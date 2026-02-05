@@ -2081,7 +2081,7 @@ function renderPartners() {
       collectionEl.innerHTML = '<p class="empty-message">No partners yet. Summon your first!</p>';
     } else {
       collectionEl.innerHTML = partnerGenerator.ownedPartners.map(partner => {
-        const rarity = PARTNER_RARITIES[partner.rarity];
+        const rarity = window.PARTNER_RARITIES[partner.rarity];
         return `
           <div class="partner-card" style="border-color: ${rarity.color}">
             <span class="partner-portrait">${partner.portrait}</span>
@@ -2122,7 +2122,15 @@ function summonPartner() {
     console.log('Generated partner:', partner);
     lastGeneratedPartner = partner;
 
-    const rarity = PARTNER_RARITIES[partner.rarity];
+    if (!partner) {
+      console.error('Partner generation failed');
+      showFloatingText('Partner generation failed!', false);
+      gameState.boopPoints += cost; // Refund
+      updateResourceDisplay();
+      return;
+    }
+
+    const rarity = window.PARTNER_RARITIES[partner.rarity];
     if (!rarity) {
       console.error('Unknown rarity:', partner.rarity);
       return;
