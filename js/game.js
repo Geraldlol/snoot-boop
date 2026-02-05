@@ -4394,70 +4394,58 @@ function setupInventoryControls() {
 }
 
 function getSalvagePreview(equipment) {
-  // Calculate what salvaging would return WITHOUT actually salvaging
+  if (!equipment) return null;
+
   const tierMaterials = {
-    common: ['upgrade_stone_common'],
-    uncommon: ['upgrade_stone_common', 'upgrade_stone_common'],
-    rare: ['upgrade_stone_common', 'upgrade_stone_rare'],
-    epic: ['upgrade_stone_rare', 'upgrade_stone_rare'],
-    legendary: ['upgrade_stone_rare', 'upgrade_stone_epic'],
-    mythic: ['upgrade_stone_epic', 'upgrade_stone_legendary']
+    common: { upgrade_stone_common: 1 },
+    uncommon: { upgrade_stone_common: 2 },
+    rare: { upgrade_stone_common: 1, upgrade_stone_rare: 1 },
+    epic: { upgrade_stone_rare: 2 },
+    legendary: { upgrade_stone_rare: 1, upgrade_stone_epic: 1 },
+    mythic: { upgrade_stone_epic: 1, upgrade_stone_legendary: 1 }
   };
 
-  const mats = tierMaterials[equipment.rarity] || tierMaterials.common;
-  const level = (equipment.upgradeLevel || 0) + 1;
-  const result = {};
+  const result = { ...(tierMaterials[equipment.rarity] || tierMaterials.common) };
+  const level = equipment.upgradeLevel || 0;
 
-  // Base materials from rarity
-  for (const matId of mats) {
-    const amount = Math.max(1, Math.floor(level * 0.5));
-    result[matId] = (result[matId] || 0) + amount;
-  }
-
-  // Bonus from upgrade level
-  if (equipment.upgradeLevel > 0) {
-    result['upgrade_stone_common'] = (result['upgrade_stone_common'] || 0) + equipment.upgradeLevel;
-  }
-
-  // Chance info for enchant scrolls
-  if (equipment.enchantments && equipment.enchantments.length > 0) {
-    result['_enchant_scroll_chance'] = equipment.enchantments.length;
+  if (level > 0) {
+    result.upgrade_stone_common = (result.upgrade_stone_common || 0) + level;
   }
 
   return result;
 }
 
 function showSalvageConfirm(equipId) {
-  const equipment = equipmentSystem?.getEquipment(equipId);
-  if (!equipment) return;
+  console.log('[Salvage] Show confirm for:', equipId);
 
-  // Calculate salvage preview
-  const materials = getSalvagePreview(equipment);
-  if (!materials || Object.keys(materials).length === 0) {
-    showNotification('Cannot salvage this item!', 'error');
+  if (!equipmentSystem) {
+    console.error('[Salvage] No equipment system');
+    alert('Equipment system not loaded!');
     return;
   }
 
-  const rarity = window.EQUIPMENT_RARITIES?.[equipment.rarity] || { color: '#888' };
-  const materialsHtml = Object.entries(materials)
-    .filter(([mat]) => !mat.startsWith('_')) // Filter out meta keys
-    .map(([mat, count]) => {
-      const matName = mat.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
-      return `<div class="salvage-material"><span>📦</span> ${count}x ${matName}</div>`;
-    }).join('');
+  // Find in inventory directly
+  const equipment = equipmentSystem.inventory.find(eq => eq.id === equipId);
+  console.log('[Salvage] Found:', equipment);
 
-  // Add enchant scroll chance note
-  const enchantChance = materials['_enchant_scroll_chance'];
-  const enchantNote = enchantChance
-    ? `<p style="font-size: 6px; color: #a78bfa; margin-top: 5px;">+ chance for ${enchantChance} enchant scroll(s)</p>`
-    : '';
+  if (!equipment) {
+    alert('Item not found! ID: ' + equipId);
+    return;
+  }
+
+  const materials = getSalvagePreview(equipment);
+  const rarity = window.EQUIPMENT_RARITIES?.[equipment.rarity] || { color: '#888' };
+
+  const materialsHtml = Object.entries(materials).map(([mat, count]) => {
+    const matName = mat.replace(/_/g, ' ');
+    return `<div class="salvage-material">📦 ${count}x ${matName}</div>`;
+  }).join('');
 
   const confirmHtml = `
     <div class="salvage-preview">
       <h6>Salvage <span style="color: ${rarity.color}">${equipment.name}</span>?</h6>
       <p style="font-size: 7px; color: #888; margin-bottom: 8px;">You will receive:</p>
       <div class="salvage-materials">${materialsHtml}</div>
-      ${enchantNote}
       <div class="salvage-actions">
         <button class="salvage-cancel" onclick="closeSalvageConfirm()">Cancel</button>
         <button class="salvage-confirm" onclick="confirmSalvage('${equipId}')">Salvage</button>
@@ -4465,12 +4453,18 @@ function showSalvageConfirm(equipId) {
     </div>
   `;
 
-  // Show in a modal or inline
   const inventoryEl = document.getElementById('equipment-inventory');
+  if (!inventoryEl) {
+    console.error('[Salvage] No inventory element');
+    return;
+  }
+
+  // Remove existing preview
   const existingPreview = inventoryEl.querySelector('.salvage-preview');
   if (existingPreview) existingPreview.remove();
 
   inventoryEl.insertAdjacentHTML('afterbegin', confirmHtml);
+  console.log('[Salvage] Preview shown');
 }
 
 function closeSalvageConfirm() {
@@ -4479,42 +4473,42 @@ function closeSalvageConfirm() {
 }
 
 function confirmSalvage(equipId) {
-  if (!equipmentSystem || !craftingSystem) return;
+  console.log('[Salvage] Confirming:', equipId);
 
-  const equipment = equipmentSystem.getEquipment(equipId);
-  if (!equipment) return;
-
-  // Remove from inventory first
-  const index = equipmentSystem.inventory.findIndex(eq => eq.id === equipId);
-  if (index === -1) return;
-
-  equipmentSystem.inventory.splice(index, 1);
-
-  // Calculate and add materials
-  const preview = getSalvagePreview(equipment);
-  for (const [mat, count] of Object.entries(preview)) {
-    if (mat.startsWith('_')) continue; // Skip meta keys
-    craftingSystem.materials[mat] = (craftingSystem.materials[mat] || 0) + count;
+  if (!equipmentSystem) {
+    alert('Equipment system not loaded!');
+    return;
   }
 
-  // Chance for enchant scrolls from enchantments
-  if (equipment.enchantments && equipment.enchantments.length > 0) {
-    for (const enc of equipment.enchantments) {
-      if (Math.random() < 0.3) { // 30% chance per enchant
-        const enchant = window.ENCHANTMENTS?.[enc.id];
-        const scrollId = `enchant_scroll_${enchant?.tier || 'common'}`;
-        craftingSystem.materials[scrollId] = (craftingSystem.materials[scrollId] || 0) + 1;
-      }
+  const index = equipmentSystem.inventory.findIndex(eq => eq.id === equipId);
+  console.log('[Salvage] Index:', index);
+
+  if (index === -1) {
+    alert('Item not found in inventory!');
+    return;
+  }
+
+  const equipment = equipmentSystem.inventory[index];
+  const materials = getSalvagePreview(equipment);
+
+  // Remove item
+  equipmentSystem.inventory.splice(index, 1);
+
+  // Add materials
+  if (craftingSystem) {
+    if (!craftingSystem.materials) craftingSystem.materials = {};
+    for (const [mat, count] of Object.entries(materials)) {
+      craftingSystem.materials[mat] = (craftingSystem.materials[mat] || 0) + count;
+      console.log('[Salvage] Added:', mat, count);
     }
   }
 
-  // Play sound and show notification
   if (audioSystem) audioSystem.playSFX('sell');
   showNotification(`Salvaged ${equipment.name}!`, 'success');
 
   closeSalvageConfirm();
   renderEquipmentInventory();
-  renderForgeTab(); // Update materials display
+  if (typeof renderForgeTab === 'function') renderForgeTab();
 }
 
 // Simple notification function
