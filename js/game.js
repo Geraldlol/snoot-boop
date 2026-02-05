@@ -105,6 +105,9 @@ const gameState = {
   cobraChickenDefeated: false,
   gooseAlly: null,
 
+  // Crafting materials
+  craftingMaterials: {},
+
   // Modifiers (calculated from all sources)
   modifiers: {},
 
@@ -278,6 +281,7 @@ const elements = {
   catinoTab: document.getElementById('catino-tab'),
   partnersTab: document.getElementById('partners-tab'),
   techniquesTab: document.getElementById('techniques-tab'),
+  forgeTab: document.getElementById('forge-tab'),
 
   // Mobile Navigation
   mobileNav: document.getElementById('mobile-nav'),
@@ -967,6 +971,9 @@ function switchTab(tabId) {
   if (elements.techniquesTab) {
     elements.techniquesTab.classList.toggle('active', tabId === 'techniques');
   }
+  if (elements.forgeTab) {
+    elements.forgeTab.classList.toggle('active', tabId === 'forge');
+  }
 
   // Update content when switching tabs
   if (tabId === 'stats') {
@@ -990,6 +997,8 @@ function switchTab(tabId) {
     renderPartners();
   } else if (tabId === 'techniques') {
     renderTechniquesPanel();
+  } else if (tabId === 'forge') {
+    renderForgeTab();
   }
 }
 
@@ -4304,6 +4313,384 @@ function equipItemToActiveCat(equipId) {
     renderEquipment();
   }
 }
+
+// ===================================
+// FORGE UI (Equipment Upgrade & Enchant)
+// ===================================
+
+let selectedForgeItem = null;
+
+function renderForgeTab() {
+  if (!equipmentSystem || !craftingSystem) return;
+
+  const itemSelect = document.getElementById('forge-item-select');
+  const materialsDisplay = document.getElementById('materials-display');
+
+  if (!itemSelect) return;
+
+  // Populate item dropdown with all equipment (inventory + equipped)
+  const inventory = equipmentSystem.inventory || [];
+  const equippedItems = [];
+
+  // Gather equipped items
+  if (equipmentSystem.equipped) {
+    for (const catId in equipmentSystem.equipped) {
+      const catEquipped = equipmentSystem.equipped[catId];
+      for (const slot in catEquipped) {
+        const eqId = catEquipped[slot];
+        if (eqId) {
+          const eq = equipmentSystem.getEquipment(eqId);
+          if (eq) equippedItems.push({ ...eq, isEquipped: true, equippedTo: catId });
+        }
+      }
+    }
+  }
+
+  const allItems = [...inventory.map(i => ({ ...i, isEquipped: false })), ...equippedItems];
+
+  itemSelect.innerHTML = '<option value="">-- Select Item --</option>' +
+    allItems.map(eq => {
+      const rarity = window.EQUIPMENT_RARITIES?.[eq.rarity] || { color: '#fff' };
+      const level = eq.upgradeLevel || 0;
+      const equipped = eq.isEquipped ? ' (Equipped)' : '';
+      return `<option value="${eq.id}" style="color: ${rarity.color}">${eq.name} +${level}${equipped}</option>`;
+    }).join('');
+
+  // Materials display
+  if (materialsDisplay) {
+    const materials = craftingSystem?.materials || {};
+    const materialList = [
+      { key: 'upgrade_stone_common', name: 'Common Stone', emoji: '🪨' },
+      { key: 'upgrade_stone_rare', name: 'Rare Stone', emoji: '💎' },
+      { key: 'upgrade_stone_epic', name: 'Epic Stone', emoji: '⭐' },
+      { key: 'upgrade_stone_legendary', name: 'Legendary Stone', emoji: '🌟' },
+      { key: 'enchant_scroll_common', name: 'Common Scroll', emoji: '📜' },
+      { key: 'enchant_scroll_rare', name: 'Rare Scroll', emoji: '📕' },
+      { key: 'enchant_scroll_legendary', name: 'Legendary Scroll', emoji: '📗' },
+      { key: 'protection_charm', name: 'Protection Charm', emoji: '🛡️' },
+      { key: 'lucky_clover', name: 'Lucky Clover', emoji: '🍀' }
+    ];
+
+    materialsDisplay.innerHTML = materialList.map(mat => {
+      const count = materials[mat.key] || 0;
+      return `<div class="material-item">
+        <span class="material-emoji">${mat.emoji}</span>
+        <span class="material-name">${mat.name}</span>
+        <span class="material-count">${count}</span>
+      </div>`;
+    }).join('');
+  }
+
+  // Update protection/clover counts
+  const protectionCount = document.getElementById('protection-count');
+  const cloverCount = document.getElementById('clover-count');
+  if (protectionCount) protectionCount.textContent = craftingSystem?.materials?.protection_charm || 0;
+  if (cloverCount) cloverCount.textContent = craftingSystem?.materials?.lucky_clover || 0;
+
+  // Clear selection
+  selectedForgeItem = null;
+  updateForgeItemDisplay();
+}
+
+function onForgeItemSelect(selectEl) {
+  const equipId = selectEl.value;
+  if (!equipId || !equipmentSystem) {
+    selectedForgeItem = null;
+    updateForgeItemDisplay();
+    return;
+  }
+
+  // Find the equipment
+  selectedForgeItem = equipmentSystem.getEquipment(equipId);
+  if (!selectedForgeItem) {
+    // Try inventory
+    selectedForgeItem = equipmentSystem.inventory.find(eq => eq.id === equipId);
+  }
+
+  updateForgeItemDisplay();
+  updateEnchantDropdown();
+}
+
+function updateForgeItemDisplay() {
+  const display = document.getElementById('forge-item-display');
+  const nameEl = document.getElementById('forge-item-name');
+  const levelEl = document.getElementById('forge-item-level');
+  const statsEl = document.getElementById('forge-item-stats');
+  const enchantsEl = document.getElementById('forge-item-enchants');
+  const upgradeCostEl = document.getElementById('upgrade-cost');
+
+  if (!display) return;
+
+  if (!selectedForgeItem) {
+    display.classList.add('hidden');
+    if (upgradeCostEl) upgradeCostEl.innerHTML = '';
+    return;
+  }
+
+  display.classList.remove('hidden');
+
+  const rarity = window.EQUIPMENT_RARITIES?.[selectedForgeItem.rarity] || { color: '#fff', name: 'Common' };
+  const level = selectedForgeItem.upgradeLevel || 0;
+
+  if (nameEl) {
+    nameEl.textContent = selectedForgeItem.name;
+    nameEl.style.color = rarity.color;
+  }
+  if (levelEl) levelEl.textContent = `+${level}`;
+
+  // Stats display
+  if (statsEl) {
+    const stats = selectedForgeItem.stats || {};
+    statsEl.innerHTML = Object.entries(stats).map(([key, val]) => {
+      const displayVal = key.includes('Chance') || key.includes('Multiplier')
+        ? `${(val * 100).toFixed(0)}%`
+        : Math.floor(val);
+      return `<div class="stat-line">${key}: ${displayVal}</div>`;
+    }).join('');
+  }
+
+  // Enchants display
+  if (enchantsEl) {
+    const enchants = selectedForgeItem.enchantments || [];
+    if (enchants.length > 0) {
+      enchantsEl.innerHTML = '<div class="enchant-header">Enchantments:</div>' +
+        enchants.map((e, i) => {
+          const enchDef = window.ENCHANTMENTS?.[e.id] || { name: e.id, tier: 'common' };
+          const tierColors = { common: '#aaa', rare: '#5af', legendary: '#fa5' };
+          return `<div class="enchant-line" style="color: ${tierColors[enchDef.tier] || '#aaa'}">
+            ${enchDef.name} +${e.level || 1}
+            <button class="remove-enchant-btn" onclick="removeEnchant(${i})">X</button>
+          </div>`;
+        }).join('');
+    } else {
+      enchantsEl.innerHTML = '<div class="no-enchants">No enchantments</div>';
+    }
+  }
+
+  // Upgrade cost
+  if (upgradeCostEl && craftingSystem) {
+    const cost = craftingSystem.getUpgradeCost(selectedForgeItem);
+    if (cost) {
+      const canAfford = checkCanAffordUpgrade(cost);
+      upgradeCostEl.innerHTML = `
+        <div class="cost-header">Upgrade Cost:</div>
+        <div class="cost-list ${canAfford ? 'affordable' : 'expensive'}">
+          ${cost.bp ? `<span>💰 ${formatNumber(cost.bp)} BP</span>` : ''}
+          ${cost.materials ? Object.entries(cost.materials).map(([mat, count]) => {
+            const have = craftingSystem?.materials?.[mat] || 0;
+            return `<span class="${have >= count ? 'have' : 'need'}">${mat.replace(/_/g, ' ')}: ${have}/${count}</span>`;
+          }).join('') : ''}
+        </div>
+        <div class="success-rate">Success: ${(cost.successRate * 100).toFixed(0)}%</div>
+      `;
+    } else {
+      upgradeCostEl.innerHTML = '<div class="maxed-out">MAX LEVEL</div>';
+    }
+  }
+}
+
+function checkCanAffordUpgrade(cost) {
+  if (!cost) return false;
+  if (cost.bp && gameState.boopPoints < cost.bp) return false;
+  if (cost.materials) {
+    for (const [mat, count] of Object.entries(cost.materials)) {
+      if ((craftingSystem?.materials?.[mat] || 0) < count) return false;
+    }
+  }
+  return true;
+}
+
+function updateEnchantDropdown() {
+  const select = document.getElementById('enchant-select');
+  const costEl = document.getElementById('enchant-cost');
+  if (!select || !craftingSystem) return;
+
+  if (!selectedForgeItem) {
+    select.innerHTML = '<option value="">-- Select Item First --</option>';
+    if (costEl) costEl.innerHTML = '';
+    return;
+  }
+
+  const slot = selectedForgeItem.slot;
+  const availableEnchants = craftingSystem.getAvailableEnchantments(slot);
+
+  select.innerHTML = '<option value="">-- Select Enchantment --</option>' +
+    availableEnchants.map(ench => {
+      const enchDef = window.ENCHANTMENTS?.[ench] || { name: ench, tier: 'common' };
+      const tierColors = { common: '#aaa', rare: '#5af', legendary: '#fa5' };
+      return `<option value="${ench}" style="color: ${tierColors[enchDef.tier]}">${enchDef.name} (${enchDef.tier})</option>`;
+    }).join('');
+}
+
+function onEnchantSelect(selectEl) {
+  const enchantId = selectEl.value;
+  const costEl = document.getElementById('enchant-cost');
+
+  if (!enchantId || !costEl || !craftingSystem) {
+    if (costEl) costEl.innerHTML = '';
+    return;
+  }
+
+  const cost = craftingSystem.getEnchantCost({ id: enchantId, tier: window.ENCHANTMENTS?.[enchantId]?.tier || 'common' });
+
+  costEl.innerHTML = `
+    <div class="cost-header">Enchant Cost:</div>
+    <div class="cost-list">
+      ${cost.bp ? `<span>💰 ${formatNumber(cost.bp)} BP</span>` : ''}
+      ${cost.scrolls ? `<span>📜 Scrolls: ${cost.scrolls}</span>` : ''}
+    </div>
+  `;
+}
+
+function upgradeSelectedItem() {
+  if (!selectedForgeItem || !craftingSystem) {
+    showForgeResult('upgrade', false, 'No item selected!');
+    return;
+  }
+
+  const useProtection = document.getElementById('use-protection')?.checked || false;
+  const useClover = document.getElementById('use-clover')?.checked || false;
+
+  // Check if we have the consumables
+  if (useProtection && (craftingSystem?.materials?.protection_charm || 0) < 1) {
+    showForgeResult('upgrade', false, 'No Protection Charms!');
+    return;
+  }
+  if (useClover && (craftingSystem?.materials?.lucky_clover || 0) < 1) {
+    showForgeResult('upgrade', false, 'No Lucky Clovers!');
+    return;
+  }
+
+  const result = craftingSystem.upgradeEquipment(selectedForgeItem, gameState, useProtection, useClover);
+
+  if (result.error) {
+    showForgeResult('upgrade', false, result.error);
+    return;
+  }
+
+  // Consume materials
+  if (useProtection) craftingSystem.materials.protection_charm--;
+  if (useClover) craftingSystem.materials.lucky_clover--;
+
+  // Deduct BP
+  if (result.bpCost) {
+    gameState.boopPoints -= result.bpCost;
+  }
+
+  // Deduct materials
+  if (result.materialsCost) {
+    for (const [mat, count] of Object.entries(result.materialsCost)) {
+      craftingSystem.materials[mat] = (craftingSystem.materials[mat] || 0) - count;
+    }
+  }
+
+  if (result.success) {
+    showForgeResult('upgrade', true, `SUCCESS! ${selectedForgeItem.name} is now +${selectedForgeItem.upgradeLevel}!`);
+    if (audioSystem) audioSystem.playSFX('levelup');
+  } else {
+    const msg = result.protected
+      ? `Failed! Protection Charm saved your item!`
+      : `Failed! Item remains at +${selectedForgeItem.upgradeLevel}`;
+    showForgeResult('upgrade', false, msg);
+    if (audioSystem) audioSystem.playSFX('error');
+  }
+
+  // Refresh UI
+  updateForgeItemDisplay();
+  renderForgeTab();
+  updateResourceDisplay();
+}
+
+function enchantSelectedItem() {
+  if (!selectedForgeItem || !craftingSystem) {
+    showForgeResult('enchant', false, 'No item selected!');
+    return;
+  }
+
+  const enchantSelect = document.getElementById('enchant-select');
+  const enchantId = enchantSelect?.value;
+
+  if (!enchantId) {
+    showForgeResult('enchant', false, 'No enchantment selected!');
+    return;
+  }
+
+  const result = craftingSystem.applyEnchantment(selectedForgeItem, enchantId, gameState);
+
+  if (result.error) {
+    showForgeResult('enchant', false, result.error);
+    return;
+  }
+
+  // Deduct costs
+  if (result.bpCost) gameState.boopPoints -= result.bpCost;
+  if (result.scrollsCost) {
+    const scrollKey = `enchant_scroll_${window.ENCHANTMENTS?.[enchantId]?.tier || 'common'}`;
+    craftingSystem.materials[scrollKey] = (craftingSystem.materials[scrollKey] || 0) - result.scrollsCost;
+  }
+
+  showForgeResult('enchant', true, `Applied ${window.ENCHANTMENTS?.[enchantId]?.name || enchantId}!`);
+  if (audioSystem) audioSystem.playSFX('powerup');
+
+  updateForgeItemDisplay();
+  renderForgeTab();
+  updateResourceDisplay();
+}
+
+function removeEnchant(index) {
+  if (!selectedForgeItem || !craftingSystem) return;
+
+  const result = craftingSystem.removeEnchantment(selectedForgeItem, index);
+  if (result.success) {
+    showForgeResult('enchant', true, 'Enchantment removed!');
+    updateForgeItemDisplay();
+  }
+}
+
+function showForgeResult(type, success, message) {
+  const resultEl = document.getElementById(type === 'upgrade' ? 'upgrade-result' : 'enchant-cost');
+  if (!resultEl) return;
+
+  const resultDiv = document.createElement('div');
+  resultDiv.className = `forge-result-msg ${success ? 'success' : 'fail'}`;
+  resultDiv.textContent = message;
+
+  // For upgrade result, use the dedicated element
+  if (type === 'upgrade') {
+    const upgradeResult = document.getElementById('upgrade-result');
+    if (upgradeResult) {
+      upgradeResult.innerHTML = '';
+      upgradeResult.appendChild(resultDiv);
+      setTimeout(() => upgradeResult.innerHTML = '', 3000);
+    }
+  } else {
+    // For enchant, show temporarily
+    const temp = document.createElement('div');
+    temp.className = `forge-result-msg ${success ? 'success' : 'fail'}`;
+    temp.textContent = message;
+    resultEl.appendChild(temp);
+    setTimeout(() => temp.remove(), 3000);
+  }
+}
+
+// Initialize forge item select event listener
+document.addEventListener('DOMContentLoaded', () => {
+  const forgeSelect = document.getElementById('forge-item-select');
+  if (forgeSelect) {
+    forgeSelect.addEventListener('change', (e) => onForgeItemSelect(e.target));
+  }
+
+  const enchantSelect = document.getElementById('enchant-select');
+  if (enchantSelect) {
+    enchantSelect.addEventListener('change', (e) => onEnchantSelect(e.target));
+  }
+});
+
+// Make forge functions globally available
+window.upgradeSelectedItem = upgradeSelectedItem;
+window.enchantSelectedItem = enchantSelectedItem;
+window.removeEnchant = removeEnchant;
+window.renderForgeTab = renderForgeTab;
 
 // ===================================
 // RESET GAME

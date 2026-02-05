@@ -2193,3 +2193,331 @@
   font-size: 6px;
   color: var(--text-secondary);
 }
+
+/* ===================================
+   FORGE PANEL
+   =================================== */
+
+.forge-panel {
+  padding: 10px;
+}
+
+.forge-section {
+  margin-bottom: 20px;
+  padding: 12px;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.forge-subtitle {
+  font-size: 9px;
+  color: var(--gold-accent);
+  margin-bottom: 10px;
+  text-transform: uppercase;
+}
+
+.forge-select {
+  width: 100%;
+  padding: 8px;
+  background: rgba(0, 0, 0, 0.5);
+  border: 2px solid var(--jade-dark);
+  border-radius: 4px;
+  color: #fff;
+  font-size: 9px;
+  margin-bottom: 10px;
+}
+
+.forge-select:focus {
+  border-color: var(--jade);
+  outline: none;
+}
+
+.forge-item-display {
+  background: linear-gradient(135deg, rgba(80, 200, 120, 0.1), rgba(0, 0, 0, 0.4));
+  border: 2px solid var(--jade);
+  border-radius: 6px;
+  padding: 12px;
+  margin-bottom: 15px;
+}
+
+.forge-item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.forge-item-name {
+  font-size: 10px;
+  font-weight: bold;
+  color: var(--gold-accent);
+}
+
+.forge-item-level {
+  font-size: 12px;
+  font-weight: bold;
+  color: var(--jade);
+}
+
+.forge-item-stats {
+  font-size: 8px;
+  color: #aaa;
+  margin-bottom: 8px;
+}
+
+.forge-item-enchants {
+  font-size: 8px;
+}
+
+.forge-item-enchant {
+  display: inline-block;
+  padding: 2px 6px;
+  background: rgba(139, 92, 246, 0.3);
+  border: 1px solid #8B5CF6;
+  border-radius: 3px;
+  margin: 2px;
+  color: #C4B5FD;
+}
+
+.forge-cost {
+  font-size: 8px;
+  color: #888;
+  margin-bottom: 10px;
+  padding: 8px;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 4px;
+}
+
+.forge-cost-item {
+  display: flex;
+  justify-content: space-between;
+  margin: 3px 0;
+}
+
+.forge-cost-item.has-enough {
+  color: var(--jade);
+}
+
+.forge-cost-item.not-enough {
+  color: var(--red-accent);
+}
+
+.forge-options {
+  margin-bottom: 10px;
+}
+
+.forge-checkbox {
+  display: block;
+  font-size: 8px;
+  color: #aaa;
+  margin: 5px 0;
+  cursor: pointer;
+}
+
+.forge-checkbox input {
+  margin-right: 5px;
+}
+
+.forge-btn {
+  width: 100%;
+  padding: 10px;
+  font-size: 10px;
+}
+
+.forge-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.forge-result {
+  margin-top: 10px;
+  padding: 10px;
+  border-radius: 4px;
+  font-size: 9px;
+  text-align: center;
+}
+
+.forge-result.success {
+  background: rgba(80, 200, 120, 0.2);
+  border: 1px solid var(--jade);
+  color: var(--jade);
+}
+
+.forge-result.fail {
+  background: rgba(233, 69, 96, 0.2);
+  border: 1px solid var(--red-accent);
+  color: var(--red-accent);
+}
+
+.materials-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.material-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 8px;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.material-emoji {
+  font-size: 16px;
+  margin-bottom: 4px;
+}
+
+.material-name {
+  font-size: 6px;
+  color: #888;
+  text-align: center;
+}
+
+.material-count {
+  font-size: 9px;
+  font-weight: bold;
+  color: var(--gold-accent);
+}
+
+/* Forge result messages */
+.forge-result-msg {
+  margin-top: 10px;
+  padding: 8px 12px;
+  border-radius: 4px;
+  font-size: 9px;
+  text-align: center;
+  animation: forge-result-fade 0.3s ease-out;
+}
+
+.forge-result-msg.success {
+  background: rgba(80, 200, 120, 0.2);
+  border: 1px solid var(--jade);
+  color: var(--jade);
+}
+
+.forge-result-msg.fail {
+  background: rgba(233, 69, 96, 0.2);
+  border: 1px solid var(--red-accent);
+  color: var(--red-accent);
+}
+
+@keyframes forge-result-fade {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Forge item display styles */
+.forge-item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.forge-item-name {
+  font-size: 11px;
+  font-weight: bold;
+}
+
+.forge-item-level {
+  font-size: 10px;
+  color: var(--gold-accent);
+}
+
+.forge-item-stats {
+  font-size: 8px;
+  color: #aaa;
+  margin-bottom: 10px;
+}
+
+.stat-line {
+  margin: 2px 0;
+}
+
+.forge-item-enchants {
+  font-size: 8px;
+  margin-bottom: 10px;
+}
+
+.enchant-header {
+  color: var(--gold-accent);
+  margin-bottom: 5px;
+}
+
+.enchant-line {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 3px 5px;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 3px;
+  margin: 2px 0;
+}
+
+.remove-enchant-btn {
+  background: var(--red-accent);
+  border: none;
+  color: white;
+  font-size: 8px;
+  padding: 2px 5px;
+  border-radius: 2px;
+  cursor: pointer;
+}
+
+.no-enchants {
+  color: #666;
+  font-style: italic;
+}
+
+/* Cost display styles */
+.cost-header {
+  color: var(--gold-accent);
+  font-size: 9px;
+  margin-bottom: 5px;
+}
+
+.cost-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  font-size: 8px;
+}
+
+.cost-list span {
+  padding: 2px 5px;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 3px;
+}
+
+.cost-list.affordable span {
+  color: var(--jade);
+}
+
+.cost-list.expensive span {
+  color: var(--red-accent);
+}
+
+.cost-list span.have {
+  color: var(--jade);
+}
+
+.cost-list span.need {
+  color: var(--red-accent);
+}
+
+.success-rate {
+  font-size: 8px;
+  color: #888;
+  margin-top: 5px;
+}
+
+.maxed-out {
+  font-size: 10px;
+  color: var(--gold-accent);
+  text-align: center;
+  font-weight: bold;
+}

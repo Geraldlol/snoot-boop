@@ -172,6 +172,7 @@
             <button class="tab-btn" data-tab="upgrades">⚔️ Arts</button>
             <button class="tab-btn" data-tab="pagoda">🏯 Pagoda</button>
             <button class="tab-btn" data-tab="equipment">⚙️ Equip</button>
+            <button class="tab-btn" data-tab="forge">🔨 Forge</button>
             <button class="tab-btn" data-tab="expeditions">🗺️ Quest</button>
             <button class="tab-btn" data-tab="catino">🎰 Casino</button>
             <button class="tab-btn" data-tab="partners">💕 Partners</button>
@@ -297,6 +298,67 @@
               <h5 class="inventory-header">Inventory (<span id="inventory-count">0</span>)</h5>
               <div id="equipment-inventory" class="equipment-inventory">
                 <p class="empty-message">No equipment yet!</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Forge Tab -->
+          <div id="forge-tab" class="tab-content">
+            <div class="forge-panel">
+              <h4 class="category-header">🔨 Equipment Forge</h4>
+
+              <!-- Item Selection -->
+              <div class="forge-section">
+                <h5 class="forge-subtitle">Select Equipment to Upgrade</h5>
+                <select id="forge-item-select" class="forge-select">
+                  <option value="">-- Select Item --</option>
+                </select>
+              </div>
+
+              <!-- Selected Item Display -->
+              <div id="forge-item-display" class="forge-item-display hidden">
+                <div class="forge-item-header">
+                  <span id="forge-item-name" class="forge-item-name">Item Name</span>
+                  <span id="forge-item-level" class="forge-item-level">+0</span>
+                </div>
+                <div id="forge-item-stats" class="forge-item-stats"></div>
+                <div id="forge-item-enchants" class="forge-item-enchants"></div>
+              </div>
+
+              <!-- Upgrade Section -->
+              <div class="forge-section">
+                <h5 class="forge-subtitle">⬆️ Upgrade Equipment</h5>
+                <div id="upgrade-cost" class="forge-cost"></div>
+                <div class="forge-options">
+                  <label class="forge-checkbox">
+                    <input type="checkbox" id="use-protection"> 🛡️ Protection Charm (<span id="protection-count">0</span>)
+                  </label>
+                  <label class="forge-checkbox">
+                    <input type="checkbox" id="use-clover"> 🍀 Lucky Clover (<span id="clover-count">0</span>)
+                  </label>
+                </div>
+                <button id="upgrade-btn" class="jade-button forge-btn" onclick="upgradeSelectedItem()">
+                  Upgrade
+                </button>
+                <div id="upgrade-result" class="forge-result"></div>
+              </div>
+
+              <!-- Enchant Section -->
+              <div class="forge-section">
+                <h5 class="forge-subtitle">✨ Enchantments</h5>
+                <select id="enchant-select" class="forge-select">
+                  <option value="">-- Select Enchantment --</option>
+                </select>
+                <div id="enchant-cost" class="forge-cost"></div>
+                <button id="enchant-btn" class="jade-button forge-btn" onclick="enchantSelectedItem()">
+                  Apply Enchantment
+                </button>
+              </div>
+
+              <!-- Materials Display -->
+              <div class="forge-section">
+                <h5 class="forge-subtitle">📦 Materials</h5>
+                <div id="materials-display" class="materials-grid"></div>
               </div>
             </div>
           </div>
