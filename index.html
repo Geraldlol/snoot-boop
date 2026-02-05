@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Snoot Booper: Idle Wuxia Cat Sanctuary</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+  <div id="game-container">
+    <!-- Master Select Screen -->
+    <div id="master-select-screen" class="screen active">
+      <div class="scroll-panel title-panel">
+        <h1 class="game-title">Snoot Booper</h1>
+        <p class="game-subtitle">Idle Wuxia Cat Sanctuary</p>
+      </div>
+
+      <p class="choose-text">Choose Your Path, Young Cultivator</p>
+
+      <div id="masters-grid" class="masters-grid">
+        <!-- Fallback master cards - JS will replace these if it loads successfully -->
+        <div class="master-card" data-master="gerald" onclick="window.showMasterPreview && window.showMasterPreview('gerald')" style="--master-color: #50C878; cursor: pointer;">
+          <div class="master-portrait">🐉</div>
+          <h3>Gerald</h3>
+          <p class="title">The Jade Palm</p>
+        </div>
+        <div class="master-card" data-master="rusty" onclick="window.showMasterPreview && window.showMasterPreview('rusty')" style="--master-color: #DC143C; cursor: pointer;">
+          <div class="master-portrait">👊</div>
+          <h3>Rusty</h3>
+          <p class="title">The Crimson Fist</p>
+        </div>
+        <div class="master-card" data-master="steve" onclick="window.showMasterPreview && window.showMasterPreview('steve')" style="--master-color: #4169E1; cursor: pointer;">
+          <div class="master-portrait">🌊</div>
+          <h3>Steve</h3>
+          <p class="title">The Flowing River</p>
+        </div>
+        <div class="master-card" data-master="andrew" onclick="window.showMasterPreview && window.showMasterPreview('andrew')" style="--master-color: #FFD700; cursor: pointer;">
+          <div class="master-portrait">⚡</div>
+          <h3>Andrew</h3>
+          <p class="title">The Thunder Step</p>
+        </div>
+        <div class="master-card" data-master="nik" onclick="window.showMasterPreview && window.showMasterPreview('nik')" style="--master-color: #483D8B; cursor: pointer;">
+          <div class="master-portrait">🌙</div>
+          <h3>Nik</h3>
+          <p class="title">The Shadow Moon</p>
+        </div>
+        <div class="master-card" data-master="yuelin" onclick="window.showMasterPreview && window.showMasterPreview('yuelin')" style="--master-color: #FFB6C1; cursor: pointer;">
+          <div class="master-portrait">🪷</div>
+          <h3>Yuelin</h3>
+          <p class="title">The Lotus Sage</p>
+        </div>
+        <div class="master-card" data-master="scott" onclick="window.showMasterPreview && window.showMasterPreview('scott')" style="--master-color: #8B4513; cursor: pointer;">
+          <div class="master-portrait">⛰️</div>
+          <h3>Scott</h3>
+          <p class="title">The Mountain</p>
+        </div>
+      </div>
+
+      <div id="master-preview" class="scroll-panel master-preview hidden">
+        <div class="preview-header">
+          <div class="preview-portrait-container">
+            <div id="preview-portrait" class="preview-portrait"></div>
+          </div>
+          <div class="preview-info">
+            <h2 id="preview-name"></h2>
+            <p id="preview-title" class="preview-title"></p>
+            <p id="preview-role" class="preview-role"></p>
+          </div>
+        </div>
+        <p id="preview-description" class="preview-description"></p>
+        <div class="preview-passive">
+          <span class="passive-label">Passive Ability:</span>
+          <span id="preview-passive-name" class="passive-name"></span>
+          <p id="preview-passive-desc" class="passive-desc"></p>
+        </div>
+        <button id="select-master-btn" class="jade-button">Begin Cultivation</button>
+      </div>
+    </div>
+
+    <!-- Main Game Screen -->
+    <div id="game-screen" class="screen">
+      <!-- Header with resources -->
+      <header class="game-header">
+        <div class="resource-bar">
+          <div class="resource">
+            <span class="resource-label">BP</span>
+            <span id="bp-display" class="resource-value">0</span>
+          </div>
+          <div class="resource">
+            <span class="resource-label">PP</span>
+            <span id="pp-display" class="resource-value">0</span>
+            <span id="pp-rate" class="resource-rate"></span>
+          </div>
+          <div class="resource">
+            <span class="resource-label">Cats</span>
+            <span id="cat-count-display" class="resource-value">0</span>
+          </div>
+        </div>
+        <div class="header-right">
+          <div id="combo-display" class="combo-display hidden">
+            <span id="combo-count">0</span>x COMBO
+          </div>
+          <div id="master-badge" class="master-badge">
+            <span id="current-master-name"></span>
+          </div>
+        </div>
+      </header>
+
+      <!-- Main game layout -->
+      <div class="game-layout">
+        <!-- Left Panel: Waifu -->
+        <aside class="side-panel waifu-panel">
+          <div class="panel-header">
+            <span id="waifu-emoji" class="panel-icon">🍡</span>
+            <span class="panel-title">Master</span>
+          </div>
+          <div class="waifu-portrait-container">
+            <div id="waifu-portrait" class="waifu-portrait">🍡</div>
+          </div>
+          <div class="waifu-info">
+            <h3 id="waifu-name">Mochi-chan</h3>
+            <p id="waifu-title" class="waifu-title">The Welcoming Dawn</p>
+            <div class="bond-bar">
+              <div id="bond-fill" class="bond-fill" style="width: 0%"></div>
+            </div>
+            <p class="bond-label">Bond: <span id="bond-level">0</span>/100</p>
+          </div>
+          <div id="waifu-dialogue" class="waifu-dialogue">
+            "Welcome to the teahouse~"
+          </div>
+          <div class="waifu-bonus">
+            <span id="waifu-bonus-text">+10% BP</span>
+          </div>
+        </aside>
+
+        <!-- Center: Boop Area -->
+        <main class="game-main">
+          <div class="boop-area">
+            <div id="active-cat-display" class="active-cat-display">
+              <div id="active-cat" class="active-cat">🐱</div>
+              <p id="active-cat-name" class="active-cat-name">Recruit a cat!</p>
+            </div>
+            <button id="boop-button" class="boop-button">
+              BOOP<br>THE<br>SNOOT
+            </button>
+            <p id="boop-power-display" class="boop-power-display">+1 BP per boop</p>
+          </div>
+          <div id="floating-text-container" class="floating-text-container"></div>
+        </main>
+
+        <!-- Right Panel: Tabs for Cats/Upgrades -->
+        <aside class="side-panel right-panel">
+          <div class="tab-bar">
+            <button class="tab-btn active" data-tab="cats">🐱 Cats</button>
+            <button class="tab-btn" data-tab="upgrades">⚔️ Arts</button>
+            <button class="tab-btn" data-tab="pagoda">🏯 Pagoda</button>
+            <button class="tab-btn" data-tab="equipment">⚙️ Equip</button>
+            <button class="tab-btn" data-tab="expeditions">🗺️ Quest</button>
+            <button class="tab-btn" data-tab="catino">🎰 Casino</button>
+            <button class="tab-btn" data-tab="partners">💕 Partners</button>
+            <button class="tab-btn" data-tab="facilities">☯️ Sect</button>
+            <button class="tab-btn" data-tab="stats">📊 Stats</button>
+          </div>
+
+          <!-- Cats Tab -->
+          <div id="cats-tab" class="tab-content active">
+            <div class="recruit-section">
+              <button id="recruit-btn" class="recruit-button">
+                <span class="recruit-text">Recruit Cat</span>
+                <span id="recruit-cost" class="recruit-cost">100 BP</span>
+              </button>
+            </div>
+            <div id="cat-collection" class="cat-collection">
+              <p class="empty-message">No cats yet. Recruit your first disciple!</p>
+            </div>
+          </div>
+
+          <!-- Upgrades Tab -->
+          <div id="upgrades-tab" class="tab-content">
+            <div class="upgrade-category">
+              <h4 class="category-header">👆 Snoot Arts</h4>
+              <div id="snoot-arts-list" class="upgrade-list"></div>
+            </div>
+            <div class="upgrade-category">
+              <h4 class="category-header">☯️ Inner Cultivation</h4>
+              <div id="inner-cultivation-list" class="upgrade-list"></div>
+            </div>
+          </div>
+
+          <!-- Pagoda Tab -->
+          <div id="pagoda-tab" class="tab-content">
+            <div class="pagoda-panel">
+              <div class="pagoda-header">
+                <h4 class="category-header">🏯 Infinite Pagoda</h4>
+                <p class="pagoda-subtitle">Test your might against endless foes!</p>
+              </div>
+              <div class="pagoda-stats">
+                <div class="pagoda-stat">
+                  <span class="stat-label">Highest Floor</span>
+                  <span id="pagoda-highest-floor" class="stat-value">0</span>
+                </div>
+                <div class="pagoda-stat">
+                  <span class="stat-label">Tokens</span>
+                  <span id="pagoda-tokens" class="stat-value">0</span>
+                </div>
+              </div>
+              <button id="start-pagoda-btn" class="jade-button pagoda-start-btn">
+                Enter the Pagoda
+              </button>
+              <div id="pagoda-combat" class="pagoda-combat hidden">
+                <div class="combat-enemy">
+                  <span id="enemy-emoji" class="enemy-emoji">👹</span>
+                  <span id="enemy-name" class="enemy-name">Enemy</span>
+                  <div class="enemy-hp-bar">
+                    <div id="enemy-hp-fill" class="hp-fill"></div>
+                  </div>
+                </div>
+                <div class="combat-player">
+                  <div class="player-hp-bar">
+                    <div id="player-hp-fill" class="hp-fill player"></div>
+                  </div>
+                  <span id="player-hp-text">100/100</span>
+                </div>
+                <div id="combat-log" class="combat-log"></div>
+                <div class="boop-commands">
+                  <button class="cmd-btn" data-cmd="power_strike">💪 Strike</button>
+                  <button class="cmd-btn" data-cmd="healing_touch">💚 Heal</button>
+                  <button class="cmd-btn" data-cmd="shield_wall">🛡️ Shield</button>
+                  <button class="cmd-btn" data-cmd="mega_boop">💥 MEGA</button>
+                  <button class="cmd-btn" data-cmd="emergency_exit">🚪 Flee</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Equipment Tab -->
+          <div id="equipment-tab" class="tab-content">
+            <div class="equipment-panel">
+              <h4 class="category-header">⚙️ Cat Equipment</h4>
+              <div class="equipment-slots">
+                <div class="equip-slot" data-slot="hat">
+                  <span class="slot-icon">🎩</span>
+                  <span class="slot-name">Hat</span>
+                  <div id="equip-hat" class="equipped-item">Empty</div>
+                </div>
+                <div class="equip-slot" data-slot="collar">
+                  <span class="slot-icon">📿</span>
+                  <span class="slot-name">Collar</span>
+                  <div id="equip-collar" class="equipped-item">Empty</div>
+                </div>
+                <div class="equip-slot" data-slot="weapon">
+                  <span class="slot-icon">⚔️</span>
+                  <span class="slot-name">Weapon</span>
+                  <div id="equip-weapon" class="equipped-item">Empty</div>
+                </div>
+                <div class="equip-slot" data-slot="armor">
+                  <span class="slot-icon">🛡️</span>
+                  <span class="slot-name">Armor</span>
+                  <div id="equip-armor" class="equipped-item">Empty</div>
+                </div>
+                <div class="equip-slot" data-slot="paws">
+                  <span class="slot-icon">🐾</span>
+                  <span class="slot-name">Paws</span>
+                  <div id="equip-paws" class="equipped-item">Empty</div>
+                </div>
+                <div class="equip-slot" data-slot="tail">
+                  <span class="slot-icon">🎀</span>
+                  <span class="slot-name">Tail</span>
+                  <div id="equip-tail" class="equipped-item">Empty</div>
+                </div>
+              </div>
+              <h5 class="inventory-header">Inventory (<span id="inventory-count">0</span>)</h5>
+              <div id="equipment-inventory" class="equipment-inventory">
+                <p class="empty-message">No equipment yet!</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Expeditions Tab -->
+          <div id="expeditions-tab" class="tab-content">
+            <div class="expedition-panel">
+              <h4 class="category-header">🗺️ Send Cats on Expeditions</h4>
+              <p class="expedition-info" style="font-size: 8px; color: #888; margin-bottom: 10px;">
+                Select a destination and choose cats to send.
+              </p>
+              <div id="expedition-destinations" class="expedition-destinations"></div>
+
+              <div id="expedition-selection" class="expedition-selection hidden">
+                <h5 style="font-size: 9px; color: var(--jade-light); margin: 15px 0 10px;">Select Cats:</h5>
+                <div id="cat-select-grid" class="cat-select-grid"></div>
+                <button id="start-expedition-btn" class="jade-button" style="margin-top: 10px; width: 100%;">
+                  Start Expedition
+                </button>
+              </div>
+
+              <div class="active-expeditions" style="margin-top: 20px;">
+                <h4 class="category-header">📍 Active Expeditions</h4>
+                <div id="active-expeditions-list"></div>
+              </div>
+            </div>
+
+            <div style="margin-top: 20px; text-align: center;">
+              <button id="minigame-btn" class="minigame-button">
+                💎 Chase the Jade Dot!
+              </button>
+            </div>
+          </div>
+
+          <!-- Catino (Casino) Tab -->
+          <div id="catino-tab" class="tab-content">
+            <div class="catino-panel">
+              <h4 class="category-header">🎰 Cat-sino</h4>
+              <p class="catino-subtitle">Fortune favors the bold (and the fluffy)</p>
+
+              <div class="catino-balance">
+                <span class="balance-label">Balance:</span>
+                <span id="catino-chips" class="balance-value">0</span>
+                <span style="font-size: 8px; color: #888;">BP</span>
+              </div>
+              <div id="catino-status" class="catino-status" style="font-size: 7px; color: #888; margin-bottom: 10px;"></div>
+
+              <!-- Slot Machine -->
+              <div class="catino-game slot-machine">
+                <h5>🎰 Lucky Slots</h5>
+                <div class="slot-display">
+                  <div class="slot-reel" id="reel-1">❓</div>
+                  <div class="slot-reel" id="reel-2">❓</div>
+                  <div class="slot-reel" id="reel-3">❓</div>
+                </div>
+                <div class="slot-controls">
+                  <select id="slot-bet">
+                    <option value="1">100 BP</option>
+                    <option value="5">500 BP</option>
+                    <option value="10">1K BP</option>
+                    <option value="50">5K BP</option>
+                  </select>
+                  <button id="spin-slots-btn" class="jade-button" onclick="spinSlots()">SPIN!</button>
+                </div>
+                <p id="slot-result" class="slot-result"></p>
+              </div>
+
+              <!-- Goose Racing -->
+              <div class="catino-game goose-racing">
+                <h5>🦢 Goose Racing</h5>
+                <div class="race-track">
+                  <div class="race-lane" id="lane-1"><span class="racer">🦢</span><span class="name">Honky</span></div>
+                  <div class="race-lane" id="lane-2"><span class="racer">🦆</span><span class="name">Quackers</span></div>
+                  <div class="race-lane" id="lane-3"><span class="racer">🐦</span><span class="name">Speedy</span></div>
+                </div>
+                <div class="race-controls">
+                  <select id="race-pick">
+                    <option value="0">Honky (2x)</option>
+                    <option value="1">Quackers (3x)</option>
+                    <option value="2">Speedy (4x)</option>
+                  </select>
+                  <input type="number" id="race-bet" value="10" min="1" max="100" style="width: 50px;">
+                  <button id="start-race-btn" class="jade-button" onclick="startGooseRace()">BET!</button>
+                </div>
+                <p id="race-result" class="race-result"></p>
+              </div>
+
+              <!-- Mystery Box -->
+              <div class="catino-game mystery-box">
+                <h5>📦 Mystery Box</h5>
+                <p class="mystery-desc">What could be inside?</p>
+                <div class="mystery-options">
+                  <button class="mystery-btn" onclick="openMysteryBox('common')">🎁 Common<br>5 Chips</button>
+                  <button class="mystery-btn rare" onclick="openMysteryBox('rare')">💎 Rare<br>25 Chips</button>
+                  <button class="mystery-btn legendary" onclick="openMysteryBox('legendary')">⭐ Legendary<br>100 Chips</button>
+                </div>
+                <p id="mystery-result" class="mystery-result"></p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Partners Tab -->
+          <div id="partners-tab" class="tab-content">
+            <div class="partners-panel">
+              <h4 class="category-header">💕 Partner Generator</h4>
+              <p class="partners-subtitle">Summon companions for your journey</p>
+
+              <div class="partner-summon">
+                <button id="summon-partner-btn" class="jade-button summon-btn" onclick="summonPartner()">
+                  ✨ Summon Partner (1000 BP)
+                </button>
+                <div id="partner-result" class="partner-result hidden">
+                  <div class="partner-portrait" id="new-partner-portrait"></div>
+                  <div class="partner-info">
+                    <h5 id="new-partner-name"></h5>
+                    <p id="new-partner-rarity"></p>
+                    <p id="new-partner-element"></p>
+                    <p id="new-partner-traits"></p>
+                  </div>
+                  <button class="jade-button small" onclick="keepPartner()">Keep</button>
+                </div>
+              </div>
+
+              <div class="owned-partners">
+                <h5>Your Partners (<span id="partner-count">0</span>)</h5>
+                <div id="partner-collection" class="partner-collection">
+                  <p class="empty-message">No partners yet. Summon your first!</p>
+                </div>
+              </div>
+
+              <div class="partner-stats">
+                <p>Partners Summoned: <span id="partners-summoned">0</span></p>
+                <p>Mythics Found: <span id="mythics-found">0</span></p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Facilities Tab -->
+          <div id="facilities-tab" class="tab-content">
+            <div class="upgrade-category">
+              <h4 class="category-header">🏯 Sect Facilities</h4>
+              <div id="facilities-list" class="upgrade-list"></div>
+            </div>
+
+            <!-- Prestige Panel -->
+            <div class="prestige-panel">
+              <div class="prestige-header">
+                <span class="prestige-tier">☯️</span>
+                <div class="prestige-info">
+                  <h4>Cultivation Realm</h4>
+                  <span id="prestige-tier-name" class="tier-name">Mortal</span>
+                </div>
+              </div>
+
+              <div class="prestige-multiplier">
+                <span id="prestige-multiplier" class="multiplier-value">1.0x</span>
+                <span class="multiplier-label">All Gains</span>
+              </div>
+
+              <div class="prestige-progress">
+                <div class="prestige-progress-bar">
+                  <div id="prestige-progress-fill" class="prestige-progress-fill" style="width: 0%"></div>
+                </div>
+                <div class="prestige-progress-text">
+                  <span id="prestige-current">0 BP</span>
+                  <span id="prestige-requirement">100K BP</span>
+                </div>
+              </div>
+
+              <button id="rebirth-btn" class="rebirth-button" disabled>
+                🔄 Ascend to Next Realm
+              </button>
+
+              <div class="prestige-perks">
+                <h5>Unlocked Perks:</h5>
+                <div id="prestige-perks-list">
+                  <p style="font-size: 8px; color: #666;">Ascend to unlock perks!</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Stats Tab -->
+          <div id="stats-tab" class="tab-content">
+            <div class="stats-panel">
+              <h4 class="category-header">📊 Cultivation Records</h4>
+              <div class="stats-grid">
+                <div class="stat-item">
+                  <p class="stat-label">Total Boops</p>
+                  <p id="stat-total-boops" class="stat-value">0</p>
+                </div>
+                <div class="stat-item">
+                  <p class="stat-label">Critical Boops</p>
+                  <p id="stat-crit-boops" class="stat-value jade">0</p>
+                </div>
+                <div class="stat-item">
+                  <p class="stat-label">Max Combo</p>
+                  <p id="stat-max-combo" class="stat-value">0</p>
+                </div>
+                <div class="stat-item">
+                  <p class="stat-label">Cats Recruited</p>
+                  <p id="stat-cats" class="stat-value jade">0</p>
+                </div>
+                <div class="stat-item">
+                  <p class="stat-label">Geese Booped</p>
+                  <p id="stat-geese" class="stat-value">0</p>
+                </div>
+                <div class="stat-item">
+                  <p class="stat-label">Highest Realm</p>
+                  <p id="stat-highest-realm" class="stat-value">-</p>
+                </div>
+                <div class="stat-item">
+                  <p class="stat-label">Play Time</p>
+                  <p id="stat-playtime" class="stat-value">0h 0m</p>
+                </div>
+                <div class="stat-item">
+                  <p class="stat-label">AFK Time</p>
+                  <p id="stat-afk-time" class="stat-value">0h 0m</p>
+                </div>
+              </div>
+
+              <h4 class="category-header" style="margin-top: 20px;">🏆 Achievements</h4>
+              <div id="achievement-progress" class="achievement-progress">
+                <p class="stat-label">Progress: <span id="achievement-count">0</span>/<span id="achievement-total">0</span></p>
+                <div class="bond-bar" style="margin-top: 8px;">
+                  <div id="achievement-bar" class="bond-fill" style="width: 0%; background: var(--gold-accent);"></div>
+                </div>
+              </div>
+
+              <div class="danger-zone" style="margin-top: 30px; padding-top: 20px; border-top: 2px dashed #ff4444;">
+                <h4 class="category-header" style="color: #ff4444;">⚠️ Danger Zone</h4>
+                <button id="reset-btn" class="reset-button">
+                  🗑️ Reset All Progress
+                </button>
+              </div>
+            </div>
+          </div>
+        </aside>
+      </div>
+
+      <!-- Footer -->
+      <footer class="game-footer">
+        <p id="master-quote" class="master-quote"></p>
+        <div id="save-indicator" class="save-indicator">Saved!</div>
+      </footer>
+    </div>
+
+    <!-- AFK Return Modal -->
+    <div id="afk-modal" class="modal hidden">
+      <div class="modal-content scroll-panel">
+        <h2>Welcome Back, Cultivator!</h2>
+        <p id="afk-time-away"></p>
+        <div class="afk-gains">
+          <div class="afk-gain">
+            <span class="gain-label">PP Gained:</span>
+            <span id="afk-pp-gained" class="gain-value">0</span>
+          </div>
+          <div class="afk-gain">
+            <span class="gain-label">BP Gained:</span>
+            <span id="afk-bp-gained" class="gain-value">0</span>
+          </div>
+        </div>
+        <div id="afk-events" class="afk-events"></div>
+        <button id="afk-close-btn" class="jade-button">Continue Cultivation</button>
+      </div>
+    </div>
+
+    <!-- Goose Event Overlay -->
+    <div id="goose-overlay" class="goose-overlay hidden">
+      <div class="goose-alert">
+        <h2>🦢 HONK! 🦢</h2>
+        <p>A wild Goose has appeared!</p>
+      </div>
+      <div id="goose-container" class="goose-container">
+        <div id="goose-target" class="goose-target">🦢</div>
+      </div>
+      <div class="goose-timer">
+        <div id="goose-timer-bar" class="goose-timer-bar"></div>
+      </div>
+      <p id="goose-mood" class="goose-mood">Mood: Calm</p>
+    </div>
+
+    <!-- Golden Snoot Overlay -->
+    <div id="golden-snoot-container" class="golden-snoot-container hidden">
+      <div id="golden-snoot" class="golden-snoot">
+        <span class="golden-snoot-emoji">👃</span>
+        <span class="golden-snoot-glow"></span>
+      </div>
+      <div class="golden-snoot-timer">
+        <div id="golden-snoot-timer-bar" class="golden-timer-bar"></div>
+      </div>
+    </div>
+
+    <!-- Daily Commissions Panel -->
+    <div id="daily-panel" class="daily-panel">
+      <div class="daily-header" onclick="toggleDailyPanel()">
+        <span>📋</span>
+        <span id="daily-progress">0/4</span>
+      </div>
+      <div id="daily-content" class="daily-content hidden">
+        <h4>Daily Commissions</h4>
+        <div id="daily-streak" class="daily-streak">
+          Streak: <span id="streak-count">0</span> days
+        </div>
+        <div id="daily-list" class="daily-list"></div>
+        <button id="claim-all-daily" class="jade-button small">Claim All</button>
+      </div>
+    </div>
+
+    <!-- Parasite Container -->
+    <div id="parasite-container" class="parasite-container"></div>
+
+    <!-- Blessing Selection Modal -->
+    <div id="blessing-modal" class="modal hidden">
+      <div class="modal-content scroll-panel blessing-modal">
+        <h2>Choose a Blessing</h2>
+        <p class="blessing-subtitle">Select one to aid your journey</p>
+        <div id="blessing-options" class="blessing-options"></div>
+        <button id="skip-blessing" class="jade-button small">Skip</button>
+      </div>
+    </div>
+
+    <!-- Level Up Modal (Wave Survival) -->
+    <div id="levelup-modal" class="modal hidden">
+      <div class="modal-content scroll-panel levelup-modal">
+        <h2>Level Up!</h2>
+        <p id="levelup-text">Choose an upgrade</p>
+        <div id="levelup-options" class="levelup-options"></div>
+      </div>
+    </div>
+
+    <!-- Active Effects Display -->
+    <div id="active-effects" class="active-effects"></div>
+
+    <!-- IRL Time Bonus Display -->
+    <div id="irl-bonus" class="irl-bonus">
+      <span id="irl-time-icon" class="irl-icon">☀️</span>
+      <span id="irl-time-name" class="irl-name">Morning</span>
+      <span id="irl-time-bonus" class="irl-bonus-text">+10% BP</span>
+    </div>
+
+    <!-- Drama Meter -->
+    <div id="drama-meter" class="drama-meter">
+      <div class="drama-header" onclick="toggleDramaPanel()">
+        <span>🎭</span>
+        <span id="drama-level">0</span>
+      </div>
+      <div id="drama-content" class="drama-content hidden">
+        <h4>Drama Level</h4>
+        <div class="drama-bar">
+          <div id="drama-fill" class="drama-fill" style="width: 0%"></div>
+        </div>
+        <p id="drama-status">All is peaceful...</p>
+        <div id="drama-events" class="drama-events"></div>
+      </div>
+    </div>
+
+    <!-- Hardcore Mode Indicator -->
+    <div id="hardcore-indicator" class="hardcore-indicator hidden">
+      <span id="hardcore-icon">💀</span>
+      <span id="hardcore-name">Ironman Mode</span>
+      <span id="hardcore-timer"></span>
+    </div>
+
+    <!-- Nemesis Warning -->
+    <div id="nemesis-warning" class="nemesis-warning hidden">
+      <div class="nemesis-alert">
+        <h3 id="nemesis-title">💀 NEMESIS APPROACHES 💀</h3>
+        <p id="nemesis-taunt">"I've been waiting..."</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/masters.js"></script>
+  <script src="js/cats.js"></script>
+  <script src="js/waifus.js"></script>
+  <script src="js/upgrades.js"></script>
+  <script src="js/events.js"></script>
+  <script src="js/achievements.js"></script>
+  <script src="js/goose.js"></script>
+  <script src="js/gifts.js"></script>
+  <script src="js/expeditions.js"></script>
+  <script src="js/minigame.js"></script>
+  <script src="js/prestige.js"></script>
+  <script src="js/audio.js"></script>
+  <!-- Phase 3 Systems -->
+  <script src="js/elements.js"></script>
+  <script src="js/equipment.js"></script>
+  <script src="js/crafting.js"></script>
+  <script src="js/pagoda.js"></script>
+  <script src="js/blessings.js"></script>
+  <script src="js/wave-survival.js"></script>
+  <script src="js/golden-snoot.js"></script>
+  <script src="js/daily.js"></script>
+  <script src="js/parasites.js"></script>
+  <!-- POST-LAUNCH Systems -->
+  <script src="js/irl-integration.js"></script>
+  <script src="js/drama.js"></script>
+  <script src="js/nemesis.js"></script>
+  <script src="js/catino.js"></script>
+  <script src="js/hardcore.js"></script>
+  <script src="js/partner-generator.js"></script>
+  <script src="js/save.js"></script>
+  <script src="js/game.js"></script>
+</body>
+</html>
