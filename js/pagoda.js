@@ -266,6 +266,7 @@ const PAGODA_BOSSES = {
 
 // Boop Commands (Abilities)
 const BOOP_COMMANDS = {
+  // === BASIC SKILLS ===
   power_strike: {
     id: 'power_strike',
     name: 'Power Strike',
@@ -273,7 +274,8 @@ const BOOP_COMMANDS = {
     description: 'A powerful boop dealing 150% damage.',
     cooldown: 0,
     effect: { type: 'damage', multiplier: 1.5 },
-    cost: 0
+    cost: 0,
+    unlocked: true
   },
   healing_touch: {
     id: 'healing_touch',
@@ -282,7 +284,8 @@ const BOOP_COMMANDS = {
     description: 'Restore 25% of max HP.',
     cooldown: 15000,
     effect: { type: 'heal', amount: 0.25 },
-    cost: 0
+    cost: 0,
+    unlocked: true
   },
   shield_wall: {
     id: 'shield_wall',
@@ -291,7 +294,8 @@ const BOOP_COMMANDS = {
     description: 'Block the next 3 attacks.',
     cooldown: 20000,
     effect: { type: 'shield', charges: 3 },
-    cost: 0
+    cost: 0,
+    unlocked: true
   },
   mega_boop: {
     id: 'mega_boop',
@@ -300,7 +304,8 @@ const BOOP_COMMANDS = {
     description: 'Devastating attack dealing 500% damage. Long cooldown.',
     cooldown: 45000,
     effect: { type: 'damage', multiplier: 5.0 },
-    cost: 0
+    cost: 0,
+    unlocked: true
   },
   emergency_exit: {
     id: 'emergency_exit',
@@ -309,7 +314,278 @@ const BOOP_COMMANDS = {
     description: 'Flee the dungeon, keeping all loot gained.',
     cooldown: 0,
     effect: { type: 'flee' },
-    cost: 0
+    cost: 0,
+    unlocked: true
+  },
+
+  // === OFFENSIVE SKILLS ===
+  critical_boop: {
+    id: 'critical_boop',
+    name: 'Critical Boop',
+    emoji: '🎯',
+    description: 'Guaranteed critical hit dealing 300% damage.',
+    cooldown: 25000,
+    effect: { type: 'damage', multiplier: 3.0, guaranteedCrit: true },
+    cost: 0,
+    unlockFloor: 10
+  },
+  combo_attack: {
+    id: 'combo_attack',
+    name: 'Combo Attack',
+    emoji: '⚡',
+    description: 'Strike 3 times at 80% damage each.',
+    cooldown: 20000,
+    effect: { type: 'multi_damage', multiplier: 0.8, hits: 3 },
+    cost: 0,
+    unlockFloor: 15
+  },
+  execute: {
+    id: 'execute',
+    name: 'Execute',
+    emoji: '💀',
+    description: 'Deals 200% damage. Instant kill below 20% HP.',
+    cooldown: 30000,
+    effect: { type: 'execute', multiplier: 2.0, threshold: 0.2 },
+    cost: 0,
+    unlockFloor: 25
+  },
+  fury_swipes: {
+    id: 'fury_swipes',
+    name: 'Fury Swipes',
+    emoji: '🐾',
+    description: 'Attack 5 times rapidly at 60% damage. Each hit gains +10% damage.',
+    cooldown: 35000,
+    effect: { type: 'ramping_damage', baseMultiplier: 0.6, rampingBonus: 0.1, hits: 5 },
+    cost: 0,
+    unlockFloor: 30
+  },
+  void_strike: {
+    id: 'void_strike',
+    name: 'Void Strike',
+    emoji: '🌑',
+    description: 'Ignore enemy defense. Deal 250% true damage.',
+    cooldown: 40000,
+    effect: { type: 'true_damage', multiplier: 2.5 },
+    cost: 0,
+    unlockFloor: 40
+  },
+  celestial_beam: {
+    id: 'celestial_beam',
+    name: 'Celestial Beam',
+    emoji: '✨',
+    description: 'Channel the heavens for 800% holy damage.',
+    cooldown: 60000,
+    effect: { type: 'damage', multiplier: 8.0, element: 'light' },
+    cost: 0,
+    unlockFloor: 50
+  },
+
+  // === DEFENSIVE SKILLS ===
+  dodge_roll: {
+    id: 'dodge_roll',
+    name: 'Dodge Roll',
+    emoji: '🔄',
+    description: 'Dodge the next attack completely.',
+    cooldown: 12000,
+    effect: { type: 'dodge', charges: 1 },
+    cost: 0,
+    unlockFloor: 5
+  },
+  counter_stance: {
+    id: 'counter_stance',
+    name: 'Counter Stance',
+    emoji: '⚔️',
+    description: 'Counter the next attack for 200% reflected damage.',
+    cooldown: 18000,
+    effect: { type: 'counter', multiplier: 2.0 },
+    cost: 0,
+    unlockFloor: 20
+  },
+  iron_fur: {
+    id: 'iron_fur',
+    name: 'Iron Fur',
+    emoji: '🦔',
+    description: 'Reduce damage taken by 50% for 3 turns.',
+    cooldown: 30000,
+    effect: { type: 'buff', stat: 'damageReduction', value: 0.5, duration: 3 },
+    cost: 0,
+    unlockFloor: 25
+  },
+  second_wind: {
+    id: 'second_wind',
+    name: 'Second Wind',
+    emoji: '💨',
+    description: 'Restore 50% HP and clear all debuffs.',
+    cooldown: 60000,
+    effect: { type: 'heal', amount: 0.5, cleanse: true },
+    cost: 0,
+    unlockFloor: 35
+  },
+  death_defiance: {
+    id: 'death_defiance',
+    name: 'Death Defiance',
+    emoji: '💫',
+    description: 'If you would die this turn, survive with 1 HP instead.',
+    cooldown: 120000,
+    effect: { type: 'death_save', duration: 1 },
+    cost: 0,
+    unlockFloor: 50
+  },
+
+  // === UTILITY SKILLS ===
+  weaken: {
+    id: 'weaken',
+    name: 'Weaken',
+    emoji: '📉',
+    description: 'Reduce enemy damage by 30% for 3 turns.',
+    cooldown: 20000,
+    effect: { type: 'debuff', stat: 'damage', value: -0.3, duration: 3 },
+    cost: 0,
+    unlockFloor: 10
+  },
+  armor_break: {
+    id: 'armor_break',
+    name: 'Armor Break',
+    emoji: '🔨',
+    description: 'Reduce enemy defense by 50% for 3 turns.',
+    cooldown: 25000,
+    effect: { type: 'debuff', stat: 'defense', value: -0.5, duration: 3 },
+    cost: 0,
+    unlockFloor: 15
+  },
+  lifesteal_bite: {
+    id: 'lifesteal_bite',
+    name: 'Lifesteal Bite',
+    emoji: '🧛',
+    description: 'Deal 150% damage and heal for 50% of damage dealt.',
+    cooldown: 20000,
+    effect: { type: 'lifesteal', multiplier: 1.5, stealPercent: 0.5 },
+    cost: 0,
+    unlockFloor: 20
+  },
+  battle_cry: {
+    id: 'battle_cry',
+    name: 'Battle Cry',
+    emoji: '📣',
+    description: 'Increase your damage by 50% for 3 turns.',
+    cooldown: 30000,
+    effect: { type: 'buff', stat: 'damage', value: 0.5, duration: 3 },
+    cost: 0,
+    unlockFloor: 15
+  },
+  focus: {
+    id: 'focus',
+    name: 'Focus',
+    emoji: '🎯',
+    description: 'Increase crit chance by 30% for 3 turns.',
+    cooldown: 25000,
+    effect: { type: 'buff', stat: 'critChance', value: 0.3, duration: 3 },
+    cost: 0,
+    unlockFloor: 20
+  },
+  treasure_sense: {
+    id: 'treasure_sense',
+    name: 'Treasure Sense',
+    emoji: '💰',
+    description: 'Next enemy drops 3x loot.',
+    cooldown: 90000,
+    effect: { type: 'loot_boost', multiplier: 3 },
+    cost: 0,
+    unlockFloor: 25
+  },
+
+  // === ULTIMATE SKILLS ===
+  nine_lives: {
+    id: 'nine_lives',
+    name: 'Nine Lives',
+    emoji: '🐱',
+    description: 'Auto-revive 3 times this run at 30% HP.',
+    cooldown: 180000,
+    effect: { type: 'revive_stack', charges: 3, hpPercent: 0.3 },
+    cost: 0,
+    unlockFloor: 60
+  },
+  ragnarok: {
+    id: 'ragnarok',
+    name: 'Ragnarök',
+    emoji: '🔥',
+    description: 'Deal 1000% damage but take 30% of your HP as recoil.',
+    cooldown: 90000,
+    effect: { type: 'recoil_damage', multiplier: 10.0, recoilPercent: 0.3 },
+    cost: 0,
+    unlockFloor: 70
+  },
+  time_stop: {
+    id: 'time_stop',
+    name: 'Time Stop',
+    emoji: '⏱️',
+    description: 'Take 3 actions without enemy retaliation.',
+    cooldown: 120000,
+    effect: { type: 'extra_turns', turns: 3 },
+    cost: 0,
+    unlockFloor: 80
+  },
+  final_boop: {
+    id: 'final_boop',
+    name: 'FINAL BOOP',
+    emoji: '💢',
+    description: 'THE ULTIMATE BOOP. 2000% damage. Only usable once per run.',
+    cooldown: 999999999,
+    effect: { type: 'damage', multiplier: 20.0, oncePerRun: true },
+    cost: 0,
+    unlockFloor: 100
+  },
+
+  // === MEME SKILLS ===
+  honk: {
+    id: 'honk',
+    name: 'HONK',
+    emoji: '🦆',
+    description: 'Summon a goose to attack for 300% damage. May steal enemy items.',
+    cooldown: 45000,
+    effect: { type: 'summon_goose', multiplier: 3.0, stealChance: 0.2 },
+    cost: 0,
+    unlockFloor: 20
+  },
+  nyan: {
+    id: 'nyan',
+    name: 'Nyan Mode',
+    emoji: '🌈',
+    description: 'RAINBOW POWER! Random element 400% damage.',
+    cooldown: 35000,
+    effect: { type: 'random_element', multiplier: 4.0 },
+    cost: 0,
+    unlockFloor: 30
+  },
+  dramatic_pose: {
+    id: 'dramatic_pose',
+    name: 'Dramatic Pose',
+    emoji: '✨',
+    description: 'Strike a pose. Next attack deals 500% damage but has 50% chance to miss.',
+    cooldown: 40000,
+    effect: { type: 'risky_buff', multiplier: 5.0, missChance: 0.5 },
+    cost: 0,
+    unlockFloor: 35
+  },
+  button_mash: {
+    id: 'button_mash',
+    name: 'Button Mash',
+    emoji: '🎮',
+    description: 'Wildly attack 1-10 times at random damage (50%-200%).',
+    cooldown: 30000,
+    effect: { type: 'random_multi', minHits: 1, maxHits: 10, minMult: 0.5, maxMult: 2.0 },
+    cost: 0,
+    unlockFloor: 25
+  },
+  gg_ez: {
+    id: 'gg_ez',
+    name: 'GG EZ',
+    emoji: '😎',
+    description: 'Assert dominance. 50% chance to instantly win. 50% chance to take 50% HP damage.',
+    cooldown: 120000,
+    effect: { type: 'gamble_win', winChance: 0.5, failDamage: 0.5 },
+    cost: 0,
+    unlockFloor: 50
   }
 };
 
@@ -442,6 +718,17 @@ class PagodaSystem {
     this.activeBuffs = [];
     this.activeDebuffs = [];
     this.floorModifiers = [];
+
+    // Clear combat state
+    this.enemyDebuffs = [];
+    this.dodgeCharges = 0;
+    this.counterActive = null;
+    this.deathSaveActive = false;
+    this.reviveCharges = 0;
+    this.reviveHpPercent = 0.3;
+    this.extraTurns = 0;
+    this.lootMultiplier = 1;
+    this.usedOnceSkills = [];
 
     this.stats.totalRuns++;
 
@@ -605,6 +892,24 @@ class PagodaSystem {
   }
 
   /**
+   * Check if skill is unlocked
+   */
+  isSkillUnlocked(commandId) {
+    const command = this.commands[commandId];
+    if (!command) return false;
+    if (command.unlocked) return true;
+    if (command.unlockFloor && this.highestFloor >= command.unlockFloor) return true;
+    return this.unlockedSkills?.includes(commandId) || false;
+  }
+
+  /**
+   * Get all available (unlocked) skills
+   */
+  getAvailableSkills() {
+    return Object.values(this.commands).filter(cmd => this.isSkillUnlocked(cmd.id));
+  }
+
+  /**
    * Execute a boop command
    */
   executeCommand(commandId) {
@@ -613,29 +918,206 @@ class PagodaSystem {
     const command = this.commands[commandId];
     if (!command) return false;
 
+    // Check if unlocked
+    if (!this.isSkillUnlocked(commandId)) {
+      this.logCombat(`${command.name} is locked! Reach floor ${command.unlockFloor}.`);
+      return false;
+    }
+
     // Check cooldown
     if (this.cooldowns[commandId] > Date.now()) {
       this.logCombat(`${command.name} is on cooldown!`);
       return false;
     }
 
+    // Check once per run skills
+    if (command.effect.oncePerRun && this.usedOnceSkills?.includes(commandId)) {
+      this.logCombat(`${command.name} can only be used once per run!`);
+      return false;
+    }
+
     this.combatState = COMBAT_STATES.PLAYER_TURN;
 
-    // Execute effect
-    switch (command.effect.type) {
+    // Track extra turns
+    let skipEnemyTurn = false;
+
+    // Execute effect based on type
+    const effect = command.effect;
+    switch (effect.type) {
       case 'damage':
-        this.playerAttack(command.effect.multiplier);
+        this.playerAttack(effect.multiplier, effect.guaranteedCrit, effect.element);
         break;
+
+      case 'multi_damage':
+        for (let i = 0; i < effect.hits; i++) {
+          if (this.enemyHp > 0) {
+            this.playerAttack(effect.multiplier, false, null);
+          }
+        }
+        break;
+
+      case 'ramping_damage':
+        for (let i = 0; i < effect.hits; i++) {
+          if (this.enemyHp > 0) {
+            const mult = effect.baseMultiplier + (effect.rampingBonus * i);
+            this.playerAttack(mult, false, null);
+          }
+        }
+        break;
+
+      case 'execute':
+        const hpPercent = this.enemyHp / this.enemyMaxHp;
+        if (hpPercent < effect.threshold) {
+          this.enemyHp = 0;
+          this.logCombat(`💀 EXECUTED! Enemy slain instantly!`);
+        } else {
+          this.playerAttack(effect.multiplier);
+        }
+        break;
+
+      case 'true_damage':
+        const trueDmg = Math.floor(this.playerDamage * effect.multiplier);
+        this.enemyHp = Math.max(0, this.enemyHp - trueDmg);
+        this.logCombat(`🌑 Void Strike deals ${trueDmg} TRUE damage!`);
+        break;
+
       case 'heal':
-        this.playerHeal(command.effect.amount);
+        this.playerHeal(effect.amount);
+        if (effect.cleanse) {
+          this.activeDebuffs = [];
+          this.logCombat('All debuffs cleansed!');
+        }
         break;
+
       case 'shield':
-        this.playerShields += command.effect.charges;
-        this.logCombat(`Gained ${command.effect.charges} shields!`);
+        this.playerShields += effect.charges;
+        this.logCombat(`🛡️ Gained ${effect.charges} shields!`);
         break;
+
+      case 'dodge':
+        this.dodgeCharges = (this.dodgeCharges || 0) + effect.charges;
+        this.logCombat(`🔄 Ready to dodge ${effect.charges} attack(s)!`);
+        break;
+
+      case 'counter':
+        this.counterActive = { multiplier: effect.multiplier };
+        this.logCombat(`⚔️ Counter stance ready!`);
+        break;
+
+      case 'buff':
+        this.activeBuffs.push({
+          stat: effect.stat,
+          value: effect.value,
+          duration: effect.duration
+        });
+        this.logCombat(`📈 ${effect.stat} increased by ${Math.round(effect.value * 100)}%!`);
+        break;
+
+      case 'debuff':
+        this.enemyDebuffs = this.enemyDebuffs || [];
+        this.enemyDebuffs.push({
+          stat: effect.stat,
+          value: effect.value,
+          duration: effect.duration
+        });
+        this.logCombat(`📉 Enemy ${effect.stat} reduced!`);
+        break;
+
+      case 'lifesteal':
+        const lsDamage = this.playerAttack(effect.multiplier);
+        const healAmt = Math.floor((lsDamage || this.playerDamage) * effect.stealPercent);
+        this.playerHp = Math.min(this.playerMaxHp, this.playerHp + healAmt);
+        this.logCombat(`🧛 Healed ${healAmt} HP from lifesteal!`);
+        break;
+
+      case 'loot_boost':
+        this.lootMultiplier = effect.multiplier;
+        this.logCombat(`💰 Next enemy drops ${effect.multiplier}x loot!`);
+        break;
+
+      case 'revive_stack':
+        this.reviveCharges = (this.reviveCharges || 0) + effect.charges;
+        this.reviveHpPercent = effect.hpPercent;
+        this.logCombat(`🐱 Nine Lives activated! ${this.reviveCharges} lives remaining.`);
+        break;
+
+      case 'recoil_damage':
+        const recoilDmg = Math.floor(this.playerMaxHp * effect.recoilPercent);
+        this.playerHp = Math.max(1, this.playerHp - recoilDmg);
+        this.logCombat(`🔥 Took ${recoilDmg} recoil damage!`);
+        this.playerAttack(effect.multiplier);
+        break;
+
+      case 'extra_turns':
+        this.extraTurns = (this.extraTurns || 0) + effect.turns;
+        skipEnemyTurn = true;
+        this.logCombat(`⏱️ TIME STOP! ${effect.turns} free actions!`);
+        break;
+
+      case 'death_save':
+        this.deathSaveActive = true;
+        this.logCombat(`💫 Death Defiance active!`);
+        break;
+
+      case 'summon_goose':
+        this.playerAttack(effect.multiplier);
+        this.logCombat(`🦆 HONK! Goose attacks!`);
+        if (Math.random() < effect.stealChance) {
+          const bonusBp = Math.floor(this.currentFloor * 50);
+          this.runRewards.bp += bonusBp;
+          this.logCombat(`🦆 Goose stole ${bonusBp} BP!`);
+        }
+        break;
+
+      case 'random_element':
+        const elements = ['fire', 'water', 'light', 'void', 'nature'];
+        const element = elements[Math.floor(Math.random() * elements.length)];
+        this.logCombat(`🌈 NYAN! ${element.toUpperCase()} element!`);
+        this.playerAttack(effect.multiplier, false, element);
+        break;
+
+      case 'risky_buff':
+        if (Math.random() < effect.missChance) {
+          this.logCombat(`✨ Struck a dramatic pose but... MISSED!`);
+        } else {
+          this.playerAttack(effect.multiplier);
+        }
+        break;
+
+      case 'random_multi':
+        const hits = effect.minHits + Math.floor(Math.random() * (effect.maxHits - effect.minHits + 1));
+        for (let i = 0; i < hits; i++) {
+          if (this.enemyHp > 0) {
+            const mult = effect.minMult + Math.random() * (effect.maxMult - effect.minMult);
+            this.playerAttack(mult);
+          }
+        }
+        this.logCombat(`🎮 Button mash! ${hits} hits!`);
+        break;
+
+      case 'gamble_win':
+        if (Math.random() < effect.winChance) {
+          this.enemyHp = 0;
+          this.logCombat(`😎 GG EZ! Enemy defeated instantly!`);
+        } else {
+          const failDmg = Math.floor(this.playerMaxHp * effect.failDamage);
+          this.playerHp = Math.max(1, this.playerHp - failDmg);
+          this.logCombat(`😎 GG... NOT EZ! Took ${failDmg} damage!`);
+        }
+        break;
+
       case 'flee':
         this.endRun('fled');
         return true;
+
+      default:
+        this.playerAttack(effect.multiplier || 1.0);
+    }
+
+    // Mark once-per-run skills as used
+    if (effect.oncePerRun) {
+      this.usedOnceSkills = this.usedOnceSkills || [];
+      this.usedOnceSkills.push(commandId);
     }
 
     // Set cooldown
@@ -649,42 +1131,124 @@ class PagodaSystem {
       return true;
     }
 
+    // Check for defeat
+    if (this.playerHp <= 0) {
+      if (this.handlePotentialDeath()) {
+        this.combatState = COMBAT_STATES.SELECTING;
+        return true;
+      }
+      this.endRun('defeat');
+      return true;
+    }
+
+    // Handle extra turns
+    if (this.extraTurns > 0) {
+      this.extraTurns--;
+      this.combatState = COMBAT_STATES.SELECTING;
+      return true;
+    }
+
     // Enemy turn
-    setTimeout(() => this.enemyTurn(), 500);
+    if (!skipEnemyTurn) {
+      setTimeout(() => this.enemyTurn(), 500);
+    } else {
+      this.combatState = COMBAT_STATES.SELECTING;
+    }
 
     return true;
   }
 
   /**
+   * Handle potential death (nine lives, death defiance, etc.)
+   */
+  handlePotentialDeath() {
+    // Check death save
+    if (this.deathSaveActive) {
+      this.playerHp = 1;
+      this.deathSaveActive = false;
+      this.logCombat(`💫 Death Defiance triggered! Survived with 1 HP!`);
+      return true;
+    }
+
+    // Check nine lives
+    if (this.reviveCharges > 0) {
+      this.reviveCharges--;
+      this.playerHp = Math.floor(this.playerMaxHp * (this.reviveHpPercent || 0.3));
+      this.logCombat(`🐱 Nine Lives! ${this.reviveCharges} lives remaining.`);
+      return true;
+    }
+
+    return false;
+  }
+
+  /**
    * Player attacks enemy
    */
-  playerAttack(multiplier = 1.0) {
+  playerAttack(multiplier = 1.0, guaranteedCrit = false, element = null) {
     let damage = this.playerDamage * multiplier;
 
-    // Apply modifiers
+    // Apply damage buffs
+    for (const buff of this.activeBuffs) {
+      if (buff.stat === 'damage') {
+        damage *= (1 + buff.value);
+      }
+    }
+
+    // Apply floor modifiers
     for (const mod of this.floorModifiers) {
       if (mod.effect.playerDamage) {
         damage *= mod.effect.playerDamage;
       }
     }
 
-    // Check for crit
-    let isCrit = false;
+    // Calculate crit chance
     let critChance = 0.1;
     for (const mod of this.floorModifiers) {
       if (mod.effect.critChance) {
         critChance += mod.effect.critChance;
       }
     }
-
-    if (Math.random() < critChance) {
-      damage *= 2;
-      isCrit = true;
+    for (const buff of this.activeBuffs) {
+      if (buff.stat === 'critChance') {
+        critChance += buff.value;
+      }
     }
 
-    // Apply enemy defense
-    const enemyDef = this.currentEnemy.baseDefense || 0;
+    // Check for crit
+    let isCrit = guaranteedCrit || (Math.random() < critChance);
+    if (isCrit) {
+      damage *= 2;
+    }
+
+    // Apply enemy defense (reduced by debuffs)
+    let enemyDef = this.currentEnemy.baseDefense || 0;
+    if (this.enemyDebuffs) {
+      for (const debuff of this.enemyDebuffs) {
+        if (debuff.stat === 'defense') {
+          enemyDef *= (1 + debuff.value);
+        }
+      }
+    }
     damage = Math.max(1, damage - enemyDef * 0.5);
+
+    // Apply elemental bonus/weakness
+    if (element) {
+      const enemyElement = this.currentEnemy.element;
+      const elementChart = {
+        fire: { weak: 'nature', strong: 'water' },
+        water: { weak: 'fire', strong: 'nature' },
+        nature: { weak: 'water', strong: 'fire' },
+        light: { weak: 'void', strong: 'void' },
+        void: { weak: 'light', strong: 'light' }
+      };
+      if (elementChart[element]?.weak === enemyElement) {
+        damage *= 1.5;
+        this.logCombat(`Super effective!`);
+      } else if (elementChart[element]?.strong === enemyElement) {
+        damage *= 0.75;
+        this.logCombat(`Not very effective...`);
+      }
+    }
 
     damage = Math.floor(damage);
     this.enemyHp = Math.max(0, this.enemyHp - damage);
@@ -693,12 +1257,15 @@ class PagodaSystem {
       this.stats.highestDamage = damage;
     }
 
-    const critText = isCrit ? ' CRIT!' : '';
-    this.logCombat(`You deal ${damage} damage!${critText}`);
+    const critText = isCrit ? ' 💥CRIT!' : '';
+    const elementText = element ? ` [${element.toUpperCase()}]` : '';
+    this.logCombat(`You deal ${damage}${elementText} damage!${critText}`);
 
     if (window.audioSystem) {
       window.audioSystem.playSFX(isCrit ? 'criticalBoop' : 'boop');
     }
+
+    return damage;
   }
 
   /**
@@ -731,26 +1298,70 @@ class PagodaSystem {
 
     this.combatState = COMBAT_STATES.ENEMY_TURN;
 
+    // Tick buff/debuff durations
+    this.tickBuffDurations();
+
     let damage = this.currentEnemy.baseDamage || 10;
 
     // Apply floor scaling
     const scaling = 1 + (this.currentFloor - 1) * 0.1;
     damage = Math.floor(damage * scaling);
 
-    // Apply modifiers
+    // Apply floor modifiers
     for (const mod of this.floorModifiers) {
       if (mod.effect.enemyDamage) {
         damage *= mod.effect.enemyDamage;
       }
     }
 
+    // Apply enemy debuffs
+    if (this.enemyDebuffs) {
+      for (const debuff of this.enemyDebuffs) {
+        if (debuff.stat === 'damage') {
+          damage *= (1 + debuff.value);
+        }
+      }
+    }
+
+    damage = Math.floor(damage);
+
+    // Check for dodge
+    if (this.dodgeCharges > 0) {
+      this.dodgeCharges--;
+      this.logCombat(`🔄 Dodged the attack! (${this.dodgeCharges} charges left)`);
+      this.combatState = COMBAT_STATES.SELECTING;
+      return;
+    }
+
+    // Check for counter
+    if (this.counterActive) {
+      const counterDamage = Math.floor(damage * this.counterActive.multiplier);
+      this.enemyHp = Math.max(0, this.enemyHp - counterDamage);
+      this.logCombat(`⚔️ COUNTER! Reflected ${counterDamage} damage!`);
+      this.counterActive = null;
+
+      // Still take reduced damage
+      damage = Math.floor(damage * 0.5);
+    }
+
     // Check for shields
     if (this.playerShields > 0) {
       this.playerShields--;
-      this.logCombat(`Shield blocks the attack! (${this.playerShields} remaining)`);
+      this.logCombat(`🛡️ Shield blocks the attack! (${this.playerShields} remaining)`);
     } else {
-      // Apply defense
-      damage = Math.max(1, damage - this.playerDefense);
+      // Apply player defense
+      let effectiveDefense = this.playerDefense;
+
+      // Apply damage reduction buffs
+      let damageReduction = 0;
+      for (const buff of this.activeBuffs) {
+        if (buff.stat === 'damageReduction') {
+          damageReduction += buff.value;
+        }
+      }
+
+      damage = Math.floor(damage * (1 - damageReduction));
+      damage = Math.max(1, damage - effectiveDefense);
       damage = Math.floor(damage);
 
       this.playerHp = Math.max(0, this.playerHp - damage);
@@ -761,13 +1372,46 @@ class PagodaSystem {
       }
     }
 
-    // Check for defeat
+    // Check enemy defeat from counter
+    if (this.enemyHp <= 0) {
+      this.onEnemyDefeated();
+      return;
+    }
+
+    // Check for player defeat
     if (this.playerHp <= 0) {
+      if (this.handlePotentialDeath()) {
+        this.combatState = COMBAT_STATES.SELECTING;
+        return;
+      }
       this.endRun('defeat');
       return;
     }
 
     this.combatState = COMBAT_STATES.SELECTING;
+  }
+
+  /**
+   * Tick down buff and debuff durations
+   */
+  tickBuffDurations() {
+    // Player buffs
+    this.activeBuffs = this.activeBuffs.filter(buff => {
+      buff.duration--;
+      if (buff.duration <= 0) {
+        this.logCombat(`Buff expired: ${buff.stat}`);
+        return false;
+      }
+      return true;
+    });
+
+    // Enemy debuffs
+    if (this.enemyDebuffs) {
+      this.enemyDebuffs = this.enemyDebuffs.filter(debuff => {
+        debuff.duration--;
+        return debuff.duration > 0;
+      });
+    }
   }
 
   /**
@@ -817,8 +1461,12 @@ class PagodaSystem {
   generateLoot(isBoss) {
     let lootMessages = [];
 
+    // Apply loot multiplier from skills
+    const lootMult = this.lootMultiplier || 1;
+    this.lootMultiplier = 1; // Reset after use
+
     // Guaranteed BP drop based on floor
-    const bonusBp = Math.floor(this.currentFloor * 5 * (isBoss ? 3 : 1));
+    const bonusBp = Math.floor(this.currentFloor * 5 * (isBoss ? 3 : 1) * lootMult);
     this.runRewards.bp += bonusBp;
 
     // Material drops
@@ -1049,7 +1697,8 @@ class PagodaSystem {
       tokens: this.tokens,
       upgrades: this.upgrades,
       stats: this.stats,
-      runHistory: this.runHistory.slice(-20) // Keep last 20 for save size
+      runHistory: this.runHistory.slice(-20),
+      unlockedSkills: this.unlockedSkills || []
     };
   }
 
@@ -1062,6 +1711,21 @@ class PagodaSystem {
     if (data.upgrades) this.upgrades = { ...this.upgrades, ...data.upgrades };
     if (data.stats) this.stats = { ...this.stats, ...data.stats };
     if (data.runHistory) this.runHistory = data.runHistory;
+    if (data.unlockedSkills) this.unlockedSkills = data.unlockedSkills;
+  }
+
+  /**
+   * Unlock a skill manually (from shop/achievement)
+   */
+  unlockSkill(skillId) {
+    if (!this.commands[skillId]) return false;
+    this.unlockedSkills = this.unlockedSkills || [];
+    if (!this.unlockedSkills.includes(skillId)) {
+      this.unlockedSkills.push(skillId);
+      if (window.audioSystem) window.audioSystem.playSFX('skillUnlock');
+      return true;
+    }
+    return false;
   }
 
   /**

@@ -1279,6 +1279,23 @@ class EquipmentSystem {
       }
     }
 
+    // Add enchantment bonuses
+    if (window.craftingSystem) {
+      for (const equipment of Object.values(items)) {
+        if (!equipment) continue;
+        const enchantBonuses = window.craftingSystem.calculateEnchantBonuses(equipment);
+        for (const [stat, value] of Object.entries(enchantBonuses)) {
+          if (typeof value === 'number') {
+            if (stats[stat] !== undefined) {
+              stats[stat] += value;
+            } else {
+              stats[stat] = value;
+            }
+          }
+        }
+      }
+    }
+
     return stats;
   }
 
