@@ -896,6 +896,13 @@ class EquipmentSystem {
   }
 
   /**
+   * Alias for calculateEquipmentStats for UI compatibility
+   */
+  getCombinedStats(catId) {
+    return this.calculateEquipmentStats(catId);
+  }
+
+  /**
    * Serialize for saving
    */
   serialize() {

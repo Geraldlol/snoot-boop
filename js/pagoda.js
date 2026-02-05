@@ -5,45 +5,45 @@
 
 // Enemy Templates by Floor Range
 const PAGODA_ENEMIES = {
-  // Floor 1-10: Spirit Animals
+  // Floor 1-10: Spirit Animals (HP scaled to match player damage ~25-30)
   spirit_mouse: {
     id: 'spirit_mouse',
     name: 'Spirit Mouse',
     emoji: '🐭',
     floorRange: [1, 10],
-    baseHp: 20,
-    baseDamage: 5,
-    baseDefense: 2,
+    baseHp: 60,
+    baseDamage: 8,
+    baseDefense: 3,
     speed: 1.2,
     element: null,
     abilities: [],
-    dropChance: 0.3
+    dropChance: 0.5
   },
   phantom_fish: {
     id: 'phantom_fish',
     name: 'Phantom Fish',
     emoji: '🐟',
     floorRange: [1, 10],
-    baseHp: 15,
-    baseDamage: 8,
-    baseDefense: 1,
+    baseHp: 50,
+    baseDamage: 12,
+    baseDefense: 2,
     speed: 1.5,
     element: 'water',
     abilities: ['splash'],
-    dropChance: 0.35
+    dropChance: 0.55
   },
   shadow_moth: {
     id: 'shadow_moth',
     name: 'Shadow Moth',
     emoji: '🦋',
     floorRange: [1, 10],
-    baseHp: 10,
-    baseDamage: 12,
+    baseHp: 40,
+    baseDamage: 15,
     baseDefense: 0,
     speed: 2.0,
     element: 'void',
     abilities: ['flutter'],
-    dropChance: 0.25
+    dropChance: 0.45
   },
 
   // Floor 11-30: Mystical Beasts
@@ -52,39 +52,39 @@ const PAGODA_ENEMIES = {
     name: 'Jade Serpent',
     emoji: '🐍',
     floorRange: [11, 30],
-    baseHp: 50,
-    baseDamage: 15,
-    baseDefense: 8,
+    baseHp: 120,
+    baseDamage: 18,
+    baseDefense: 10,
     speed: 1.0,
     element: 'nature',
     abilities: ['constrict', 'poison_bite'],
-    dropChance: 0.4
+    dropChance: 0.6
   },
   thunder_sparrow: {
     id: 'thunder_sparrow',
     name: 'Thunder Sparrow',
     emoji: '🐦',
     floorRange: [11, 30],
-    baseHp: 35,
-    baseDamage: 25,
-    baseDefense: 3,
+    baseHp: 90,
+    baseDamage: 28,
+    baseDefense: 5,
     speed: 2.5,
     element: 'light',
     abilities: ['lightning_dive'],
-    dropChance: 0.35
+    dropChance: 0.55
   },
   frost_fox: {
     id: 'frost_fox',
     name: 'Frost Fox',
     emoji: '🦊',
     floorRange: [11, 30],
-    baseHp: 45,
-    baseDamage: 18,
-    baseDefense: 5,
+    baseHp: 100,
+    baseDamage: 22,
+    baseDefense: 8,
     speed: 1.8,
     element: 'water',
     abilities: ['freeze', 'ice_breath'],
-    dropChance: 0.45
+    dropChance: 0.65
   },
 
   // Floor 31-50: Legendary Creatures
@@ -93,39 +93,39 @@ const PAGODA_ENEMIES = {
     name: 'Void Wolf',
     emoji: '🐺',
     floorRange: [31, 50],
-    baseHp: 100,
-    baseDamage: 35,
-    baseDefense: 15,
+    baseHp: 200,
+    baseDamage: 40,
+    baseDefense: 18,
     speed: 1.5,
     element: 'void',
     abilities: ['shadow_step', 'howl'],
-    dropChance: 0.5
+    dropChance: 0.7
   },
   celestial_crane: {
     id: 'celestial_crane',
     name: 'Celestial Crane',
     emoji: '🦢',
     floorRange: [31, 50],
-    baseHp: 80,
-    baseDamage: 40,
-    baseDefense: 10,
+    baseHp: 180,
+    baseDamage: 45,
+    baseDefense: 12,
     speed: 2.0,
     element: 'light',
     abilities: ['divine_wind', 'feather_storm'],
-    dropChance: 0.45
+    dropChance: 0.65
   },
   storm_dragon: {
     id: 'storm_dragon',
     name: 'Storm Dragon',
     emoji: '🐲',
     floorRange: [31, 50],
-    baseHp: 150,
-    baseDamage: 30,
-    baseDefense: 20,
+    baseHp: 280,
+    baseDamage: 35,
+    baseDefense: 25,
     speed: 1.0,
     element: 'water',
     abilities: ['thunder_breath', 'tail_sweep'],
-    dropChance: 0.6
+    dropChance: 0.75
   },
 
   // Floor 51+: Ancient Horrors
@@ -134,57 +134,57 @@ const PAGODA_ENEMIES = {
     name: 'Ancient Beast',
     emoji: '🦖',
     floorRange: [51, 100],
-    baseHp: 250,
-    baseDamage: 50,
-    baseDefense: 25,
+    baseHp: 400,
+    baseDamage: 55,
+    baseDefense: 30,
     speed: 0.8,
     element: 'nature',
     abilities: ['primal_roar', 'crushing_blow'],
-    dropChance: 0.7
+    dropChance: 0.85
   },
   corrupted_spirit: {
     id: 'corrupted_spirit',
     name: 'Corrupted Spirit',
     emoji: '👹',
     floorRange: [51, 100],
-    baseHp: 180,
-    baseDamage: 65,
-    baseDefense: 15,
+    baseHp: 320,
+    baseDamage: 70,
+    baseDefense: 20,
     speed: 1.5,
     element: 'void',
     abilities: ['corruption', 'soul_drain'],
-    dropChance: 0.65
+    dropChance: 0.8
   },
   dimensional_entity: {
     id: 'dimensional_entity',
     name: 'Dimensional Entity',
     emoji: '👁️',
     floorRange: [51, 100],
-    baseHp: 200,
-    baseDamage: 55,
-    baseDefense: 30,
+    baseHp: 350,
+    baseDamage: 60,
+    baseDefense: 35,
     speed: 1.2,
     element: 'void',
     abilities: ['reality_warp', 'gaze'],
-    dropChance: 0.8
+    dropChance: 0.9
   }
 };
 
-// Boss Templates (Every 10 floors)
+// Boss Templates (Every 10 floors) - HP scaled for multi-turn fights
 const PAGODA_BOSSES = {
   eternal_napper: {
     id: 'eternal_napper',
     name: 'The Eternal Napper',
     emoji: '😴',
     floor: 10,
-    baseHp: 500,
-    baseDamage: 30,
-    baseDefense: 20,
+    baseHp: 250,
+    baseDamage: 25,
+    baseDefense: 15,
     speed: 0.5,
     element: null,
     phases: 2,
     abilities: ['sleep_aura', 'dream_attack', 'nightmare'],
-    rewards: { bp: 1000, tokens: 5 },
+    rewards: { bp: 500, tokens: 3 },
     flavorText: '"Disturbing its slumber was a grave mistake."'
   },
   goose_emperor: {
@@ -192,14 +192,14 @@ const PAGODA_BOSSES = {
     name: 'The Goose Emperor',
     emoji: '🦢',
     floor: 20,
-    baseHp: 1200,
-    baseDamage: 50,
-    baseDefense: 30,
+    baseHp: 500,
+    baseDamage: 40,
+    baseDefense: 20,
     speed: 1.2,
     element: 'water',
     phases: 3,
     abilities: ['imperial_honk', 'wing_buffet', 'summon_geese'],
-    rewards: { bp: 3000, tokens: 10 },
+    rewards: { bp: 1500, tokens: 6 },
     flavorText: '"ALL SHALL BOW BEFORE THE HONK."'
   },
   nine_tailed_menace: {
@@ -207,14 +207,14 @@ const PAGODA_BOSSES = {
     name: 'Nine-Tailed Menace',
     emoji: '🦊',
     floor: 30,
-    baseHp: 2000,
-    baseDamage: 70,
-    baseDefense: 35,
+    baseHp: 800,
+    baseDamage: 55,
+    baseDefense: 25,
     speed: 1.5,
     element: 'fire',
     phases: 3,
     abilities: ['fox_fire', 'illusion', 'tail_whip', 'charm'],
-    rewards: { bp: 5000, tokens: 15 },
+    rewards: { bp: 3000, tokens: 10 },
     flavorText: '"Each tail holds a century of cunning."'
   },
   jade_guardian: {
@@ -222,14 +222,14 @@ const PAGODA_BOSSES = {
     name: 'Jade Guardian',
     emoji: '🗿',
     floor: 40,
-    baseHp: 3500,
-    baseDamage: 60,
-    baseDefense: 60,
+    baseHp: 1200,
+    baseDamage: 50,
+    baseDefense: 45,
     speed: 0.7,
     element: 'nature',
     phases: 2,
     abilities: ['stone_skin', 'jade_blast', 'earthquake'],
-    rewards: { bp: 8000, tokens: 20 },
+    rewards: { bp: 5000, tokens: 15 },
     flavorText: '"Protector of the ancient jade."'
   },
   void_sovereign: {
@@ -237,14 +237,14 @@ const PAGODA_BOSSES = {
     name: 'Void Sovereign',
     emoji: '🌑',
     floor: 50,
-    baseHp: 5000,
-    baseDamage: 100,
-    baseDefense: 50,
+    baseHp: 2000,
+    baseDamage: 80,
+    baseDefense: 40,
     speed: 1.0,
     element: 'void',
     phases: 4,
     abilities: ['void_rend', 'dimension_shift', 'absolute_zero', 'annihilate'],
-    rewards: { bp: 15000, tokens: 30 },
+    rewards: { bp: 10000, tokens: 25 },
     flavorText: '"The lord of nothingness."'
   },
   celestial_cat: {
@@ -252,14 +252,14 @@ const PAGODA_BOSSES = {
     name: 'Celestial Cat God',
     emoji: '🐱',
     floor: 100,
-    baseHp: 50000,
-    baseDamage: 200,
-    baseDefense: 100,
+    baseHp: 10000,
+    baseDamage: 150,
+    baseDefense: 80,
     speed: 2.0,
     element: 'light',
     phases: 5,
     abilities: ['divine_boop', 'heaven_fall', 'purr_of_doom', 'nine_lives'],
-    rewards: { bp: 100000, tokens: 100, special: 'celestial_blessing' },
+    rewards: { bp: 50000, tokens: 100, special: 'celestial_blessing' },
     flavorText: '"The ultimate snoot awaits."'
   }
 };
@@ -370,7 +370,9 @@ class PagodaSystem {
       bp: 0,
       tokens: 0,
       materials: [],
-      equipment: []
+      equipment: [],
+      techniques: [],
+      consumables: []
     };
 
     // Buffs/Debuffs
@@ -420,7 +422,9 @@ class PagodaSystem {
       bp: 0,
       tokens: 0,
       materials: [],
-      equipment: []
+      equipment: [],
+      techniques: [],
+      consumables: []
     };
 
     // Calculate player stats from cats + equipment + upgrades
@@ -811,22 +815,35 @@ class PagodaSystem {
    * Generate loot drops
    */
   generateLoot(isBoss) {
+    let lootMessages = [];
+
+    // Guaranteed BP drop based on floor
+    const bonusBp = Math.floor(this.currentFloor * 5 * (isBoss ? 3 : 1));
+    this.runRewards.bp += bonusBp;
+
     // Material drops
     if (window.craftingSystem) {
-      const drops = window.craftingSystem.generateDrop({
-        floor: this.currentFloor,
-        luck: this.playerDefense, // Use defense as luck proxy
-        isBoss: isBoss
-      });
-      this.runRewards.materials.push(...drops);
+      try {
+        const drops = window.craftingSystem.generateDrop({
+          floor: this.currentFloor,
+          luck: this.playerDefense,
+          isBoss: isBoss
+        });
+        if (drops && drops.length > 0) {
+          this.runRewards.materials.push(...drops);
+          lootMessages.push(`+${drops.length} materials`);
+        }
+      } catch (e) {
+        console.warn('Crafting drop failed:', e);
+      }
     }
 
     // Equipment drops (chance based)
     if (window.equipmentSystem) {
-      const dropChance = isBoss ? 0.5 : this.currentEnemy.dropChance || 0.2;
+      const baseDropChance = isBoss ? 0.8 : (this.currentEnemy.dropChance || 0.5);
 
       // Apply loot bonus modifier
-      let finalChance = dropChance;
+      let finalChance = baseDropChance;
       for (const mod of this.floorModifiers) {
         if (mod.effect.lootBonus) {
           finalChance *= mod.effect.lootBonus;
@@ -834,13 +851,61 @@ class PagodaSystem {
       }
 
       if (Math.random() < finalChance) {
-        const equipment = window.equipmentSystem.generateDrop(this.currentFloor);
-        if (equipment) {
-          this.runRewards.equipment.push(equipment);
-          this.logCombat(`Found: ${equipment.name}!`);
+        try {
+          const equipment = window.equipmentSystem.generateDrop(this.currentFloor);
+          if (equipment) {
+            this.runRewards.equipment.push(equipment);
+            lootMessages.push(`🗡️ ${equipment.name}`);
+          }
+        } catch (e) {
+          console.warn('Equipment drop failed:', e);
         }
       }
     }
+
+    // Secret Technique drops (boss only)
+    if (isBoss && window.techniqueSystem && typeof rollBossTechniqueDrop === 'function') {
+      try {
+        const techniqueId = rollBossTechniqueDrop(this.currentEnemy.id);
+        if (techniqueId) {
+          const technique = window.techniqueSystem.learnTechnique(techniqueId);
+          if (technique) {
+            this.logCombat(`📜 SECRET TECHNIQUE DISCOVERED: ${technique.name}!`);
+            this.runRewards.techniques = this.runRewards.techniques || [];
+            this.runRewards.techniques.push(techniqueId);
+            lootMessages.push(`📜 ${technique.name}`);
+          }
+        }
+      } catch (e) {
+        console.warn('Technique drop failed:', e);
+      }
+    }
+
+    // Consumable drops
+    if (window.techniqueSystem && typeof rollConsumableDrop === 'function') {
+      try {
+        const consumables = rollConsumableDrop(this.currentFloor, isBoss);
+        if (consumables && consumables.length > 0) {
+          for (const consumableId of consumables) {
+            window.techniqueSystem.addConsumable(consumableId);
+            const consumable = CULTIVATION_CONSUMABLES[consumableId];
+            if (consumable) {
+              lootMessages.push(`💊 ${consumable.name}`);
+            }
+          }
+          this.runRewards.consumables = this.runRewards.consumables || [];
+          this.runRewards.consumables.push(...consumables);
+        }
+      } catch (e) {
+        console.warn('Consumable drop failed:', e);
+      }
+    }
+
+    // Always log loot gained
+    if (lootMessages.length > 0) {
+      this.logCombat(`Loot: ${lootMessages.join(', ')}`);
+    }
+    this.logCombat(`+${bonusBp} BP`);
   }
 
   /**

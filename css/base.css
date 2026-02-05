@@ -1,0 +1,131 @@
+/* ===================================
+   BASE STYLES
+   Variables, Resets, Typography
+   =================================== */
+
+/* --- CSS Variables (Wuxia Color Palette) --- */
+:root {
+  /* Base colors */
+  --bg-dark: #1a1a2e;
+  --bg-light: #16213e;
+  --bg-parchment: #f4e4bc;
+  --bg-parchment-dark: #e8d4a8;
+
+  /* Primary - Jade */
+  --jade: #50C878;
+  --jade-light: #7FFFD4;
+  --jade-dark: #3D9970;
+
+  /* The Seven Masters */
+  --gerald-jade: #50C878;
+  --rusty-crimson: #DC143C;
+  --steve-blue: #4169E1;
+  --andrew-gold: #FFD700;
+  --nik-purple: #483D8B;
+  --yuelin-pink: #FFB6C1;
+  --scott-brown: #8B4513;
+
+  /* Goose colors */
+  --goose-white: #F5F5F5;
+  --goose-rage: #FF4500;
+  --goose-golden: #FFD700;
+  --goose-chaos: #8B008B;
+
+  /* UI Elements */
+  --gold-accent: #FFD700;
+  --red-accent: #E94560;
+  --qi-blue: #00BFFF;
+  --critical-gold: #FFF8DC;
+
+  /* Cat happiness */
+  --happy: #6bc5d2;
+  --neutral: #f9ed69;
+  --unhappy: #ff6b6b;
+
+  /* Realms */
+  --realm-mortal: #A0A0A0;
+  --realm-earth: #8B4513;
+  --realm-sky: #87CEEB;
+  --realm-heaven: #FFD700;
+  --realm-divine: #FFFFFF;
+
+  /* Text */
+  --text-light: #f0f0f0;
+  --text-dark: #2a2a2a;
+
+  /* Fonts */
+  --font-pixel: 'Press Start 2P', monospace;
+
+  /* Animation speeds */
+  --anim-fast: 0.1s;
+  --anim-normal: 0.2s;
+  --anim-slow: 0.4s;
+}
+
+/* --- Reset & Base --- */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-pixel);
+  background: linear-gradient(135deg, var(--bg-dark) 0%, var(--bg-light) 100%);
+  color: var(--text-light);
+  min-height: 100vh;
+  overflow-x: hidden;
+  line-height: 1.6;
+}
+
+/* --- Game Container --- */
+#game-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  min-height: 100vh;
+}
+
+/* --- Screens --- */
+.screen {
+  display: none;
+}
+
+.screen.active {
+  display: block;
+}
+
+/* --- Hidden utility --- */
+.hidden {
+  display: none !important;
+}
+
+/* --- Text utilities --- */
+.text-center { text-align: center; }
+.text-jade { color: var(--jade); }
+.text-gold { color: var(--gold-accent); }
+.text-red { color: var(--red-accent); }
+
+/* --- Scrollbar styling --- */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--jade-dark);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--jade);
+}

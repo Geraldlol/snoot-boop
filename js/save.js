@@ -51,6 +51,7 @@ const SaveSystem = {
       // Systems
       cats: catSystem.serialize(),
       waifus: waifuSystem.serialize(),
+      gifts: window.giftSystem ? window.giftSystem.serialize() : { inventory: {}, giftHistory: [] },
       upgrades: upgradeSystem.serialize(),
 
       // Goose system
@@ -74,6 +75,7 @@ const SaveSystem = {
       equipment: window.equipmentSystem ? window.equipmentSystem.serialize() : { inventory: [], equipped: {}, nextId: 1 },
       crafting: window.craftingSystem ? window.craftingSystem.serialize() : { materials: {}, blueprints: {}, craftingQueue: [] },
       pagoda: window.pagodaSystem ? window.pagodaSystem.serialize() : { highestFloor: 0, tokens: 0, upgrades: {}, stats: {}, runHistory: [] },
+      techniques: window.techniqueSystem ? window.techniqueSystem.serialize() : { learnedTechniques: [], learnedSkills: [], cultivationPassives: [], legendaryInternals: {}, consumables: {} },
       blessings: window.blessingSystem ? window.blessingSystem.serialize() : { permanentBlessings: [], stats: {} },
       survival: window.waveSurvivalSystem ? window.waveSurvivalSystem.serialize() : { stats: {}, unlocks: [] },
       goldenSnoot: window.goldenSnootSystem ? window.goldenSnootSystem.serialize() : { stats: {} },

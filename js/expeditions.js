@@ -205,36 +205,52 @@ class ExpeditionSystem {
       }
     }
 
-    return cats.filter(cat => !busyCatIds.has(cat.id));
+    return cats.filter(cat => {
+      const catId = String(cat.instanceId || cat.id);
+      return !busyCatIds.has(catId);
+    });
   }
 
   /**
    * Check if can start expedition
    */
   canStartExpedition(destinationId, catIds, catSystem) {
+    console.log('canStartExpedition check:');
+    console.log('  destinationId:', destinationId);
+    console.log('  catIds:', catIds);
+    console.log('  activeExpeditions:', this.activeExpeditions.length);
+
     if (this.activeExpeditions.length >= this.maxConcurrentExpeditions) {
+      console.log('  FAIL: Maximum expeditions active');
       return { can: false, reason: 'Maximum expeditions active' };
     }
 
     const destination = EXPEDITION_DESTINATIONS[destinationId];
     if (!destination) {
+      console.log('  FAIL: Invalid destination');
       return { can: false, reason: 'Invalid destination' };
     }
 
+    console.log('  destination requires:', destination.minCats, '-', destination.maxCats, 'cats');
+
     if (catIds.length < destination.minCats) {
+      console.log('  FAIL: Need at least', destination.minCats, 'cats, have', catIds.length);
       return { can: false, reason: `Need at least ${destination.minCats} cats` };
     }
 
     if (catIds.length > destination.maxCats) {
+      console.log('  FAIL: Maximum', destination.maxCats, 'cats allowed');
       return { can: false, reason: `Maximum ${destination.maxCats} cats allowed` };
     }
 
     // Check if cats are available
     const availableCats = this.getAvailableCats(catSystem);
-    const availableIds = new Set(availableCats.map(c => c.id));
+    const availableIds = new Set(availableCats.map(c => String(c.instanceId || c.id)));
+    console.log('  availableIds:', Array.from(availableIds));
 
     for (const catId of catIds) {
-      if (!availableIds.has(catId)) {
+      if (!availableIds.has(String(catId))) {
+        console.log('  FAIL: Cat', catId, 'is unavailable. Available:', Array.from(availableIds));
         return { can: false, reason: 'Some cats are unavailable' };
       }
     }
@@ -242,18 +258,22 @@ class ExpeditionSystem {
     // Check realm requirement
     const realmOrder = ['mortal', 'earth', 'sky', 'heaven', 'divine'];
     const requiredIndex = realmOrder.indexOf(destination.requiredRealm);
+    console.log('  Required realm:', destination.requiredRealm, '(index', requiredIndex, ')');
 
     const hasQualifiedCat = catIds.some(catId => {
       const cat = catSystem.getCatById(catId);
+      console.log('  Checking cat', catId, ':', cat ? cat.realm : 'NOT FOUND');
       if (!cat) return false;
       const catRealmIndex = realmOrder.indexOf(cat.realm);
       return catRealmIndex >= requiredIndex;
     });
 
     if (!hasQualifiedCat) {
+      console.log('  FAIL: No cat meets realm requirement');
       return { can: false, reason: `Need at least one ${destination.requiredRealm} realm cat` };
     }
 
+    console.log('  SUCCESS: Can start expedition');
     return { can: true };
   }
 
@@ -275,7 +295,7 @@ class ExpeditionSystem {
       if (cat) {
         const power = this.calculateCatPower(cat);
         totalPower += power;
-        catDetails.push({ id: cat.id, name: cat.name, power });
+        catDetails.push({ id: cat.instanceId || cat.id, name: cat.name, power });
       }
     }
 

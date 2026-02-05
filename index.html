@@ -7,7 +7,15 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/main.css">
+  <!-- Modular CSS Architecture -->
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/screens.css">
+  <link rel="stylesheet" href="css/features.css">
+  <link rel="stylesheet" href="css/modals.css">
+  <link rel="stylesheet" href="css/animations.css">
+  <link rel="stylesheet" href="css/responsive.css">
 </head>
 <body>
   <div id="game-container">
@@ -168,6 +176,7 @@
             <button class="tab-btn" data-tab="catino">🎰 Casino</button>
             <button class="tab-btn" data-tab="partners">💕 Partners</button>
             <button class="tab-btn" data-tab="facilities">☯️ Sect</button>
+            <button class="tab-btn" data-tab="techniques">📜 Skills</button>
             <button class="tab-btn" data-tab="stats">📊 Stats</button>
           </div>
 
@@ -178,6 +187,10 @@
                 <span class="recruit-text">Recruit Cat</span>
                 <span id="recruit-cost" class="recruit-cost">100 BP</span>
               </button>
+              <div class="cat-capacity-display">
+                <span class="capacity-label">Sect Capacity:</span>
+                <span id="cat-capacity-current">0</span>/<span id="cat-capacity-max">10</span>
+              </div>
             </div>
             <div id="cat-collection" class="cat-collection">
               <p class="empty-message">No cats yet. Recruit your first disciple!</p>
@@ -246,6 +259,9 @@
           <div id="equipment-tab" class="tab-content">
             <div class="equipment-panel">
               <h4 class="category-header">⚙️ Cat Equipment</h4>
+              <div id="equipment-stats-summary" class="equipment-stats-summary">
+                <p class="empty-message">Equip items to see stats</p>
+              </div>
               <div class="equipment-slots">
                 <div class="equip-slot" data-slot="hat">
                   <span class="slot-icon">🎩</span>
@@ -297,7 +313,7 @@
               <div id="expedition-selection" class="expedition-selection hidden">
                 <h5 style="font-size: 9px; color: var(--jade-light); margin: 15px 0 10px;">Select Cats:</h5>
                 <div id="cat-select-grid" class="cat-select-grid"></div>
-                <button id="start-expedition-btn" class="jade-button" style="margin-top: 10px; width: 100%;">
+                <button id="start-expedition-btn" class="jade-button" style="margin-top: 10px; width: 100%;" onclick="startSelectedExpedition()">
                   Start Expedition
                 </button>
               </div>
@@ -458,6 +474,51 @@
                 <h5>Unlocked Perks:</h5>
                 <div id="prestige-perks-list">
                   <p style="font-size: 8px; color: #666;">Ascend to unlock perks!</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Techniques Tab -->
+          <div id="techniques-tab" class="tab-content">
+            <div class="techniques-panel">
+              <!-- Legendary Internals -->
+              <div class="technique-section">
+                <h4 class="category-header">🐉 Legendary Internals</h4>
+                <div id="legendary-internals-list" class="technique-list legendary-list">
+                  <p class="empty-message">Reach higher pagoda floors to unlock legendary cultivation methods.</p>
+                </div>
+              </div>
+
+              <!-- Secret Techniques -->
+              <div class="technique-section">
+                <h4 class="category-header">📜 Secret Techniques</h4>
+                <div id="secret-techniques-list" class="technique-list">
+                  <p class="empty-message">Defeat Pagoda bosses to learn their secret techniques.</p>
+                </div>
+              </div>
+
+              <!-- Hidden Skills -->
+              <div class="technique-section">
+                <h4 class="category-header">🔮 Hidden Skills</h4>
+                <div id="hidden-skills-list" class="technique-list">
+                  <p class="empty-message">Achieve great feats to discover hidden skills.</p>
+                </div>
+              </div>
+
+              <!-- Cultivation Passives -->
+              <div class="technique-section">
+                <h4 class="category-header">✨ Cultivation Passives</h4>
+                <div id="cultivation-passives-list" class="technique-list">
+                  <p class="empty-message">Progress through the game to unlock cultivation passives.</p>
+                </div>
+              </div>
+
+              <!-- Consumables -->
+              <div class="technique-section">
+                <h4 class="category-header">💊 Consumables</h4>
+                <div id="consumables-list" class="consumables-grid">
+                  <p class="empty-message">Collect consumables from the Pagoda.</p>
                 </div>
               </div>
             </div>
@@ -781,6 +842,67 @@
       </div>
     </div>
 
+    <!-- Waifu Modal -->
+    <div id="waifu-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="waifu-modal-title">
+      <div class="modal-content scroll-panel waifu-modal-content">
+        <h2 id="waifu-modal-title">💕 Waifu Masters</h2>
+
+        <div class="waifu-modal-tabs">
+          <button class="waifu-tab active" data-waifu-tab="collection">All Waifus</button>
+          <button class="waifu-tab" data-waifu-tab="gifts">Gift Shop</button>
+          <button class="waifu-tab" data-waifu-tab="inventory">My Gifts</button>
+        </div>
+
+        <!-- Waifus Collection Tab -->
+        <div id="waifu-collection-tab" class="waifu-tab-content active">
+          <div id="waifu-grid" class="waifu-grid">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+
+        <!-- Gift Shop Tab -->
+        <div id="waifu-gifts-tab" class="waifu-tab-content">
+          <p class="gift-shop-intro">Purchase gifts to give to your waifus and increase bond!</p>
+          <div id="gift-shop" class="gift-shop-grid">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+
+        <!-- Gift Inventory Tab -->
+        <div id="waifu-inventory-tab" class="waifu-tab-content">
+          <p class="gift-inventory-intro">Select a gift to give to your active waifu.</p>
+          <div id="gift-inventory" class="gift-inventory-grid">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+
+        <!-- Selected Waifu Detail -->
+        <div id="waifu-detail" class="waifu-detail hidden">
+          <div class="waifu-detail-header">
+            <div id="waifu-detail-portrait" class="waifu-detail-portrait">🍡</div>
+            <div class="waifu-detail-info">
+              <h3 id="waifu-detail-name">Mochi-chan</h3>
+              <p id="waifu-detail-title" class="waifu-detail-title">The Welcoming Dawn</p>
+              <div class="bond-bar large">
+                <div id="waifu-detail-bond-fill" class="bond-fill" style="width: 0%"></div>
+              </div>
+              <p class="bond-label">Bond: <span id="waifu-detail-bond">0</span>/100</p>
+            </div>
+          </div>
+          <p id="waifu-detail-dialogue" class="waifu-detail-dialogue">"Welcome~"</p>
+          <div id="waifu-detail-bonus" class="waifu-detail-bonus"></div>
+          <div class="waifu-detail-actions">
+            <button id="set-active-waifu-btn" class="jade-button small">Set as Active</button>
+            <button id="give-gift-btn" class="jade-button small">Give Gift</button>
+          </div>
+        </div>
+
+        <div class="settings-buttons">
+          <button id="waifu-modal-close" class="jade-button">Close</button>
+        </div>
+      </div>
+    </div>
+
     <!-- Active Effects Display -->
     <div id="active-effects" class="active-effects"></div>
 
@@ -863,6 +985,7 @@
       <button class="more-menu-btn" data-tab="catino">🎰 Casino</button>
       <button class="more-menu-btn" data-tab="partners">💕 Partners</button>
       <button class="more-menu-btn" data-tab="facilities">☯️ Sect</button>
+      <button class="more-menu-btn" data-tab="techniques">📜 Skills</button>
       <button class="more-menu-btn" data-tab="stats">📊 Stats</button>
       <button class="more-menu-btn" data-tab="waifu">💝 Waifu</button>
     </div>
@@ -885,6 +1008,7 @@
   <script src="js/elements.js"></script>
   <script src="js/equipment.js"></script>
   <script src="js/crafting.js"></script>
+  <script src="js/techniques.js"></script>
   <script src="js/pagoda.js"></script>
   <script src="js/blessings.js"></script>
   <script src="js/wave-survival.js"></script>

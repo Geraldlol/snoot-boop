@@ -123,7 +123,7 @@ const gameState = {
 let masterSystem, catSystem, waifuSystem, upgradeSystem, eventSystem;
 let achievementSystem, gooseSystem, giftSystem, expeditionSystem, jadeDotGame;
 let prestigeSystem, audioSystem;
-let elementalSystem, equipmentSystem, craftingSystem, pagodaSystem;
+let elementalSystem, equipmentSystem, craftingSystem, pagodaSystem, techniqueSystem;
 let blessingSystem, waveSurvivalSystem, goldenSnootSystem, dailySystem, parasiteSystem;
 let irlIntegrationSystem, dramaSystem, nemesisSystem, catinoSystem, hardcoreSystem, partnerGenerator;
 
@@ -161,6 +161,7 @@ elementalSystem = createSystem('ElementalSystem', ElementalSystem);
 equipmentSystem = createSystem('EquipmentSystem', EquipmentSystem);
 craftingSystem = createSystem('CraftingSystem', CraftingSystem);
 pagodaSystem = createSystem('PagodaSystem', PagodaSystem);
+techniqueSystem = createSystem('TechniqueSystem', TechniqueSystem);
 blessingSystem = createSystem('BlessingSystem', BlessingSystem);
 waveSurvivalSystem = createSystem('WaveSurvivalSystem', WaveSurvivalSystem);
 goldenSnootSystem = createSystem('GoldenSnootSystem', GoldenSnootSystem);
@@ -197,6 +198,7 @@ window.elementalSystem = elementalSystem;
 window.equipmentSystem = equipmentSystem;
 window.craftingSystem = craftingSystem;
 window.pagodaSystem = pagodaSystem;
+window.techniqueSystem = techniqueSystem;
 window.blessingSystem = blessingSystem;
 window.waveSurvivalSystem = waveSurvivalSystem;
 window.goldenSnootSystem = goldenSnootSystem;
@@ -275,6 +277,7 @@ const elements = {
   statsTab: document.getElementById('stats-tab'),
   catinoTab: document.getElementById('catino-tab'),
   partnersTab: document.getElementById('partners-tab'),
+  techniquesTab: document.getElementById('techniques-tab'),
 
   // Mobile Navigation
   mobileNav: document.getElementById('mobile-nav'),
@@ -337,6 +340,8 @@ const elements = {
   recruitBtn: document.getElementById('recruit-btn'),
   recruitCost: document.getElementById('recruit-cost'),
   catCollection: document.getElementById('cat-collection'),
+  catCapacityCurrent: document.getElementById('cat-capacity-current'),
+  catCapacityMax: document.getElementById('cat-capacity-max'),
 
   // Upgrades
   snootArtsList: document.getElementById('snoot-arts-list'),
@@ -354,6 +359,7 @@ const elements = {
   // Goose
   gooseOverlay: document.getElementById('goose-overlay'),
   gooseTarget: document.getElementById('goose-target'),
+  gooseContainer: document.getElementById('goose-container'),
   gooseTimerBar: document.getElementById('goose-timer-bar'),
   gooseMood: document.getElementById('goose-mood'),
 
@@ -434,6 +440,13 @@ function loadGame(saveData) {
   // Restore systems
   catSystem.deserialize(saveData.cats || {});
   waifuSystem.deserialize(saveData.waifus || {});
+  if (giftSystem) {
+    giftSystem.deserialize(saveData.gifts || {});
+    // If no gifts loaded, init with starter gifts
+    if (Object.keys(giftSystem.inventory).length === 0) {
+      giftSystem.init();
+    }
+  }
   upgradeSystem.deserialize(saveData.upgrades || {});
 
   // Restore goose system
@@ -471,6 +484,9 @@ function loadGame(saveData) {
   }
   if (saveData.pagoda && pagodaSystem) {
     pagodaSystem.deserialize(saveData.pagoda);
+  }
+  if (saveData.techniques && techniqueSystem) {
+    techniqueSystem.deserialize(saveData.techniques);
   }
   if (saveData.blessings && blessingSystem) {
     blessingSystem.deserialize(saveData.blessings);
@@ -569,6 +585,9 @@ function startGameWithSave(afkGains) {
 
   // Update expeditions UI periodically
   setInterval(updateExpeditionsUI, 1000);
+
+  // Update upgrades UI periodically (so affordability updates with BP changes)
+  setInterval(renderUpgrades, 2000);
 }
 
 /**
@@ -615,7 +634,11 @@ function renderMasterCards() {
            data-master="${master.id}"
            onclick="window.showMasterPreview('${master.id}')"
            style="--master-color: ${master.color}; cursor: pointer;">
-        <div class="master-portrait">${master.emoji}</div>
+        <div class="master-portrait">
+          ${master.portrait
+            ? `<img src="${master.portrait}" alt="${master.name}" onerror="this.outerHTML='${master.emoji}'">`
+            : master.emoji}
+        </div>
         <h3>${master.name}</h3>
         <p class="title">${master.title}</p>
       </div>
@@ -644,7 +667,12 @@ function showMasterPreview(masterId) {
 
   previewedMasterId = masterId;
 
-  elements.previewPortrait.textContent = master.emoji;
+  // Set portrait image or emoji fallback
+  if (master.portrait) {
+    elements.previewPortrait.innerHTML = `<img src="${master.portrait}" alt="${master.name}" onerror="this.outerHTML='${master.emoji}'">`;
+  } else {
+    elements.previewPortrait.textContent = master.emoji;
+  }
   elements.previewPortrait.style.borderColor = master.color;
   elements.previewName.textContent = master.name;
   elements.previewName.style.color = master.color;
@@ -669,6 +697,9 @@ function startGame() {
 
   // Initialize waifu system with starter
   waifuSystem.init();
+
+  // Initialize gift system with starter gifts
+  if (giftSystem) giftSystem.init();
 
   // Setup UI
   updateMasterUI();
@@ -704,6 +735,9 @@ function startGame() {
 
   // Update expeditions UI periodically
   setInterval(updateExpeditionsUI, 1000);
+
+  // Update upgrades UI periodically (so affordability updates with BP changes)
+  setInterval(renderUpgrades, 2000);
 }
 
 // Make startGame globally accessible
@@ -793,6 +827,9 @@ function setupEventListeners() {
   // Codex
   setupCodex();
 
+  // Waifu modal
+  setupWaifuModal();
+
   // Recruit cat
   elements.recruitBtn.addEventListener('click', recruitCat);
 
@@ -801,8 +838,13 @@ function setupEventListeners() {
     elements.afkModal.classList.add('hidden');
   });
 
-  // Goose click
-  elements.gooseTarget.addEventListener('click', attemptGooseBoop);
+  // Goose click - both target and container
+  if (elements.gooseTarget) {
+    elements.gooseTarget.addEventListener('click', attemptGooseBoop);
+  }
+  if (elements.gooseContainer) {
+    elements.gooseContainer.addEventListener('click', attemptGooseBoop);
+  }
 
   // Mini-game button
   if (elements.minigameBtn) {
@@ -922,6 +964,9 @@ function switchTab(tabId) {
   if (elements.partnersTab) {
     elements.partnersTab.classList.toggle('active', tabId === 'partners');
   }
+  if (elements.techniquesTab) {
+    elements.techniquesTab.classList.toggle('active', tabId === 'techniques');
+  }
 
   // Update content when switching tabs
   if (tabId === 'stats') {
@@ -943,6 +988,8 @@ function switchTab(tabId) {
     renderCatino();
   } else if (tabId === 'partners') {
     renderPartners();
+  } else if (tabId === 'techniques') {
+    renderTechniquesPanel();
   }
 }
 
@@ -959,6 +1006,7 @@ const TAB_TITLES = {
   catino: '🎰 Cat-sino',
   partners: '💕 Partners',
   facilities: '☯️ Sect Facilities',
+  techniques: '📜 Skills & Techniques',
   stats: '📊 Stats',
   waifu: '💝 Waifu Master'
 };
@@ -2049,44 +2097,75 @@ function renderPartners() {
 }
 
 function summonPartner() {
-  if (!partnerGenerator) {
-    showFloatingText('Partners not available!', false);
-    return;
+  try {
+    console.log('summonPartner called');
+    console.log('  partnerGenerator:', !!partnerGenerator);
+    console.log('  BP:', gameState.boopPoints);
+
+    if (!partnerGenerator) {
+      console.error('partnerGenerator is null/undefined');
+      showFloatingText('Partners not available!', false);
+      return;
+    }
+
+    const cost = 1000;
+    if (gameState.boopPoints < cost) {
+      showFloatingText('Not enough BP! Need 1000', false);
+      return;
+    }
+
+    gameState.boopPoints -= cost;
+    updateResourceDisplay();
+
+    console.log('Generating partner...');
+    const partner = partnerGenerator.generate();
+    console.log('Generated partner:', partner);
+    lastGeneratedPartner = partner;
+
+    const rarity = PARTNER_RARITIES[partner.rarity];
+    if (!rarity) {
+      console.error('Unknown rarity:', partner.rarity);
+      return;
+    }
+
+    // Show result
+    const resultDiv = document.getElementById('partner-result');
+    if (resultDiv) {
+      resultDiv.classList.remove('hidden');
+    } else {
+      console.error('partner-result element not found');
+    }
+
+    const portraitEl = document.getElementById('new-partner-portrait');
+    const nameEl = document.getElementById('new-partner-name');
+    const rarityEl = document.getElementById('new-partner-rarity');
+    const elementEl = document.getElementById('new-partner-element');
+    const traitsEl = document.getElementById('new-partner-traits');
+
+    if (portraitEl) portraitEl.textContent = partner.portrait;
+    if (nameEl) {
+      nameEl.textContent = partner.name;
+      nameEl.style.color = rarity.color;
+    }
+    if (rarityEl) {
+      rarityEl.textContent = `${rarity.name} Partner`;
+      rarityEl.style.color = rarity.color;
+    }
+    if (elementEl) elementEl.textContent = `Element: ${partner.element}`;
+    if (traitsEl) traitsEl.textContent = partner.traits.map(t => t.name).join(', ');
+
+    // Special effects for rare partners
+    if (partner.rarity === 'legendary' || partner.rarity === 'mythic') {
+      triggerScreenShake();
+      showFloatingText(`${rarity.name.toUpperCase()}!`, true);
+    }
+
+    renderPartners();
+    console.log('summonPartner completed successfully');
+  } catch (error) {
+    console.error('Error in summonPartner:', error);
+    showFloatingText('Error summoning partner!', false);
   }
-
-  const cost = 1000;
-  if (gameState.boopPoints < cost) {
-    showFloatingText('Not enough BP!', false);
-    return;
-  }
-
-  gameState.boopPoints -= cost;
-  updateResourceDisplay();
-
-  const partner = partnerGenerator.generate();
-  lastGeneratedPartner = partner;
-
-  const rarity = PARTNER_RARITIES[partner.rarity];
-
-  // Show result
-  const resultDiv = document.getElementById('partner-result');
-  resultDiv.classList.remove('hidden');
-
-  document.getElementById('new-partner-portrait').textContent = partner.portrait;
-  document.getElementById('new-partner-name').textContent = partner.name;
-  document.getElementById('new-partner-name').style.color = rarity.color;
-  document.getElementById('new-partner-rarity').textContent = `${rarity.name} Partner`;
-  document.getElementById('new-partner-rarity').style.color = rarity.color;
-  document.getElementById('new-partner-element').textContent = `Element: ${partner.element}`;
-  document.getElementById('new-partner-traits').textContent = partner.traits.map(t => t.name).join(', ');
-
-  // Special effects for rare partners
-  if (partner.rarity === 'legendary' || partner.rarity === 'mythic') {
-    triggerScreenShake();
-    showFloatingText(`${rarity.name.toUpperCase()}!`, true);
-  }
-
-  renderPartners();
 }
 
 function keepPartner() {
@@ -2365,11 +2444,28 @@ function handleBoop() {
     }
   }
 
-  // Increase waifu bond slightly
+  // Increase waifu bond through booping
   if (waifuSystem) {
     const activeWaifu = waifuSystem.getActiveWaifu();
-    if (activeWaifu && Math.random() < 0.01) {
-      waifuSystem.increaseBond(activeWaifu.id, 0.1);
+    if (activeWaifu) {
+      let bondGain = 0;
+
+      // Critical boops always give bond
+      if (isCrit) {
+        bondGain = 0.5;
+      }
+      // High combo bonus (50+)
+      else if (gameState.currentCombo >= 50 && Math.random() < 0.1) {
+        bondGain = 0.3;
+      }
+      // Regular boop chance (5%)
+      else if (Math.random() < 0.05) {
+        bondGain = 0.2;
+      }
+
+      if (bondGain > 0) {
+        waifuSystem.increaseBond(activeWaifu.id, bondGain);
+      }
     }
   }
 
@@ -2415,17 +2511,22 @@ function handleBoop() {
   }
 }
 
-function showFloatingText(amount, isCrit) {
+function showFloatingText(amountOrMessage, isCrit) {
   if (!elements.boopButton || !elements.floatingTextContainer) return;
 
   const text = document.createElement('div');
   text.className = 'floating-text' + (isCrit ? ' critical' : '');
 
-  if (isCrit) {
+  if (isCrit && typeof amountOrMessage === 'number') {
+    // Critical hit with BP amount
     const critMessages = ['CRITICAL!', 'QI BURST!', 'PERFECT BOOP!', 'HEAVEN-SHAKING!'];
     text.textContent = critMessages[Math.floor(Math.random() * critMessages.length)];
+  } else if (typeof amountOrMessage === 'string') {
+    // Text message (e.g., "New: Cat Name!")
+    text.textContent = amountOrMessage;
   } else {
-    text.textContent = `+${formatNumber(amount)} BP`;
+    // Regular BP amount
+    text.textContent = `+${formatNumber(amountOrMessage)} BP`;
   }
 
   const rect = elements.boopButton.getBoundingClientRect();
@@ -2494,6 +2595,16 @@ window.triggerCritFlash = triggerCritFlash;
 
 function recruitCat() {
   if (!catSystem) return;
+
+  // Check cat capacity from upgrades
+  const catCapacity = gameState.modifiers.catCapacity || 10;
+  const currentCats = catSystem.getCatCount();
+  if (currentCats >= catCapacity) {
+    if (audioSystem) audioSystem.playSFX('error');
+    showFloatingText(`Sect full! (${currentCats}/${catCapacity} cats)`);
+    return;
+  }
+
   const cost = catSystem.getRecruitmentCost();
   if (gameState.boopPoints < cost) {
     if (audioSystem) audioSystem.playSFX('error');
@@ -2531,19 +2642,58 @@ function renderCatCollection() {
   if (!cats || cats.length === 0) {
     elements.catCollection.innerHTML = '<p class="empty-message">No cats yet. Recruit your first disciple!</p>';
   } else {
-    elements.catCollection.innerHTML = cats.map((cat, index) => `
-      <div class="cat-card ${index === gameState.activeCatIndex ? 'selected' : ''}"
-           data-index="${index}"
-           style="--realm-color: ${REALMS[cat.realm]?.color || '#888'}"
-           onclick="selectCat(${index})">
-        <span class="cat-emoji">${cat.emoji}</span>
-        <div class="cat-info">
-          <p class="cat-name">${cat.name}</p>
-          <p class="cat-realm">${REALMS[cat.realm]?.name || 'Unknown'}</p>
-          <p class="cat-pp">+${(cat.stats.innerPurr * cat.stats.loafMastery * (REALMS[cat.realm]?.ppMultiplier || 1)).toFixed(1)} PP/s</p>
-        </div>
+    // Group cats by template ID for stacking
+    const catStacks = {};
+    cats.forEach((cat, index) => {
+      const key = cat.templateId;
+      if (!catStacks[key]) {
+        catStacks[key] = {
+          template: cat,
+          count: 0,
+          totalPP: 0,
+          indices: []
+        };
+      }
+      catStacks[key].count++;
+      catStacks[key].indices.push(index);
+      // Calculate this cat's PP contribution
+      const catPP = cat.stats.innerPurr * cat.stats.loafMastery * (REALMS[cat.realm]?.ppMultiplier || 1);
+      catStacks[key].totalPP += catPP;
+    });
+
+    // Sort stacks by realm (highest first), then by count
+    const realmOrder = ['divine', 'heaven', 'sky', 'earth', 'mortal'];
+    const sortedStacks = Object.values(catStacks).sort((a, b) => {
+      const realmDiff = realmOrder.indexOf(a.template.realm) - realmOrder.indexOf(b.template.realm);
+      if (realmDiff !== 0) return realmDiff;
+      return b.count - a.count;
+    });
+
+    // Render stacked cat cards
+    elements.catCollection.innerHTML = `
+      <div class="cat-stacks-grid">
+        ${sortedStacks.map(stack => {
+          const cat = stack.template;
+          const isActive = stack.indices.includes(gameState.activeCatIndex);
+          const realmClass = `realm-${cat.realm}`;
+          const legendaryClass = cat.legendary ? 'legendary' : '';
+
+          return `
+            <div class="cat-stack ${realmClass} ${legendaryClass} ${isActive ? 'selected' : ''}"
+                 data-template="${cat.templateId}"
+                 data-indices="${stack.indices.join(',')}"
+                 style="--realm-color: ${REALMS[cat.realm]?.color || '#888'}"
+                 onclick="selectCatStack('${cat.templateId}')">
+              ${stack.count > 1 ? `<span class="cat-count">x${stack.count}</span>` : ''}
+              <span class="cat-emoji">${cat.emoji}</span>
+              <p class="cat-name">${cat.name}</p>
+              <p class="cat-realm">${REALMS[cat.realm]?.name || 'Unknown'}</p>
+              <p class="cat-pp">+${stack.totalPP.toFixed(1)}/s</p>
+            </div>
+          `;
+        }).join('')}
       </div>
-    `).join('');
+    `;
   }
 
   // Update active cat display
@@ -2555,6 +2705,16 @@ function renderCatCollection() {
   }
   if (elements.recruitBtn) {
     elements.recruitBtn.disabled = gameState.boopPoints < catSystem.getRecruitmentCost();
+  }
+}
+
+function selectCatStack(templateId) {
+  // Find the first cat index with this template
+  const cats = catSystem.getAllCats();
+  const index = cats.findIndex(c => c.templateId === templateId);
+  if (index !== -1) {
+    gameState.activeCatIndex = index;
+    renderCatCollection();
   }
 }
 
@@ -2576,8 +2736,9 @@ function updateActiveCatDisplay() {
   }
 }
 
-// Make selectCat global for onclick
+// Make selectCat and selectCatStack global for onclick
 window.selectCat = selectCat;
+window.selectCatStack = selectCatStack;
 
 // ===================================
 // WAIFUS
@@ -2614,6 +2775,17 @@ function updateWaifuDialogue() {
   if (elements.waifuDialogue) elements.waifuDialogue.textContent = `"${dialogue}"`;
 }
 
+// Lightweight function to update just the bond display (called frequently)
+function updateWaifuBondDisplay() {
+  if (!waifuSystem) return;
+  const waifu = waifuSystem.getActiveWaifu();
+  if (!waifu) return;
+
+  const bondLevel = Math.floor(waifu.bondLevel);
+  if (elements.bondFill) elements.bondFill.style.width = `${waifu.bondLevel}%`;
+  if (elements.bondLevel) elements.bondLevel.textContent = bondLevel;
+}
+
 function showWaifuReaction(type) {
   if (!waifuSystem) return;
   const waifu = waifuSystem.getActiveWaifu();
@@ -2640,6 +2812,345 @@ function checkWaifuUnlocks() {
     updateWaifuUI();
   }
 }
+
+// ===================================
+// WAIFU MODAL SYSTEM
+// ===================================
+
+let selectedWaifuForDetail = null;
+let currentWaifuTab = 'collection';
+
+function setupWaifuModal() {
+  // Make waifu panel clickable
+  const waifuPanel = document.querySelector('.waifu-panel');
+  if (waifuPanel) {
+    waifuPanel.addEventListener('click', openWaifuModal);
+  }
+
+  // Close button
+  const closeBtn = document.getElementById('waifu-modal-close');
+  if (closeBtn) {
+    closeBtn.addEventListener('click', closeWaifuModal);
+  }
+
+  // Modal backdrop click
+  const modal = document.getElementById('waifu-modal');
+  if (modal) {
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) closeWaifuModal();
+    });
+  }
+
+  // Tab switching
+  document.querySelectorAll('.waifu-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      switchWaifuTab(tab.dataset.waifuTab);
+    });
+  });
+
+  // Set active waifu button
+  const setActiveBtn = document.getElementById('set-active-waifu-btn');
+  if (setActiveBtn) {
+    setActiveBtn.addEventListener('click', setSelectedWaifuAsActive);
+  }
+
+  // Give gift button
+  const giveGiftBtn = document.getElementById('give-gift-btn');
+  if (giveGiftBtn) {
+    giveGiftBtn.addEventListener('click', () => switchWaifuTab('inventory'));
+  }
+}
+
+function openWaifuModal() {
+  const modal = document.getElementById('waifu-modal');
+  if (modal) {
+    modal.classList.remove('hidden');
+    renderWaifuModal();
+  }
+}
+
+function closeWaifuModal() {
+  const modal = document.getElementById('waifu-modal');
+  if (modal) {
+    modal.classList.add('hidden');
+  }
+  selectedWaifuForDetail = null;
+  hideWaifuDetail();
+}
+
+function switchWaifuTab(tabName) {
+  currentWaifuTab = tabName;
+
+  // Update tab buttons
+  document.querySelectorAll('.waifu-tab').forEach(tab => {
+    tab.classList.toggle('active', tab.dataset.waifuTab === tabName);
+  });
+
+  // Update tab content
+  document.querySelectorAll('.waifu-tab-content').forEach(content => {
+    content.classList.remove('active');
+  });
+  const activeContent = document.getElementById(`waifu-${tabName}-tab`);
+  if (activeContent) {
+    activeContent.classList.add('active');
+  }
+
+  // Render content
+  if (tabName === 'collection') renderWaifuGrid();
+  else if (tabName === 'gifts') renderGiftShop();
+  else if (tabName === 'inventory') renderGiftInventory();
+}
+
+function renderWaifuModal() {
+  switchWaifuTab(currentWaifuTab);
+}
+
+function renderWaifuGrid() {
+  const container = document.getElementById('waifu-grid');
+  if (!container || !waifuSystem) return;
+
+  const activeWaifu = waifuSystem.getActiveWaifu();
+  let html = '';
+
+  // Render all waifu templates
+  for (const [id, template] of Object.entries(WAIFU_TEMPLATES)) {
+    const unlockedWaifu = waifuSystem.getWaifu(id);
+    const isUnlocked = !!unlockedWaifu;
+    const isActive = activeWaifu && activeWaifu.id === id;
+    const bondLevel = unlockedWaifu ? Math.floor(unlockedWaifu.bondLevel) : 0;
+
+    html += `
+      <div class="waifu-card ${isUnlocked ? '' : 'locked'} ${isActive ? 'active' : ''}"
+           style="--waifu-color: ${template.color}"
+           onclick="${isUnlocked ? `selectWaifuForDetail('${id}')` : ''}"
+           data-waifu="${id}">
+        <div class="waifu-card-portrait">${template.emoji}</div>
+        <div class="waifu-card-name">${isUnlocked ? template.name : '???'}</div>
+        <div class="waifu-card-title">${isUnlocked ? template.title : 'Locked'}</div>
+        ${isUnlocked ? `
+          <div class="bond-bar">
+            <div class="bond-fill" style="width: ${bondLevel}%"></div>
+          </div>
+          <div style="font-size: 6px; color: #aaa;">Bond: ${bondLevel}/100</div>
+        ` : `
+          <div class="waifu-card-unlock">${getWaifuUnlockHint(template)}</div>
+        `}
+        ${isActive ? '<div style="font-size: 6px; color: var(--gold-accent); margin-top: 5px;">ACTIVE</div>' : ''}
+      </div>
+    `;
+  }
+
+  container.innerHTML = html;
+}
+
+function getWaifuUnlockHint(template) {
+  const cond = template.unlockCondition;
+  switch (cond.type) {
+    case 'starter': return 'Starting waifu';
+    case 'catCount': return `Recruit ${cond.value} cats`;
+    case 'afkTime': return `${Math.floor(cond.value / 3600)} hours AFK time`;
+    case 'allBasicUpgrades': return 'Buy all basic upgrades';
+    case 'maxBondAll': return 'Max bond with all others';
+    default: return 'Unknown requirement';
+  }
+}
+
+function selectWaifuForDetail(waifuId) {
+  selectedWaifuForDetail = waifuId;
+  showWaifuDetail(waifuId);
+}
+
+function showWaifuDetail(waifuId) {
+  const waifu = waifuSystem.getWaifu(waifuId);
+  const template = WAIFU_TEMPLATES[waifuId];
+  if (!waifu || !template) return;
+
+  const detail = document.getElementById('waifu-detail');
+  if (detail) detail.classList.remove('hidden');
+
+  const portrait = document.getElementById('waifu-detail-portrait');
+  if (portrait) {
+    portrait.textContent = template.emoji;
+    portrait.style.borderColor = template.color;
+  }
+
+  const name = document.getElementById('waifu-detail-name');
+  if (name) name.textContent = template.name;
+
+  const title = document.getElementById('waifu-detail-title');
+  if (title) {
+    title.textContent = template.title;
+    title.style.color = template.color;
+  }
+
+  const bondFill = document.getElementById('waifu-detail-bond-fill');
+  if (bondFill) bondFill.style.width = `${waifu.bondLevel}%`;
+
+  const bondText = document.getElementById('waifu-detail-bond');
+  if (bondText) bondText.textContent = Math.floor(waifu.bondLevel);
+
+  const dialogue = document.getElementById('waifu-detail-dialogue');
+  if (dialogue) dialogue.textContent = `"${waifuSystem.getDialogue(waifuId, 'bond')}"`;
+
+  const bonus = document.getElementById('waifu-detail-bonus');
+  if (bonus) bonus.textContent = template.bonus?.description || '';
+
+  // Update active button state
+  const activeWaifu = waifuSystem.getActiveWaifu();
+  const setActiveBtn = document.getElementById('set-active-waifu-btn');
+  if (setActiveBtn) {
+    if (activeWaifu && activeWaifu.id === waifuId) {
+      setActiveBtn.textContent = 'Currently Active';
+      setActiveBtn.disabled = true;
+    } else {
+      setActiveBtn.textContent = 'Set as Active';
+      setActiveBtn.disabled = false;
+    }
+  }
+}
+
+function hideWaifuDetail() {
+  const detail = document.getElementById('waifu-detail');
+  if (detail) detail.classList.add('hidden');
+}
+
+function setSelectedWaifuAsActive() {
+  if (!selectedWaifuForDetail) return;
+
+  // Move selected waifu to first position (makes it active)
+  const waifu = waifuSystem.getWaifu(selectedWaifuForDetail);
+  if (!waifu) return;
+
+  // Reorder unlocked waifus array
+  const idx = waifuSystem.unlockedWaifus.findIndex(w => w.id === selectedWaifuForDetail);
+  if (idx > 0) {
+    const [selected] = waifuSystem.unlockedWaifus.splice(idx, 1);
+    waifuSystem.unlockedWaifus.unshift(selected);
+  }
+
+  // Update UI
+  updateWaifuUI();
+  renderWaifuGrid();
+  showWaifuDetail(selectedWaifuForDetail);
+  showFloatingText(`${WAIFU_TEMPLATES[selectedWaifuForDetail].name} is now active!`, true);
+}
+
+function renderGiftShop() {
+  const container = document.getElementById('gift-shop');
+  if (!container || !giftSystem) return;
+
+  const gifts = giftSystem.getPurchasableGifts();
+  let html = '';
+
+  gifts.forEach(gift => {
+    const canAfford = giftSystem.canAfford(gift.id, gameState);
+    let costText = '';
+
+    if (gift.cost.bp) costText = `${formatNumber(gift.cost.bp)} BP`;
+    else if (gift.cost.pp) costText = `${formatNumber(gift.cost.pp)} PP`;
+    else if (gift.cost.jadeCatnip) costText = `${gift.cost.jadeCatnip} Jade`;
+    else if (gift.cost.destinyThreads) costText = `${gift.cost.destinyThreads} Thread`;
+
+    html += `
+      <div class="gift-item rarity-${gift.rarity} ${canAfford ? '' : 'disabled'}"
+           onclick="${canAfford ? `purchaseGift('${gift.id}')` : ''}"
+           title="${gift.description}">
+        <div class="gift-emoji">${gift.emoji}</div>
+        <div class="gift-name">${gift.name}</div>
+        <div class="gift-cost">${costText}</div>
+      </div>
+    `;
+  });
+
+  container.innerHTML = html || '<p style="text-align: center; color: #888;">No gifts available</p>';
+}
+
+function renderGiftInventory() {
+  const container = document.getElementById('gift-inventory');
+  if (!container || !giftSystem) return;
+
+  const inventory = giftSystem.inventory;
+  let html = '';
+
+  for (const [itemId, count] of Object.entries(inventory)) {
+    if (count <= 0) continue;
+    const gift = GIFT_ITEMS[itemId];
+    if (!gift) continue;
+
+    html += `
+      <div class="gift-item rarity-${gift.rarity}"
+           onclick="giveGiftToWaifu('${itemId}')"
+           title="${gift.description}">
+        <div class="gift-emoji">${gift.emoji}</div>
+        <div class="gift-name">${gift.name}</div>
+        <div class="gift-count">x${count}</div>
+      </div>
+    `;
+  }
+
+  container.innerHTML = html || '<p style="text-align: center; color: #888;">No gifts in inventory. Visit the Gift Shop!</p>';
+}
+
+function purchaseGift(giftId) {
+  if (!giftSystem) return;
+
+  const success = giftSystem.purchaseGift(giftId, gameState);
+  if (success) {
+    const gift = GIFT_ITEMS[giftId];
+    showFloatingText(`Bought ${gift.name}!`, false);
+    if (audioSystem) audioSystem.playSFX('purchase');
+    updateResourceDisplay();
+    renderGiftShop();
+    renderGiftInventory();
+  } else {
+    showFloatingText("Can't afford!", false);
+    if (audioSystem) audioSystem.playSFX('error');
+  }
+}
+
+function giveGiftToWaifu(giftId) {
+  if (!giftSystem || !waifuSystem) return;
+
+  const activeWaifu = waifuSystem.getActiveWaifu();
+  if (!activeWaifu) {
+    showFloatingText('No active waifu!', false);
+    return;
+  }
+
+  const result = giftSystem.giveGift(giftId, activeWaifu.id, waifuSystem);
+  if (result) {
+    const gift = GIFT_ITEMS[giftId];
+
+    // Show reaction
+    showFloatingText(`${result.reaction}`, result.affinity === 'loves' || result.affinity === 'likes');
+
+    // Show bond increase
+    setTimeout(() => {
+      showFloatingText(`+${result.bondIncrease} Bond!`, true);
+    }, 500);
+
+    // Update dialogue
+    if (elements.waifuDialogue) {
+      elements.waifuDialogue.textContent = `"${result.reaction}"`;
+    }
+
+    // Update UI
+    updateWaifuUI();
+    renderGiftInventory();
+
+    // If detail panel is open, update it
+    if (selectedWaifuForDetail === activeWaifu.id) {
+      showWaifuDetail(activeWaifu.id);
+    }
+
+    renderWaifuGrid();
+  }
+}
+
+// Make functions global
+window.selectWaifuForDetail = selectWaifuForDetail;
+window.purchaseGift = purchaseGift;
+window.giveGiftToWaifu = giveGiftToWaifu;
 
 // ===================================
 // UPGRADES
@@ -2678,14 +3189,27 @@ function renderUpgradeCard(upgrade) {
   const cost = upgradeSystem.getCost(upgrade.id);
   const canAfford = gameState.boopPoints >= cost;
   const isMaxed = level >= upgrade.maxLevel;
-  const canPurchase = upgradeSystem.canPurchase(upgrade.id, gameState.boopPoints);
 
+  // Check requirements separately from cost
+  const meetsRequirements = checkUpgradeRequirements(upgrade);
+  const canPurchase = meetsRequirements && canAfford && !isMaxed;
+
+  // Determine status class with better logic
   let statusClass = '';
-  if (isMaxed) statusClass = 'maxed';
-  else if (!canPurchase && !canAfford) statusClass = 'locked';
-  else if (canAfford) statusClass = 'affordable';
+  let requirementText = '';
+
+  if (isMaxed) {
+    statusClass = 'maxed';
+  } else if (!meetsRequirements) {
+    statusClass = 'locked';
+    requirementText = getRequirementText(upgrade);
+  } else if (canAfford) {
+    statusClass = 'affordable';
+  }
+  // If meets requirements but can't afford, no special class (normal state)
 
   const effectValue = upgradeSystem.getEffectValue(upgrade.id);
+  const effectDisplay = getEffectDisplayText(upgrade, level);
 
   return `
     <div class="upgrade-card ${statusClass}" data-upgrade="${upgrade.id}">
@@ -2694,11 +3218,80 @@ function renderUpgradeCard(upgrade) {
         <span class="upgrade-level">${level}/${upgrade.maxLevel}</span>
       </div>
       <p class="upgrade-effect">${upgrade.description}</p>
+      ${level > 0 ? `<p class="upgrade-current-effect">${effectDisplay}</p>` : ''}
+      ${requirementText ? `<p class="upgrade-requirement">${requirementText}</p>` : ''}
       <p class="upgrade-cost ${canAfford ? 'affordable' : ''}">
         ${isMaxed ? 'MAXED' : formatNumber(cost) + ' BP'}
       </p>
     </div>
   `;
+}
+
+// Format the current effect for display
+function getEffectDisplayText(upgrade, level) {
+  if (level === 0) return '';
+
+  const value = upgrade.effect.baseValue + (upgrade.effect.perLevel * level);
+
+  switch (upgrade.effect.type) {
+    case 'bpPerBoop':
+      return `Current: +${value.toFixed(1)} BP/boop`;
+    case 'bpMultiplier':
+      return `Current: ${value.toFixed(2)}x BP`;
+    case 'ppMultiplier':
+      return `Current: ${value.toFixed(2)}x PP`;
+    case 'afkMultiplier':
+      return `Current: ${value.toFixed(2)}x AFK gains`;
+    case 'critChance':
+      return `Current: +${(value * 100).toFixed(0)}% crit chance`;
+    case 'critMultiplier':
+      return `Current: +${value.toFixed(0)}x crit damage`;
+    case 'autoBoopRate':
+      return `Current: ${value.toFixed(1)} auto-boops/sec`;
+    case 'passiveBpPerSecond':
+      return `Current: +${value.toFixed(0)} BP/sec`;
+    case 'catCapacity':
+      return `Current: ${Math.floor(value)} cat slots`;
+    case 'happinessDecayReduction':
+      return `Current: ${(value * 100).toFixed(0)}% slower decay`;
+    case 'happinessGain':
+      return `Current: +${value.toFixed(1)} happiness/tick`;
+    case 'eventChanceBonus':
+      return `Current: +${(value * 100).toFixed(0)}% event chance`;
+    case 'megaBoopMultiplier':
+      return `Current: +${(value * 100).toFixed(0)}% mega boop power`;
+    default:
+      return `Current: ${value.toFixed(2)}`;
+  }
+}
+
+// Check if upgrade requirements are met (without cost check)
+function checkUpgradeRequirements(upgrade) {
+  if (!upgrade.requires) return true;
+
+  for (const [reqId, reqLevel] of Object.entries(upgrade.requires)) {
+    if (upgradeSystem.getLevel(reqId) < reqLevel) {
+      return false;
+    }
+  }
+  return true;
+}
+
+// Get human-readable requirement text
+function getRequirementText(upgrade) {
+  if (!upgrade.requires) return '';
+
+  const unmet = [];
+  for (const [reqId, reqLevel] of Object.entries(upgrade.requires)) {
+    const currentLevel = upgradeSystem.getLevel(reqId);
+    if (currentLevel < reqLevel) {
+      const reqUpgrade = UPGRADE_TEMPLATES[reqId];
+      const name = reqUpgrade ? reqUpgrade.name : reqId;
+      unmet.push(`${name} Lv.${reqLevel}`);
+    }
+  }
+
+  return unmet.length > 0 ? `Requires: ${unmet.join(', ')}` : '';
 }
 
 function purchaseUpgrade(upgradeId) {
@@ -2744,25 +3337,291 @@ function recalculateModifiers() {
     bpMultiplier: 1, ppMultiplier: 1, afkMultiplier: 1, catHappinessBonus: 0
   };
 
+  // Get technique effects (skills, passives, legendary internals)
+  const techniqueEffects = techniqueSystem ? techniqueSystem.getCombinedEffects() : {
+    bpMultiplier: 1, ppMultiplier: 1, afkMultiplier: 1, critChance: 0, critDamage: 0
+  };
+
   // Combine all modifiers
   gameState.modifiers = {
-    bpPerBoop: upgradeEffects.bpPerBoop || 0,
-    bpMultiplier: (upgradeEffects.bpMultiplier || 1) * (masterEffects.bpMultiplier || 1),
-    ppMultiplier: (upgradeEffects.ppMultiplier || 1) * (waifuEffects.ppMultiplier || 1),
-    afkMultiplier: (upgradeEffects.afkMultiplier || 1) * (waifuEffects.afkMultiplier || 1) * (masterEffects.afkMultiplier || 1),
-    critChance: upgradeEffects.critChance || 0,
-    critMultiplier: upgradeEffects.critMultiplier || 1,
+    bpPerBoop: (upgradeEffects.bpPerBoop || 0) + (techniqueEffects.bpPerBoop || 0),
+    bpMultiplier: (upgradeEffects.bpMultiplier || 1) * (masterEffects.bpMultiplier || 1) * (techniqueEffects.bpMultiplier || 1),
+    ppMultiplier: (upgradeEffects.ppMultiplier || 1) * (waifuEffects.ppMultiplier || 1) * (techniqueEffects.ppMultiplier || 1),
+    afkMultiplier: (upgradeEffects.afkMultiplier || 1) * (waifuEffects.afkMultiplier || 1) * (masterEffects.afkMultiplier || 1) * (techniqueEffects.afkMultiplier || 1),
+    critChance: (upgradeEffects.critChance || 0) + (techniqueEffects.critChance || 0),
+    critMultiplier: (upgradeEffects.critMultiplier || 1) + (techniqueEffects.critDamage || 0),
     autoBoopRate: upgradeEffects.autoBoopRate || 0,
     passiveBpPerSecond: upgradeEffects.passiveBpPerSecond || 0,
     catCapacity: upgradeEffects.catCapacity || 10,
     happinessDecayReduction: upgradeEffects.happinessDecayReduction || 0,
-    catHappinessMultiplier: (masterEffects.catHappinessMultiplier || 1) + (waifuEffects.catHappinessBonus || 0)
+    catHappinessMultiplier: (masterEffects.catHappinessMultiplier || 1) + (waifuEffects.catHappinessBonus || 0),
+    // Technique-specific modifiers
+    damageReduction: techniqueEffects.damageReduction || 0,
+    maxHpBonus: techniqueEffects.maxHpBonus || 0,
+    dodgeChance: techniqueEffects.dodgeChance || 0,
+    attackSpeedBonus: techniqueEffects.attackSpeedBonus || 0
   };
 
   // Update boop power display
   if (elements.boopPowerDisplay) {
     const totalBoopPower = gameState.boopPower + (gameState.modifiers.bpPerBoop || 0);
     elements.boopPowerDisplay.textContent = `+${formatNumber(totalBoopPower * (gameState.modifiers.bpMultiplier || 1))} BP per boop`;
+  }
+}
+
+// ===================================
+// TECHNIQUES UI
+// ===================================
+
+function renderTechniquesPanel() {
+  renderLegendaryInternals();
+  renderSecretTechniques();
+  renderHiddenSkills();
+  renderCultivationPassives();
+  renderConsumables();
+}
+
+function renderLegendaryInternals() {
+  const container = document.getElementById('legendary-internals-list');
+  if (!container || !window.LEGENDARY_INTERNALS) return;
+
+  const internals = Object.values(window.LEGENDARY_INTERNALS);
+
+  if (internals.length === 0) {
+    container.innerHTML = '<p class="empty-message">No legendary internals available.</p>';
+    return;
+  }
+
+  container.innerHTML = internals.map(internal => {
+    const data = techniqueSystem?.legendaryInternals[internal.id];
+    const isUnlocked = data?.unlocked;
+    const currentStage = data?.stage || 0;
+    const canUnlock = techniqueSystem?.canUnlockLegendaryInternal(internal.id, gameState);
+
+    if (!isUnlocked) {
+      return `
+        <div class="legendary-internal-card locked">
+          <div class="legendary-internal-header">
+            <span class="legendary-internal-icon">${internal.emoji || '📜'}</span>
+            <div class="legendary-internal-info">
+              <div class="legendary-internal-name">${internal.name}</div>
+              <div class="legendary-internal-category">${internal.category}</div>
+            </div>
+          </div>
+          <div class="legendary-internal-description">${internal.description}</div>
+          <div class="unlock-requirements">
+            <div class="requirement-label">Requirements</div>
+            <div class="requirement-text">${canUnlock?.reason || 'Unknown requirements'}</div>
+          </div>
+          ${canUnlock?.can ? `
+            <button class="unlock-btn" onclick="unlockLegendaryInternal('${internal.id}')">
+              ${canUnlock.cost ? `Sacrifice ${formatNumber(canUnlock.cost)} BP to Unlock` : 'Unlock'}
+            </button>
+          ` : ''}
+        </div>
+      `;
+    }
+
+    const stage = internal.stages[currentStage - 1];
+    return `
+      <div class="legendary-internal-card">
+        <div class="legendary-internal-header">
+          <span class="legendary-internal-icon">${internal.emoji || '📜'}</span>
+          <div class="legendary-internal-info">
+            <div class="legendary-internal-name">${internal.name}</div>
+            <div class="legendary-internal-category">${internal.category}</div>
+          </div>
+          <div class="legendary-internal-stage">
+            <div class="stage-label">Stage</div>
+            <div class="stage-value">${currentStage}/${internal.stages.length}</div>
+          </div>
+        </div>
+        <div class="legendary-internal-description">${stage?.name || internal.description}</div>
+        <div class="legendary-internal-effects">
+          ${stage?.effects ? Object.entries(stage.effects).map(([key, val]) =>
+            `<div class="internal-effect">${formatEffectName(key)}: ${formatEffectValue(key, val)}</div>`
+          ).join('') : ''}
+        </div>
+        <div class="legendary-internal-abilities">
+          ${internal.activeAbility ? `
+            <div class="internal-ability">
+              <div class="ability-name">${internal.activeAbility.name}</div>
+              <div class="ability-desc">Cooldown: ${internal.activeAbility.cooldown / 1000}s</div>
+            </div>
+          ` : ''}
+          ${internal.ultimateAbility ? `
+            <div class="internal-ability">
+              <div class="ability-name">★ ${internal.ultimateAbility.name}</div>
+              <div class="ability-desc">Cooldown: ${internal.ultimateAbility.cooldown / 1000}s</div>
+            </div>
+          ` : ''}
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function renderSecretTechniques() {
+  const container = document.getElementById('secret-techniques-list');
+  if (!container || !techniqueSystem) return;
+
+  const techniques = techniqueSystem.getAllLearnedTechniques();
+
+  if (techniques.length === 0) {
+    container.innerHTML = '<p class="empty-message">Defeat Pagoda bosses to learn their secret techniques.</p>';
+    return;
+  }
+
+  container.innerHTML = techniques.map(tech => `
+    <div class="technique-card ${tech.tier}">
+      <div class="technique-header">
+        <span class="technique-emoji">${tech.emoji || '📜'}</span>
+        <span class="technique-name">${tech.name}</span>
+        <span class="technique-tier ${tech.tier}">${tech.tier}</span>
+      </div>
+      <div class="technique-description">${tech.description}</div>
+      ${tech.effects ? `
+        <div class="technique-effects">
+          ${Object.entries(tech.effects).map(([key, val]) =>
+            `<span class="technique-effect">${formatEffectName(key)}: ${formatEffectValue(key, val)}</span>`
+          ).join('')}
+        </div>
+      ` : ''}
+    </div>
+  `).join('');
+}
+
+function renderHiddenSkills() {
+  const container = document.getElementById('hidden-skills-list');
+  if (!container || !techniqueSystem) return;
+
+  const skills = techniqueSystem.getAllLearnedSkills();
+
+  if (skills.length === 0) {
+    container.innerHTML = '<p class="empty-message">Achieve great feats to discover hidden skills.</p>';
+    return;
+  }
+
+  container.innerHTML = skills.map(skill => `
+    <div class="skill-card">
+      <div class="skill-header">
+        <span class="skill-emoji">${skill.emoji || '🔮'}</span>
+        <span class="skill-name">${skill.name}</span>
+      </div>
+      <div class="skill-description">${skill.description}</div>
+      ${skill.effects ? `
+        <div class="technique-effects">
+          ${Object.entries(skill.effects).map(([key, val]) =>
+            `<span class="technique-effect">${formatEffectName(key)}: ${formatEffectValue(key, val)}</span>`
+          ).join('')}
+        </div>
+      ` : ''}
+    </div>
+  `).join('');
+}
+
+function renderCultivationPassives() {
+  const container = document.getElementById('cultivation-passives-list');
+  if (!container || !techniqueSystem) return;
+
+  const passives = techniqueSystem.getAllCultivationPassives();
+
+  if (passives.length === 0) {
+    container.innerHTML = '<p class="empty-message">Progress through the game to unlock cultivation passives.</p>';
+    return;
+  }
+
+  container.innerHTML = passives.map(passive => `
+    <div class="passive-card">
+      <span class="passive-icon">${passive.emoji || '✨'}</span>
+      <div class="passive-info">
+        <div class="passive-name">${passive.name}</div>
+        <div class="passive-effect">${passive.description}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function renderConsumables() {
+  const container = document.getElementById('consumables-list');
+  if (!container || !techniqueSystem || !window.CULTIVATION_CONSUMABLES) return;
+
+  const consumables = techniqueSystem.consumables;
+  const items = Object.entries(consumables).filter(([id, count]) => count > 0);
+
+  if (items.length === 0) {
+    container.innerHTML = '<p class="empty-message">Collect consumables from the Pagoda.</p>';
+    return;
+  }
+
+  container.innerHTML = items.map(([id, count]) => {
+    const item = window.CULTIVATION_CONSUMABLES[id];
+    if (!item) return '';
+
+    return `
+      <div class="consumable-card ${item.rarity}">
+        <div class="consumable-emoji">${item.emoji}</div>
+        <div class="consumable-name">${item.name}</div>
+        <div class="consumable-count">x${count}</div>
+        <button class="consumable-use-btn" onclick="useConsumable('${id}')">Use</button>
+      </div>
+    `;
+  }).join('');
+}
+
+function formatEffectName(key) {
+  const names = {
+    bpMultiplier: 'BP Mult',
+    ppMultiplier: 'PP Mult',
+    afkMultiplier: 'AFK Mult',
+    critChance: 'Crit Chance',
+    critDamage: 'Crit Damage',
+    damageReduction: 'Damage Red',
+    maxHpBonus: 'Max HP',
+    dodgeChance: 'Dodge',
+    attackSpeedBonus: 'Atk Speed',
+    bpPerBoop: 'BP/Boop',
+    ppPerSecond: 'PP/Sec'
+  };
+  return names[key] || key;
+}
+
+function formatEffectValue(key, val) {
+  if (key.includes('Multiplier') || key.includes('Mult')) {
+    return `x${val.toFixed(2)}`;
+  }
+  if (key.includes('Chance') || key.includes('Reduction')) {
+    return `+${(val * 100).toFixed(0)}%`;
+  }
+  if (typeof val === 'number') {
+    return `+${formatNumber(val)}`;
+  }
+  return val;
+}
+
+function unlockLegendaryInternal(internalId) {
+  if (!techniqueSystem) return;
+
+  const result = techniqueSystem.unlockLegendaryInternal(internalId, gameState);
+  if (result.success) {
+    showFloatingText(`🐉 ${result.internal.name} UNLOCKED!`, true);
+    if (audioSystem) audioSystem.playSFX('achievement');
+    renderTechniquesPanel();
+    recalculateModifiers();
+  } else {
+    showFloatingText(result.reason || 'Cannot unlock', false);
+  }
+}
+
+function useConsumable(consumableId) {
+  if (!techniqueSystem) return;
+
+  const result = techniqueSystem.useConsumable(consumableId, gameState);
+  if (result) {
+    showFloatingText(`Used ${result.name}!`, true);
+    if (audioSystem) audioSystem.playSFX('powerup');
+    renderConsumables();
+    recalculateModifiers();
   }
 }
 
@@ -2783,7 +3642,27 @@ function updateResourceDisplay() {
 
   // Update recruit button
   if (elements.recruitBtn && catSystem) {
-    elements.recruitBtn.disabled = gameState.boopPoints < catSystem.getRecruitmentCost();
+    const capacity = gameState.modifiers.catCapacity || 10;
+    const currentCats = catSystem.getCatCount();
+    const cost = catSystem.getRecruitmentCost();
+
+    // Disable if can't afford OR at capacity
+    elements.recruitBtn.disabled = gameState.boopPoints < cost || currentCats >= capacity;
+  }
+
+  // Update cat capacity display
+  if (elements.catCapacityCurrent && catSystem) {
+    const capacity = gameState.modifiers.catCapacity || 10;
+    const currentCats = catSystem.getCatCount();
+    elements.catCapacityCurrent.textContent = currentCats;
+    elements.catCapacityMax.textContent = capacity;
+
+    // Color coding - red if at capacity
+    if (currentCats >= capacity) {
+      elements.catCapacityCurrent.style.color = '#ff6b6b';
+    } else {
+      elements.catCapacityCurrent.style.color = 'var(--jade)';
+    }
   }
 }
 
@@ -2907,11 +3786,13 @@ function renderCatSelection() {
 
   elements.catSelectGrid.innerHTML = availableCats.map(cat => {
     const power = expeditionSystem.calculateCatPower(cat);
-    const isSelected = selectedCats.has(cat.id);
+    // Use instanceId for unique identification, convert to string for consistent comparison
+    const catId = String(cat.instanceId || cat.id);
+    const isSelected = selectedCats.has(catId);
     const realmEmoji = { mortal: '⚪', earth: '🟤', sky: '🔵', heaven: '🟡', divine: '⚪✨' }[cat.realm] || '⚪';
 
     return `
-      <div class="cat-select-item ${isSelected ? 'selected' : ''}" data-cat-id="${cat.id}">
+      <div class="cat-select-item ${isSelected ? 'selected' : ''}" data-cat-id="${catId}">
         <span class="cat-emoji">${cat.emoji}</span>
         <span class="cat-power">${realmEmoji} ${power}</span>
       </div>
@@ -2954,6 +3835,12 @@ function updateExpeditionButton() {
   if (!elements.startExpeditionBtn) return;
 
   const destination = EXPEDITION_DESTINATIONS[selectedDestination];
+  if (!destination) {
+    elements.startExpeditionBtn.disabled = true;
+    elements.startExpeditionBtn.textContent = 'Select a destination';
+    return;
+  }
+
   const canStart = selectedCats.size >= destination.minCats && selectedCats.size <= destination.maxCats;
 
   elements.startExpeditionBtn.disabled = !canStart;
@@ -2963,13 +3850,27 @@ function updateExpeditionButton() {
 }
 
 function startSelectedExpedition() {
-  if (!selectedDestination || selectedCats.size === 0 || !expeditionSystem) return;
+  console.log('startSelectedExpedition called');
+  console.log('  selectedDestination:', selectedDestination);
+  console.log('  selectedCats:', Array.from(selectedCats));
+  console.log('  expeditionSystem:', !!expeditionSystem);
+
+  if (!selectedDestination || selectedCats.size === 0 || !expeditionSystem) {
+    console.log('Early return - missing requirements');
+    showFloatingText('Select a destination and cats first!', false);
+    return;
+  }
+
+  const catIds = Array.from(selectedCats);
+  console.log('Starting expedition with cats:', catIds);
 
   const result = expeditionSystem.startExpedition(
     selectedDestination,
-    Array.from(selectedCats),
+    catIds,
     catSystem
   );
+
+  console.log('Expedition result:', result);
 
   if (result.success) {
     selectedDestination = null;
@@ -2978,8 +3879,10 @@ function startSelectedExpedition() {
     renderExpeditions();
     updateExpeditionsUI();
     renderCatCollection();
+    showFloatingText('Expedition started!', false);
   } else {
     console.log('Expedition failed:', result.reason);
+    showFloatingText(result.reason || 'Expedition failed!', false);
   }
 }
 
@@ -3011,6 +3914,12 @@ function updateExpeditionsUI() {
     `;
   }).join('');
 }
+
+// Expedition functions - make global for onclick handlers
+window.startSelectedExpedition = startSelectedExpedition;
+window.selectDestination = selectDestination;
+window.toggleCatSelection = toggleCatSelection;
+window.renderExpeditions = renderExpeditions;
 
 // ===================================
 // PRESTIGE SYSTEM
@@ -3204,8 +4113,24 @@ function executePagodaCommand(cmdId) {
       setTimeout(() => {
         const rewards = pagodaSystem.runRewards;
         gameState.boopPoints += rewards.bp;
-        pagodaSystem.tokens += rewards.tokens;
-        alert(`Run ended! Gained ${rewards.bp} BP and ${rewards.tokens} tokens!`);
+
+        // Build loot summary
+        let summary = `Floor ${pagodaSystem.currentFloor} reached!\n\n`;
+        summary += `💰 BP Gained: ${formatNumber(rewards.bp)}\n`;
+        summary += `🎟️ Tokens: ${rewards.tokens}\n`;
+
+        if (rewards.materials && rewards.materials.length > 0) {
+          summary += `📦 Materials: ${rewards.materials.length}\n`;
+        }
+
+        if (rewards.equipment && rewards.equipment.length > 0) {
+          summary += `🗡️ Equipment:\n`;
+          rewards.equipment.forEach(eq => {
+            summary += `  - ${eq.name} (${eq.rarity})\n`;
+          });
+        }
+
+        alert(summary);
         renderPagoda();
         updateResourceDisplay();
       }, 500);
@@ -3218,8 +4143,46 @@ function executePagodaCommand(cmdId) {
 // ===================================
 
 function renderEquipment() {
+  renderEquipmentStats();
   renderEquipmentSlots();
   renderEquipmentInventory();
+}
+
+function renderEquipmentStats() {
+  if (!equipmentSystem) return;
+
+  const statsEl = document.getElementById('equipment-stats-summary');
+  if (!statsEl) return;
+
+  const activeCatId = getActiveCatId();
+  const totalStats = equipmentSystem.getCombinedStats ? equipmentSystem.getCombinedStats(activeCatId) : {};
+
+  const statNames = {
+    attack: '⚔️ Attack',
+    hp: '❤️ HP',
+    defense: '🛡️ Defense',
+    critChance: '💥 Crit%',
+    critDamage: '💢 Crit DMG',
+    dodge: '💨 Dodge',
+    attackSpeed: '⚡ Atk Speed',
+    wisdom: '🧠 Wisdom',
+    bpMultiplier: '💰 BP Mult',
+    ppMultiplier: '😺 PP Mult'
+  };
+
+  const statEntries = Object.entries(totalStats).filter(([k, v]) => v !== 0 && statNames[k]);
+
+  if (statEntries.length === 0) {
+    statsEl.innerHTML = '<p class="empty-message">Equip items to see stats</p>';
+    return;
+  }
+
+  statsEl.innerHTML = statEntries.map(([key, value]) => {
+    const displayValue = key.includes('Chance') || key.includes('Multiplier') || key === 'dodge'
+      ? `+${(value * 100).toFixed(0)}%`
+      : `+${Math.floor(value)}`;
+    return `<span class="stat-chip">${statNames[key] || key}: ${displayValue}</span>`;
+  }).join('');
 }
 
 function renderEquipmentSlots() {
@@ -3237,9 +4200,16 @@ function renderEquipmentSlots() {
     const equipment = equipId ? equipmentSystem.getEquipment(equipId) : null;
 
     if (equipment) {
-      slotEl.innerHTML = `<span style="color: ${EQUIPMENT_RARITIES[equipment.rarity].color}">${equipment.name}</span>`;
+      const rarity = EQUIPMENT_RARITIES[equipment.rarity];
+      const statsText = formatEquipmentStats(equipment.stats);
+      slotEl.innerHTML = `
+        <div class="equipped-item">
+          <span class="equip-name" style="color: ${rarity.color}">${equipment.name}</span>
+          <span class="equip-stats">${statsText}</span>
+        </div>
+      `;
     } else {
-      slotEl.textContent = 'Empty';
+      slotEl.innerHTML = '<span class="equip-empty">Empty</span>';
     }
   });
 }
@@ -3255,27 +4225,62 @@ function renderEquipmentInventory() {
   if (countEl) countEl.textContent = inventory.length;
 
   if (inventory.length === 0) {
-    inventoryEl.innerHTML = '<p class="empty-message">No equipment yet!</p>';
+    inventoryEl.innerHTML = '<p class="empty-message">No equipment yet! Run the Pagoda to find loot.</p>';
     return;
   }
 
   inventoryEl.innerHTML = inventory.map(eq => {
     const rarity = EQUIPMENT_RARITIES[eq.rarity];
+    const statsText = formatEquipmentStats(eq.stats);
     return `
-      <div class="inventory-item ${eq.rarity}" data-equip-id="${eq.id}" title="${eq.name}">
-        <span style="font-size: 16px;">${EQUIPMENT_SLOTS[eq.slot].emoji}</span>
-        <span style="font-size: 6px; color: ${rarity.color};">${eq.rarity.charAt(0).toUpperCase()}</span>
+      <div class="inventory-item ${eq.rarity}" data-equip-id="${eq.id}">
+        <div class="inv-item-header">
+          <span class="inv-item-icon">${EQUIPMENT_SLOTS[eq.slot]?.emoji || '📦'}</span>
+          <span class="inv-item-name" style="color: ${rarity.color}">${eq.name}</span>
+        </div>
+        <div class="inv-item-stats">${statsText}</div>
+        <button class="equip-btn" data-equip-id="${eq.id}">Equip</button>
       </div>
     `;
   }).join('');
 
   // Add click handlers
-  inventoryEl.querySelectorAll('.inventory-item').forEach(item => {
-    item.addEventListener('click', () => {
-      const equipId = item.dataset.equipId;
+  inventoryEl.querySelectorAll('.equip-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const equipId = btn.dataset.equipId;
       equipItemToActiveCat(equipId);
     });
   });
+}
+
+function formatEquipmentStats(stats) {
+  if (!stats || Object.keys(stats).length === 0) return 'No stats';
+
+  const shortNames = {
+    attack: 'ATK',
+    hp: 'HP',
+    defense: 'DEF',
+    critChance: 'CRIT%',
+    critDamage: 'CDMG',
+    dodge: 'DODGE',
+    attackSpeed: 'SPD',
+    wisdom: 'WIS',
+    bpMultiplier: 'BP%',
+    ppMultiplier: 'PP%',
+    boopDamage: 'BOOP',
+    fireDamage: 'FIRE',
+    allStats: 'ALL%',
+    regenPerSecond: 'REGEN'
+  };
+
+  return Object.entries(stats).map(([key, value]) => {
+    const name = shortNames[key] || key;
+    const displayValue = key.includes('Chance') || key.includes('Multiplier') || key === 'dodge' || key.includes('Damage') || key === 'allStats' || key === 'regenPerSecond'
+      ? `${(value * 100).toFixed(0)}%`
+      : Math.floor(value);
+    return `${name}:${displayValue}`;
+  }).join(' ');
 }
 
 function getActiveCatId() {
@@ -3503,6 +4508,7 @@ function gameLoop(timestamp) {
   // Update display periodically (not every frame)
   if (timestamp % 500 < deltaTime) {
     updateResourceDisplay();
+    updateWaifuBondDisplay();
     updateGoldenSnootUI();
     updateActiveEffectsUI();
     updateIRLBonusUI();
@@ -3517,6 +4523,27 @@ function gameLoop(timestamp) {
   // Update drama UI less frequently
   if (timestamp % 2000 < deltaTime) {
     updateDramaUI();
+  }
+
+  // Check for waifu unlocks every 5 seconds
+  if (timestamp % 5000 < deltaTime) {
+    checkWaifuUnlocks();
+
+    // Check for technique skill and passive discoveries
+    if (techniqueSystem) {
+      const newSkills = techniqueSystem.checkSkillDiscovery(gameState);
+      for (const skill of newSkills) {
+        showFloatingText(`🔮 HIDDEN SKILL: ${skill.name}!`, true);
+        console.log(`Discovered hidden skill: ${skill.name}`);
+        if (audioSystem) audioSystem.playSFX('achievement');
+      }
+
+      const newPassives = techniqueSystem.checkCultivationPassives(gameState);
+      for (const passive of newPassives) {
+        showFloatingText(`✨ ${passive.name} learned!`, true);
+        console.log(`Learned cultivation passive: ${passive.name}`);
+      }
+    }
   }
 
   requestAnimationFrame(gameLoop);
@@ -3550,6 +4577,87 @@ window.forceStart = function(masterId = 'gerald') {
 window.forceRenderMasters = function() {
   console.log('Force rendering master cards...');
   renderMasterCards();
+};
+
+// Debug: Spawn a goose manually
+window.spawnGoose = function() {
+  if (!gooseSystem) {
+    console.error('GooseSystem not initialized');
+    return;
+  }
+  console.log('Spawning goose...');
+  gooseSystem.spawnGoose();
+};
+
+// Debug: Add test techniques
+window.addTestTechniques = function() {
+  if (!techniqueSystem) {
+    console.error('TechniqueSystem not initialized');
+    return;
+  }
+  techniqueSystem.learnTechnique('dream_walker');
+  techniqueSystem.learnTechnique('honk_of_authority');
+  techniqueSystem.addConsumable('qi_pill_minor', 5);
+  techniqueSystem.addConsumable('boop_elixir', 3);
+  techniqueSystem.addConsumable('golden_catnip', 1);
+  techniqueSystem.learnedSkills.push('thousand_paw_strike');
+  techniqueSystem.learnedSkills.push('critical_meridian');
+  techniqueSystem.cultivationPassives.push('iron_body_1');
+  console.log('Test techniques added! Switch to Skills tab to see them.');
+  renderTechniquesPanel();
+};
+
+// Debug: Give resources
+window.giveResources = function(bp = 100000, pp = 10000) {
+  gameState.boopPoints += bp;
+  gameState.purrPower += pp;
+  updateResourceDisplay();
+  console.log(`Added ${bp} BP and ${pp} PP`);
+};
+
+// Debug: Test expeditions
+window.testExpedition = function() {
+  console.log('=== EXPEDITION DEBUG ===');
+  console.log('expeditionSystem:', expeditionSystem);
+  console.log('catSystem:', catSystem);
+  if (catSystem) {
+    console.log('All cats:', catSystem.getAllCats());
+  }
+  if (expeditionSystem) {
+    console.log('Active expeditions:', expeditionSystem.activeExpeditions);
+    console.log('Destinations:', Object.keys(EXPEDITION_DESTINATIONS));
+    for (const [id, dest] of Object.entries(EXPEDITION_DESTINATIONS)) {
+      const unlocked = expeditionSystem.isDestinationUnlocked(id, catSystem);
+      console.log(`  ${dest.name}: ${unlocked ? 'UNLOCKED' : 'LOCKED'} (needs ${dest.requiredRealm})`);
+    }
+  }
+  renderExpeditions();
+};
+
+// Debug: Test partners
+window.testPartners = function() {
+  console.log('=== PARTNER DEBUG ===');
+  console.log('partnerGenerator:', partnerGenerator);
+  if (partnerGenerator) {
+    console.log('Owned partners:', partnerGenerator.ownedPartners);
+    console.log('Stats:', partnerGenerator.stats);
+    // Generate a test partner
+    const partner = partnerGenerator.generate();
+    console.log('Generated test partner:', partner);
+    partnerGenerator.addToOwned(partner);
+    renderPartners();
+    console.log('Partner added to collection!');
+  }
+};
+
+// Debug: Force add a cat for testing
+window.addTestCat = function() {
+  if (catSystem) {
+    const cat = catSystem.generateCat('mortal');
+    catSystem.addCat(cat);
+    renderCatCollection();
+    console.log('Added test cat:', cat);
+  }
 };
 
 // ===================================

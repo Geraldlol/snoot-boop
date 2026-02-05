@@ -1,0 +1,666 @@
+/* ===================================
+   RESPONSIVE
+   All media queries and breakpoints
+   =================================== */
+
+/* --- Hide mobile nav by default on desktop --- */
+.mobile-nav,
+.mobile-tab-modal,
+.mobile-more-menu {
+  display: none;
+}
+
+/* ===================================
+   TABLET BREAKPOINT (max-width: 1024px)
+   =================================== */
+
+@media (max-width: 1024px) {
+  .game-layout {
+    grid-template-columns: 1fr;
+    padding-bottom: 70px; /* Space for mobile nav */
+  }
+
+  .side-panel {
+    display: none;
+  }
+
+  .waifu-panel {
+    display: none;
+  }
+
+  /* Show mobile navigation */
+  .mobile-nav {
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 60px;
+    background: linear-gradient(to top, #1a1a2e 0%, #16213e 100%);
+    border-top: 2px solid var(--jade);
+    z-index: 1000;
+    justify-content: space-around;
+    align-items: center;
+    padding: 0 10px;
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.5);
+  }
+
+  .mobile-nav-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: none;
+    color: #888;
+    padding: 8px 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border-radius: 8px;
+    min-width: 60px;
+  }
+
+  .mobile-nav-btn:hover,
+  .mobile-nav-btn:focus {
+    background: rgba(80, 200, 120, 0.1);
+  }
+
+  .mobile-nav-btn.active {
+    color: var(--jade);
+  }
+
+  .mobile-nav-btn .nav-icon {
+    font-size: 20px;
+    margin-bottom: 2px;
+  }
+
+  .mobile-nav-btn .nav-label {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 6px;
+  }
+
+  /* Mobile Tab Modal */
+  .mobile-tab-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 60px;
+    background: rgba(26, 26, 46, 0.98);
+    z-index: 900;
+    overflow-y: auto;
+    animation: slideUp 0.3s ease;
+  }
+
+  .mobile-tab-modal.hidden {
+    display: none;
+  }
+
+  .mobile-tab-modal:not(.hidden) {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .mobile-tab-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    background: linear-gradient(to bottom, #16213e, #1a1a2e);
+    border-bottom: 2px solid var(--jade);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+
+  .mobile-tab-header h3 {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 12px;
+    color: var(--jade);
+    margin: 0;
+  }
+
+  .mobile-tab-close {
+    background: transparent;
+    border: 2px solid var(--jade);
+    color: var(--jade);
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    font-size: 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+  }
+
+  .mobile-tab-close:hover {
+    background: var(--jade);
+    color: #1a1a2e;
+  }
+
+  .mobile-tab-content {
+    flex: 1;
+    padding: 15px;
+    overflow-y: auto;
+  }
+
+  /* Clone tab content styles for mobile modal */
+  .mobile-tab-content .tab-content {
+    display: block !important;
+  }
+
+  /* Mobile More Menu */
+  .mobile-more-menu {
+    position: fixed;
+    bottom: 70px;
+    right: 10px;
+    background: linear-gradient(to bottom, #16213e, #1a1a2e);
+    border: 2px solid var(--jade);
+    border-radius: 12px;
+    padding: 10px;
+    z-index: 950;
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.5);
+    animation: fadeIn 0.2s ease;
+  }
+
+  .mobile-more-menu.hidden {
+    display: none;
+  }
+
+  .mobile-more-menu:not(.hidden) {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .more-menu-btn {
+    background: rgba(80, 200, 120, 0.1);
+    border: 1px solid rgba(80, 200, 120, 0.3);
+    color: #ccc;
+    padding: 12px 20px;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 8px;
+    cursor: pointer;
+    border-radius: 6px;
+    text-align: left;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+  }
+
+  .more-menu-btn:hover,
+  .more-menu-btn:focus {
+    background: rgba(80, 200, 120, 0.2);
+    color: var(--jade);
+    border-color: var(--jade);
+  }
+
+  /* Adjust header for mobile */
+  .game-header {
+    padding: 10px 15px;
+  }
+
+  .resource-bar {
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .resource-label {
+    font-size: 6px;
+  }
+
+  .resource-value {
+    font-size: 10px;
+  }
+
+  /* Adjust floating panels */
+  .daily-panel,
+  .drama-meter,
+  .irl-bonus {
+    display: none; /* Hide on tablet, show in More menu */
+  }
+}
+
+/* ===================================
+   MOBILE PHONE BREAKPOINT (max-width: 768px)
+   =================================== */
+
+@media (max-width: 768px) {
+  .game-title {
+    font-size: 16px;
+  }
+
+  .game-subtitle {
+    font-size: 8px;
+  }
+
+  .masters-grid {
+    grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+    gap: 8px;
+    padding: 0 10px;
+  }
+
+  .master-portrait {
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
+  }
+
+  .master-card {
+    padding: 10px;
+  }
+
+  .master-card h3 {
+    font-size: 7px;
+  }
+
+  .master-card .title {
+    font-size: 5px;
+  }
+
+  .preview-header {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .master-preview {
+    margin: 10px;
+    padding: 15px;
+  }
+
+  .boop-button {
+    width: 140px;
+    height: 140px;
+    font-size: 11px;
+  }
+
+  .boop-area {
+    padding: 20px 10px;
+  }
+
+  .active-cat {
+    font-size: 50px;
+  }
+
+  .active-cat-name {
+    font-size: 8px;
+  }
+
+  .boop-power-display {
+    font-size: 8px;
+  }
+
+  .goose-container {
+    width: 280px;
+    height: 180px;
+  }
+
+  .goose-timer {
+    width: 280px;
+  }
+
+  .goose-alert h2 {
+    font-size: 16px;
+  }
+
+  /* Mobile nav adjustments */
+  .mobile-nav {
+    height: 56px;
+  }
+
+  .mobile-nav-btn {
+    min-width: 50px;
+    padding: 6px 8px;
+  }
+
+  .mobile-nav-btn .nav-icon {
+    font-size: 18px;
+  }
+
+  .mobile-nav-btn .nav-label {
+    font-size: 5px;
+  }
+
+  .mobile-tab-header h3 {
+    font-size: 10px;
+  }
+
+  .game-layout {
+    padding-bottom: 66px;
+  }
+
+  /* Modal adjustments */
+  .modal-content {
+    margin: 10px;
+    padding: 15px;
+    max-height: calc(100vh - 100px);
+  }
+
+  .modal-content h2 {
+    font-size: 14px;
+  }
+
+  /* Header compact mode */
+  .header-right {
+    display: none;
+  }
+
+  .combo-display {
+    position: fixed;
+    top: 60px;
+    right: 10px;
+    z-index: 100;
+  }
+
+  .master-badge {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    z-index: 100;
+    font-size: 6px;
+  }
+
+  /* Achievement notification mobile */
+  .achievement-notification {
+    width: calc(100% - 40px);
+    right: -100%;
+    bottom: 80px;
+  }
+
+  .achievement-notification.visible {
+    right: 20px;
+  }
+
+  /* Cat cards compact */
+  .cat-card {
+    padding: 8px;
+  }
+
+  .cat-card .cat-emoji {
+    font-size: 24px;
+  }
+
+  .cat-name {
+    font-size: 7px;
+  }
+
+  /* Cat stacks grid mobile */
+  .cat-stacks-grid {
+    grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+    gap: 6px;
+  }
+
+  .cat-stack {
+    padding: 6px 4px;
+  }
+
+  .cat-stack .cat-emoji {
+    font-size: 24px;
+  }
+
+  .cat-stack .cat-name {
+    font-size: 5px;
+  }
+
+  .cat-count {
+    font-size: 6px;
+    padding: 1px 4px;
+  }
+
+  /* Resource display compact */
+  .resource {
+    padding: 6px 10px;
+  }
+}
+
+/* ===================================
+   SMALL PHONE BREAKPOINT (max-width: 480px)
+   =================================== */
+
+@media (max-width: 480px) {
+  .game-title {
+    font-size: 14px;
+  }
+
+  .masters-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+  }
+
+  .master-portrait {
+    width: 36px;
+    height: 36px;
+    font-size: 18px;
+  }
+
+  .boop-button {
+    width: 120px;
+    height: 120px;
+    font-size: 10px;
+  }
+
+  .resource-bar {
+    justify-content: center;
+  }
+
+  .resource {
+    flex: 0 0 auto;
+  }
+
+  .mobile-nav-btn .nav-label {
+    display: none;
+  }
+
+  .mobile-nav-btn .nav-icon {
+    font-size: 22px;
+  }
+
+  .mobile-nav-btn {
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  /* Cat stacks small phone */
+  .cat-stacks-grid {
+    grid-template-columns: repeat(auto-fill, minmax(55px, 1fr));
+    gap: 5px;
+  }
+
+  .cat-stack .cat-emoji {
+    font-size: 22px;
+  }
+
+  .cat-stack .cat-realm,
+  .cat-stack .cat-pp {
+    font-size: 5px;
+  }
+
+  /* Codex modal compact */
+  .codex-modal {
+    max-width: 100%;
+    width: 100%;
+    max-height: 100vh;
+    border-radius: 0;
+  }
+
+  .codex-tabs {
+    gap: 3px;
+  }
+
+  .codex-tab {
+    padding: 6px 8px;
+    font-size: 6px;
+  }
+
+  /* Upgrade cards compact */
+  .upgrade-card {
+    padding: 8px;
+  }
+
+  .upgrade-name {
+    font-size: 7px;
+  }
+
+  .upgrade-effect {
+    font-size: 6px;
+  }
+
+  /* Goose overlay compact */
+  .goose-container {
+    width: 260px;
+    height: 160px;
+  }
+
+  .goose-timer {
+    width: 260px;
+  }
+
+  .goose-target {
+    font-size: 80px;
+  }
+}
+
+/* ===================================
+   LANDSCAPE ORIENTATION
+   =================================== */
+
+@media (max-height: 500px) and (orientation: landscape) {
+  .game-layout {
+    padding-bottom: 50px;
+  }
+
+  .mobile-nav {
+    height: 44px;
+  }
+
+  .mobile-nav-btn .nav-label {
+    display: none;
+  }
+
+  .boop-button {
+    width: 100px;
+    height: 100px;
+    font-size: 9px;
+  }
+
+  .active-cat {
+    font-size: 40px;
+  }
+
+  .mobile-tab-modal {
+    bottom: 44px;
+  }
+
+  .game-header {
+    padding: 8px 10px;
+  }
+
+  .resource-value {
+    font-size: 12px;
+  }
+}
+
+/* ===================================
+   WIDE SCREEN ADJUSTMENTS
+   =================================== */
+
+@media (min-width: 1400px) {
+  #game-container {
+    max-width: 1400px;
+  }
+
+  .game-layout {
+    grid-template-columns: 250px 1fr 320px;
+    gap: 30px;
+  }
+
+  .boop-button {
+    width: 220px;
+    height: 220px;
+    font-size: 18px;
+  }
+
+  .active-cat {
+    font-size: 120px;
+  }
+}
+
+/* ===================================
+   ACCESSIBILITY: REDUCED MOTION
+   =================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .cat-idle,
+  .floating-text,
+  .combo-display,
+  .goose-target,
+  .golden-snoot,
+  .parasite {
+    animation: none !important;
+  }
+
+  #game-container::before {
+    animation: none !important;
+  }
+}
+
+/* ===================================
+   HIGH CONTRAST MODE
+   =================================== */
+
+@media (prefers-contrast: high) {
+  .jade-button {
+    border-width: 4px;
+  }
+
+  .tab-btn {
+    border-width: 3px;
+  }
+
+  .cat-card,
+  .upgrade-card,
+  .master-card {
+    border-width: 4px;
+  }
+
+  .modal-content {
+    border-width: 5px;
+  }
+}
+
+/* ===================================
+   PRINT STYLES
+   =================================== */
+
+@media print {
+  .mobile-nav,
+  .goose-overlay,
+  .modal,
+  .save-indicator,
+  .achievement-notification,
+  .floating-text-container,
+  #game-container::before {
+    display: none !important;
+  }
+
+  body {
+    background: white;
+    color: black;
+  }
+
+  .scroll-panel {
+    background: white;
+    border: 2px solid black;
+    box-shadow: none;
+  }
+}

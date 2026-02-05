@@ -17,6 +17,7 @@ const MASTERS = {
       }
     },
     emoji: '🐉',
+    portrait: 'assets/masters/gerald.png',
     color: '#50C878',
     quotes: [
       "Balance in all things. Especially snoots.",
@@ -46,6 +47,7 @@ const MASTERS = {
       }
     },
     emoji: '👊',
+    portrait: 'assets/masters/rusty.png',
     color: '#DC143C',
     quotes: [
       "When in doubt, boop harder!",
@@ -70,6 +72,7 @@ const MASTERS = {
       }
     },
     emoji: '🌊',
+    portrait: 'assets/masters/steve.png',
     color: '#4169E1',
     quotes: [
       "Patience yields the greatest gains.",
@@ -97,6 +100,7 @@ const MASTERS = {
       }
     },
     emoji: '⚡',
+    portrait: 'assets/masters/andrew.png',
     color: '#FFD700',
     quotes: [
       "Already found three cats while you were reading this.",
@@ -121,6 +125,7 @@ const MASTERS = {
       }
     },
     emoji: '🌙',
+    portrait: 'assets/masters/nik.png',
     color: '#483D8B',
     quotes: [
       "...",
@@ -145,6 +150,7 @@ const MASTERS = {
       }
     },
     emoji: '🪷',
+    portrait: 'assets/masters/yuelin.png',
     color: '#FFB6C1',
     quotes: [
       "The cats tell me you have a kind heart.",
@@ -169,6 +175,7 @@ const MASTERS = {
       }
     },
     emoji: '⛰️',
+    portrait: 'assets/masters/scott.png',
     color: '#8B4513',
     quotes: [
       "I am the mountain. The cats are my snow.",

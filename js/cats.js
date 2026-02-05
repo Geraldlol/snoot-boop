@@ -539,7 +539,14 @@ class CatSystem {
    * Get a cat by ID
    */
   getCatById(catId) {
-    return this.ownedCats.find(c => c.id === catId || c.instanceId === catId);
+    // Handle both string and number IDs (DOM datasets return strings)
+    const numId = parseInt(catId);
+    return this.ownedCats.find(c =>
+      c.id === catId ||
+      c.instanceId === catId ||
+      c.instanceId === numId ||
+      c.id == catId  // Loose equality fallback
+    );
   }
 
   /**

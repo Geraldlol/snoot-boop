@@ -163,7 +163,7 @@ class GooseSystem {
     this.activeGoose = null;
     this.gooseTimer = null;
     this.timeRemaining = 0;
-    this.spawnChance = 0.02; // 2% per minute base
+    this.spawnChance = 0.15; // 15% per minute base
     this.timeLimit = 30000; // 30 seconds
     this.spawnInterval = null;
 
@@ -185,7 +185,7 @@ class GooseSystem {
       if (!this.activeGoose) {
         this.checkForSpawn();
       }
-    }, 60000); // Check every minute
+    }, 20000); // Check every 20 seconds
   }
 
   /**

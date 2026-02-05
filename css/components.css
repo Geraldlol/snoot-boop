@@ -1,0 +1,418 @@
+/* ===================================
+   COMPONENTS
+   Buttons, Cards, Panels, Badges
+   =================================== */
+
+/* --- Scroll Panel (Wuxia UI) --- */
+.scroll-panel {
+  background: linear-gradient(to bottom,
+    var(--bg-parchment) 0%,
+    var(--bg-parchment-dark) 50%,
+    var(--bg-parchment) 100%
+  );
+  border: 4px solid var(--scott-brown);
+  border-radius: 4px;
+  box-shadow:
+    inset 0 0 20px rgba(0,0,0,0.1),
+    4px 4px 0 rgba(0,0,0,0.3);
+  padding: 20px;
+  color: var(--text-dark);
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+
+/* --- Jade Button --- */
+.jade-button {
+  position: relative;
+  background: linear-gradient(180deg, var(--jade-light) 0%, var(--jade) 50%, var(--jade-dark) 100%);
+  border: 4px solid var(--jade-dark);
+  border-radius: 4px;
+  color: #fff;
+  text-shadow:
+    2px 2px 0 #1a5c3a,
+    0 0 10px rgba(255, 255, 255, 0.3);
+  font-family: var(--font-pixel);
+  font-size: 12px;
+  padding: 15px 30px;
+  cursor: pointer;
+  transition: all var(--anim-fast) ease;
+  box-shadow:
+    0 6px 0 #2d7a50,
+    0 0 20px rgba(80, 200, 120, 0.3);
+  overflow: hidden;
+  display: block;
+  width: 100%;
+}
+
+.jade-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  transition: left 0.5s ease;
+}
+
+.jade-button:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 8px 0 #2d7a50,
+    0 0 30px rgba(80, 200, 120, 0.5),
+    0 0 60px rgba(80, 200, 120, 0.3);
+  filter: brightness(1.1);
+}
+
+.jade-button:hover::before {
+  left: 100%;
+}
+
+.jade-button:active {
+  transform: translateY(4px);
+  box-shadow:
+    0 2px 0 #2d7a50,
+    0 0 40px rgba(80, 200, 120, 0.7);
+}
+
+.jade-button.small {
+  padding: 8px 15px;
+  font-size: 8px;
+}
+
+/* --- Tab Buttons --- */
+.tab-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px;
+  margin-bottom: 15px;
+}
+
+.tab-btn {
+  flex: 1;
+  min-width: 60px;
+  padding: 8px 6px;
+  font-size: 7px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.1), rgba(0,0,0,0.2));
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 4px 4px 0 0;
+  color: var(--text-light);
+  font-family: var(--font-pixel);
+  cursor: pointer;
+  transition: all var(--anim-fast) ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.tab-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: transparent;
+  transition: background var(--anim-fast) ease;
+}
+
+.tab-btn:hover {
+  background: linear-gradient(180deg, rgba(80, 200, 120, 0.2), rgba(0,0,0,0.3));
+  border-color: var(--jade);
+  transform: translateY(-2px);
+}
+
+.tab-btn:hover::before {
+  background: var(--jade);
+}
+
+.tab-btn.active {
+  background: linear-gradient(180deg, var(--jade-dark), rgba(0, 0, 0, 0.4));
+  border-color: var(--jade);
+  color: white;
+  box-shadow:
+    0 -2px 10px rgba(80, 200, 120, 0.3),
+    inset 0 2px 10px rgba(255, 255, 255, 0.1);
+}
+
+.tab-btn.active::before {
+  background: var(--jade-light);
+  box-shadow: 0 0 10px var(--jade);
+}
+
+.tab-content {
+  display: none;
+  flex: 1;
+  overflow-y: auto;
+  animation: tab-fade-in 0.2s ease-out;
+}
+
+.tab-content.active {
+  display: block;
+}
+
+/* --- Toggle Button --- */
+.toggle-btn {
+  background: rgba(255, 100, 100, 0.2);
+  border: 2px solid #ff6464;
+  color: #ff6464;
+  padding: 6px 12px;
+  font-family: var(--font-pixel);
+  font-size: 8px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  min-width: 50px;
+}
+
+.toggle-btn[aria-pressed="true"] {
+  background: rgba(80, 200, 120, 0.2);
+  border-color: var(--jade);
+  color: var(--jade);
+}
+
+.toggle-btn:hover {
+  transform: scale(1.05);
+}
+
+/* --- Header Button --- */
+.header-btn {
+  background: rgba(80, 200, 120, 0.1);
+  border: 2px solid var(--jade);
+  color: var(--jade);
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  margin-left: 10px;
+}
+
+.header-btn:hover,
+.header-btn:focus {
+  background: var(--jade);
+  color: #1a1a2e;
+  transform: scale(1.1);
+}
+
+/* --- Reset Button --- */
+.reset-button {
+  width: 100%;
+  padding: 12px;
+  font-family: var(--font-pixel);
+  font-size: 8px;
+  background: linear-gradient(180deg, #ff4444, #cc0000);
+  border: 2px solid #990000;
+  color: white;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+.reset-button:hover {
+  background: linear-gradient(180deg, #ff6666, #ff0000);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 0, 0, 0.4);
+}
+
+/* --- Minigame Button --- */
+.minigame-button {
+  background: linear-gradient(135deg, var(--jade) 0%, var(--jade-dark) 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 20px;
+  font-family: var(--font-pixel);
+  font-size: 10px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-top: 10px;
+}
+
+.minigame-button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 5px 20px rgba(80, 200, 120, 0.4);
+}
+
+.minigame-button:active {
+  transform: scale(0.98);
+}
+
+/* --- Command Button --- */
+.cmd-btn {
+  background: linear-gradient(180deg, rgba(255,255,255,0.15), rgba(0,0,0,0.3));
+  border: 2px solid var(--jade);
+  border-radius: 4px;
+  padding: 8px 12px;
+  color: white;
+  font-family: var(--font-pixel);
+  font-size: 8px;
+  cursor: pointer;
+  transition: all var(--anim-fast) ease;
+}
+
+.cmd-btn:hover:not(:disabled) {
+  background: linear-gradient(180deg, var(--jade-dark), rgba(0,0,0,0.4));
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(80, 200, 120, 0.4);
+}
+
+.cmd-btn:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+.cmd-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  filter: grayscale(50%);
+}
+
+/* --- Volume Slider --- */
+.volume-slider {
+  flex: 1;
+  height: 8px;
+  -webkit-appearance: none;
+  appearance: none;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.volume-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  background: var(--jade);
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.volume-slider::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  background: var(--jade);
+  border-radius: 50%;
+  cursor: pointer;
+  border: none;
+}
+
+/* --- Recruit Button --- */
+.recruit-section {
+  margin-bottom: 15px;
+}
+
+.recruit-button {
+  width: 100%;
+  background: linear-gradient(135deg, var(--jade), var(--jade-dark));
+  border: 3px solid var(--jade-dark);
+  border-radius: 8px;
+  padding: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+}
+
+.recruit-button:hover:not(:disabled) {
+  box-shadow: 0 0 15px var(--jade);
+  transform: translateY(-2px);
+}
+
+.recruit-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.recruit-text {
+  font-family: var(--font-pixel);
+  font-size: 10px;
+  color: white;
+  text-shadow: 1px 1px 0 #000;
+}
+
+.recruit-cost {
+  font-family: var(--font-pixel);
+  font-size: 8px;
+  color: var(--gold-accent);
+}
+
+.cat-capacity-display {
+  margin-top: 8px;
+  text-align: center;
+  font-family: var(--font-pixel);
+  font-size: 8px;
+  color: #aaa;
+}
+
+.cat-capacity-display .capacity-label {
+  margin-right: 5px;
+}
+
+.cat-capacity-display #cat-capacity-current {
+  color: var(--jade);
+}
+
+.cat-capacity-display #cat-capacity-max {
+  color: var(--gold-accent);
+}
+
+/* --- Loading Spinner --- */
+.spinner {
+  width: 24px;
+  height: 24px;
+  border: 3px solid rgba(255, 255, 255, 0.2);
+  border-top-color: var(--jade);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+/* --- Tooltip --- */
+.tooltip {
+  position: relative;
+}
+
+.tooltip::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.9);
+  color: white;
+  padding: 8px 12px;
+  border-radius: 4px;
+  font-size: 8px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+  z-index: 100;
+}
+
+.tooltip:hover::after {
+  opacity: 1;
+}
+
+/* --- Glow Effects --- */
+.glow-jade {
+  animation: glow-jade 2s ease-in-out infinite;
+}
+
+.glow-gold {
+  animation: glow-gold 2s ease-in-out infinite;
+}
+
+/* --- General Button Polish --- */
+button, .tab-btn, .upgrade-card, .cat-card, .master-card {
+  transition: all 0.2s ease;
+}
+
+button:active:not(:disabled) {
+  transform: scale(0.98);
+}
