@@ -4393,28 +4393,71 @@ function setupInventoryControls() {
   }
 }
 
+function getSalvagePreview(equipment) {
+  // Calculate what salvaging would return WITHOUT actually salvaging
+  const tierMaterials = {
+    common: ['upgrade_stone_common'],
+    uncommon: ['upgrade_stone_common', 'upgrade_stone_common'],
+    rare: ['upgrade_stone_common', 'upgrade_stone_rare'],
+    epic: ['upgrade_stone_rare', 'upgrade_stone_rare'],
+    legendary: ['upgrade_stone_rare', 'upgrade_stone_epic'],
+    mythic: ['upgrade_stone_epic', 'upgrade_stone_legendary']
+  };
+
+  const mats = tierMaterials[equipment.rarity] || tierMaterials.common;
+  const level = (equipment.upgradeLevel || 0) + 1;
+  const result = {};
+
+  // Base materials from rarity
+  for (const matId of mats) {
+    const amount = Math.max(1, Math.floor(level * 0.5));
+    result[matId] = (result[matId] || 0) + amount;
+  }
+
+  // Bonus from upgrade level
+  if (equipment.upgradeLevel > 0) {
+    result['upgrade_stone_common'] = (result['upgrade_stone_common'] || 0) + equipment.upgradeLevel;
+  }
+
+  // Chance info for enchant scrolls
+  if (equipment.enchantments && equipment.enchantments.length > 0) {
+    result['_enchant_scroll_chance'] = equipment.enchantments.length;
+  }
+
+  return result;
+}
+
 function showSalvageConfirm(equipId) {
   const equipment = equipmentSystem?.getEquipment(equipId);
   if (!equipment) return;
 
-  // Calculate salvage returns
-  const materials = craftingSystem?.salvageForMaterials(equipment);
-  if (!materials) {
+  // Calculate salvage preview
+  const materials = getSalvagePreview(equipment);
+  if (!materials || Object.keys(materials).length === 0) {
     showNotification('Cannot salvage this item!', 'error');
     return;
   }
 
   const rarity = window.EQUIPMENT_RARITIES?.[equipment.rarity] || { color: '#888' };
-  const materialsHtml = Object.entries(materials).map(([mat, count]) => {
-    const matName = mat.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
-    return `<div class="salvage-material"><span>📦</span> ${count}x ${matName}</div>`;
-  }).join('');
+  const materialsHtml = Object.entries(materials)
+    .filter(([mat]) => !mat.startsWith('_')) // Filter out meta keys
+    .map(([mat, count]) => {
+      const matName = mat.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+      return `<div class="salvage-material"><span>📦</span> ${count}x ${matName}</div>`;
+    }).join('');
+
+  // Add enchant scroll chance note
+  const enchantChance = materials['_enchant_scroll_chance'];
+  const enchantNote = enchantChance
+    ? `<p style="font-size: 6px; color: #a78bfa; margin-top: 5px;">+ chance for ${enchantChance} enchant scroll(s)</p>`
+    : '';
 
   const confirmHtml = `
     <div class="salvage-preview">
       <h6>Salvage <span style="color: ${rarity.color}">${equipment.name}</span>?</h6>
       <p style="font-size: 7px; color: #888; margin-bottom: 8px;">You will receive:</p>
       <div class="salvage-materials">${materialsHtml}</div>
+      ${enchantNote}
       <div class="salvage-actions">
         <button class="salvage-cancel" onclick="closeSalvageConfirm()">Cancel</button>
         <button class="salvage-confirm" onclick="confirmSalvage('${equipId}')">Salvage</button>
@@ -4441,18 +4484,28 @@ function confirmSalvage(equipId) {
   const equipment = equipmentSystem.getEquipment(equipId);
   if (!equipment) return;
 
-  // Get materials before removing
-  const materials = craftingSystem.salvageForMaterials(equipment);
-
-  // Remove from inventory
+  // Remove from inventory first
   const index = equipmentSystem.inventory.findIndex(eq => eq.id === equipId);
   if (index === -1) return;
 
   equipmentSystem.inventory.splice(index, 1);
 
-  // Add materials
-  for (const [mat, count] of Object.entries(materials)) {
+  // Calculate and add materials
+  const preview = getSalvagePreview(equipment);
+  for (const [mat, count] of Object.entries(preview)) {
+    if (mat.startsWith('_')) continue; // Skip meta keys
     craftingSystem.materials[mat] = (craftingSystem.materials[mat] || 0) + count;
+  }
+
+  // Chance for enchant scrolls from enchantments
+  if (equipment.enchantments && equipment.enchantments.length > 0) {
+    for (const enc of equipment.enchantments) {
+      if (Math.random() < 0.3) { // 30% chance per enchant
+        const enchant = window.ENCHANTMENTS?.[enc.id];
+        const scrollId = `enchant_scroll_${enchant?.tier || 'common'}`;
+        craftingSystem.materials[scrollId] = (craftingSystem.materials[scrollId] || 0) + 1;
+      }
+    }
   }
 
   // Play sound and show notification
