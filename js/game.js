@@ -4441,34 +4441,39 @@ function showSalvageConfirm(equipId) {
     return `<div class="salvage-material">📦 ${count}x ${matName}</div>`;
   }).join('');
 
-  const confirmHtml = `
-    <div class="salvage-preview">
-      <h6>Salvage <span style="color: ${rarity.color}">${equipment.name}</span>?</h6>
-      <p style="font-size: 7px; color: #888; margin-bottom: 8px;">You will receive:</p>
-      <div class="salvage-materials">${materialsHtml}</div>
-      <div class="salvage-actions">
-        <button class="salvage-cancel" onclick="closeSalvageConfirm()">Cancel</button>
-        <button class="salvage-confirm" onclick="confirmSalvage('${equipId}')">Salvage</button>
-      </div>
+  // Remove any existing modal first
+  closeSalvageConfirm();
+
+  // Create modal with backdrop - append to body for proper z-index
+  const backdrop = document.createElement('div');
+  backdrop.className = 'salvage-backdrop';
+  backdrop.onclick = closeSalvageConfirm;
+
+  const modal = document.createElement('div');
+  modal.className = 'salvage-preview';
+  modal.innerHTML = `
+    <h6>Salvage <span style="color: ${rarity.color}">${equipment.name}</span>?</h6>
+    <p style="font-size: 8px; color: #888; margin-bottom: 10px;">You will receive:</p>
+    <div class="salvage-materials">${materialsHtml}</div>
+    <div class="salvage-actions">
+      <button class="salvage-cancel">Cancel</button>
+      <button class="salvage-confirm">Salvage</button>
     </div>
   `;
 
-  const inventoryEl = document.getElementById('equipment-inventory');
-  if (!inventoryEl) {
-    console.error('[Salvage] No inventory element');
-    return;
-  }
+  // Add event listeners
+  modal.querySelector('.salvage-cancel').onclick = closeSalvageConfirm;
+  modal.querySelector('.salvage-confirm').onclick = () => confirmSalvage(equipId);
 
-  // Remove existing preview
-  const existingPreview = inventoryEl.querySelector('.salvage-preview');
-  if (existingPreview) existingPreview.remove();
-
-  inventoryEl.insertAdjacentHTML('afterbegin', confirmHtml);
-  console.log('[Salvage] Preview shown');
+  document.body.appendChild(backdrop);
+  document.body.appendChild(modal);
+  console.log('[Salvage] Modal shown');
 }
 
 function closeSalvageConfirm() {
+  const backdrop = document.querySelector('.salvage-backdrop');
   const preview = document.querySelector('.salvage-preview');
+  if (backdrop) backdrop.remove();
   if (preview) preview.remove();
 }
 
