@@ -427,18 +427,15 @@
 
 /* --- IRL Bonus Display --- */
 .irl-bonus {
-  position: fixed;
-  top: 20px;
-  left: 20px;
+  position: relative;
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 8px 12px;
+  gap: 6px;
+  padding: 6px 10px;
   background: rgba(0, 0, 0, 0.7);
   border: 2px solid var(--jade-dark);
   border-radius: 6px;
-  z-index: 100;
-  font-size: 8px;
+  font-size: 7px;
 }
 
 .irl-icon {

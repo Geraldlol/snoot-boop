@@ -1429,14 +1429,27 @@
 }
 
 /* ===================================
+   STATUS WIDGETS CONTAINER
+   Groups Daily, Drama, and IRL bonus together
+   =================================== */
+
+.status-widgets {
+  position: fixed;
+  bottom: 70px;
+  left: 10px;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  max-width: 160px;
+}
+
+/* ===================================
    DAILY COMMISSIONS
    =================================== */
 
 .daily-panel {
-  position: fixed;
-  top: 100px;
-  right: 20px;
-  z-index: 1000;
+  position: relative;
   background: var(--bg-dark);
   border: 2px solid var(--jade-dark);
   border-radius: 4px;
@@ -1629,10 +1642,7 @@
    =================================== */
 
 .drama-meter {
-  position: fixed;
-  top: 60px;
-  left: 20px;
-  z-index: 100;
+  position: relative;
   background: rgba(0, 0, 0, 0.7);
   border: 2px solid #ff69b4;
   border-radius: 6px;
