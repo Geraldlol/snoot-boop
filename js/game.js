@@ -834,6 +834,9 @@ function setupEventListeners() {
   // Waifu modal
   setupWaifuModal();
 
+  // Inventory controls
+  setupInventoryControls();
+
   // Recruit cat
   elements.recruitBtn.addEventListener('click', recruitCat);
 
@@ -4231,6 +4234,14 @@ function renderEquipmentSlots() {
   });
 }
 
+// Inventory state
+let inventoryViewMode = 'grid';
+let inventorySortBy = 'rarity';
+let inventoryFilterSlot = 'all';
+let inventorySearchTerm = '';
+
+const RARITY_ORDER = { common: 0, uncommon: 1, rare: 2, epic: 3, legendary: 4, mythic: 5 };
+
 function renderEquipmentInventory() {
   if (!equipmentSystem) return;
 
@@ -4238,25 +4249,85 @@ function renderEquipmentInventory() {
   const countEl = document.getElementById('inventory-count');
   if (!inventoryEl) return;
 
-  const inventory = equipmentSystem.inventory;
-  if (countEl) countEl.textContent = inventory.length;
+  let inventory = [...equipmentSystem.inventory];
+
+  // Apply search filter
+  if (inventorySearchTerm) {
+    const term = inventorySearchTerm.toLowerCase();
+    inventory = inventory.filter(eq =>
+      eq.name.toLowerCase().includes(term) ||
+      eq.slot.toLowerCase().includes(term)
+    );
+  }
+
+  // Apply slot filter
+  if (inventoryFilterSlot !== 'all') {
+    inventory = inventory.filter(eq => eq.slot === inventoryFilterSlot);
+  }
+
+  // Apply sorting
+  inventory.sort((a, b) => {
+    switch (inventorySortBy) {
+      case 'rarity':
+        return (RARITY_ORDER[b.rarity] || 0) - (RARITY_ORDER[a.rarity] || 0);
+      case 'slot':
+        return a.slot.localeCompare(b.slot);
+      case 'level':
+        return (b.upgradeLevel || 0) - (a.upgradeLevel || 0);
+      case 'name':
+        return a.name.localeCompare(b.name);
+      default:
+        return 0;
+    }
+  });
+
+  if (countEl) countEl.textContent = equipmentSystem.inventory.length;
+
+  // Update view class
+  inventoryEl.className = `equipment-inventory ${inventoryViewMode}-view`;
 
   if (inventory.length === 0) {
-    inventoryEl.innerHTML = '<p class="empty-message">No equipment yet! Run the Pagoda to find loot.</p>';
+    const msg = inventorySearchTerm || inventoryFilterSlot !== 'all'
+      ? 'No items match your filters.'
+      : 'No equipment yet! Run the Pagoda to find loot.';
+    inventoryEl.innerHTML = `<p class="empty-message">${msg}</p>`;
     return;
   }
 
   inventoryEl.innerHTML = inventory.map(eq => {
-    const rarity = EQUIPMENT_RARITIES[eq.rarity];
-    const statsText = formatEquipmentStats(eq.stats);
+    const rarity = window.EQUIPMENT_RARITIES?.[eq.rarity] || { color: '#888', name: 'Common' };
+    const level = eq.upgradeLevel || 0;
+    const enchants = eq.enchantments || [];
+
+    // Format stats as badges
+    const statsHtml = Object.entries(eq.stats || {}).map(([key, val]) => {
+      const displayVal = key.includes('Chance') || key.includes('Multiplier') || key === 'dodge'
+        ? `${(val * 100).toFixed(0)}%`
+        : Math.floor(val);
+      const shortKey = key.replace('Damage', 'DMG').replace('attack', 'ATK').replace('defense', 'DEF')
+        .replace('Chance', '%').replace('Speed', 'SPD').replace('Multiplier', 'x');
+      return `<span class="stat">${shortKey}: ${displayVal}</span>`;
+    }).join('');
+
+    // Format enchant badges
+    const enchantsHtml = enchants.map(e => {
+      const enchDef = window.ENCHANTMENTS?.[e.id] || { name: e.id, tier: 'common' };
+      return `<span class="enchant-badge ${enchDef.tier}">${enchDef.name}</span>`;
+    }).join('');
+
     return `
       <div class="inventory-item ${eq.rarity}" data-equip-id="${eq.id}">
         <div class="inv-item-header">
-          <span class="inv-item-icon">${EQUIPMENT_SLOTS[eq.slot]?.emoji || '📦'}</span>
+          <span class="inv-item-icon">${window.EQUIPMENT_SLOTS?.[eq.slot]?.emoji || '📦'}</span>
           <span class="inv-item-name" style="color: ${rarity.color}">${eq.name}</span>
+          ${level > 0 ? `<span class="inv-item-level">+${level}</span>` : ''}
         </div>
-        <div class="inv-item-stats">${statsText}</div>
-        <button class="equip-btn" data-equip-id="${eq.id}">Equip</button>
+        <div class="inv-item-stats">${statsHtml || '<span class="stat">No stats</span>'}</div>
+        ${enchantsHtml ? `<div class="inv-item-enchants">${enchantsHtml}</div>` : ''}
+        <div class="inv-item-actions">
+          <button class="equip-btn" data-equip-id="${eq.id}">Equip</button>
+          <button class="salvage-btn" data-equip-id="${eq.id}">Salvage</button>
+        </div>
       </div>
     `;
   }).join('');
@@ -4265,11 +4336,178 @@ function renderEquipmentInventory() {
   inventoryEl.querySelectorAll('.equip-btn').forEach(btn => {
     btn.addEventListener('click', (e) => {
       e.stopPropagation();
-      const equipId = btn.dataset.equipId;
-      equipItemToActiveCat(equipId);
+      equipItemToActiveCat(btn.dataset.equipId);
+    });
+  });
+
+  inventoryEl.querySelectorAll('.salvage-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      showSalvageConfirm(btn.dataset.equipId);
     });
   });
 }
+
+function setupInventoryControls() {
+  const searchInput = document.getElementById('inventory-search');
+  const sortSelect = document.getElementById('inventory-sort');
+  const filterSelect = document.getElementById('inventory-filter');
+  const gridBtn = document.getElementById('view-grid');
+  const listBtn = document.getElementById('view-list');
+
+  if (searchInput) {
+    searchInput.addEventListener('input', (e) => {
+      inventorySearchTerm = e.target.value;
+      renderEquipmentInventory();
+    });
+  }
+
+  if (sortSelect) {
+    sortSelect.addEventListener('change', (e) => {
+      inventorySortBy = e.target.value;
+      renderEquipmentInventory();
+    });
+  }
+
+  if (filterSelect) {
+    filterSelect.addEventListener('change', (e) => {
+      inventoryFilterSlot = e.target.value;
+      renderEquipmentInventory();
+    });
+  }
+
+  if (gridBtn && listBtn) {
+    gridBtn.addEventListener('click', () => {
+      inventoryViewMode = 'grid';
+      gridBtn.classList.add('active');
+      listBtn.classList.remove('active');
+      renderEquipmentInventory();
+    });
+
+    listBtn.addEventListener('click', () => {
+      inventoryViewMode = 'list';
+      listBtn.classList.add('active');
+      gridBtn.classList.remove('active');
+      renderEquipmentInventory();
+    });
+  }
+}
+
+function showSalvageConfirm(equipId) {
+  const equipment = equipmentSystem?.getEquipment(equipId);
+  if (!equipment) return;
+
+  // Calculate salvage returns
+  const materials = craftingSystem?.salvageForMaterials(equipment);
+  if (!materials) {
+    showNotification('Cannot salvage this item!', 'error');
+    return;
+  }
+
+  const rarity = window.EQUIPMENT_RARITIES?.[equipment.rarity] || { color: '#888' };
+  const materialsHtml = Object.entries(materials).map(([mat, count]) => {
+    const matName = mat.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+    return `<div class="salvage-material"><span>📦</span> ${count}x ${matName}</div>`;
+  }).join('');
+
+  const confirmHtml = `
+    <div class="salvage-preview">
+      <h6>Salvage <span style="color: ${rarity.color}">${equipment.name}</span>?</h6>
+      <p style="font-size: 7px; color: #888; margin-bottom: 8px;">You will receive:</p>
+      <div class="salvage-materials">${materialsHtml}</div>
+      <div class="salvage-actions">
+        <button class="salvage-cancel" onclick="closeSalvageConfirm()">Cancel</button>
+        <button class="salvage-confirm" onclick="confirmSalvage('${equipId}')">Salvage</button>
+      </div>
+    </div>
+  `;
+
+  // Show in a modal or inline
+  const inventoryEl = document.getElementById('equipment-inventory');
+  const existingPreview = inventoryEl.querySelector('.salvage-preview');
+  if (existingPreview) existingPreview.remove();
+
+  inventoryEl.insertAdjacentHTML('afterbegin', confirmHtml);
+}
+
+function closeSalvageConfirm() {
+  const preview = document.querySelector('.salvage-preview');
+  if (preview) preview.remove();
+}
+
+function confirmSalvage(equipId) {
+  if (!equipmentSystem || !craftingSystem) return;
+
+  const equipment = equipmentSystem.getEquipment(equipId);
+  if (!equipment) return;
+
+  // Get materials before removing
+  const materials = craftingSystem.salvageForMaterials(equipment);
+
+  // Remove from inventory
+  const index = equipmentSystem.inventory.findIndex(eq => eq.id === equipId);
+  if (index === -1) return;
+
+  equipmentSystem.inventory.splice(index, 1);
+
+  // Add materials
+  for (const [mat, count] of Object.entries(materials)) {
+    craftingSystem.materials[mat] = (craftingSystem.materials[mat] || 0) + count;
+  }
+
+  // Play sound and show notification
+  if (audioSystem) audioSystem.playSFX('sell');
+  showNotification(`Salvaged ${equipment.name}!`, 'success');
+
+  closeSalvageConfirm();
+  renderEquipmentInventory();
+  renderForgeTab(); // Update materials display
+}
+
+// Simple notification function
+function showNotification(message, type = 'info') {
+  // Create notification element
+  const notification = document.createElement('div');
+  notification.className = `game-notification ${type}`;
+  notification.textContent = message;
+
+  // Style inline for simplicity
+  Object.assign(notification.style, {
+    position: 'fixed',
+    bottom: '60px',
+    right: '20px',
+    padding: '10px 20px',
+    borderRadius: '6px',
+    fontSize: '10px',
+    fontFamily: 'var(--font-pixel)',
+    zIndex: '9999',
+    animation: 'notification-slide 0.3s ease-out',
+    background: type === 'success' ? 'linear-gradient(135deg, var(--jade-dark), var(--jade))' :
+                type === 'error' ? 'linear-gradient(135deg, #8B0000, var(--red-accent))' :
+                'linear-gradient(135deg, #333, #555)',
+    color: '#fff',
+    border: type === 'success' ? '2px solid var(--jade-light)' :
+            type === 'error' ? '2px solid #ff6666' :
+            '2px solid #888',
+    boxShadow: '0 4px 15px rgba(0, 0, 0, 0.4)'
+  });
+
+  document.body.appendChild(notification);
+
+  // Remove after delay
+  setTimeout(() => {
+    notification.style.opacity = '0';
+    notification.style.transform = 'translateX(100px)';
+    notification.style.transition = 'all 0.3s ease-out';
+    setTimeout(() => notification.remove(), 300);
+  }, 2500);
+}
+
+// Make salvage functions global
+window.showSalvageConfirm = showSalvageConfirm;
+window.closeSalvageConfirm = closeSalvageConfirm;
+window.confirmSalvage = confirmSalvage;
+window.showNotification = showNotification;
 
 function formatEquipmentStats(stats) {
   if (!stats || Object.keys(stats).length === 0) return 'No stats';

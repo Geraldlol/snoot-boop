@@ -295,8 +295,32 @@
                   <div id="equip-tail" class="equipped-item">Empty</div>
                 </div>
               </div>
-              <h5 class="inventory-header">Inventory (<span id="inventory-count">0</span>)</h5>
-              <div id="equipment-inventory" class="equipment-inventory">
+              <div class="inventory-controls">
+                <h5 class="inventory-header">Inventory (<span id="inventory-count">0</span>)</h5>
+                <div class="inventory-toolbar">
+                  <input type="text" id="inventory-search" class="inventory-search" placeholder="Search...">
+                  <select id="inventory-sort" class="inventory-sort">
+                    <option value="rarity">Sort: Rarity</option>
+                    <option value="slot">Sort: Slot</option>
+                    <option value="level">Sort: Level</option>
+                    <option value="name">Sort: Name</option>
+                  </select>
+                  <select id="inventory-filter" class="inventory-filter">
+                    <option value="all">All Slots</option>
+                    <option value="hat">🎩 Hats</option>
+                    <option value="collar">📿 Collars</option>
+                    <option value="weapon">⚔️ Weapons</option>
+                    <option value="armor">🛡️ Armor</option>
+                    <option value="paws">🐾 Paws</option>
+                    <option value="tail">🎀 Tails</option>
+                  </select>
+                  <div class="view-toggle">
+                    <button id="view-grid" class="view-btn active" title="Grid View">▦</button>
+                    <button id="view-list" class="view-btn" title="List View">☰</button>
+                  </div>
+                </div>
+              </div>
+              <div id="equipment-inventory" class="equipment-inventory grid-view">
                 <p class="empty-message">No equipment yet!</p>
               </div>
             </div>
