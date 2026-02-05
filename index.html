@@ -83,26 +83,32 @@
     <!-- Main Game Screen -->
     <div id="game-screen" class="screen">
       <!-- Header with resources -->
-      <header class="game-header">
-        <div class="resource-bar">
+      <header class="game-header" role="banner">
+        <div class="resource-bar" role="status" aria-live="polite">
           <div class="resource">
-            <span class="resource-label">BP</span>
-            <span id="bp-display" class="resource-value">0</span>
+            <span class="resource-label" id="bp-label">BP</span>
+            <span id="bp-display" class="resource-value" aria-labelledby="bp-label">0</span>
           </div>
-          <div class="resource">
-            <span class="resource-label">PP</span>
-            <span id="pp-display" class="resource-value">0</span>
+          <div class="resource pp-resource" id="pp-resource-container">
+            <span class="resource-label" id="pp-label">PP</span>
+            <span id="pp-display" class="resource-value" aria-labelledby="pp-label">0</span>
             <span id="pp-rate" class="resource-rate"></span>
+            <div id="pp-breakdown" class="pp-breakdown hidden">
+              <h4>PP Generation Breakdown</h4>
+              <div id="pp-breakdown-content"></div>
+            </div>
           </div>
           <div class="resource">
-            <span class="resource-label">Cats</span>
-            <span id="cat-count-display" class="resource-value">0</span>
+            <span class="resource-label" id="cats-label">Cats</span>
+            <span id="cat-count-display" class="resource-value" aria-labelledby="cats-label">0</span>
           </div>
         </div>
         <div class="header-right">
-          <div id="combo-display" class="combo-display hidden">
+          <div id="combo-display" class="combo-display hidden" role="status" aria-live="polite">
             <span id="combo-count">0</span>x COMBO
           </div>
+          <button id="help-btn" class="header-btn" aria-label="Help and tutorial" title="Help">❓</button>
+          <button id="settings-btn" class="header-btn" aria-label="Settings" title="Settings">⚙️</button>
           <div id="master-badge" class="master-badge">
             <span id="current-master-name"></span>
           </div>
@@ -137,18 +143,18 @@
         </aside>
 
         <!-- Center: Boop Area -->
-        <main class="game-main">
+        <main class="game-main" role="main">
           <div class="boop-area">
             <div id="active-cat-display" class="active-cat-display">
-              <div id="active-cat" class="active-cat">🐱</div>
+              <div id="active-cat" class="active-cat" role="img" aria-label="Current cat">🐱</div>
               <p id="active-cat-name" class="active-cat-name">Recruit a cat!</p>
             </div>
-            <button id="boop-button" class="boop-button">
+            <button id="boop-button" class="boop-button" aria-label="Boop the cat's snoot to earn Boop Points">
               BOOP<br>THE<br>SNOOT
             </button>
-            <p id="boop-power-display" class="boop-power-display">+1 BP per boop</p>
+            <p id="boop-power-display" class="boop-power-display" aria-live="polite">+1 BP per boop</p>
           </div>
-          <div id="floating-text-container" class="floating-text-container"></div>
+          <div id="floating-text-container" class="floating-text-container" aria-hidden="true"></div>
         </main>
 
         <!-- Right Panel: Tabs for Cats/Upgrades -->
@@ -459,6 +465,37 @@
 
           <!-- Stats Tab -->
           <div id="stats-tab" class="tab-content">
+            <!-- Goose Ally Section -->
+            <div id="goose-ally-section" class="goose-ally-section hidden">
+              <h4 class="category-header">🦢 Goose Ally</h4>
+              <div id="current-ally-display" class="current-ally">
+                <span id="ally-emoji" class="ally-portrait">🦢</span>
+                <div class="ally-info">
+                  <span id="ally-name" class="ally-name">None Selected</span>
+                  <span id="ally-effect" class="ally-effect">Defeat Cobra Chicken to unlock</span>
+                </div>
+              </div>
+              <div id="ally-selection" class="ally-selection">
+                <button class="ally-btn" data-ally="guard" title="Guard Goose">
+                  🛡️
+                  <span class="ally-label">Guard</span>
+                </button>
+                <button class="ally-btn" data-ally="attack" title="Attack Goose">
+                  ⚔️
+                  <span class="ally-label">Attack</span>
+                </button>
+                <button class="ally-btn" data-ally="chaos" title="Chaos Goose">
+                  🌀
+                  <span class="ally-label">Chaos</span>
+                </button>
+                <button class="ally-btn" data-ally="honk" title="Honk Goose">
+                  📢
+                  <span class="ally-label">Honk</span>
+                </button>
+              </div>
+              <p id="ally-quote" class="ally-quote"></p>
+            </div>
+
             <div class="stats-panel">
               <h4 class="category-header">📊 Cultivation Records</h4>
               <div class="stats-grid">
@@ -502,6 +539,14 @@
                 <div class="bond-bar" style="margin-top: 8px;">
                   <div id="achievement-bar" class="bond-fill" style="width: 0%; background: var(--gold-accent);"></div>
                 </div>
+              </div>
+
+              <h4 class="category-header" style="margin-top: 20px;">📜 Lore & Secrets</h4>
+              <div class="codex-preview">
+                <p class="stat-label">Lore Fragments: <span id="lore-count">0</span>/<span id="lore-total">0</span></p>
+                <button id="open-codex-btn" class="jade-button small" style="margin-top: 10px;">
+                  📖 Open Codex
+                </button>
               </div>
 
               <div class="danger-zone" style="margin-top: 30px; padding-top: 20px; border-top: 2px dashed #ff4444;">
@@ -606,6 +651,136 @@
       </div>
     </div>
 
+    <!-- Settings Modal -->
+    <div id="settings-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="settings-title">
+      <div class="modal-content scroll-panel settings-modal">
+        <h2 id="settings-title">⚙️ Settings</h2>
+
+        <div class="settings-section">
+          <h3>🔊 Audio</h3>
+          <div class="setting-row">
+            <label for="sfx-toggle">Sound Effects</label>
+            <button id="sfx-toggle" class="toggle-btn" aria-pressed="true" role="switch">ON</button>
+          </div>
+          <div class="setting-row">
+            <label for="music-toggle">Music</label>
+            <button id="music-toggle" class="toggle-btn" aria-pressed="true" role="switch">ON</button>
+          </div>
+          <div class="setting-row">
+            <label for="volume-slider">Volume</label>
+            <input type="range" id="volume-slider" min="0" max="100" value="70" class="volume-slider">
+            <span id="volume-value">70%</span>
+          </div>
+        </div>
+
+        <div class="settings-section">
+          <h3>🎨 Visual</h3>
+          <div class="setting-row">
+            <label for="particles-toggle">Particles</label>
+            <button id="particles-toggle" class="toggle-btn" aria-pressed="true" role="switch">ON</button>
+          </div>
+          <div class="setting-row">
+            <label for="screenshake-toggle">Screen Shake</label>
+            <button id="screenshake-toggle" class="toggle-btn" aria-pressed="true" role="switch">ON</button>
+          </div>
+        </div>
+
+        <div class="settings-section">
+          <h3>💾 Data</h3>
+          <div class="setting-row">
+            <button id="export-save-btn" class="jade-button small">Export Save</button>
+            <button id="import-save-btn" class="jade-button small">Import Save</button>
+          </div>
+          <textarea id="save-code" class="save-code-input" placeholder="Paste save code here..." rows="3"></textarea>
+        </div>
+
+        <div class="settings-buttons">
+          <button id="settings-close-btn" class="jade-button">Close</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Help Modal -->
+    <div id="help-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="help-title">
+      <div class="modal-content scroll-panel help-modal">
+        <h2 id="help-title">❓ How to Play</h2>
+
+        <div class="help-section">
+          <h3>🐱 The Basics</h3>
+          <p><strong>BOOP THE SNOOT!</strong> Click the big red button to boop cats and earn <span class="highlight">BP (Boop Points)</span>.</p>
+          <p>Cats generate <span class="highlight">PP (Purr Power)</span> automatically over time - even when you're away!</p>
+        </div>
+
+        <div class="help-section">
+          <h3>⚡ Combos & Crits</h3>
+          <p>Keep booping to build a <span class="highlight">combo</span> (up to 2x bonus at 100 combo).</p>
+          <p>You have a chance for <span class="highlight">Critical Boops</span> that deal 10x damage!</p>
+          <p>The combo resets after 4 seconds of not booping.</p>
+        </div>
+
+        <div class="help-section">
+          <h3>👤 Your Master</h3>
+          <p>Each of the <span class="highlight">Seven Masters</span> has a unique passive ability:</p>
+          <ul class="help-list">
+            <li><strong>Gerald:</strong> +25% BP while calm</li>
+            <li><strong>Rusty:</strong> Active ability - 5x boop speed burst</li>
+            <li><strong>Steve:</strong> 2x offline PP generation</li>
+            <li><strong>Andrew:</strong> +50% event discovery</li>
+            <li><strong>Nik:</strong> +25% critical chance</li>
+            <li><strong>Yuelin:</strong> +50% cat happiness</li>
+            <li><strong>Scott:</strong> Multipliers never decay</li>
+          </ul>
+        </div>
+
+        <div class="help-section">
+          <h3>🦢 HONK!</h3>
+          <p>Watch out for <span class="highlight">Geese</span>! They appear randomly and must be booped before they escape!</p>
+          <p>Angrier geese give bigger rewards but are harder to hit.</p>
+        </div>
+
+        <div class="help-section">
+          <h3>☯️ Prestige</h3>
+          <p>Once you reach enough BP, you can <span class="highlight">Ascend</span> to reset progress but gain permanent multipliers!</p>
+          <p>At Tier 3, you can switch masters once per day.</p>
+        </div>
+
+        <div class="help-section">
+          <h3>⌨️ Keyboard Shortcuts</h3>
+          <ul class="help-list">
+            <li><strong>Space:</strong> Boop (also boops Geese)</li>
+            <li><strong>Escape:</strong> Close modals</li>
+          </ul>
+        </div>
+
+        <div class="settings-buttons">
+          <button id="help-close-btn" class="jade-button">Got it!</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Codex Modal -->
+    <div id="codex-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="codex-title">
+      <div class="modal-content scroll-panel codex-modal">
+        <h2 id="codex-title">📜 Celestial Codex</h2>
+        <p class="codex-subtitle">Secrets of the Snoot Sect</p>
+
+        <div class="codex-tabs">
+          <button class="codex-tab active" data-codex="masters">👤 Masters</button>
+          <button class="codex-tab" data-codex="waifus">💕 Waifus</button>
+          <button class="codex-tab" data-codex="cats">🐱 Cats</button>
+          <button class="codex-tab" data-codex="geese">🦢 Geese</button>
+        </div>
+
+        <div id="codex-content" class="codex-content">
+          <!-- Content populated by JS -->
+        </div>
+
+        <div class="settings-buttons">
+          <button id="codex-close-btn" class="jade-button">Close</button>
+        </div>
+      </div>
+    </div>
+
     <!-- Active Effects Display -->
     <div id="active-effects" class="active-effects"></div>
 
@@ -645,6 +820,51 @@
         <h3 id="nemesis-title">💀 NEMESIS APPROACHES 💀</h3>
         <p id="nemesis-taunt">"I've been waiting..."</p>
       </div>
+    </div>
+
+    <!-- Mobile Navigation Bar -->
+    <nav id="mobile-nav" class="mobile-nav" aria-label="Main navigation">
+      <button class="mobile-nav-btn active" data-tab="cats" aria-label="Cats tab">
+        <span class="nav-icon">🐱</span>
+        <span class="nav-label">Cats</span>
+      </button>
+      <button class="mobile-nav-btn" data-tab="upgrades" aria-label="Upgrades tab">
+        <span class="nav-icon">⚔️</span>
+        <span class="nav-label">Arts</span>
+      </button>
+      <button class="mobile-nav-btn" data-tab="pagoda" aria-label="Pagoda tab">
+        <span class="nav-icon">🏯</span>
+        <span class="nav-label">Pagoda</span>
+      </button>
+      <button class="mobile-nav-btn" data-tab="expeditions" aria-label="Expeditions tab">
+        <span class="nav-icon">🗺️</span>
+        <span class="nav-label">Quest</span>
+      </button>
+      <button class="mobile-nav-btn" data-tab="more" aria-label="More options">
+        <span class="nav-icon">☰</span>
+        <span class="nav-label">More</span>
+      </button>
+    </nav>
+
+    <!-- Mobile Tab Modal -->
+    <div id="mobile-tab-modal" class="mobile-tab-modal hidden" role="dialog" aria-modal="true">
+      <div class="mobile-tab-header">
+        <h3 id="mobile-tab-title">Tab</h3>
+        <button id="mobile-tab-close" class="mobile-tab-close" aria-label="Close">&times;</button>
+      </div>
+      <div id="mobile-tab-content" class="mobile-tab-content">
+        <!-- Tab content cloned here on mobile -->
+      </div>
+    </div>
+
+    <!-- Mobile More Menu -->
+    <div id="mobile-more-menu" class="mobile-more-menu hidden">
+      <button class="more-menu-btn" data-tab="equipment">⚙️ Equipment</button>
+      <button class="more-menu-btn" data-tab="catino">🎰 Casino</button>
+      <button class="more-menu-btn" data-tab="partners">💕 Partners</button>
+      <button class="more-menu-btn" data-tab="facilities">☯️ Sect</button>
+      <button class="more-menu-btn" data-tab="stats">📊 Stats</button>
+      <button class="more-menu-btn" data-tab="waifu">💝 Waifu</button>
     </div>
   </div>
 

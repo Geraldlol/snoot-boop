@@ -115,9 +115,9 @@ const MASTERS = {
     description: 'Mysterious. The cats trust him. No one knows why. His critical strikes are legendary.',
     passive: {
       name: 'Phantom Boop',
-      description: '+50% critical boop chance. Strike from the shadows.',
+      description: '+25% critical boop chance. Strike from the shadows.',
       effect: (gameState) => {
-        return { critChanceBonus: 0.5 };
+        return { critChanceBonus: 0.25 };
       }
     },
     emoji: '🌙',

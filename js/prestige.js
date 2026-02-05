@@ -30,7 +30,7 @@ const REBIRTH_TIERS = {
     requirement: 2000000,
     multiplier: 1.5,
     color: '#A8E6CF',
-    unlocks: ['starting_cats']
+    unlocks: ['starting_cats', 'master_switch']
   },
   4: {
     tier: 4,
@@ -57,7 +57,7 @@ const REBIRTH_TIERS = {
     requirement: 200000000,
     multiplier: 5.0,
     color: '#C9B1FF',
-    unlocks: ['master_switch', 'waifu_bond_retain']
+    unlocks: ['waifu_bond_retain', 'goose_ally_boost']
   },
   7: {
     tier: 7,
@@ -131,6 +131,12 @@ const REBIRTH_PERKS = {
     name: 'Harem Transcendence',
     description: 'All waifus unlocked from start.',
     effect: { allWaifusUnlocked: true }
+  },
+  goose_ally_boost: {
+    id: 'goose_ally_boost',
+    name: 'Goose Empowerment',
+    description: 'Goose ally effects are 50% stronger.',
+    effect: { gooseAllyBoost: 1.5 }
   }
 };
 

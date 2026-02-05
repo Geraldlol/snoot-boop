@@ -236,18 +236,54 @@ const SaveSystem = {
   },
 
   /**
-   * Pick a random AFK event
+   * Pick a random AFK event - now scales with progression!
    */
   pickRandomEvent() {
-    const events = [
-      { type: 'meditation', message: 'Cats achieved group meditation!', emoji: '🧘', ppBonus: 100 },
-      { type: 'visitor', message: 'A merchant visited with gifts!', emoji: '🎁', bpBonus: 50 },
-      { type: 'zoomies', message: 'Mass zoomies outbreak!', emoji: '💨', happinessBonus: 10 },
-      { type: 'sunbeam', message: 'Perfect sunbeam alignment!', emoji: '☀️', ppBonus: 50 },
-      { type: 'treat', message: 'Mysterious treats appeared!', emoji: '🐟', happinessBonus: 5 }
+    // Get player's current progress to scale rewards
+    const currentBP = window.gameState?.boopPoints || 1000;
+    const currentPP = window.gameState?.purrPower || 100;
+
+    // Base rewards scale with ~5% of current resources
+    const scaledBP = Math.max(100, Math.floor(currentBP * 0.05));
+    const scaledPP = Math.max(50, Math.floor(currentPP * 0.05));
+
+    // Common events (80% chance)
+    const commonEvents = [
+      { type: 'meditation', message: 'Cats achieved group meditation!', emoji: '🧘', ppBonus: scaledPP, rarity: 'common' },
+      { type: 'visitor', message: 'A merchant visited with gifts!', emoji: '🎁', bpBonus: scaledBP, rarity: 'common' },
+      { type: 'zoomies', message: 'Mass zoomies outbreak!', emoji: '💨', happinessBonus: 15, rarity: 'common' },
+      { type: 'sunbeam', message: 'Perfect sunbeam alignment!', emoji: '☀️', ppBonus: scaledPP, bpBonus: scaledBP / 2, rarity: 'common' },
+      { type: 'treat', message: 'Mysterious treats appeared!', emoji: '🐟', happinessBonus: 10, rarity: 'common' }
     ];
 
-    return events[Math.floor(Math.random() * events.length)];
+    // Rare events (15% chance)
+    const rareEvents = [
+      { type: 'golden_visitor', message: '✨ A GOLDEN MERCHANT appeared with treasures!', emoji: '👑', bpBonus: scaledBP * 5, rarity: 'rare' },
+      { type: 'cultivation_breakthrough', message: '⚡ Your cats achieved a CULTIVATION BREAKTHROUGH!', emoji: '💫', ppBonus: scaledPP * 5, rarity: 'rare' },
+      { type: 'celestial_blessing', message: '🌟 The heavens smiled upon your sect!', emoji: '🌟', bpBonus: scaledBP * 3, ppBonus: scaledPP * 3, rarity: 'rare' },
+      { type: 'ancient_scroll', message: '📜 An ancient scroll was discovered!', emoji: '📜', permanentBonus: { type: 'pp_mult', value: 1.01 }, rarity: 'rare' }
+    ];
+
+    // Legendary events (5% chance)
+    const legendaryEvents = [
+      { type: 'immortal_visit', message: '🐉 AN IMMORTAL CAT VISITED YOUR SECT!', emoji: '🐉', bpBonus: scaledBP * 20, ppBonus: scaledPP * 10, rarity: 'legendary' },
+      { type: 'heaven_blessing', message: '✨ BLESSING FROM THE JADE EMPEROR!', emoji: '👑', permanentBonus: { type: 'bp_mult', value: 1.05 }, rarity: 'legendary' },
+      { type: 'cosmic_alignment', message: '🌌 COSMIC ALIGNMENT! ALL MULTIPLIERS ENHANCED!', emoji: '🌌', temporaryBonus: { type: 'all_mult', value: 2, duration: 3600000 }, rarity: 'legendary' }
+    ];
+
+    // Roll for rarity
+    const roll = Math.random() * 100;
+    let pool;
+
+    if (roll < 5) {
+      pool = legendaryEvents;
+    } else if (roll < 20) {
+      pool = rareEvents;
+    } else {
+      pool = commonEvents;
+    }
+
+    return pool[Math.floor(Math.random() * pool.length)];
   },
 
   /**

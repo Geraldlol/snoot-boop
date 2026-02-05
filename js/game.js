@@ -238,6 +238,9 @@ const elements = {
   bpDisplay: document.getElementById('bp-display'),
   ppDisplay: document.getElementById('pp-display'),
   ppRate: document.getElementById('pp-rate'),
+  ppResourceContainer: document.getElementById('pp-resource-container'),
+  ppBreakdown: document.getElementById('pp-breakdown'),
+  ppBreakdownContent: document.getElementById('pp-breakdown-content'),
   catCountDisplay: document.getElementById('cat-count-display'),
   comboDisplay: document.getElementById('combo-display'),
   comboCount: document.getElementById('combo-count'),
@@ -272,6 +275,50 @@ const elements = {
   statsTab: document.getElementById('stats-tab'),
   catinoTab: document.getElementById('catino-tab'),
   partnersTab: document.getElementById('partners-tab'),
+
+  // Mobile Navigation
+  mobileNav: document.getElementById('mobile-nav'),
+  mobileNavBtns: document.querySelectorAll('.mobile-nav-btn'),
+  mobileTabModal: document.getElementById('mobile-tab-modal'),
+  mobileTabTitle: document.getElementById('mobile-tab-title'),
+  mobileTabContent: document.getElementById('mobile-tab-content'),
+  mobileTabClose: document.getElementById('mobile-tab-close'),
+  mobileMoreMenu: document.getElementById('mobile-more-menu'),
+  moreMenuBtns: document.querySelectorAll('.more-menu-btn'),
+
+  // Settings & Help
+  settingsBtn: document.getElementById('settings-btn'),
+  settingsModal: document.getElementById('settings-modal'),
+  settingsCloseBtn: document.getElementById('settings-close-btn'),
+  helpBtn: document.getElementById('help-btn'),
+  helpModal: document.getElementById('help-modal'),
+  helpCloseBtn: document.getElementById('help-close-btn'),
+  sfxToggle: document.getElementById('sfx-toggle'),
+  musicToggle: document.getElementById('music-toggle'),
+  volumeSlider: document.getElementById('volume-slider'),
+  volumeValue: document.getElementById('volume-value'),
+  particlesToggle: document.getElementById('particles-toggle'),
+  screenshakeToggle: document.getElementById('screenshake-toggle'),
+  exportSaveBtn: document.getElementById('export-save-btn'),
+  importSaveBtn: document.getElementById('import-save-btn'),
+  saveCodeInput: document.getElementById('save-code'),
+
+  // Goose Ally
+  gooseAllySection: document.getElementById('goose-ally-section'),
+  allyEmoji: document.getElementById('ally-emoji'),
+  allyName: document.getElementById('ally-name'),
+  allyEffect: document.getElementById('ally-effect'),
+  allyQuote: document.getElementById('ally-quote'),
+  allyBtns: document.querySelectorAll('.ally-btn'),
+
+  // Codex
+  codexModal: document.getElementById('codex-modal'),
+  codexCloseBtn: document.getElementById('codex-close-btn'),
+  codexContent: document.getElementById('codex-content'),
+  codexTabs: document.querySelectorAll('.codex-tab'),
+  openCodexBtn: document.getElementById('open-codex-btn'),
+  loreCount: document.getElementById('lore-count'),
+  loreTotal: document.getElementById('lore-total'),
 
   // Stats
   statTotalBoops: document.getElementById('stat-total-boops'),
@@ -731,6 +778,21 @@ function setupEventListeners() {
     });
   });
 
+  // Mobile Navigation
+  setupMobileNavigation();
+
+  // Settings & Help modals
+  setupSettingsAndHelp();
+
+  // PP Breakdown hover
+  setupPPBreakdown();
+
+  // Goose Ally selection
+  setupGooseAllyUI();
+
+  // Codex
+  setupCodex();
+
   // Recruit cat
   elements.recruitBtn.addEventListener('click', recruitCat);
 
@@ -883,6 +945,892 @@ function switchTab(tabId) {
     renderPartners();
   }
 }
+
+// ===================================
+// MOBILE NAVIGATION
+// ===================================
+
+const TAB_TITLES = {
+  cats: '🐱 Cat Collection',
+  upgrades: '⚔️ Snoot Arts',
+  pagoda: '🏯 Infinite Pagoda',
+  equipment: '⚙️ Equipment',
+  expeditions: '🗺️ Expeditions',
+  catino: '🎰 Cat-sino',
+  partners: '💕 Partners',
+  facilities: '☯️ Sect Facilities',
+  stats: '📊 Stats',
+  waifu: '💝 Waifu Master'
+};
+
+let mobileMoreMenuOpen = false;
+
+function setupMobileNavigation() {
+  // Mobile nav button clicks
+  if (elements.mobileNavBtns) {
+    elements.mobileNavBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const tabId = btn.dataset.tab;
+
+        if (tabId === 'more') {
+          toggleMobileMoreMenu();
+        } else {
+          closeMobileMoreMenu();
+          openMobileTab(tabId);
+
+          // Update active state
+          elements.mobileNavBtns.forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+        }
+      });
+    });
+  }
+
+  // More menu button clicks
+  if (elements.moreMenuBtns) {
+    elements.moreMenuBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const tabId = btn.dataset.tab;
+        closeMobileMoreMenu();
+        openMobileTab(tabId);
+
+        // Clear main nav active state
+        elements.mobileNavBtns.forEach(b => b.classList.remove('active'));
+      });
+    });
+  }
+
+  // Close modal button
+  if (elements.mobileTabClose) {
+    elements.mobileTabClose.addEventListener('click', closeMobileTabModal);
+  }
+
+  // Close modal on backdrop click
+  if (elements.mobileTabModal) {
+    elements.mobileTabModal.addEventListener('click', (e) => {
+      if (e.target === elements.mobileTabModal) {
+        closeMobileTabModal();
+      }
+    });
+  }
+
+  // Close more menu when clicking outside
+  document.addEventListener('click', (e) => {
+    if (mobileMoreMenuOpen &&
+        !e.target.closest('.mobile-more-menu') &&
+        !e.target.closest('[data-tab="more"]')) {
+      closeMobileMoreMenu();
+    }
+  });
+
+  // Escape key closes mobile modal
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      if (!elements.mobileTabModal?.classList.contains('hidden')) {
+        closeMobileTabModal();
+      }
+      closeMobileMoreMenu();
+    }
+  });
+}
+
+function openMobileTab(tabId) {
+  if (!elements.mobileTabModal || !elements.mobileTabContent) return;
+
+  // Handle waifu panel specially
+  if (tabId === 'waifu') {
+    openMobileWaifuPanel();
+    return;
+  }
+
+  // Get the source tab content
+  const sourceTab = document.getElementById(`${tabId}-tab`);
+  if (!sourceTab) return;
+
+  // Set title
+  if (elements.mobileTabTitle) {
+    elements.mobileTabTitle.textContent = TAB_TITLES[tabId] || tabId;
+  }
+
+  // Clone content into mobile modal
+  elements.mobileTabContent.innerHTML = '';
+  const clone = sourceTab.cloneNode(true);
+  clone.classList.add('active');
+  clone.style.display = 'block';
+  elements.mobileTabContent.appendChild(clone);
+
+  // Re-attach event listeners for cloned content
+  reattachMobileEventListeners(tabId, clone);
+
+  // Show modal
+  elements.mobileTabModal.classList.remove('hidden');
+
+  // Also switch the desktop tab (for state consistency)
+  switchTab(tabId);
+}
+
+function openMobileWaifuPanel() {
+  if (!elements.mobileTabModal || !elements.mobileTabContent) return;
+
+  // Set title
+  if (elements.mobileTabTitle) {
+    elements.mobileTabTitle.textContent = TAB_TITLES.waifu;
+  }
+
+  // Get waifu panel content
+  const waifuPanel = document.querySelector('.waifu-panel');
+  if (!waifuPanel) return;
+
+  // Clone and show
+  elements.mobileTabContent.innerHTML = '';
+  const clone = waifuPanel.cloneNode(true);
+  clone.style.display = 'block';
+  elements.mobileTabContent.appendChild(clone);
+
+  elements.mobileTabModal.classList.remove('hidden');
+}
+
+function closeMobileTabModal() {
+  if (elements.mobileTabModal) {
+    elements.mobileTabModal.classList.add('hidden');
+  }
+  if (elements.mobileTabContent) {
+    elements.mobileTabContent.innerHTML = '';
+  }
+}
+
+function toggleMobileMoreMenu() {
+  if (elements.mobileMoreMenu) {
+    mobileMoreMenuOpen = !mobileMoreMenuOpen;
+    elements.mobileMoreMenu.classList.toggle('hidden', !mobileMoreMenuOpen);
+  }
+}
+
+function closeMobileMoreMenu() {
+  if (elements.mobileMoreMenu) {
+    mobileMoreMenuOpen = false;
+    elements.mobileMoreMenu.classList.add('hidden');
+  }
+}
+
+function reattachMobileEventListeners(tabId, container) {
+  // Re-attach button listeners for cloned content
+  switch (tabId) {
+    case 'cats':
+      const recruitBtn = container.querySelector('#recruit-btn');
+      if (recruitBtn) {
+        recruitBtn.addEventListener('click', recruitCat);
+      }
+      break;
+
+    case 'upgrades':
+      container.querySelectorAll('.upgrade-card').forEach(card => {
+        card.addEventListener('click', () => {
+          const upgradeId = card.dataset.upgrade;
+          if (upgradeId) {
+            purchaseUpgrade(upgradeId);
+            // Refresh the modal content
+            openMobileTab(tabId);
+          }
+        });
+      });
+      break;
+
+    case 'pagoda':
+      const startPagodaBtn = container.querySelector('#start-pagoda-btn');
+      if (startPagodaBtn) {
+        startPagodaBtn.addEventListener('click', startPagodaRun);
+      }
+      container.querySelectorAll('.cmd-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const cmd = btn.dataset.cmd;
+          if (cmd) executePagodaCommand(cmd);
+        });
+      });
+      break;
+
+    case 'expeditions':
+      container.querySelectorAll('.expedition-dest').forEach(dest => {
+        dest.addEventListener('click', () => {
+          selectExpeditionDestination(dest.dataset.destination);
+        });
+      });
+      const startExpBtn = container.querySelector('#start-expedition-btn');
+      if (startExpBtn) {
+        startExpBtn.addEventListener('click', startSelectedExpedition);
+      }
+      break;
+
+    case 'catino':
+      const spinBtn = container.querySelector('#spin-slots-btn');
+      if (spinBtn) {
+        spinBtn.addEventListener('click', spinSlots);
+      }
+      const raceBtn = container.querySelector('#start-race-btn');
+      if (raceBtn) {
+        raceBtn.addEventListener('click', startGooseRace);
+      }
+      container.querySelectorAll('.mystery-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const rarity = btn.textContent.includes('Common') ? 'common' :
+                         btn.textContent.includes('Rare') ? 'rare' : 'legendary';
+          openMysteryBox(rarity);
+        });
+      });
+      break;
+
+    case 'partners':
+      const summonBtn = container.querySelector('#summon-partner-btn');
+      if (summonBtn) {
+        summonBtn.addEventListener('click', summonPartner);
+      }
+      break;
+
+    case 'facilities':
+      const rebirthBtn = container.querySelector('#rebirth-btn');
+      if (rebirthBtn) {
+        rebirthBtn.addEventListener('click', handleRebirth);
+      }
+      break;
+
+    case 'stats':
+      const resetBtn = container.querySelector('#reset-btn');
+      if (resetBtn) {
+        resetBtn.addEventListener('click', resetGame);
+      }
+      break;
+  }
+}
+
+// ===================================
+// SETTINGS & HELP
+// ===================================
+
+// Settings state
+const settings = {
+  sfxEnabled: true,
+  musicEnabled: true,
+  volume: 70,
+  particlesEnabled: true,
+  screenshakeEnabled: true
+};
+
+function setupSettingsAndHelp() {
+  // Settings button
+  if (elements.settingsBtn) {
+    elements.settingsBtn.addEventListener('click', openSettings);
+  }
+
+  // Settings close button
+  if (elements.settingsCloseBtn) {
+    elements.settingsCloseBtn.addEventListener('click', closeSettings);
+  }
+
+  // Settings modal backdrop click
+  if (elements.settingsModal) {
+    elements.settingsModal.addEventListener('click', (e) => {
+      if (e.target === elements.settingsModal) {
+        closeSettings();
+      }
+    });
+  }
+
+  // Help button
+  if (elements.helpBtn) {
+    elements.helpBtn.addEventListener('click', openHelp);
+  }
+
+  // Help close button
+  if (elements.helpCloseBtn) {
+    elements.helpCloseBtn.addEventListener('click', closeHelp);
+  }
+
+  // Help modal backdrop click
+  if (elements.helpModal) {
+    elements.helpModal.addEventListener('click', (e) => {
+      if (e.target === elements.helpModal) {
+        closeHelp();
+      }
+    });
+  }
+
+  // Toggle buttons
+  if (elements.sfxToggle) {
+    elements.sfxToggle.addEventListener('click', () => toggleSetting('sfx'));
+  }
+  if (elements.musicToggle) {
+    elements.musicToggle.addEventListener('click', () => toggleSetting('music'));
+  }
+  if (elements.particlesToggle) {
+    elements.particlesToggle.addEventListener('click', () => toggleSetting('particles'));
+  }
+  if (elements.screenshakeToggle) {
+    elements.screenshakeToggle.addEventListener('click', () => toggleSetting('screenshake'));
+  }
+
+  // Volume slider
+  if (elements.volumeSlider) {
+    elements.volumeSlider.addEventListener('input', (e) => {
+      settings.volume = parseInt(e.target.value);
+      if (elements.volumeValue) {
+        elements.volumeValue.textContent = settings.volume + '%';
+      }
+      if (audioSystem) {
+        audioSystem.setVolume(settings.volume / 100);
+      }
+    });
+  }
+
+  // Export/Import save
+  if (elements.exportSaveBtn) {
+    elements.exportSaveBtn.addEventListener('click', exportSave);
+  }
+  if (elements.importSaveBtn) {
+    elements.importSaveBtn.addEventListener('click', importSave);
+  }
+
+  // Load saved settings
+  loadSettings();
+}
+
+function openSettings() {
+  if (elements.settingsModal) {
+    elements.settingsModal.classList.remove('hidden');
+    updateSettingsUI();
+  }
+}
+
+function closeSettings() {
+  if (elements.settingsModal) {
+    elements.settingsModal.classList.add('hidden');
+  }
+  saveSettings();
+}
+
+function openHelp() {
+  if (elements.helpModal) {
+    elements.helpModal.classList.remove('hidden');
+  }
+}
+
+function closeHelp() {
+  if (elements.helpModal) {
+    elements.helpModal.classList.add('hidden');
+  }
+}
+
+function toggleSetting(setting) {
+  switch (setting) {
+    case 'sfx':
+      settings.sfxEnabled = !settings.sfxEnabled;
+      if (audioSystem) audioSystem.setSFXEnabled(settings.sfxEnabled);
+      break;
+    case 'music':
+      settings.musicEnabled = !settings.musicEnabled;
+      if (audioSystem) audioSystem.setMusicEnabled(settings.musicEnabled);
+      break;
+    case 'particles':
+      settings.particlesEnabled = !settings.particlesEnabled;
+      break;
+    case 'screenshake':
+      settings.screenshakeEnabled = !settings.screenshakeEnabled;
+      break;
+  }
+  updateSettingsUI();
+  saveSettings();
+}
+
+function updateSettingsUI() {
+  if (elements.sfxToggle) {
+    elements.sfxToggle.textContent = settings.sfxEnabled ? 'ON' : 'OFF';
+    elements.sfxToggle.setAttribute('aria-pressed', settings.sfxEnabled);
+  }
+  if (elements.musicToggle) {
+    elements.musicToggle.textContent = settings.musicEnabled ? 'ON' : 'OFF';
+    elements.musicToggle.setAttribute('aria-pressed', settings.musicEnabled);
+  }
+  if (elements.particlesToggle) {
+    elements.particlesToggle.textContent = settings.particlesEnabled ? 'ON' : 'OFF';
+    elements.particlesToggle.setAttribute('aria-pressed', settings.particlesEnabled);
+  }
+  if (elements.screenshakeToggle) {
+    elements.screenshakeToggle.textContent = settings.screenshakeEnabled ? 'ON' : 'OFF';
+    elements.screenshakeToggle.setAttribute('aria-pressed', settings.screenshakeEnabled);
+  }
+  if (elements.volumeSlider) {
+    elements.volumeSlider.value = settings.volume;
+  }
+  if (elements.volumeValue) {
+    elements.volumeValue.textContent = settings.volume + '%';
+  }
+}
+
+function saveSettings() {
+  localStorage.setItem('snoot_booper_settings', JSON.stringify(settings));
+}
+
+function loadSettings() {
+  const saved = localStorage.getItem('snoot_booper_settings');
+  if (saved) {
+    try {
+      const loaded = JSON.parse(saved);
+      Object.assign(settings, loaded);
+    } catch (e) {
+      console.error('Failed to load settings:', e);
+    }
+  }
+  updateSettingsUI();
+}
+
+function exportSave() {
+  const encoded = SaveSystem.exportSave();
+  if (encoded && elements.saveCodeInput) {
+    elements.saveCodeInput.value = encoded;
+    elements.saveCodeInput.select();
+    try {
+      document.execCommand('copy');
+      showFloatingText('Save code copied!', 0, 0, false);
+    } catch (e) {
+      showFloatingText('Code ready - copy manually', 0, 0, false);
+    }
+  }
+}
+
+function importSave() {
+  if (!elements.saveCodeInput) return;
+
+  const code = elements.saveCodeInput.value.trim();
+  if (!code) {
+    showFloatingText('Paste a save code first!', 0, 0, false);
+    return;
+  }
+
+  if (SaveSystem.importSave(code)) {
+    showFloatingText('Save imported! Reloading...', 0, 0, false);
+    setTimeout(() => location.reload(), 1000);
+  } else {
+    showFloatingText('Invalid save code!', 0, 0, false);
+  }
+}
+
+// ===================================
+// PP BREAKDOWN
+// ===================================
+
+function setupPPBreakdown() {
+  if (elements.ppResourceContainer && elements.ppBreakdown) {
+    elements.ppResourceContainer.addEventListener('mouseenter', showPPBreakdown);
+    elements.ppResourceContainer.addEventListener('mouseleave', hidePPBreakdown);
+    elements.ppResourceContainer.addEventListener('click', togglePPBreakdown);
+  }
+}
+
+let ppBreakdownVisible = false;
+
+function togglePPBreakdown() {
+  ppBreakdownVisible = !ppBreakdownVisible;
+  if (ppBreakdownVisible) {
+    showPPBreakdown();
+  } else {
+    hidePPBreakdown();
+  }
+}
+
+function showPPBreakdown() {
+  if (!elements.ppBreakdown || !elements.ppBreakdownContent) return;
+
+  const breakdown = calculatePPBreakdown();
+  renderPPBreakdown(breakdown);
+  elements.ppBreakdown.classList.remove('hidden');
+}
+
+function hidePPBreakdown() {
+  if (ppBreakdownVisible) return; // Keep open if toggled on
+  if (elements.ppBreakdown) {
+    elements.ppBreakdown.classList.add('hidden');
+  }
+}
+
+function calculatePPBreakdown() {
+  const breakdown = {
+    basePP: 0,
+    catContributions: [],
+    realmBonuses: { mortal: 0, earth: 0, sky: 0, heaven: 0, divine: 0 },
+    happinessMultiplier: 1,
+    waifuMultiplier: 1,
+    masterMultiplier: 1,
+    upgradeMultiplier: 1,
+    total: 0
+  };
+
+  if (!catSystem) return breakdown;
+
+  const cats = catSystem.getAllCats();
+  const realms = { mortal: 1, earth: 2, sky: 5, heaven: 15, divine: 50 };
+
+  // Calculate base PP from each cat
+  cats.forEach(cat => {
+    const realm = cat.realm || 'mortal';
+    const realmMult = realms[realm] || 1;
+    const happiness = cat.happiness || 50;
+    const happinessMult = 0.5 + (happiness / 100);
+    const innerPurr = cat.stats?.innerPurr || 1;
+    const loafMastery = cat.stats?.loafMastery || 1;
+
+    const catPP = innerPurr * loafMastery * realmMult * happinessMult;
+    breakdown.basePP += catPP;
+    breakdown.realmBonuses[realm] = (breakdown.realmBonuses[realm] || 0) + catPP;
+  });
+
+  // Happiness average
+  if (cats.length > 0) {
+    const avgHappiness = cats.reduce((sum, c) => sum + (c.happiness || 50), 0) / cats.length;
+    breakdown.happinessMultiplier = 0.5 + (avgHappiness / 100);
+  }
+
+  // Waifu bonuses
+  if (waifuSystem) {
+    const waifuBonuses = waifuSystem.getCombinedBonuses();
+    breakdown.waifuMultiplier = waifuBonuses.ppMultiplier || 1;
+  }
+
+  // Master bonuses
+  if (masterSystem) {
+    const masterEffects = masterSystem.getPassiveEffects(gameState);
+    if (masterEffects.catHappinessMultiplier) {
+      breakdown.masterMultiplier *= masterEffects.catHappinessMultiplier;
+    }
+  }
+
+  // Upgrade bonuses
+  if (upgradeSystem) {
+    const upgradeEffects = upgradeSystem.getCombinedEffects();
+    breakdown.upgradeMultiplier = upgradeEffects.ppMultiplier || 1;
+  }
+
+  // Calculate total
+  breakdown.total = breakdown.basePP * breakdown.waifuMultiplier * breakdown.upgradeMultiplier;
+
+  return breakdown;
+}
+
+function renderPPBreakdown(breakdown) {
+  if (!elements.ppBreakdownContent) return;
+
+  let html = '';
+
+  // Realm contributions
+  const realmEmoji = { mortal: '⬜', earth: '🟫', sky: '🟦', heaven: '🟨', divine: '⬛' };
+  const realmNames = { mortal: 'Mortal', earth: 'Earth', sky: 'Sky', heaven: 'Heaven', divine: 'Divine' };
+
+  for (const [realm, pp] of Object.entries(breakdown.realmBonuses)) {
+    if (pp > 0) {
+      html += `
+        <div class="pp-breakdown-row">
+          <span class="label">${realmEmoji[realm]} ${realmNames[realm]} Cats</span>
+          <span class="value">+${formatNumber(pp)}/s</span>
+        </div>
+      `;
+    }
+  }
+
+  // Multipliers
+  if (breakdown.waifuMultiplier !== 1) {
+    html += `
+      <div class="pp-breakdown-row">
+        <span class="label">💕 Waifu Bonus</span>
+        <span class="value">×${breakdown.waifuMultiplier.toFixed(2)}</span>
+      </div>
+    `;
+  }
+
+  if (breakdown.upgradeMultiplier !== 1) {
+    html += `
+      <div class="pp-breakdown-row">
+        <span class="label">⚔️ Upgrades</span>
+        <span class="value">×${breakdown.upgradeMultiplier.toFixed(2)}</span>
+      </div>
+    `;
+  }
+
+  if (breakdown.masterMultiplier !== 1) {
+    html += `
+      <div class="pp-breakdown-row">
+        <span class="label">👤 Master</span>
+        <span class="value">×${breakdown.masterMultiplier.toFixed(2)}</span>
+      </div>
+    `;
+  }
+
+  // Total
+  html += `
+    <div class="pp-breakdown-row total">
+      <span class="label">TOTAL</span>
+      <span class="value">${formatNumber(breakdown.total)}/s</span>
+    </div>
+  `;
+
+  elements.ppBreakdownContent.innerHTML = html;
+}
+
+// ===================================
+// GOOSE ALLY UI
+// ===================================
+
+function setupGooseAllyUI() {
+  if (elements.allyBtns) {
+    elements.allyBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const allyId = btn.dataset.ally;
+        selectGooseAlly(allyId);
+      });
+    });
+  }
+}
+
+function selectGooseAlly(allyId) {
+  if (!gooseSystem || !gooseSystem.gooseAllyUnlocked) {
+    showFloatingText('Defeat Cobra Chicken first!', 0, 0, false);
+    return;
+  }
+
+  const ally = gooseSystem.selectAlly(allyId);
+  if (ally) {
+    showFloatingText(`${ally.name} selected!`, 0, 0, false);
+    updateGooseAllyUI();
+    if (audioSystem) audioSystem.playSFX('upgrade');
+  }
+}
+
+function updateGooseAllyUI() {
+  // Check if goose ally is unlocked
+  const unlocked = gooseSystem && gooseSystem.gooseAllyUnlocked;
+
+  // Show/hide the section
+  if (elements.gooseAllySection) {
+    if (unlocked || (gameState && gameState.cobraChickenDefeated)) {
+      elements.gooseAllySection.classList.remove('hidden');
+    } else {
+      elements.gooseAllySection.classList.add('hidden');
+      return;
+    }
+  }
+
+  // Get current ally
+  const currentAlly = gooseSystem?.selectedAlly || gameState?.gooseAlly;
+
+  // Update display
+  if (currentAlly) {
+    if (elements.allyEmoji) {
+      elements.allyEmoji.textContent = currentAlly.emoji || '🦢';
+    }
+    if (elements.allyName) {
+      elements.allyName.textContent = currentAlly.name;
+    }
+    if (elements.allyEffect) {
+      elements.allyEffect.textContent = currentAlly.description;
+    }
+    if (elements.allyQuote) {
+      elements.allyQuote.textContent = currentAlly.quote || '';
+    }
+  } else {
+    if (elements.allyEmoji) elements.allyEmoji.textContent = '🦢';
+    if (elements.allyName) elements.allyName.textContent = 'Select an Ally';
+    if (elements.allyEffect) elements.allyEffect.textContent = 'Choose a goose to aid your cultivation!';
+    if (elements.allyQuote) elements.allyQuote.textContent = '';
+  }
+
+  // Update button states
+  if (elements.allyBtns) {
+    elements.allyBtns.forEach(btn => {
+      const allyId = btn.dataset.ally;
+      const isSelected = currentAlly && currentAlly.id === allyId;
+      btn.classList.toggle('selected', isSelected);
+    });
+  }
+}
+
+// ===================================
+// CODEX SYSTEM
+// ===================================
+
+// Lore entries for the codex
+const CODEX_ENTRIES = {
+  masters: [
+    { id: 'gerald', emoji: '🐉', title: 'Gerald - The Jade Palm', subtitle: 'Sect Leader', unlocked: true,
+      story: "Gerald founded the Celestial Snoot Sect after discovering the Ancient Snoot Scrolls in a forgotten temple.\n\nOnce a wandering cultivator, he realized that true power came not from combat, but from the gentle art of the boop.\n\n\"Balance in all things,\" he would say. \"Especially snoots.\"\n\nHis jade palm technique allows him to channel qi directly through snoot meridians, achieving perfect cultivation harmony." },
+    { id: 'rusty', emoji: '👊', title: 'Rusty - The Crimson Fist', subtitle: 'War General', unlocked: true,
+      story: "Before joining the Sect, Rusty was known as the Crimson Bandit King - feared across seven provinces.\n\nHis legendary Thousand Boop Barrage could overwhelm any opponent. But one day, a small tabby cat booped HIM.\n\n\"That day, I understood,\" Rusty recalls. \"The true path isn't about destroying enemies. It's about booping snoots.\"\n\nHe now serves as the Sect's War General, protecting all cats under their care with his reformed fury." },
+    { id: 'steve', emoji: '🌊', title: 'Steve - The Flowing River', subtitle: 'Strategist', unlocked: true,
+      story: "Steve spent 10,000 hours calculating the optimal snoot-to-boop ratio.\n\nHis spreadsheets are legendary. His patience, infinite.\n\n\"The math is clear,\" Steve explains while adjusting his glasses. \"Maximum PP generation requires exactly 2.7 boops per cat per minute, adjusted for happiness decay.\"\n\nHis Eternal Flow technique allows cultivation to continue even while sleeping. Some say he never actually stops calculating." },
+    { id: 'andrew', emoji: '⚡', title: 'Andrew - The Thunder Step', subtitle: 'Scout', unlocked: true,
+      story: "No one has ever seen Andrew standing still. Legend says he was born running.\n\n\"Already found three cats while you were reading this,\" is his catchphrase.\n\nHis Lightning Reflexes allow him to discover events before they happen. Some theorize he exists slightly in the future.\n\nHe serves as the Sect's scout, always first to find new snoots in need of booping." },
+    { id: 'nik', emoji: '🌙', title: 'Nik - The Shadow Moon', subtitle: 'Assassin', unlocked: true,
+      story: "...\n\n*appears from shadows*\n\n...boop.\n\n*disappears*\n\nNo one knows Nik's full story. The cats trust him completely. No one knows why.\n\nHis Phantom Boop technique strikes without warning, achieving critical damage before the target even realizes they've been booped.\n\nSome say he isn't human at all, but a manifestation of the night itself." },
+    { id: 'yuelin', emoji: '🪷', title: 'Yuelin - The Lotus Sage', subtitle: 'Healer', unlocked: true,
+      story: "Yuelin can speak to cats in their ancient tongue - a language lost to all others.\n\n\"The cats tell me you have a kind heart,\" she often says to newcomers.\n\nHer Harmonious Aura brings peace to all felines, increasing their happiness merely by her presence.\n\nSome whisper that she was once a cat herself, transformed by the Jade Emperor as a reward for perfect cultivation." },
+    { id: 'scott', emoji: '⛰️', title: 'Scott - The Mountain', subtitle: 'Guardian', unlocked: true,
+      story: "Scott meditated for exactly 1,000 days without moving.\n\nA cat sat on him the entire time. Worth it.\n\nHis Unshakeable Foundation technique prevents any decay or reset of his cultivation multipliers.\n\n\"I am the mountain,\" he says. \"The cats are my snow.\"\n\nTo this day, if you look closely, you can see the faint outline of a cat's pawprint on his shoulder." }
+  ],
+  waifus: [
+    { id: 'mochi', emoji: '🍡', title: 'Mochi-chan', subtitle: 'The Welcoming Dawn', unlocked: true,
+      story: "Mochi-chan runs the Celestial Teahouse at the heart of the Sect.\n\n\"Welcome back to the teahouse, cultivator~\"\n\nFew know that she was once a fierce warrior, wielding the legendary Dango Blade. She retired after realizing that hospitality brought more joy than combat.\n\nHer special tea can restore any cultivator's spirit. The secret ingredient? Love. (And catnip.)" },
+    { id: 'luna', emoji: '🌙', title: 'Luna Whiskerbell', subtitle: 'The Midnight Watcher', unlocked: false, unlockHint: 'Reach 24 hours of total AFK time',
+      story: "Luna doesn't sleep. Not because she can't - because she's afraid of the dreams.\n\n*yawn* \"The night shift... is peaceful...\"\n\nShe watches over all sleeping cats, ensuring their dreams are filled with endless treats and warm sunbeams.\n\nSome say her sleepy demeanor hides immense power - power she once used to seal away a nightmare demon." },
+    { id: 'nyanta', emoji: '🏴‍☠️', title: 'Captain Nyanta', subtitle: 'The Sea Sovereign', unlocked: false, unlockHint: 'Recruit 50 cats',
+      story: "YARR! Captain Nyanta sailed the seven seas seeking gold!\n\nWhat she found instead was the greatest treasure of all: friendship. (And also a lot of gold.)\n\nHer ship, the Whisker Wind, can sail to dimensions unknown, discovering rare cats across infinite worlds.\n\n\"The seas be calm and full of snoots today!\"" }
+  ],
+  cats: [
+    { id: 'ceiling_cat', emoji: '😺', title: 'Ceiling Cat', subtitle: 'The All-Seeing', unlocked: false, unlockHint: 'Reach 10,000 total boops',
+      story: "In the beginning, there was only the Ceiling. And upon it, the Cat.\n\nCeiling Cat watches from above, judging all boops. Those deemed worthy receive his blessing.\n\nAncient scriptures speak of a prophecy: when one achieves one million critical boops, Ceiling Cat will descend to grant the ultimate technique.\n\nUntil then, he watches. Always watches." },
+    { id: 'keyboard_cat', emoji: '🎹', title: 'Keyboard Cat', subtitle: 'Melody of Ages', unlocked: false, unlockHint: 'Achieve a 100-hit combo',
+      story: "The legendary Keyboard Cat once played a melody so beautiful, it brought peace to warring nations.\n\nNow semi-retired, he occasionally graces the Sect with impromptu concerts.\n\nHis music has special properties - it can boost cultivation speed by up to 500% for those who truly appreciate the arts." }
+  ],
+  geese: [
+    { id: 'untitled', emoji: '🦢', title: 'The Untitled Goose', subtitle: 'Horrible', unlocked: true,
+      story: "It's a lovely day in the Jianghu, and you are a horrible goose.\n\nNo one knows where the Untitled Goose came from. Some say it was born from pure chaos energy. Others say it escaped from a peaceful village after causing untold mayhem.\n\nIt steals. It honks. It feels no remorse.\n\nHONK." },
+    { id: 'cobra_chicken', emoji: '🐔', title: 'Cobra Chicken', subtitle: 'Avatar of Chaos', unlocked: false, unlockHint: 'Reach 1,000 goose boops',
+      story: "Not a cobra. Not a chicken. Somehow worse than both.\n\nThe Cobra Chicken is the final form of goose rage - a being of pure, concentrated HONK energy.\n\nLegend says defeating it grants access to tame goose allies. But few have ever succeeded...\n\nThose who have speak only in hushed whispers: \"It honked... so loud...\"" }
+  ]
+};
+
+let currentCodexCategory = 'masters';
+
+function setupCodex() {
+  // Open codex button
+  if (elements.openCodexBtn) {
+    elements.openCodexBtn.addEventListener('click', openCodex);
+  }
+
+  // Close codex button
+  if (elements.codexCloseBtn) {
+    elements.codexCloseBtn.addEventListener('click', closeCodex);
+  }
+
+  // Codex modal backdrop click
+  if (elements.codexModal) {
+    elements.codexModal.addEventListener('click', (e) => {
+      if (e.target === elements.codexModal) {
+        closeCodex();
+      }
+    });
+  }
+
+  // Codex tabs
+  if (elements.codexTabs) {
+    elements.codexTabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        const category = tab.dataset.codex;
+        switchCodexCategory(category);
+      });
+    });
+  }
+}
+
+function openCodex() {
+  if (elements.codexModal) {
+    elements.codexModal.classList.remove('hidden');
+    renderCodex();
+    updateLoreCount();
+  }
+}
+
+function closeCodex() {
+  if (elements.codexModal) {
+    elements.codexModal.classList.add('hidden');
+  }
+}
+
+function switchCodexCategory(category) {
+  currentCodexCategory = category;
+
+  // Update tab states
+  if (elements.codexTabs) {
+    elements.codexTabs.forEach(tab => {
+      tab.classList.toggle('active', tab.dataset.codex === category);
+    });
+  }
+
+  renderCodex();
+}
+
+function renderCodex() {
+  if (!elements.codexContent) return;
+
+  const entries = CODEX_ENTRIES[currentCodexCategory] || [];
+  let html = '';
+
+  entries.forEach(entry => {
+    const isUnlocked = checkCodexUnlock(entry);
+
+    html += `
+      <div class="codex-entry ${isUnlocked ? '' : 'locked'}" onclick="${isUnlocked ? `showCodexEntry('${currentCodexCategory}', '${entry.id}')` : ''}">
+        <div class="codex-entry-header">
+          <span class="codex-entry-emoji">${isUnlocked ? entry.emoji : '❓'}</span>
+          <div>
+            <div class="codex-entry-title">${isUnlocked ? entry.title : '???'}</div>
+            <div class="codex-entry-subtitle">${isUnlocked ? entry.subtitle : 'Locked'}</div>
+          </div>
+        </div>
+        <div class="codex-entry-preview">
+          ${isUnlocked ? entry.story.split('\n')[0].substring(0, 100) + '...' : entry.unlockHint || 'Keep playing to unlock...'}
+        </div>
+      </div>
+    `;
+  });
+
+  elements.codexContent.innerHTML = html || '<p style="text-align: center; color: #888;">No entries yet...</p>';
+}
+
+function showCodexEntry(category, entryId) {
+  const entries = CODEX_ENTRIES[category] || [];
+  const entry = entries.find(e => e.id === entryId);
+  if (!entry || !elements.codexContent) return;
+
+  elements.codexContent.innerHTML = `
+    <div class="codex-full-entry">
+      <h3>${entry.emoji} ${entry.title}</h3>
+      <p class="story">${entry.story}</p>
+      <button class="jade-button small codex-back-btn" onclick="renderCodex()">← Back to List</button>
+    </div>
+  `;
+}
+
+function checkCodexUnlock(entry) {
+  if (entry.unlocked) return true;
+
+  // Check various unlock conditions
+  if (entry.unlockHint) {
+    // Simple checks based on game state
+    if (entry.unlockHint.includes('AFK time') && gameState.totalAfkTime >= 86400000) return true;
+    if (entry.unlockHint.includes('50 cats') && catSystem && catSystem.getCatCount() >= 50) return true;
+    if (entry.unlockHint.includes('10,000 total boops') && gameState.totalBoops >= 10000) return true;
+    if (entry.unlockHint.includes('100-hit combo') && gameState.maxCombo >= 100) return true;
+    if (entry.unlockHint.includes('1,000 goose boops') && gooseSystem && gooseSystem.gooseBoops >= 1000) return true;
+  }
+
+  return false;
+}
+
+function updateLoreCount() {
+  let unlocked = 0;
+  let total = 0;
+
+  for (const category of Object.values(CODEX_ENTRIES)) {
+    for (const entry of category) {
+      total++;
+      if (checkCodexUnlock(entry)) {
+        unlocked++;
+      }
+    }
+  }
+
+  if (elements.loreCount) elements.loreCount.textContent = unlocked;
+  if (elements.loreTotal) elements.loreTotal.textContent = total;
+}
+
+// Make showCodexEntry available globally for onclick
+window.showCodexEntry = showCodexEntry;
 
 // ===================================
 // CATINO (CASINO) UI
@@ -1318,6 +2266,9 @@ function updateStatsDisplay() {
       elements.achievementBar.style.width = progress.percent + '%';
     }
   }
+
+  // Update goose ally section
+  updateGooseAllyUI();
 }
 
 /**
@@ -1392,7 +2343,7 @@ function handleBoop() {
   gameState.comboTimer = setTimeout(() => {
     gameState.comboCount = 0;
     if (elements.comboDisplay) elements.comboDisplay.classList.add('hidden');
-  }, 2000);
+  }, 4000); // 4 second combo window (was 2s)
 
   // Combo multiplier (up to 2x at 100)
   const comboMult = 1 + (Math.min(gameState.comboCount, 100) * 0.01);
