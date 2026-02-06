@@ -1906,3 +1906,260 @@ window.BOOP_COMMANDS = BOOP_COMMANDS;
 window.LOOT_RARITIES = LOOT_RARITIES;
 window.COMBAT_STATES = COMBAT_STATES;
 window.PagodaSystem = PagodaSystem;
+
+// ===================================
+// DATA LOADER INTEGRATION - Enemies
+// ===================================
+
+// Additional enemy data loaded from JSON
+let ENEMY_TYPES = {
+  normal: { hpMult: 1.0, damageMult: 1.0, rewardMult: 1.0 },
+  elite: { hpMult: 3.0, damageMult: 2.0, rewardMult: 3.0 },
+  boss: { hpMult: 10.0, damageMult: 3.0, rewardMult: 10.0 },
+  miniboss: { hpMult: 5.0, damageMult: 2.5, rewardMult: 5.0 }
+};
+
+let JSON_ENEMIES = {
+  normal: {},
+  elite: {},
+  boss: {},
+  goose: {}
+};
+
+let ENEMY_ABILITIES = {};
+
+/**
+ * Load enemy data from data/enemies.json
+ */
+function loadEnemyDataFromJSON(data) {
+  if (!data) return;
+
+  console.log('[Pagoda] Loading enemy data from JSON...');
+
+  // Load enemy types/multipliers
+  if (data.enemyTypes) {
+    Object.assign(ENEMY_TYPES, data.enemyTypes);
+  }
+
+  // Load enemies by category
+  if (data.enemies) {
+    // Normal enemies
+    if (data.enemies.normal) {
+      Object.entries(data.enemies.normal).forEach(([id, enemy]) => {
+        JSON_ENEMIES.normal[id] = {
+          ...enemy,
+          id: id,
+          emoji: enemy.emoji || getEmojiForEnemy(enemy),
+          floorRange: enemy.floorRange || [1, 100],
+          baseHp: enemy.baseHp || 50,
+          baseDamage: enemy.baseDamage || 10,
+          baseDefense: enemy.baseDefense || 0,
+          speed: enemy.attackSpeed || 1.0,
+          dropChance: enemy.dropChance || 0.5
+        };
+      });
+    }
+
+    // Elite enemies
+    if (data.enemies.elite) {
+      Object.entries(data.enemies.elite).forEach(([id, enemy]) => {
+        JSON_ENEMIES.elite[id] = {
+          ...enemy,
+          id: id,
+          isElite: true,
+          emoji: enemy.emoji || getEmojiForEnemy(enemy),
+          floorRange: enemy.floorRange || [10, 100],
+          baseHp: (enemy.baseHp || 150) * ENEMY_TYPES.elite.hpMult,
+          baseDamage: (enemy.baseDamage || 25) * ENEMY_TYPES.elite.damageMult,
+          baseDefense: enemy.baseDefense || 10,
+          speed: enemy.attackSpeed || 1.2,
+          dropChance: enemy.dropChance || 0.8
+        };
+      });
+    }
+
+    // Boss enemies
+    if (data.enemies.boss) {
+      Object.entries(data.enemies.boss).forEach(([id, enemy]) => {
+        JSON_ENEMIES.boss[id] = {
+          ...enemy,
+          id: id,
+          isBoss: true,
+          emoji: enemy.emoji || getEmojiForEnemy(enemy),
+          floorRange: enemy.floorRange || [10, 100],
+          baseHp: (enemy.baseHp || 500) * ENEMY_TYPES.boss.hpMult,
+          baseDamage: (enemy.baseDamage || 50) * ENEMY_TYPES.boss.damageMult,
+          baseDefense: enemy.baseDefense || 20,
+          speed: enemy.attackSpeed || 0.8,
+          phases: enemy.phases || 1
+        };
+      });
+    }
+
+    // Goose enemies (for Goose Dimension)
+    if (data.enemies.goose) {
+      Object.entries(data.enemies.goose).forEach(([id, enemy]) => {
+        JSON_ENEMIES.goose[id] = {
+          ...enemy,
+          id: id,
+          isGoose: true,
+          emoji: enemy.emoji || '🦢',
+          baseHp: enemy.baseHp || 100,
+          baseDamage: enemy.baseDamage || 20,
+          honkPower: enemy.honkPower || 1
+        };
+      });
+    }
+  }
+
+  // Load abilities
+  if (data.abilities) {
+    Object.assign(ENEMY_ABILITIES, data.abilities);
+  }
+
+  console.log('[Pagoda] Loaded enemies:', {
+    normal: Object.keys(JSON_ENEMIES.normal).length,
+    elite: Object.keys(JSON_ENEMIES.elite).length,
+    boss: Object.keys(JSON_ENEMIES.boss).length,
+    goose: Object.keys(JSON_ENEMIES.goose).length
+  });
+}
+
+/**
+ * Get emoji for enemy based on element/type
+ */
+function getEmojiForEnemy(enemy) {
+  const elementEmojis = {
+    void: '🌑',
+    fire: '🔥',
+    water: '💧',
+    earth: '🪨',
+    wood: '🌿',
+    metal: '⚔️',
+    chaos: '🌀'
+  };
+  return elementEmojis[enemy.element] || '👾';
+}
+
+/**
+ * Get enemy from JSON data by ID
+ */
+function getJSONEnemy(id, category = 'normal') {
+  return JSON_ENEMIES[category]?.[id] || null;
+}
+
+/**
+ * Get all enemies for a floor range
+ */
+function getEnemiesForFloor(floorNum, category = 'normal') {
+  const enemies = [];
+
+  // Check JSON enemies
+  Object.values(JSON_ENEMIES[category] || {}).forEach(enemy => {
+    if (enemy.floorRange) {
+      const [minFloor, maxFloor] = enemy.floorRange;
+      if (floorNum >= minFloor && floorNum <= maxFloor) {
+        enemies.push(enemy);
+      }
+    } else {
+      enemies.push(enemy);
+    }
+  });
+
+  // Also include hardcoded PAGODA_ENEMIES for compatibility
+  if (category === 'normal') {
+    Object.values(PAGODA_ENEMIES).forEach(enemy => {
+      if (enemy.floorRange) {
+        const [minFloor, maxFloor] = enemy.floorRange;
+        if (floorNum >= minFloor && floorNum <= maxFloor) {
+          enemies.push(enemy);
+        }
+      }
+    });
+  }
+
+  return enemies;
+}
+
+/**
+ * Get a random enemy for a floor
+ */
+function getRandomEnemyForFloor(floorNum, preferElite = false) {
+  const category = preferElite ? 'elite' : 'normal';
+  const enemies = getEnemiesForFloor(floorNum, category);
+
+  if (enemies.length === 0) {
+    // Fallback to any normal enemy
+    const allNormal = Object.values(JSON_ENEMIES.normal);
+    if (allNormal.length > 0) {
+      return allNormal[Math.floor(Math.random() * allNormal.length)];
+    }
+    // Ultimate fallback to hardcoded
+    const hardcoded = Object.values(PAGODA_ENEMIES);
+    return hardcoded[Math.floor(Math.random() * hardcoded.length)];
+  }
+
+  return enemies[Math.floor(Math.random() * enemies.length)];
+}
+
+/**
+ * Get boss for a floor
+ */
+function getBossForFloor(floorNum) {
+  const bosses = Object.values(JSON_ENEMIES.boss).filter(boss => {
+    if (boss.floorRange) {
+      const [minFloor, maxFloor] = boss.floorRange;
+      return floorNum >= minFloor && floorNum <= maxFloor;
+    }
+    return true;
+  });
+
+  // Also check hardcoded bosses
+  Object.values(PAGODA_BOSSES).forEach(boss => {
+    if (boss.floorThreshold && floorNum >= boss.floorThreshold) {
+      bosses.push(boss);
+    }
+  });
+
+  if (bosses.length === 0) {
+    return Object.values(PAGODA_BOSSES)[0]; // Fallback to first hardcoded boss
+  }
+
+  return bosses[Math.floor(Math.random() * bosses.length)];
+}
+
+// Export additional functions
+window.ENEMY_TYPES = ENEMY_TYPES;
+window.JSON_ENEMIES = JSON_ENEMIES;
+window.ENEMY_ABILITIES = ENEMY_ABILITIES;
+window.loadEnemyDataFromJSON = loadEnemyDataFromJSON;
+window.getJSONEnemy = getJSONEnemy;
+window.getEnemiesForFloor = getEnemiesForFloor;
+window.getRandomEnemyForFloor = getRandomEnemyForFloor;
+window.getBossForFloor = getBossForFloor;
+
+// DataLoader integration
+if (window.dataLoader) {
+  dataLoader.onReady(() => {
+    const enemyData = dataLoader.get('enemies');
+    if (enemyData) {
+      loadEnemyDataFromJSON(enemyData);
+    }
+  });
+} else {
+  // Wait for dataLoader to be available
+  const checkDataLoader = setInterval(() => {
+    if (window.dataLoader) {
+      clearInterval(checkDataLoader);
+      dataLoader.onReady(() => {
+        const enemyData = dataLoader.get('enemies');
+        if (enemyData) {
+          loadEnemyDataFromJSON(enemyData);
+        }
+      });
+    }
+  }, 100);
+
+  // Stop checking after 10 seconds
+  setTimeout(() => clearInterval(checkDataLoader), 10000);
+}

@@ -6343,3 +6343,164 @@ window.addTestCat = function() {
 // ===================================
 
 document.addEventListener('DOMContentLoaded', init);
+
+// ===================================
+// BALANCE DATA LOADER INTEGRATION
+// ===================================
+
+// Balance data with fallback defaults
+let BALANCE_DATA = {
+  coreFormulas: {
+    bpPerBoop: { basePower: 1, upgradeScale: 0.1 },
+    ppPerSecond: { basePerCat: 0.1 },
+    comboMultiplier: { maxCombo: 100, comboGain: 0.01 },
+    critChance: { baseCrit: 0.05, maxCrit: 0.75 },
+    critMultiplier: { baseCritMult: 10, maxCritMult: 100 }
+  },
+  cultivation: {
+    defaultRealmScale: 3.0,
+    tribulationDifficulty: { baseDifficulty: 100 }
+  },
+  cats: {
+    realmMultipliers: {
+      kittenMortal: 1, earthKitten: 2, skyKitten: 5,
+      heavenKitten: 15, divineBeast: 50, celestialBeast: 200, cosmicEntity: 1000
+    },
+    starMultipliers: { 1: 1.0, 2: 1.1, 3: 1.25, 4: 1.5, 5: 2.0, 6: 3.0 },
+    happinessDecayRate: { base: 0.01, perHour: 0.05, minHappiness: 0.1 },
+    happinessGainRate: { perBoop: 0.5, perFeed: 5, perPet: 2, yuelinBonus: 1.5 },
+    cultivationXP: { perBoop: 0.1, perDungeonFloor: 10, perHourActive: 5, perHourAFK: 1 }
+  },
+  waifus: {
+    bondGain: {
+      preferredBonus: 1.5,
+      harmonyBonus: 1.1,
+      giftMultipliers: { love: 5.0, like: 2.0, neutral: 1.0, dislike: 0.5 }
+    },
+    maxBond: 100,
+    bondDecay: { rate: 0, minBond: 0 }
+  },
+  afk: {
+    maxOfflineTime: 86400000, // 24 hours
+    offlineEfficiency: 0.75,
+    eventChancePerHour: 0.3,
+    strayCatChancePerHour: 0.05
+  },
+  goose: {
+    baseSpawnChance: 0.02,
+    spawnCheckInterval: 60000,
+    escapeTime: 30000,
+    moodRewardMultipliers: { calm: 10, suspicious: 25, aggressive: 50, rage: 100 }
+  },
+  prestige: {
+    ascension: { threshold: 1e9, sealFormula: 'log10(pp) - 8 + cats/20 + bonds/100' },
+    reincarnation: { ascensionsRequired: 10, sealsRequired: 500 },
+    transcendence: { reincarnationsRequired: 5, karmaRequired: 1000 }
+  },
+  dungeons: {
+    floorScaling: { hpScale: 1.15, damageScale: 1.1, rewardScale: 1.08 },
+    bossEveryNFloors: 10,
+    eliteChance: 0.15,
+    treasureChance: 0.1
+  },
+  economy: {
+    currencyConversions: {
+      bpToPp: 1000,
+      jcToBp: 10000,
+      gfToJc: 100
+    }
+  }
+};
+
+/**
+ * Load balance data from data/balance.json
+ */
+function loadBalanceDataFromJSON(data) {
+  if (!data) return;
+
+  console.log('[Game] Loading balance data from JSON...');
+
+  // Deep merge balance data
+  function deepMerge(target, source) {
+    for (const key of Object.keys(source)) {
+      if (source[key] && typeof source[key] === 'object' && !Array.isArray(source[key])) {
+        if (!target[key]) target[key] = {};
+        deepMerge(target[key], source[key]);
+      } else {
+        target[key] = source[key];
+      }
+    }
+    return target;
+  }
+
+  deepMerge(BALANCE_DATA, data);
+
+  // Apply balance to gameState defaults if applicable
+  if (BALANCE_DATA.coreFormulas?.critChance?.baseCrit) {
+    gameState.critChance = BALANCE_DATA.coreFormulas.critChance.baseCrit;
+  }
+  if (BALANCE_DATA.coreFormulas?.critMultiplier?.baseCritMult) {
+    gameState.critMultiplier = BALANCE_DATA.coreFormulas.critMultiplier.baseCritMult;
+  }
+
+  console.log('[Game] Balance data loaded:', Object.keys(BALANCE_DATA));
+}
+
+/**
+ * Get balance value with dot notation path
+ * @param {string} path - e.g., 'cats.starMultipliers.3'
+ * @param {*} defaultValue - fallback if path not found
+ */
+function getBalance(path, defaultValue = null) {
+  const keys = path.split('.');
+  let value = BALANCE_DATA;
+
+  for (const key of keys) {
+    if (value && typeof value === 'object' && key in value) {
+      value = value[key];
+    } else {
+      return defaultValue;
+    }
+  }
+
+  return value !== undefined ? value : defaultValue;
+}
+
+/**
+ * Get formula parameter
+ */
+function getFormulaParam(formulaName, paramName, defaultValue = 1) {
+  return getBalance(`coreFormulas.${formulaName}.${paramName}`, defaultValue);
+}
+
+// Export balance functions
+window.BALANCE_DATA = BALANCE_DATA;
+window.loadBalanceDataFromJSON = loadBalanceDataFromJSON;
+window.getBalance = getBalance;
+window.getFormulaParam = getFormulaParam;
+
+// DataLoader integration for balance
+if (window.dataLoader) {
+  dataLoader.onReady(() => {
+    const balanceData = dataLoader.get('balance');
+    if (balanceData) {
+      loadBalanceDataFromJSON(balanceData);
+    }
+  });
+} else {
+  // Wait for dataLoader to be available
+  const checkDataLoader = setInterval(() => {
+    if (window.dataLoader) {
+      clearInterval(checkDataLoader);
+      dataLoader.onReady(() => {
+        const balanceData = dataLoader.get('balance');
+        if (balanceData) {
+          loadBalanceDataFromJSON(balanceData);
+        }
+      });
+    }
+  }, 100);
+
+  // Stop checking after 10 seconds
+  setTimeout(() => clearInterval(checkDataLoader), 10000);
+}
