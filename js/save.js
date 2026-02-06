@@ -6,7 +6,7 @@
 const SaveSystem = {
   SAVE_KEY: 'celestial_snoot_sect',
   AUTO_SAVE_INTERVAL: 30000, // 30 seconds
-  VERSION: '2.1.0',
+  VERSION: '2.6.0',
   MAX_AFK_TIME: 24 * 60 * 60 * 1000, // 24 hours
 
   autoSaveTimer: null,
@@ -26,14 +26,19 @@ const SaveSystem = {
       // Core state
       master: masterSystem.selectedMaster?.id || null,
 
-      // Resources
+      // Resources (legacy support + new currencies)
       resources: {
         bp: gameState.boopPoints,
         pp: gameState.purrPower,
+        qi: gameState.qi || 0,
         jadeCatnip: gameState.jadeCatnip || 0,
         destinyThreads: gameState.destinyThreads || 0,
         gooseFeathers: gameState.gooseFeathers || 0,
-        goldenFeathers: gameState.goldenFeathers || 0
+        goldenFeathers: gameState.goldenFeathers || 0,
+        spiritStones: gameState.spiritStones || 0,
+        heavenlySeals: gameState.heavenlySeals || 0,
+        sectReputation: gameState.sectReputation || 0,
+        waifuTokens: gameState.waifuTokens || 0
       },
 
       // Stats
@@ -88,7 +93,56 @@ const SaveSystem = {
       nemesis: window.nemesisSystem ? window.nemesisSystem.serialize() : { nemeses: [], defeatedNemeses: [], defectedNemeses: [], stats: {} },
       catino: window.catinoSystem ? window.catinoSystem.serialize() : { chips: 0, stats: {} },
       hardcore: window.hardcoreSystem ? window.hardcoreSystem.serialize() : { completedModes: [], stats: {} },
-      partners: window.partnerGenerator ? window.partnerGenerator.serialize() : { ownedPartners: [], stats: {} }
+      partners: window.partnerGenerator ? window.partnerGenerator.serialize() : { ownedPartners: [], stats: {} },
+
+      // Cultivation System (Primary Progression)
+      cultivation: window.cultivationSystem ? window.cultivationSystem.serialize() : {
+        currentRealm: 'mortal',
+        currentRank: 1,
+        cultivationXP: 0,
+        totalCultivationXP: 0,
+        passivesUnlocked: [],
+        unlockedContent: ['basic_boop', 'cat_sanctuary'],
+        stats: {}
+      },
+
+      // Building System (Sect Facilities)
+      buildings: window.buildingSystem ? window.buildingSystem.serialize() : {
+        buildings: {},
+        currentTerritory: 'humble_courtyard',
+        unlockedTerritories: ['humble_courtyard'],
+        stats: {}
+      },
+
+      // Economy System (9-Currency System)
+      economy: window.economySystem ? window.economySystem.serialize() : {
+        currencies: {},
+        gooseShopPurchases: {},
+        conversionCooldowns: {},
+        permanentEffects: {},
+        activeEffects: [],
+        consumables: {},
+        stats: {
+          totalEarned: {},
+          totalSpent: {},
+          conversionsPerformed: 0,
+          gooseShopPurchases: 0
+        }
+      },
+
+      // Time System (Day/Night & Seasons)
+      time: window.timeSystem ? window.timeSystem.serialize() : {
+        stats: { dawnsSeen: 0, nightsSpent: 0, festivalsParticipated: [], totalNightBoops: 0 }
+      },
+
+      // Events System (Multi-Layer Events)
+      events: window.eventSystem ? window.eventSystem.serialize() : {
+        eventHistory: [],
+        weeklyChallenge: null,
+        lastWeeklyReset: null,
+        triggeredHiddenEvents: [],
+        hiddenEventCooldowns: {}
+      }
     };
 
     try {
@@ -151,6 +205,133 @@ const SaveSystem = {
       data.partners = data.partners || { ownedPartners: [], stats: {} };
       data.version = '2.1.0';
       console.log('Migrated save to version 2.1.0 (POST-LAUNCH systems)');
+    }
+
+    // Migrate to 2.2.0 (Cultivation System)
+    if (data.version === '2.1.0') {
+      data.cultivation = data.cultivation || {
+        currentRealm: 'mortal',
+        currentRank: 1,
+        cultivationXP: 0,
+        totalCultivationXP: 0,
+        tribulationAttempts: {},
+        passivesUnlocked: [],
+        unlockedContent: ['basic_boop', 'cat_sanctuary'],
+        severingChoices: {},
+        daoWounds: 0,
+        permanentScars: 0,
+        stats: {
+          realmBreakthroughs: 0,
+          tribulationSuccesses: 0,
+          tribulationFailures: 0,
+          totalXPEarned: 0,
+          highestRealm: 'mortal',
+          highestRank: 1
+        }
+      };
+      data.version = '2.2.0';
+      console.log('Migrated save to version 2.2.0 (Cultivation System)');
+    }
+
+    // Migrate to 2.3.0 (Building System)
+    if (data.version === '2.2.0') {
+      data.buildings = data.buildings || {
+        buildings: {},
+        currentTerritory: 'humble_courtyard',
+        unlockedTerritories: ['humble_courtyard'],
+        stats: {
+          totalBuilt: 0,
+          totalUpgrades: 0,
+          highestBuildingLevel: 0,
+          bpSpentOnBuildings: 0
+        }
+      };
+      data.version = '2.3.0';
+      console.log('Migrated save to version 2.3.0 (Building System)');
+    }
+
+    // Migrate to 2.4.0 (Prestige Layers 2-3: Reincarnation & Transcendence)
+    if (data.version === '2.3.0') {
+      // Ensure prestige data has reincarnation and transcendence fields
+      data.prestige = data.prestige || { currentTier: 0, totalRebirths: 0, lifetimeBP: 0, unlockedPerks: [] };
+      data.prestige.reincarnationCount = data.prestige.reincarnationCount || 0;
+      data.prestige.karmaPoints = data.prestige.karmaPoints || 0;
+      data.prestige.pastLifeMemory = data.prestige.pastLifeMemory || null;
+      data.prestige.karmaShopPurchases = data.prestige.karmaShopPurchases || {};
+      data.prestige.maxWaifuBonds = data.prestige.maxWaifuBonds || {};
+      data.prestige.maxRealmReached = data.prestige.maxRealmReached || 'mortal';
+      data.prestige.lifetimeBoops = data.prestige.lifetimeBoops || data.stats?.totalBoops || 0;
+      data.prestige.lifetimeGooseBoops = data.prestige.lifetimeGooseBoops || data.stats?.gooseBoops || 0;
+      data.prestige.transcendenceCount = data.prestige.transcendenceCount || 0;
+      data.prestige.transcendencePoints = data.prestige.transcendencePoints || 0;
+      data.prestige.celestialUnlocks = data.prestige.celestialUnlocks || [];
+      data.version = '2.4.0';
+      console.log('Migrated save to version 2.4.0 (Prestige Layers 2-3)');
+    }
+
+    // Migrate to 2.5.0 (9-Currency Economy System)
+    if (data.version === '2.4.0') {
+      // Add new currency fields to resources
+      data.resources = data.resources || {};
+      data.resources.qi = data.resources.qi || 0;
+      data.resources.spiritStones = data.resources.spiritStones || 0;
+      data.resources.heavenlySeals = data.resources.heavenlySeals || (data.prestige?.heavenlySeals || 0);
+      data.resources.sectReputation = data.resources.sectReputation || 0;
+      data.resources.waifuTokens = data.resources.waifuTokens || 0;
+
+      // Initialize economy system data
+      data.economy = data.economy || {
+        currencies: {
+          bp: data.resources.bp || 0,
+          pp: data.resources.pp || 0,
+          qi: data.resources.qi || 0,
+          jadeCatnip: data.resources.jadeCatnip || 0,
+          spiritStones: data.resources.spiritStones || 0,
+          heavenlySeals: data.resources.heavenlySeals || 0,
+          sectReputation: data.resources.sectReputation || 0,
+          waifuTokens: data.resources.waifuTokens || 0,
+          gooseFeathers: data.resources.gooseFeathers || 0
+        },
+        gooseShopPurchases: {},
+        conversionCooldowns: {},
+        permanentEffects: {},
+        activeEffects: [],
+        consumables: {},
+        stats: {
+          totalEarned: {},
+          totalSpent: {},
+          conversionsPerformed: 0,
+          gooseShopPurchases: 0
+        }
+      };
+
+      data.version = '2.5.0';
+      console.log('Migrated save to version 2.5.0 (9-Currency Economy System)');
+    }
+
+    // Migrate to 2.6.0 (Time & Events System)
+    if (data.version === '2.5.0') {
+      // Initialize time system data
+      data.time = data.time || {
+        stats: {
+          dawnsSeen: 0,
+          nightsSpent: 0,
+          festivalsParticipated: [],
+          totalNightBoops: 0
+        }
+      };
+
+      // Initialize events system data
+      data.events = data.events || {
+        eventHistory: [],
+        weeklyChallenge: null,
+        lastWeeklyReset: null,
+        triggeredHiddenEvents: [],
+        hiddenEventCooldowns: {}
+      };
+
+      data.version = '2.6.0';
+      console.log('Migrated save to version 2.6.0 (Time & Events System)');
     }
 
     console.log(`Loaded save version ${data.version}`);

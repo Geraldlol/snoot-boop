@@ -405,9 +405,478 @@
   100% { transform: translateX(100px); }
 }
 
-/* --- Utility Classes --- */
+/* ===================================
+   QI PARTICLE EFFECTS
+   Enhanced particle animations for that Hades feel
+   =================================== */
+
+/* --- Qi Particle Base --- */
+@keyframes qi-float-up {
+  0% {
+    transform: translateY(0) translateX(0) scale(1) rotate(0deg);
+    opacity: 1;
+  }
+  50% {
+    transform: translateY(-40px) translateX(var(--drift-x, 10px)) scale(1.2) rotate(180deg);
+    opacity: 0.8;
+  }
+  100% {
+    transform: translateY(-80px) translateX(var(--drift-x, 10px)) scale(0.5) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+@keyframes qi-spiral {
+  0% {
+    transform: translateY(0) rotate(0deg) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-100px) rotate(720deg) scale(0);
+    opacity: 0;
+  }
+}
+
+@keyframes qi-burst {
+  0% {
+    transform: translate(0, 0) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(var(--burst-x, 50px), var(--burst-y, -50px)) scale(0);
+    opacity: 0;
+  }
+}
+
+@keyframes qi-orbit {
+  0% {
+    transform: rotate(0deg) translateX(30px) rotate(0deg) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: rotate(360deg) translateX(60px) rotate(-360deg) scale(0);
+    opacity: 0;
+  }
+}
+
+/* --- Critical Explosion --- */
+@keyframes crit-explosion-ring {
+  0% {
+    transform: scale(0.5);
+    opacity: 1;
+    border-width: 8px;
+  }
+  100% {
+    transform: scale(3);
+    opacity: 0;
+    border-width: 1px;
+  }
+}
+
+@keyframes crit-explosion-flash {
+  0% {
+    opacity: 0.8;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.5);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(2);
+  }
+}
+
+@keyframes crit-star-burst {
+  0% {
+    transform: rotate(0deg) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: rotate(180deg) scale(2);
+    opacity: 0;
+  }
+}
+
+/* --- Combo Effects --- */
+@keyframes combo-fire {
+  0%, 100% {
+    text-shadow: 0 0 10px #ff6600, 0 0 20px #ff4400, 0 0 30px #ff2200;
+    transform: scale(1);
+  }
+  50% {
+    text-shadow: 0 0 20px #ff8800, 0 0 40px #ff6600, 0 0 60px #ff4400;
+    transform: scale(1.05);
+  }
+}
+
+@keyframes combo-electrify {
+  0%, 100% {
+    text-shadow: 0 0 5px #00ffff, 0 0 10px #00ccff, 0 0 15px #0099ff;
+    filter: brightness(1);
+  }
+  25% {
+    text-shadow: 0 0 20px #00ffff, 0 0 40px #00ccff, 0 0 60px #0099ff;
+    filter: brightness(1.5);
+  }
+  50% {
+    text-shadow: 0 0 5px #00ffff, 0 0 10px #00ccff;
+    filter: brightness(1);
+  }
+  75% {
+    text-shadow: 0 0 30px #ffffff, 0 0 50px #00ffff, 0 0 70px #0099ff;
+    filter: brightness(2);
+  }
+}
+
+@keyframes combo-transcend {
+  0% {
+    text-shadow: 0 0 10px #ffd700, 0 0 20px #ff6600, 0 0 30px #ff0000;
+    transform: scale(1) rotate(0deg);
+    filter: hue-rotate(0deg);
+  }
+  50% {
+    text-shadow: 0 0 30px #00ff00, 0 0 50px #00ffff, 0 0 70px #ff00ff;
+    transform: scale(1.1) rotate(2deg);
+    filter: hue-rotate(180deg);
+  }
+  100% {
+    text-shadow: 0 0 10px #ffd700, 0 0 20px #ff6600, 0 0 30px #ff0000;
+    transform: scale(1) rotate(0deg);
+    filter: hue-rotate(360deg);
+  }
+}
+
+@keyframes combo-number-pop {
+  0% {
+    transform: scale(1);
+  }
+  20% {
+    transform: scale(1.4);
+  }
+  40% {
+    transform: scale(0.9);
+  }
+  60% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* ===================================
+   SCREEN SHAKE VARIATIONS
+   Different intensities for different events
+   =================================== */
+
+/* Light shake - for regular hits */
+@keyframes screen-shake-light {
+  0%, 100% { transform: translate(0, 0); }
+  20% { transform: translate(-2px, 1px); }
+  40% { transform: translate(2px, -1px); }
+  60% { transform: translate(-1px, 2px); }
+  80% { transform: translate(1px, -2px); }
+}
+
+/* Medium shake - for critical hits */
+@keyframes screen-shake-medium {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  10% { transform: translate(-4px, -2px) rotate(-0.5deg); }
+  20% { transform: translate(4px, 2px) rotate(0.5deg); }
+  30% { transform: translate(-3px, 3px) rotate(-0.3deg); }
+  40% { transform: translate(3px, -3px) rotate(0.3deg); }
+  50% { transform: translate(-2px, -4px) rotate(-0.2deg); }
+  60% { transform: translate(2px, 4px) rotate(0.2deg); }
+  70% { transform: translate(-3px, 2px) rotate(-0.1deg); }
+  80% { transform: translate(3px, -2px) rotate(0.1deg); }
+  90% { transform: translate(-1px, 1px); }
+}
+
+/* Heavy shake - for special abilities */
+@keyframes screen-shake-heavy {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  5% { transform: translate(-8px, -5px) rotate(-1deg); }
+  10% { transform: translate(8px, 5px) rotate(1deg); }
+  15% { transform: translate(-7px, 6px) rotate(-0.8deg); }
+  20% { transform: translate(7px, -6px) rotate(0.8deg); }
+  25% { transform: translate(-6px, -7px) rotate(-0.6deg); }
+  30% { transform: translate(6px, 7px) rotate(0.6deg); }
+  35% { transform: translate(-5px, 5px) rotate(-0.5deg); }
+  40% { transform: translate(5px, -5px) rotate(0.5deg); }
+  50% { transform: translate(-4px, -4px) rotate(-0.4deg); }
+  60% { transform: translate(4px, 4px) rotate(0.4deg); }
+  70% { transform: translate(-3px, 3px) rotate(-0.2deg); }
+  80% { transform: translate(3px, -3px) rotate(0.2deg); }
+  90% { transform: translate(-1px, 1px); }
+}
+
+/* Epic shake - for goose kills and legendary events */
+@keyframes screen-shake-epic {
+  0%, 100% { transform: translate(0, 0) rotate(0deg) scale(1); }
+  5% { transform: translate(-12px, -8px) rotate(-2deg) scale(1.01); }
+  10% { transform: translate(12px, 8px) rotate(2deg) scale(0.99); }
+  15% { transform: translate(-10px, 10px) rotate(-1.5deg) scale(1.02); }
+  20% { transform: translate(10px, -10px) rotate(1.5deg) scale(0.98); }
+  25% { transform: translate(-8px, -10px) rotate(-1deg) scale(1.01); }
+  30% { transform: translate(8px, 10px) rotate(1deg) scale(0.99); }
+  40% { transform: translate(-6px, 6px) rotate(-0.8deg); }
+  50% { transform: translate(6px, -6px) rotate(0.8deg); }
+  60% { transform: translate(-4px, -4px) rotate(-0.5deg); }
+  70% { transform: translate(4px, 4px) rotate(0.5deg); }
+  80% { transform: translate(-2px, 2px) rotate(-0.2deg); }
+  90% { transform: translate(2px, -2px) rotate(0.2deg); }
+}
+
+/* ===================================
+   REALM-SPECIFIC AMBIENT EFFECTS
+   Background effects change based on cultivation realm
+   =================================== */
+
+@keyframes realm-mortal-ambient {
+  0%, 100% {
+    background-position: 0% 50%;
+    filter: brightness(1);
+  }
+  50% {
+    background-position: 100% 50%;
+    filter: brightness(1.05);
+  }
+}
+
+@keyframes realm-qi-ambient {
+  0%, 100% {
+    box-shadow: inset 0 0 30px rgba(135, 206, 235, 0.1);
+  }
+  50% {
+    box-shadow: inset 0 0 60px rgba(135, 206, 235, 0.2);
+  }
+}
+
+@keyframes realm-foundation-ambient {
+  0%, 100% {
+    box-shadow: inset 0 0 40px rgba(139, 69, 19, 0.15);
+  }
+  50% {
+    box-shadow: inset 0 0 80px rgba(139, 69, 19, 0.25);
+  }
+}
+
+@keyframes realm-core-ambient {
+  0%, 100% {
+    box-shadow: inset 0 0 50px rgba(255, 215, 0, 0.1);
+  }
+  50% {
+    box-shadow: inset 0 0 100px rgba(255, 215, 0, 0.2);
+  }
+}
+
+@keyframes realm-nascent-ambient {
+  0% {
+    box-shadow: inset 0 0 60px rgba(147, 112, 219, 0.15);
+  }
+  33% {
+    box-shadow: inset 0 0 80px rgba(138, 43, 226, 0.2);
+  }
+  66% {
+    box-shadow: inset 0 0 100px rgba(75, 0, 130, 0.25);
+  }
+  100% {
+    box-shadow: inset 0 0 60px rgba(147, 112, 219, 0.15);
+  }
+}
+
+@keyframes realm-immortal-ambient {
+  0% {
+    box-shadow: inset 0 0 80px rgba(255, 215, 0, 0.15), inset 0 0 120px rgba(255, 255, 255, 0.1);
+    filter: brightness(1) saturate(1);
+  }
+  50% {
+    box-shadow: inset 0 0 120px rgba(255, 215, 0, 0.25), inset 0 0 180px rgba(255, 255, 255, 0.2);
+    filter: brightness(1.1) saturate(1.1);
+  }
+  100% {
+    box-shadow: inset 0 0 80px rgba(255, 215, 0, 0.15), inset 0 0 120px rgba(255, 255, 255, 0.1);
+    filter: brightness(1) saturate(1);
+  }
+}
+
+@keyframes realm-divine-ambient {
+  0% {
+    box-shadow: inset 0 0 100px rgba(255, 255, 255, 0.2);
+    filter: brightness(1) hue-rotate(0deg);
+  }
+  25% {
+    box-shadow: inset 0 0 150px rgba(255, 215, 0, 0.3);
+    filter: brightness(1.15) hue-rotate(15deg);
+  }
+  50% {
+    box-shadow: inset 0 0 200px rgba(255, 255, 255, 0.35);
+    filter: brightness(1.2) hue-rotate(0deg);
+  }
+  75% {
+    box-shadow: inset 0 0 150px rgba(200, 200, 255, 0.3);
+    filter: brightness(1.15) hue-rotate(-15deg);
+  }
+  100% {
+    box-shadow: inset 0 0 100px rgba(255, 255, 255, 0.2);
+    filter: brightness(1) hue-rotate(0deg);
+  }
+}
+
+/* ===================================
+   NOTIFICATION ANIMATIONS
+   Toast and alert animations
+   =================================== */
+
+@keyframes notification-slide-in {
+  0% {
+    transform: translateX(120%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes notification-slide-out {
+  0% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(120%);
+    opacity: 0;
+  }
+}
+
+@keyframes notification-bounce-in {
+  0% {
+    transform: scale(0.3) translateY(-20px);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.05) translateY(0);
+  }
+  70% {
+    transform: scale(0.95);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes notification-shake {
+  0%, 100% { transform: translateX(0); }
+  10% { transform: translateX(-8px); }
+  20% { transform: translateX(8px); }
+  30% { transform: translateX(-6px); }
+  40% { transform: translateX(6px); }
+  50% { transform: translateX(-4px); }
+  60% { transform: translateX(4px); }
+  70% { transform: translateX(-2px); }
+  80% { transform: translateX(2px); }
+}
+
+@keyframes achievement-glow {
+  0%, 100% {
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3), 0 4px 15px rgba(0, 0, 0, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(255, 215, 0, 0.6), 0 0 50px rgba(255, 215, 0, 0.3), 0 4px 15px rgba(0, 0, 0, 0.3);
+  }
+}
+
+@keyframes lore-reveal {
+  0% {
+    opacity: 0;
+    filter: blur(10px);
+    transform: scale(0.9);
+  }
+  100% {
+    opacity: 1;
+    filter: blur(0);
+    transform: scale(1);
+  }
+}
+
+/* ===================================
+   BUTTON FEEDBACK ANIMATIONS
+   Satisfying button press effects
+   =================================== */
+
+@keyframes button-press {
+  0% { transform: scale(1); }
+  50% { transform: scale(0.95); }
+  100% { transform: scale(1); }
+}
+
+@keyframes button-success-flash {
+  0% { filter: brightness(1); }
+  50% { filter: brightness(1.5) saturate(1.2); }
+  100% { filter: brightness(1); }
+}
+
+@keyframes button-error-shake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-5px); }
+  40% { transform: translateX(5px); }
+  60% { transform: translateX(-3px); }
+  80% { transform: translateX(3px); }
+}
+
+@keyframes resource-gain-flash {
+  0% {
+    background-color: transparent;
+    transform: scale(1);
+  }
+  30% {
+    background-color: rgba(80, 200, 120, 0.3);
+    transform: scale(1.05);
+  }
+  100% {
+    background-color: transparent;
+    transform: scale(1);
+  }
+}
+
+@keyframes resource-loss-flash {
+  0% {
+    background-color: transparent;
+  }
+  30% {
+    background-color: rgba(255, 100, 100, 0.3);
+  }
+  100% {
+    background-color: transparent;
+  }
+}
+
+/* ===================================
+   UTILITY CLASSES
+   =================================== */
+
 .screen-shake {
   animation: screen-shake 0.3s ease-out;
+}
+
+.screen-shake-light {
+  animation: screen-shake-light 0.2s ease-out;
+}
+
+.screen-shake-medium {
+  animation: screen-shake-medium 0.3s ease-out;
+}
+
+.screen-shake-heavy {
+  animation: screen-shake-heavy 0.4s ease-out;
+}
+
+.screen-shake-epic {
+  animation: screen-shake-epic 0.5s ease-out;
 }
 
 .crit-flash {
@@ -436,4 +905,80 @@
 
 .critical-flash {
   animation: critical-flash 0.15s ease;
+}
+
+/* --- Combo Display Classes --- */
+.combo-display.combo-10 {
+  animation: combo-pulse 0.5s ease infinite;
+  color: #ffaa00;
+}
+
+.combo-display.combo-25 {
+  animation: combo-fire 0.8s ease infinite;
+  color: #ff6600;
+}
+
+.combo-display.combo-50 {
+  animation: combo-electrify 0.6s ease infinite;
+  color: #00ffff;
+}
+
+.combo-display.combo-100 {
+  animation: combo-transcend 1s ease infinite;
+  color: #ffd700;
+}
+
+.combo-count-pop {
+  animation: combo-number-pop 0.3s ease;
+}
+
+/* --- Realm Ambient Classes --- */
+.realm-mortal .game-main {
+  animation: realm-mortal-ambient 8s ease-in-out infinite;
+}
+
+.realm-qi-condensation .game-main {
+  animation: realm-qi-ambient 6s ease-in-out infinite;
+}
+
+.realm-foundation .game-main {
+  animation: realm-foundation-ambient 5s ease-in-out infinite;
+}
+
+.realm-core-formation .game-main {
+  animation: realm-core-ambient 4s ease-in-out infinite;
+}
+
+.realm-nascent-soul .game-main {
+  animation: realm-nascent-ambient 5s ease-in-out infinite;
+}
+
+.realm-immortal .game-main {
+  animation: realm-immortal-ambient 4s ease-in-out infinite;
+}
+
+.realm-divine .game-main {
+  animation: realm-divine-ambient 6s ease-in-out infinite;
+}
+
+/* --- Resource Flash Classes --- */
+.resource.gained {
+  animation: resource-gain-flash 0.4s ease-out;
+}
+
+.resource.lost {
+  animation: resource-loss-flash 0.4s ease-out;
+}
+
+/* --- Button Feedback --- */
+.button-pressed {
+  animation: button-press 0.15s ease;
+}
+
+.button-success {
+  animation: button-success-flash 0.3s ease;
+}
+
+.button-error {
+  animation: button-error-shake 0.4s ease;
 }

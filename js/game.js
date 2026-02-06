@@ -73,18 +73,98 @@ if (typeof HardcoreSystem === 'undefined') {
   };
 }
 
+if (typeof BuildingSystem === 'undefined') {
+  console.warn('BuildingSystem not found, using fallback');
+  window.BuildingSystem = class BuildingSystem {
+    constructor() {
+      this.buildings = {};
+      this.currentTerritory = 'humble_courtyard';
+      this.unlockedTerritories = ['humble_courtyard'];
+      this.buildingEffects = {};
+      this.stats = {};
+    }
+    getBuildingCost() { return Infinity; }
+    canBuild() { return { canBuild: false, reason: 'System not loaded' }; }
+    build() { return { success: false }; }
+    recalculateEffects() { return {}; }
+    getCombinedEffects() { return { catCapacity: 0, ppMultiplier: 1, bpMultiplier: 1, afkMultiplier: 1 }; }
+    getTotalCatCapacity() { return 10; }
+    getAvailableSlots() { return 3; }
+    getUsedSlots() { return 0; }
+    serialize() { return { buildings: {}, currentTerritory: 'humble_courtyard', unlockedTerritories: ['humble_courtyard'], stats: this.stats }; }
+    deserialize(data) { if (data) { this.buildings = data.buildings || {}; this.stats = data.stats || {}; } }
+  };
+}
+
+if (typeof EconomySystem === 'undefined') {
+  console.warn('EconomySystem not found, using fallback');
+  window.EconomySystem = class EconomySystem {
+    constructor() {
+      this.currencies = { bp: 0, pp: 0, qi: 0, jadeCatnip: 0, spiritStones: 0, heavenlySeals: 0, sectReputation: 0, waifuTokens: 0, gooseFeathers: 0 };
+      this.gooseShopPurchases = {};
+      this.permanentEffects = {};
+      this.stats = { totalEarned: {}, totalSpent: {}, conversionsPerformed: 0, gooseShopPurchases: 0 };
+    }
+    getBalance(id) { return this.currencies[id] || 0; }
+    getAllBalances() { return { ...this.currencies }; }
+    addCurrency(id, amount) { this.currencies[id] = (this.currencies[id] || 0) + amount; return { success: true }; }
+    spendCurrency(id, amount) { if (this.currencies[id] >= amount) { this.currencies[id] -= amount; return { success: true }; } return { success: false }; }
+    canAfford(costs) { return { canAfford: true }; }
+    getGooseShopItems() { return []; }
+    getGoosePermanentEffects() { return {}; }
+    loadFromGameState() {}
+    syncAllToGameState() {}
+    serialize() { return { currencies: this.currencies, gooseShopPurchases: {}, stats: this.stats }; }
+    deserialize(data) { if (data?.currencies) this.currencies = data.currencies; }
+  };
+}
+
+if (typeof TimeSystem === 'undefined') {
+  console.warn('TimeSystem not found, using fallback');
+  window.TimeSystem = class TimeSystem {
+    constructor() {
+      this.currentTimeOfDay = 'afternoon';
+      this.currentSeason = 'spring';
+      this.activeSeasonalEvent = null;
+      this.stats = { dawnsSeen: 0, nightsSpent: 0, festivalsParticipated: [], totalNightBoops: 0 };
+    }
+    update() {}
+    getCurrentTimeOfDay() { return this.currentTimeOfDay; }
+    getCurrentSeason() { return this.currentSeason; }
+    isNightTime() { const h = new Date().getHours(); return h >= 22 || h < 6; }
+    isDayTime() { return !this.isNightTime(); }
+    getTimeModifiers() {
+      return {
+        bpMultiplier: 1, ppMultiplier: 1, waifuBondMultiplier: 1, afkMultiplier: 1,
+        eventChanceMultiplier: 1, giftQualityMultiplier: 1, expeditionSpeedMultiplier: 1,
+        happinessDecayMultiplier: 1, lunaBonus: 1, nocturnalCatBonus: 1,
+        gooseSpawnMultiplier: 1, gooseRewardMultiplier: 1, critChanceBonus: 0
+      };
+    }
+    getCurrentTimeInfo() { return { timeOfDay: { id: 'afternoon', name: 'Afternoon', emoji: '☀️' }, season: { id: 'spring', name: 'Spring', emoji: '🌸' }, activeEvent: null, isNight: false }; }
+    serialize() { return { stats: this.stats }; }
+    deserialize(data) { if (data?.stats) this.stats = data.stats; }
+  };
+}
+
 // ===================================
 // GAME STATE
 // ===================================
 
 const gameState = {
-  // Resources
+  // Resources - Primary currencies
   boopPoints: 0,
   purrPower: 0,
+  qi: 0,
   jadeCatnip: 0,
   destinyThreads: 0,
   gooseFeathers: 0,
   goldenFeathers: 0,
+  // Resources - Additional currencies (9-currency system)
+  spiritStones: 0,
+  heavenlySeals: 0,
+  sectReputation: 0,
+  waifuTokens: 0,
 
   // Boop stats
   totalBoops: 0,
@@ -125,10 +205,11 @@ const gameState = {
 
 let masterSystem, catSystem, waifuSystem, upgradeSystem, eventSystem;
 let achievementSystem, gooseSystem, giftSystem, expeditionSystem, jadeDotGame;
-let prestigeSystem, audioSystem;
+let prestigeSystem, audioSystem, cultivationSystem, buildingSystem, economySystem;
 let elementalSystem, equipmentSystem, craftingSystem, pagodaSystem, techniqueSystem;
 let blessingSystem, waveSurvivalSystem, goldenSnootSystem, dailySystem, parasiteSystem;
 let irlIntegrationSystem, dramaSystem, nemesisSystem, catinoSystem, hardcoreSystem, partnerGenerator;
+let timeSystem;
 
 function createSystem(name, constructorFn) {
   if (typeof constructorFn === 'undefined') {
@@ -158,6 +239,9 @@ expeditionSystem = createSystem('ExpeditionSystem', ExpeditionSystem);
 jadeDotGame = createSystem('JadeDotGame', JadeDotGame);
 prestigeSystem = createSystem('PrestigeSystem', PrestigeSystem);
 audioSystem = createSystem('AudioSystem', AudioSystem);
+cultivationSystem = createSystem('CultivationSystem', CultivationSystem);
+buildingSystem = createSystem('BuildingSystem', BuildingSystem);
+economySystem = createSystem('EconomySystem', EconomySystem);
 
 console.log('Creating Phase 3 systems...');
 elementalSystem = createSystem('ElementalSystem', ElementalSystem);
@@ -178,6 +262,7 @@ nemesisSystem = createSystem('NemesisSystem', NemesisSystem);
 catinoSystem = createSystem('CatinoSystem', CatinoSystem);
 hardcoreSystem = createSystem('HardcoreSystem', HardcoreSystem);
 partnerGenerator = createSystem('PartnerGenerator', PartnerGenerator);
+timeSystem = createSystem('TimeSystem', TimeSystem);
 
 console.log('System creation complete');
 
@@ -195,6 +280,9 @@ window.expeditionSystem = expeditionSystem;
 window.jadeDotGame = jadeDotGame;
 window.prestigeSystem = prestigeSystem;
 window.audioSystem = audioSystem;
+window.cultivationSystem = cultivationSystem;
+window.buildingSystem = buildingSystem;
+window.economySystem = economySystem;
 
 // Phase 3 Systems (global)
 window.elementalSystem = elementalSystem;
@@ -215,6 +303,7 @@ window.nemesisSystem = nemesisSystem;
 window.catinoSystem = catinoSystem;
 window.hardcoreSystem = hardcoreSystem;
 window.partnerGenerator = partnerGenerator;
+window.timeSystem = timeSystem;
 
 console.log('Snoot Booper: All systems created successfully');
 
@@ -383,7 +472,17 @@ const elements = {
   prestigeCurrent: document.getElementById('prestige-current'),
   prestigeRequirement: document.getElementById('prestige-requirement'),
   rebirthBtn: document.getElementById('rebirth-btn'),
-  prestigePerksList: document.getElementById('prestige-perks-list')
+  prestigePerksList: document.getElementById('prestige-perks-list'),
+
+  // Cultivation Display
+  cultivationDisplay: document.getElementById('cultivation-display'),
+  cultivationRealmName: document.getElementById('cultivation-realm-name'),
+  cultivationRank: document.getElementById('cultivation-rank'),
+  cultivationXpFill: document.getElementById('cultivation-xp-fill'),
+  cultivationXpText: document.getElementById('cultivation-xp-text'),
+  cultivationDesc: document.getElementById('cultivation-desc'),
+  cultivationPassives: document.getElementById('cultivation-passives'),
+  breakthroughBtn: document.getElementById('breakthrough-btn')
 };
 
 // Currently previewed master
@@ -425,13 +524,20 @@ function loadGame(saveData) {
   // Restore master
   masterSystem.selectMaster(saveData.master);
 
-  // Restore resources
+  // Restore resources (primary currencies)
   gameState.boopPoints = saveData.resources.bp || 0;
   gameState.purrPower = saveData.resources.pp || 0;
   gameState.jadeCatnip = saveData.resources.jadeCatnip || 0;
   gameState.gooseFeathers = saveData.resources.gooseFeathers || 0;
   gameState.goldenFeathers = saveData.resources.goldenFeathers || 0;
   gameState.destinyThreads = saveData.resources.destinyThreads || 0;
+
+  // Restore additional currencies (9-currency system)
+  gameState.qi = saveData.resources.qi || 0;
+  gameState.spiritStones = saveData.resources.spiritStones || 0;
+  gameState.heavenlySeals = saveData.resources.heavenlySeals || 0;
+  gameState.sectReputation = saveData.resources.sectReputation || 0;
+  gameState.waifuTokens = saveData.resources.waifuTokens || 0;
 
   // Restore stats
   gameState.totalBoops = saveData.stats?.totalBoops || 0;
@@ -475,6 +581,10 @@ function loadGame(saveData) {
   // Restore prestige
   if (saveData.prestige) {
     prestigeSystem.deserialize(saveData.prestige);
+  }
+  // Initialize advanced prestige features (Reincarnation & Transcendence)
+  if (prestigeSystem.initializeAdvancedPrestige) {
+    prestigeSystem.initializeAdvancedPrestige();
   }
 
   // Restore Phase 3 systems (with null checks)
@@ -528,6 +638,24 @@ function loadGame(saveData) {
   if (saveData.partners && partnerGenerator) {
     partnerGenerator.deserialize(saveData.partners);
   }
+  if (saveData.cultivation && cultivationSystem) {
+    cultivationSystem.deserialize(saveData.cultivation);
+  }
+  if (saveData.buildings && buildingSystem) {
+    buildingSystem.deserialize(saveData.buildings);
+  }
+  if (saveData.economy && economySystem) {
+    economySystem.deserialize(saveData.economy);
+  } else if (economySystem) {
+    // No economy data - sync from gameState for backwards compatibility
+    economySystem.loadFromGameState();
+  }
+  if (saveData.time && timeSystem) {
+    timeSystem.deserialize(saveData.time);
+  }
+  if (saveData.events && eventSystem) {
+    eventSystem.deserialize(saveData.events);
+  }
 
   // If no waifus loaded, init with starter
   if (waifuSystem.getUnlockedWaifus().length === 0) {
@@ -577,6 +705,7 @@ function startGameWithSave(afkGains) {
   // Render new UI elements
   renderExpeditions();
   renderPrestige();
+  updateCultivationDisplay();
   updateExpeditionsUI();
   renderDailyCommissions();
   renderPagoda();
@@ -727,6 +856,7 @@ function startGame() {
   // Render Phase 3 UI elements
   renderExpeditions();
   renderPrestige();
+  updateCultivationDisplay();
   updateExpeditionsUI();
   renderDailyCommissions();
   renderPagoda();
@@ -2411,8 +2541,16 @@ function handleBoop() {
   // Recalculate modifiers
   recalculateModifiers();
 
-  // Calculate base BP
-  let bp = gameState.boopPower;
+  // Get stance modifiers from technique system
+  const stanceModifiers = techniqueSystem ? techniqueSystem.getStanceBoopModifiers() : {
+    boopPower: 1.0,
+    critChance: 0.05,
+    critMultiplier: 10,
+    comboDecay: 4000
+  };
+
+  // Calculate base BP with stance modifier
+  let bp = gameState.boopPower * stanceModifiers.boopPower;
   bp += gameState.modifiers.bpPerBoop || 0;
   bp *= gameState.modifiers.bpMultiplier || 1;
 
@@ -2420,8 +2558,8 @@ function handleBoop() {
   const waifuBonuses = waifuSystem ? waifuSystem.getCombinedBonuses() : { bpMultiplier: 1 };
   bp *= waifuBonuses.bpMultiplier || 1;
 
-  // Check critical
-  let critChance = gameState.critChance + (gameState.modifiers.critChance || 0);
+  // Check critical with stance modifier
+  let critChance = stanceModifiers.critChance + (gameState.modifiers.critChance || 0);
   const masterEffects = masterSystem ? masterSystem.getPassiveEffects(gameState) : {};
   if (masterEffects.critChanceBonus) {
     critChance += masterEffects.critChanceBonus;
@@ -2429,7 +2567,7 @@ function handleBoop() {
 
   const isCrit = Math.random() < critChance;
   if (isCrit) {
-    const critMult = gameState.critMultiplier + (gameState.modifiers.critMultiplier || 0);
+    const critMult = stanceModifiers.critMultiplier + (gameState.modifiers.critMultiplier || 0);
     bp *= critMult;
     gameState.criticalBoops++;
     if (audioSystem) audioSystem.playSFX('critical');
@@ -2446,15 +2584,30 @@ function handleBoop() {
   // Track combo for daily commissions
   if (dailySystem) dailySystem.trackProgress('combo', gameState.comboCount);
 
+  // Stance-specific combo decay
   clearTimeout(gameState.comboTimer);
   gameState.comboTimer = setTimeout(() => {
-    gameState.comboCount = 0;
+    // Flowing River stance: combo never fully resets (minimum 10%)
+    if (techniqueSystem && techniqueSystem.currentStance === 'flowingRiver') {
+      gameState.comboCount = Math.max(1, Math.floor(gameState.comboCount * 0.1));
+    } else {
+      gameState.comboCount = 0;
+    }
     if (elements.comboDisplay) elements.comboDisplay.classList.add('hidden');
-  }, 4000); // 4 second combo window (was 2s)
+  }, stanceModifiers.comboDecay);
 
   // Combo multiplier (up to 2x at 100)
   const comboMult = 1 + (Math.min(gameState.comboCount, 100) * 0.01);
   bp *= comboMult;
+
+  // Process stance special abilities
+  if (techniqueSystem) {
+    const stanceResult = techniqueSystem.processStanceBoop(bp, isCrit, gameState.comboCount);
+    bp = stanceResult.bp;
+    if (stanceResult.specialTriggered) {
+      showStanceSpecialEffect(stanceResult.specialTriggered);
+    }
+  }
 
   // Update state
   gameState.boopPoints += bp;
@@ -2462,6 +2615,20 @@ function handleBoop() {
 
   // Track lifetime BP for prestige
   if (prestigeSystem) prestigeSystem.trackBP(bp);
+
+  // Gain cultivation XP from booping
+  if (cultivationSystem) {
+    // Base XP = 1 per boop, +1 for crits, +combo bonus
+    let cultivationXP = 1;
+    if (isCrit) cultivationXP += 1;
+    cultivationXP += Math.floor(gameState.comboCount / 25); // +1 per 25 combo
+    cultivationSystem.addXP(cultivationXP);
+  }
+
+  // Gain stance mastery XP from booping
+  if (techniqueSystem) {
+    techniqueSystem.gainStanceMasteryXP(1);
+  }
 
   // Track daily commission progress
   if (dailySystem) {
@@ -2513,8 +2680,14 @@ function handleBoop() {
 
   // Enhanced visual effects for crits
   if (isCrit) {
-    triggerScreenShake();
+    triggerScreenShake('medium');
     triggerCritFlash();
+    createBoopParticles('critical');
+  } else {
+    // Regular Qi particles on normal boops (less frequent for performance)
+    if (Math.random() < 0.3) {
+      createBoopParticles('qi');
+    }
   }
 
   // Animate cat on boop
@@ -2537,6 +2710,40 @@ function handleBoop() {
     bpResource.classList.add('gained');
     setTimeout(() => bpResource.classList.remove('gained'), 400);
   }
+}
+
+/**
+ * Show stance special ability effect notification
+ */
+function showStanceSpecialEffect(specialName) {
+  // Create a special floating notification for stance abilities
+  const container = elements.floatingTextContainer;
+  if (!container) return;
+
+  const effectEl = document.createElement('div');
+  effectEl.className = 'floating-text stance-special';
+  effectEl.textContent = specialName;
+
+  // Center it on the screen
+  effectEl.style.left = '50%';
+  effectEl.style.top = '40%';
+  effectEl.style.transform = 'translateX(-50%)';
+  effectEl.style.fontSize = '1.5rem';
+  effectEl.style.color = '#FFD700';
+  effectEl.style.textShadow = '0 0 10px #FF4500, 0 0 20px #FF6600';
+  effectEl.style.fontWeight = 'bold';
+
+  container.appendChild(effectEl);
+
+  // Play special sound if available
+  if (audioSystem) {
+    audioSystem.playSFX('special_ability');
+  }
+
+  // Trigger screen shake for stance specials
+  triggerScreenShake();
+
+  setTimeout(() => effectEl.remove(), 1500);
 }
 
 function showFloatingText(amountOrMessage, isCrit) {
@@ -2578,27 +2785,101 @@ function animateBoopButton() {
 function updateComboDisplay() {
   if (!elements.comboDisplay || !elements.comboCount) return;
 
-  if (gameState.comboCount > 5) {
-    elements.comboDisplay.classList.remove('hidden');
-    elements.comboCount.textContent = gameState.comboCount;
+  const combo = gameState.comboCount;
 
-    // Add high-combo class for special effects at 50+ combo
-    if (gameState.comboCount >= 50) {
-      elements.comboDisplay.classList.add('high-combo');
-    } else {
-      elements.comboDisplay.classList.remove('high-combo');
+  if (combo > 5) {
+    elements.comboDisplay.classList.remove('hidden');
+    elements.comboCount.textContent = combo;
+
+    // Remove all tier classes
+    elements.comboDisplay.classList.remove('combo-10', 'combo-25', 'combo-50', 'combo-100', 'high-combo');
+
+    // Add tier-specific effects based on combo level
+    if (combo >= 100) {
+      elements.comboDisplay.classList.add('combo-100');
+      // Trigger particles and effects at milestones
+      if (combo === 100 || combo % 50 === 0) {
+        createBoopParticles('combo', { level: combo });
+        triggerScreenShake('heavy');
+      }
+    } else if (combo >= 50) {
+      elements.comboDisplay.classList.add('combo-50', 'high-combo');
+      if (combo === 50) {
+        createBoopParticles('combo', { level: combo });
+        triggerScreenShake('medium');
+      }
+    } else if (combo >= 25) {
+      elements.comboDisplay.classList.add('combo-25');
+      if (combo === 25) {
+        createBoopParticles('combo', { level: combo });
+        triggerScreenShake('light');
+      }
+    } else if (combo >= 10) {
+      elements.comboDisplay.classList.add('combo-10');
+      if (combo === 10) {
+        createBoopParticles('combo', { level: combo });
+      }
     }
+
+    // Pop animation on combo number
+    elements.comboCount.classList.remove('combo-count-pop');
+    void elements.comboCount.offsetWidth;
+    elements.comboCount.classList.add('combo-count-pop');
   }
 }
 
 /**
- * Trigger screen shake effect for critical hits
+ * Create particles at boop button location
+ * @param {string} type - 'qi', 'critical', 'combo', etc.
+ * @param {Object} options - Additional options
  */
-function triggerScreenShake() {
+function createBoopParticles(type = 'qi', options = {}) {
+  if (!window.particleSystem || !elements.boopButton) return;
+
+  const rect = elements.boopButton.getBoundingClientRect();
+  const x = rect.left + rect.width / 2;
+  const y = rect.top + rect.height / 2;
+
+  const realm = cultivationSystem?.getCurrentRealm()?.id || 'mortal';
+
+  switch (type) {
+    case 'qi':
+      window.particleSystem.createQiParticles(x, y, realm);
+      break;
+    case 'critical':
+      window.particleSystem.createCriticalExplosion(x, y);
+      break;
+    case 'combo':
+      window.particleSystem.createComboParticles(x, y, options.level || 10);
+      break;
+    case 'gold':
+      window.particleSystem.createGoldParticles(x, y, options.amount);
+      break;
+    default:
+      window.particleSystem.createQiParticles(x, y, realm);
+  }
+}
+
+/**
+ * Trigger screen shake effect with variable intensity
+ * @param {string} intensity - 'light', 'medium', 'heavy', or 'epic'
+ */
+function triggerScreenShake(intensity = 'medium') {
+  // Use new ScreenShakeSystem if available
+  if (window.screenShakeSystem) {
+    window.screenShakeSystem.shake(intensity);
+    return;
+  }
+
+  // Fallback to old method
   const gameContainer = document.getElementById('game-container');
   if (gameContainer) {
-    gameContainer.classList.add('screen-shake');
-    setTimeout(() => gameContainer.classList.remove('screen-shake'), 300);
+    const shakeClass = `screen-shake-${intensity}`;
+    gameContainer.classList.remove('screen-shake', 'screen-shake-light', 'screen-shake-medium', 'screen-shake-heavy', 'screen-shake-epic');
+    void gameContainer.offsetWidth; // Force reflow
+    gameContainer.classList.add(shakeClass);
+    const durations = { light: 200, medium: 300, heavy: 400, epic: 500 };
+    setTimeout(() => gameContainer.classList.remove(shakeClass), durations[intensity] || 300);
   }
 }
 
@@ -2613,9 +2894,49 @@ function triggerCritFlash() {
   }
 }
 
+/**
+ * Apply realm-specific visual theme to game
+ */
+function updateRealmTheme() {
+  const gameContainer = document.getElementById('game-container');
+  if (!gameContainer || !cultivationSystem) return;
+
+  const realm = cultivationSystem.getCurrentRealm();
+  if (!realm) return;
+
+  // Remove all realm classes
+  const realmClasses = [
+    'realm-mortal', 'realm-qi-condensation', 'realm-foundation',
+    'realm-core-formation', 'realm-nascent-soul', 'realm-spirit-severing',
+    'realm-dao-seeking', 'realm-immortal', 'realm-true-immortal', 'realm-divine'
+  ];
+  realmClasses.forEach(cls => gameContainer.classList.remove(cls));
+
+  // Add current realm class
+  const realmClassMap = {
+    mortal: 'realm-mortal',
+    qiCondensation: 'realm-qi-condensation',
+    foundationEstablishment: 'realm-foundation',
+    coreFormation: 'realm-core-formation',
+    nascentSoul: 'realm-nascent-soul',
+    spiritSevering: 'realm-spirit-severing',
+    daoSeeking: 'realm-dao-seeking',
+    immortalAscension: 'realm-immortal',
+    trueImmortal: 'realm-true-immortal',
+    heavenlySovereign: 'realm-divine'
+  };
+
+  const realmClass = realmClassMap[realm.id];
+  if (realmClass) {
+    gameContainer.classList.add(realmClass);
+  }
+}
+
 // Make visual effect functions globally available
 window.triggerScreenShake = triggerScreenShake;
 window.triggerCritFlash = triggerCritFlash;
+window.createBoopParticles = createBoopParticles;
+window.updateRealmTheme = updateRealmTheme;
 
 // ===================================
 // CATS
@@ -2925,6 +3246,7 @@ function switchWaifuTab(tabName) {
 
   // Render content
   if (tabName === 'collection') renderWaifuGrid();
+  else if (tabName === 'activities') renderActivityTab();
   else if (tabName === 'gifts') renderGiftShop();
   else if (tabName === 'inventory') renderGiftInventory();
 }
@@ -3709,6 +4031,139 @@ function formatNumber(n) {
 
   return scaled.toFixed(1) + suffix;
 }
+
+// ===================================
+// CULTIVATION DISPLAY
+// ===================================
+
+/**
+ * Update the cultivation realm display panel
+ */
+function updateCultivationDisplay() {
+  if (!cultivationSystem || !elements.cultivationDisplay) return;
+
+  const realm = cultivationSystem.getCurrentRealm();
+  const currentRank = cultivationSystem.currentRank;
+  const progress = cultivationSystem.getRealmProgress();
+
+  // Update data-realm attribute for CSS theming
+  elements.cultivationDisplay.setAttribute('data-realm', cultivationSystem.currentRealm);
+
+  // Update realm name
+  if (elements.cultivationRealmName) {
+    elements.cultivationRealmName.textContent = realm.name;
+    elements.cultivationRealmName.style.color = realm.color;
+  }
+
+  // Update rank display
+  if (elements.cultivationRank) {
+    if (cultivationSystem.currentRealm === 'heavenlySovereign') {
+      elements.cultivationRank.textContent = `Rank ${currentRank} (Infinite)`;
+    } else {
+      elements.cultivationRank.textContent = `Rank ${currentRank} / ${realm.ranks}`;
+    }
+  }
+
+  // Update XP progress bar
+  if (elements.cultivationXpFill) {
+    const percent = Math.min(progress.percent, 100);
+    elements.cultivationXpFill.style.width = `${percent}%`;
+  }
+
+  // Update XP text
+  if (elements.cultivationXpText) {
+    if (progress.needed === Infinity) {
+      elements.cultivationXpText.textContent = `${formatNumber(progress.current)} XP (Max Rank)`;
+    } else {
+      elements.cultivationXpText.textContent = `${formatNumber(progress.current)} / ${formatNumber(progress.needed)} XP`;
+    }
+  }
+
+  // Update description
+  if (elements.cultivationDesc) {
+    elements.cultivationDesc.textContent = realm.description;
+  }
+
+  // Update unlocked passives
+  if (elements.cultivationPassives) {
+    const passives = cultivationSystem.passivesUnlocked;
+    if (passives.length > 0) {
+      // Show most recent 3 passives
+      const recentPassives = passives.slice(-3);
+      elements.cultivationPassives.innerHTML = recentPassives.map(passiveId => {
+        const [realmId, rank] = passiveId.split('_');
+        const passiveRealm = window.CULTIVATION_REALMS ? window.CULTIVATION_REALMS[realmId] : null;
+        if (!passiveRealm || !passiveRealm.passives[rank]) return '';
+
+        const passive = passiveRealm.passives[rank];
+        return `
+          <div class="cultivation-passive">
+            <span class="passive-icon">✨</span>
+            <span class="passive-name">${passive.name}</span>
+            <span class="passive-effect">${passive.description}</span>
+          </div>
+        `;
+      }).join('');
+    } else {
+      elements.cultivationPassives.innerHTML = `
+        <div class="cultivation-passive">
+          <span class="passive-icon">🔒</span>
+          <span class="passive-name">No passives yet</span>
+          <span class="passive-effect">Rank up to unlock!</span>
+        </div>
+      `;
+    }
+  }
+
+  // Update breakthrough button visibility
+  if (elements.breakthroughBtn) {
+    const canBreakthrough = cultivationSystem.canAttemptBreakthrough();
+    if (canBreakthrough.can) {
+      elements.breakthroughBtn.classList.remove('hidden');
+      const nextRealm = cultivationSystem.getNextRealm();
+      if (nextRealm) {
+        elements.breakthroughBtn.innerHTML = `⚡ Break through to ${nextRealm.name}`;
+      }
+    } else {
+      elements.breakthroughBtn.classList.add('hidden');
+    }
+  }
+}
+
+/**
+ * Attempt cultivation breakthrough
+ */
+function attemptBreakthrough() {
+  if (!cultivationSystem) return;
+
+  const result = cultivationSystem.startBreakthrough();
+
+  if (result.success) {
+    if (result.newRealm) {
+      // Auto-success breakthrough (no tribulation)
+      showNotification('BREAKTHROUGH! ' + result.message, 'success');
+      updateCultivationDisplay();
+      if (audioSystem) audioSystem.playSFX('breakthrough');
+    } else if (result.tribulation) {
+      // Tribulation started - show UI
+      showNotification('Tribulation Begins! ' + result.message, 'info');
+      // For now, auto-complete the tribulation (simplified)
+      setTimeout(() => {
+        const tribResult = cultivationSystem.completeTribulation();
+        if (tribResult.success) {
+          showNotification('TRIBULATION PASSED! ' + tribResult.message, 'success');
+          updateCultivationDisplay();
+          if (audioSystem) audioSystem.playSFX('breakthrough');
+        }
+      }, 2000);
+    }
+  } else {
+    showNotification('Cannot Break Through: ' + result.reason, 'error');
+  }
+}
+
+// Make attemptBreakthrough globally accessible
+window.attemptBreakthrough = attemptBreakthrough;
 
 // ===================================
 // AFK MODAL
@@ -4608,7 +5063,10 @@ function showNotification(message, type = 'info') {
 window.showSalvageConfirm = showSalvageConfirm;
 window.closeSalvageConfirm = closeSalvageConfirm;
 window.confirmSalvage = confirmSalvage;
-window.showNotification = showNotification;
+// Only use simple notification if enhanced system not loaded
+if (!window.notificationSystem) {
+  window.showNotification = showNotification;
+}
 
 function formatEquipmentStats(stats) {
   if (!stats || Object.keys(stats).length === 0) return 'No stats';
@@ -5699,6 +6157,11 @@ function gameLoop(timestamp) {
   // Update POST-LAUNCH systems (with null checks)
   if (irlIntegrationSystem) irlIntegrationSystem.update(deltaTime);
   if (dramaSystem) dramaSystem.update(deltaTime);
+  if (timeSystem) timeSystem.update(deltaTime);
+  if (eventSystem) eventSystem.update(deltaTime);
+
+  // Apply time-based bonuses to production
+  const timeModifiers = timeSystem ? timeSystem.getTimeModifiers() : {};
 
   // Apply IRL bonuses to production
   const irlEffects = irlIntegrationSystem ? irlIntegrationSystem.getCombinedEffects() : {};
@@ -5734,8 +6197,9 @@ function gameLoop(timestamp) {
     }
   }
 
-  // Update drama UI less frequently
+  // Update cultivation display and drama UI less frequently
   if (timestamp % 2000 < deltaTime) {
+    updateCultivationDisplay();
     updateDramaUI();
   }
 

@@ -4,6 +4,212 @@
  */
 
 // ===================================
+// TECHNIQUE STANCES (Boop Playstyles)
+// ===================================
+
+const TECHNIQUE_STANCES = {
+  jadePalm: {
+    id: 'jadePalm',
+    name: 'Jade Palm',
+    emoji: '🖐️',
+    description: 'The balanced way. Default stance for all cultivators.',
+    unlockRealm: 'mortal',
+    stats: {
+      boopPower: 1.0,
+      boopSpeed: 1.0,
+      critChance: 0.05,
+      critMultiplier: 10,
+      comboDecay: 4000
+    },
+    special: null,
+    mastery: {
+      maxLevel: 10,
+      xpPerBoop: 1,
+      bonusPerLevel: { boopPower: 0.05 }
+    },
+    color: '#50C878'
+  },
+
+  ironFinger: {
+    id: 'ironFinger',
+    name: 'Iron Finger',
+    emoji: '👆',
+    description: 'Slow but devastating. Each boop carries the weight of a mountain.',
+    unlockRealm: 'qiCondensation',
+    stats: {
+      boopPower: 3.0,
+      boopSpeed: 0.5,
+      critChance: 0.15,
+      critMultiplier: 15,
+      comboDecay: 6000
+    },
+    special: {
+      name: 'Mountain Crusher',
+      description: 'Every 10th boop deals 10x damage',
+      trigger: { everyNBoops: 10 },
+      effect: { damageMultiplier: 10 }
+    },
+    mastery: {
+      maxLevel: 10,
+      xpPerBoop: 2,
+      bonusPerLevel: { critMultiplier: 1 }
+    },
+    color: '#8B4513'
+  },
+
+  drunkenPaw: {
+    id: 'drunkenPaw',
+    name: 'Drunken Paw',
+    emoji: '🍶',
+    description: 'Chaotic and unpredictable. Embrace the randomness.',
+    unlockRealm: 'foundationEstablishment',
+    stats: {
+      boopPowerMin: 0.5,
+      boopPowerMax: 5.0,
+      boopSpeed: 1.2,
+      critChance: 0.25,
+      critMultiplierMin: 5,
+      critMultiplierMax: 25,
+      comboDecay: 3000
+    },
+    special: {
+      name: 'Lucky Stumble',
+      description: '5% chance for JACKPOT (100x damage)',
+      trigger: { chance: 0.05 },
+      effect: { damageMultiplier: 100 }
+    },
+    mastery: {
+      maxLevel: 10,
+      xpPerBoop: 1,
+      bonusPerLevel: { jackpotChance: 0.005 }
+    },
+    color: '#9370DB'
+  },
+
+  shadowStep: {
+    id: 'shadowStep',
+    name: 'Shadow Step',
+    emoji: '👤',
+    description: 'Rapid strikes with diminishing returns, then a devastating burst.',
+    unlockRealm: 'coreFormation',
+    stats: {
+      boopPower: 0.3,
+      boopSpeed: 2.0,
+      critChance: 0.1,
+      critMultiplier: 8,
+      comboDecay: 2000
+    },
+    special: {
+      name: 'Shadow Burst',
+      description: 'After 20 rapid boops, next boop deals combo × 5 damage',
+      trigger: { afterCombo: 20 },
+      effect: { burstMultiplier: 5 }
+    },
+    mastery: {
+      maxLevel: 10,
+      xpPerBoop: 0.5,
+      bonusPerLevel: { burstMultiplier: 0.5 }
+    },
+    color: '#483D8B'
+  },
+
+  flowingRiver: {
+    id: 'flowingRiver',
+    name: 'Flowing River',
+    emoji: '🌊',
+    description: 'Steady and consistent. Optimized for AFK synergy.',
+    unlockRealm: 'nascentSoul',
+    stats: {
+      boopPower: 1.5,
+      boopSpeed: 0.8,
+      critChance: 0.08,
+      critMultiplier: 12,
+      comboDecay: 8000
+    },
+    special: {
+      name: 'Eternal Flow',
+      description: 'Combo never fully resets, minimum 10%',
+      trigger: { always: true },
+      effect: { minComboPercent: 0.1 }
+    },
+    mastery: {
+      maxLevel: 10,
+      xpPerBoop: 1.5,
+      bonusPerLevel: { comboDecay: 500 }
+    },
+    color: '#4169E1'
+  },
+
+  forbiddenTechnique: {
+    id: 'forbiddenTechnique',
+    name: 'Thousand Snoot Annihilation',
+    emoji: '💀',
+    description: 'THE ULTIMATE TECHNIQUE. Costs Qi to activate.',
+    unlockRealm: 'spiritSevering',
+    unlockCondition: { masterAllStances: true },
+    stats: {
+      boopPower: 10.0,
+      boopSpeed: 3.0,
+      critChance: 0.5,
+      critMultiplier: 50,
+      comboDecay: 1000
+    },
+    special: {
+      name: 'Annihilation',
+      description: 'Costs 5 Qi per boop. All boops hit all cats on screen.',
+      trigger: { always: true },
+      effect: { aoe: true, qiCost: 5 }
+    },
+    mastery: {
+      maxLevel: 10,
+      xpPerBoop: 5,
+      bonusPerLevel: { qiCostReduction: 0.3 }
+    },
+    color: '#DC143C'
+  }
+};
+
+// Fusion Techniques - Unlocked by mastering multiple stances
+const FUSION_TECHNIQUES = {
+  jadeMountain: {
+    id: 'jadeMountain',
+    name: 'Jade Mountain Strike',
+    emoji: '🗻',
+    requires: ['jadePalm', 'ironFinger'],
+    requiredMastery: 5,
+    description: 'Balanced power with devastating follow-ups',
+    effect: { boopPower: 2.0, everyNth: { n: 5, multiplier: 5 } }
+  },
+  drunkenShadow: {
+    id: 'drunkenShadow',
+    name: 'Drunken Shadow Dance',
+    emoji: '🎭',
+    requires: ['drunkenPaw', 'shadowStep'],
+    requiredMastery: 5,
+    description: 'Chaotic rapid strikes with burst potential',
+    effect: { randomMultiplier: { min: 1, max: 3 }, burstAfter: 15 }
+  },
+  riverOfJade: {
+    id: 'riverOfJade',
+    name: 'River of Jade',
+    emoji: '💎',
+    requires: ['jadePalm', 'flowingRiver'],
+    requiredMastery: 5,
+    description: 'Endless combos with steady power',
+    effect: { comboNeverResets: true, boopPower: 1.75 }
+  },
+  ultimateSynthesis: {
+    id: 'ultimateSynthesis',
+    name: 'Celestial Snoot Synthesis',
+    emoji: '✨',
+    requires: ['jadePalm', 'ironFinger', 'drunkenPaw', 'shadowStep', 'flowingRiver'],
+    requiredMastery: 10,
+    description: 'THE ULTIMATE FUSION. Combines all stance benefits.',
+    effect: { allStancePassives: true, uniqueAnimation: 'celestial_boop' }
+  }
+};
+
+// ===================================
 // SECRET TECHNIQUES (Boss Drops)
 // ===================================
 
@@ -587,6 +793,16 @@ class TechniqueSystem {
     this.consumables = {};
     this.activeBuffs = [];
     this.cooldowns = {};
+
+    // Stance System
+    this.currentStance = 'jadePalm';
+    this.stanceMastery = {}; // { stanceId: level }
+    this.stanceMasteryXP = {}; // { stanceId: xp }
+    this.unlockedStances = ['jadePalm'];
+    this.unlockedFusions = [];
+    this.stanceBoopCount = 0; // Tracks boops in current stance for specials
+    this.shadowBurstReady = false;
+    this.lastStanceBoopTime = 0;
   }
 
   init() {
@@ -596,6 +812,293 @@ class TechniqueSystem {
     this.cultivationPassives = [];
     this.legendaryInternals = {};
     this.consumables = {};
+
+    // Init stance system
+    this.currentStance = 'jadePalm';
+    this.stanceMastery = { jadePalm: 0 };
+    this.stanceMasteryXP = { jadePalm: 0 };
+    this.unlockedStances = ['jadePalm'];
+    this.unlockedFusions = [];
+  }
+
+  // ===================================
+  // STANCE SYSTEM
+  // ===================================
+
+  /**
+   * Check if a stance is unlocked based on cultivation realm
+   */
+  checkStanceUnlocks() {
+    if (!window.cultivationSystem) return [];
+
+    const newUnlocks = [];
+    const playerRealmOrder = window.CULTIVATION_REALMS?.[window.cultivationSystem.currentRealm]?.order || 1;
+
+    for (const [stanceId, stance] of Object.entries(TECHNIQUE_STANCES)) {
+      if (this.unlockedStances.includes(stanceId)) continue;
+
+      const requiredRealmOrder = window.CULTIVATION_REALMS?.[stance.unlockRealm]?.order || 1;
+
+      // Check realm requirement
+      if (playerRealmOrder >= requiredRealmOrder) {
+        // Check special unlock condition for forbidden technique
+        if (stance.unlockCondition?.masterAllStances) {
+          const allMastered = Object.keys(TECHNIQUE_STANCES)
+            .filter(id => id !== 'forbiddenTechnique')
+            .every(id => (this.stanceMastery[id] || 0) >= 10);
+          if (!allMastered) continue;
+        }
+
+        this.unlockedStances.push(stanceId);
+        this.stanceMastery[stanceId] = 0;
+        this.stanceMasteryXP[stanceId] = 0;
+        newUnlocks.push(stance);
+      }
+    }
+
+    return newUnlocks;
+  }
+
+  /**
+   * Switch to a different stance
+   */
+  switchStance(stanceId) {
+    const stance = TECHNIQUE_STANCES[stanceId];
+    if (!stance) return { error: 'Unknown stance' };
+
+    if (!this.unlockedStances.includes(stanceId)) {
+      return { error: `${stance.name} is not unlocked yet` };
+    }
+
+    this.currentStance = stanceId;
+    this.stanceBoopCount = 0;
+    this.shadowBurstReady = false;
+
+    return { success: true, stance };
+  }
+
+  /**
+   * Get current stance data
+   */
+  getCurrentStance() {
+    return TECHNIQUE_STANCES[this.currentStance] || TECHNIQUE_STANCES.jadePalm;
+  }
+
+  /**
+   * Calculate boop modifiers based on current stance
+   */
+  getStanceBoopModifiers() {
+    const stance = this.getCurrentStance();
+    const masteryLevel = this.stanceMastery[this.currentStance] || 0;
+    const masteryBonus = stance.mastery.bonusPerLevel || {};
+
+    const modifiers = {
+      boopPower: stance.stats.boopPower || 1.0,
+      boopPowerMin: stance.stats.boopPowerMin,
+      boopPowerMax: stance.stats.boopPowerMax,
+      boopSpeed: stance.stats.boopSpeed || 1.0,
+      critChance: stance.stats.critChance || 0.05,
+      critMultiplier: stance.stats.critMultiplier || 10,
+      critMultiplierMin: stance.stats.critMultiplierMin,
+      critMultiplierMax: stance.stats.critMultiplierMax,
+      comboDecay: stance.stats.comboDecay || 4000
+    };
+
+    // Apply mastery bonuses
+    if (masteryBonus.boopPower) {
+      modifiers.boopPower *= (1 + masteryLevel * masteryBonus.boopPower);
+    }
+    if (masteryBonus.critMultiplier) {
+      modifiers.critMultiplier += masteryLevel * masteryBonus.critMultiplier;
+    }
+    if (masteryBonus.comboDecay) {
+      modifiers.comboDecay += masteryLevel * masteryBonus.comboDecay;
+    }
+
+    return modifiers;
+  }
+
+  /**
+   * Process a boop with stance mechanics
+   */
+  processStanceBoop(baseBP, isCrit, comboCount) {
+    const stance = this.getCurrentStance();
+    const masteryLevel = this.stanceMastery[this.currentStance] || 0;
+    this.stanceBoopCount++;
+
+    let bp = baseBP;
+    let specialTriggered = null;
+
+    // Handle random ranges for Drunken Paw
+    if (stance.stats.boopPowerMin !== undefined) {
+      const min = stance.stats.boopPowerMin;
+      const max = stance.stats.boopPowerMax;
+      const randomMult = min + Math.random() * (max - min);
+      bp *= randomMult;
+    }
+
+    // Process stance special abilities
+    if (stance.special) {
+      // Mountain Crusher (Iron Finger)
+      if (stance.special.trigger?.everyNBoops) {
+        if (this.stanceBoopCount % stance.special.trigger.everyNBoops === 0) {
+          bp *= stance.special.effect.damageMultiplier;
+          specialTriggered = { name: stance.special.name, type: 'mountain_crusher' };
+        }
+      }
+
+      // Lucky Stumble (Drunken Paw)
+      if (stance.special.trigger?.chance) {
+        const bonusChance = masteryLevel * (stance.mastery.bonusPerLevel?.jackpotChance || 0);
+        if (Math.random() < (stance.special.trigger.chance + bonusChance)) {
+          bp *= stance.special.effect.damageMultiplier;
+          specialTriggered = { name: stance.special.name, type: 'jackpot' };
+        }
+      }
+
+      // Shadow Burst (Shadow Step)
+      if (stance.special.trigger?.afterCombo) {
+        if (comboCount === stance.special.trigger.afterCombo) {
+          this.shadowBurstReady = true;
+        }
+        if (this.shadowBurstReady && comboCount > stance.special.trigger.afterCombo) {
+          const burstBonus = masteryLevel * (stance.mastery.bonusPerLevel?.burstMultiplier || 0);
+          bp *= (comboCount * (stance.special.effect.burstMultiplier + burstBonus));
+          specialTriggered = { name: stance.special.name, type: 'shadow_burst' };
+          this.shadowBurstReady = false;
+        }
+      }
+
+      // Eternal Flow (Flowing River) - handled in combo decay
+      // Annihilation (Forbidden) - handled separately for AOE
+    }
+
+    // Gain mastery XP
+    this.gainStanceMasteryXP(stance.mastery.xpPerBoop);
+
+    return {
+      bp,
+      specialTriggered,
+      stance: this.currentStance,
+      stanceBoopCount: this.stanceBoopCount
+    };
+  }
+
+  /**
+   * Gain mastery XP for current stance
+   */
+  gainStanceMasteryXP(amount) {
+    const currentMastery = this.stanceMastery[this.currentStance] || 0;
+    const stance = TECHNIQUE_STANCES[this.currentStance];
+
+    if (currentMastery >= stance.mastery.maxLevel) return;
+
+    const xpNeeded = Math.pow(currentMastery + 1, 2) * 100;
+    this.stanceMasteryXP[this.currentStance] =
+      (this.stanceMasteryXP[this.currentStance] || 0) + amount;
+
+    if (this.stanceMasteryXP[this.currentStance] >= xpNeeded) {
+      this.stanceMastery[this.currentStance] = currentMastery + 1;
+      this.stanceMasteryXP[this.currentStance] = 0;
+      this.onStanceMasteryLevelUp(this.currentStance, currentMastery + 1);
+    }
+  }
+
+  /**
+   * Called when stance mastery levels up
+   */
+  onStanceMasteryLevelUp(stanceId, newLevel) {
+    const stance = TECHNIQUE_STANCES[stanceId];
+
+    if (window.showNotification) {
+      window.showNotification({
+        type: 'mastery',
+        title: `${stance.name} Mastery Level ${newLevel}!`,
+        message: `Your ${stance.name} technique grows stronger.`,
+        duration: 4000
+      });
+    }
+
+    // Check for fusion technique unlocks
+    this.checkFusionUnlocks();
+  }
+
+  /**
+   * Check if any fusion techniques should unlock
+   */
+  checkFusionUnlocks() {
+    const newUnlocks = [];
+
+    for (const [fusionId, fusion] of Object.entries(FUSION_TECHNIQUES)) {
+      if (this.unlockedFusions.includes(fusionId)) continue;
+
+      const allRequired = fusion.requires.every(stanceId =>
+        (this.stanceMastery[stanceId] || 0) >= fusion.requiredMastery
+      );
+
+      if (allRequired) {
+        this.unlockedFusions.push(fusionId);
+        newUnlocks.push(fusion);
+
+        if (window.showNotification) {
+          window.showNotification({
+            type: 'epic',
+            title: 'FUSION TECHNIQUE UNLOCKED!',
+            message: `${fusion.name}: ${fusion.description}`,
+            duration: 6000
+          });
+        }
+      }
+    }
+
+    return newUnlocks;
+  }
+
+  /**
+   * Get all unlocked stances
+   */
+  getUnlockedStances() {
+    return this.unlockedStances.map(id => ({
+      ...TECHNIQUE_STANCES[id],
+      mastery: this.stanceMastery[id] || 0,
+      masteryXP: this.stanceMasteryXP[id] || 0,
+      xpNeeded: Math.pow((this.stanceMastery[id] || 0) + 1, 2) * 100,
+      isCurrent: id === this.currentStance
+    }));
+  }
+
+  /**
+   * Get all unlocked fusion techniques
+   */
+  getUnlockedFusions() {
+    return this.unlockedFusions.map(id => FUSION_TECHNIQUES[id]).filter(Boolean);
+  }
+
+  /**
+   * Get combo decay time based on current stance
+   */
+  getComboDecayTime() {
+    const stance = this.getCurrentStance();
+    const masteryLevel = this.stanceMastery[this.currentStance] || 0;
+    let decayTime = stance.stats.comboDecay || 4000;
+
+    // Mastery bonus to combo decay (Flowing River)
+    if (stance.mastery.bonusPerLevel?.comboDecay) {
+      decayTime += masteryLevel * stance.mastery.bonusPerLevel.comboDecay;
+    }
+
+    return decayTime;
+  }
+
+  /**
+   * Check if Flowing River's minimum combo should apply
+   */
+  getMinimumComboPercent() {
+    const stance = this.getCurrentStance();
+    if (stance.special?.effect?.minComboPercent) {
+      return stance.special.effect.minComboPercent;
+    }
+    return 0;
   }
 
   // ===================================
@@ -1103,7 +1606,13 @@ class TechniqueSystem {
       legendaryInternals: this.legendaryInternals,
       consumables: this.consumables,
       activeBuffs: this.activeBuffs.filter(b => b.endTime > Date.now()),
-      cooldowns: this.cooldowns
+      cooldowns: this.cooldowns,
+      // Stance System
+      currentStance: this.currentStance,
+      stanceMastery: this.stanceMastery,
+      stanceMasteryXP: this.stanceMasteryXP,
+      unlockedStances: this.unlockedStances,
+      unlockedFusions: this.unlockedFusions
     };
   }
 
@@ -1115,6 +1624,12 @@ class TechniqueSystem {
     if (data.consumables) this.consumables = data.consumables;
     if (data.activeBuffs) this.activeBuffs = data.activeBuffs;
     if (data.cooldowns) this.cooldowns = data.cooldowns;
+    // Stance System
+    if (data.currentStance) this.currentStance = data.currentStance;
+    if (data.stanceMastery) this.stanceMastery = data.stanceMastery;
+    if (data.stanceMasteryXP) this.stanceMasteryXP = data.stanceMasteryXP;
+    if (data.unlockedStances) this.unlockedStances = data.unlockedStances;
+    if (data.unlockedFusions) this.unlockedFusions = data.unlockedFusions;
   }
 }
 

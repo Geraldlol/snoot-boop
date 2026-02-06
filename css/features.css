@@ -404,6 +404,335 @@
 }
 
 /* ===================================
+   BOND ACTIVITIES
+   =================================== */
+
+/* Activity Selection */
+.activity-selection {
+  padding: 10px 0;
+}
+
+.activity-waifu-select {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.activity-waifu-select label {
+  font-family: var(--font-pixel);
+  font-size: 9px;
+  color: #aaa;
+}
+
+.activity-dropdown {
+  flex: 1;
+  background: rgba(0, 0, 0, 0.3);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+  padding: 8px 12px;
+  font-family: var(--font-pixel);
+  font-size: 8px;
+  color: var(--text-light);
+  cursor: pointer;
+}
+
+.activity-dropdown:hover {
+  border-color: var(--yuelin-pink);
+}
+
+.activity-dropdown:focus {
+  outline: none;
+  border-color: var(--jade);
+}
+
+/* Available Activities Grid */
+.available-activities {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 10px;
+  max-height: 300px;
+  overflow-y: auto;
+  padding: 5px;
+}
+
+.activity-card {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(0, 0, 0, 0.3));
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  padding: 12px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.activity-card:hover:not(.locked) {
+  border-color: var(--yuelin-pink);
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(255, 182, 193, 0.3);
+}
+
+.activity-card.preferred {
+  border-color: var(--gold-accent);
+  background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(0, 0, 0, 0.3));
+}
+
+.activity-card.preferred::before {
+  content: '★';
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  color: var(--gold-accent);
+  font-size: 10px;
+}
+
+.activity-card.locked {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.activity-card-emoji {
+  font-size: 28px;
+  margin-bottom: 8px;
+}
+
+.activity-card-name {
+  font-family: var(--font-pixel);
+  font-size: 8px;
+  color: var(--text-light);
+  margin-bottom: 4px;
+}
+
+.activity-card-desc {
+  font-size: 7px;
+  color: #888;
+  margin-bottom: 8px;
+  line-height: 1.4;
+}
+
+.activity-card-stats {
+  display: flex;
+  justify-content: space-between;
+  font-size: 7px;
+  color: #aaa;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding-top: 8px;
+  margin-top: 8px;
+}
+
+.activity-card-bond {
+  color: var(--yuelin-pink);
+  font-weight: bold;
+}
+
+.activity-card-bond.bonus {
+  color: var(--gold-accent);
+}
+
+.activity-card-time {
+  color: var(--jade);
+}
+
+.activity-card-requirement {
+  font-size: 6px;
+  color: #ff6b6b;
+  margin-top: 6px;
+}
+
+/* Current Activity Panel */
+.current-activity {
+  margin-bottom: 20px;
+}
+
+.current-activity.hidden {
+  display: none;
+}
+
+.activity-progress-panel {
+  background: linear-gradient(135deg, rgba(255, 182, 193, 0.1), rgba(0, 0, 0, 0.4));
+  border: 3px solid var(--yuelin-pink);
+  border-radius: 12px;
+  padding: 20px;
+  text-align: center;
+}
+
+.activity-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  margin-bottom: 15px;
+}
+
+.activity-emoji {
+  font-size: 48px;
+  animation: activity-pulse 2s ease-in-out infinite;
+}
+
+@keyframes activity-pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+
+.activity-info h4 {
+  font-family: var(--font-pixel);
+  font-size: 12px;
+  color: var(--yuelin-pink);
+  margin-bottom: 4px;
+}
+
+.activity-info p {
+  font-size: 9px;
+  color: #aaa;
+}
+
+#activity-waifu-name {
+  color: var(--gold-accent);
+}
+
+.activity-progress-bar {
+  height: 16px;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 10px;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+.activity-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--yuelin-pink), var(--gold-accent));
+  background-size: 200% 100%;
+  animation: activity-gradient 3s ease infinite;
+  transition: width 0.5s ease;
+  position: relative;
+}
+
+@keyframes activity-gradient {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.activity-progress-fill::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 30px;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4));
+  animation: activity-shimmer 1.5s ease-in-out infinite;
+}
+
+@keyframes activity-shimmer {
+  0% { opacity: 0; }
+  50% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+.activity-time {
+  font-family: var(--font-pixel);
+  font-size: 14px;
+  color: var(--jade);
+  margin-bottom: 15px;
+}
+
+#activity-time-remaining {
+  font-size: 18px;
+  color: var(--gold-accent);
+}
+
+.activity-dialogue {
+  background: rgba(0, 0, 0, 0.2);
+  border-left: 3px solid var(--yuelin-pink);
+  padding: 10px 15px;
+  font-style: italic;
+  font-size: 9px;
+  margin-bottom: 15px;
+  text-align: left;
+  color: #ccc;
+}
+
+.activity-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+.activity-actions .jade-button.danger {
+  background: linear-gradient(135deg, #8B0000, #5c0a0a);
+  border-color: #ff4444;
+}
+
+.activity-actions .jade-button.danger:hover {
+  background: linear-gradient(135deg, #a00, #700);
+}
+
+/* Activity History */
+.activity-history-section {
+  margin-top: 20px;
+  padding-top: 15px;
+  border-top: 2px dashed rgba(255, 182, 193, 0.3);
+}
+
+.activity-history-header {
+  font-family: var(--font-pixel);
+  font-size: 10px;
+  color: var(--yuelin-pink);
+  margin-bottom: 10px;
+}
+
+.activity-history {
+  max-height: 150px;
+  overflow-y: auto;
+}
+
+.activity-history-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+  margin-bottom: 5px;
+  font-size: 8px;
+}
+
+.activity-history-item .history-emoji {
+  font-size: 16px;
+}
+
+.activity-history-item .history-text {
+  flex: 1;
+  color: #aaa;
+}
+
+.activity-history-item .history-waifu {
+  color: var(--yuelin-pink);
+}
+
+.activity-history-item .history-bond {
+  color: var(--jade);
+  font-weight: bold;
+}
+
+.activity-history-item .history-time {
+  color: #666;
+  font-size: 7px;
+}
+
+/* Night Activity Indicator */
+.activity-card.night-only::after {
+  content: '🌙';
+  position: absolute;
+  bottom: 5px;
+  right: 5px;
+  font-size: 10px;
+}
+
+/* ===================================
    CAT COLLECTION
    =================================== */
 
@@ -3259,4 +3588,281 @@
   color: #666;
   font-size: 10px;
   font-style: italic;
+}
+
+/* ===================================
+   CULTIVATION REALM DISPLAY
+   =================================== */
+
+.cultivation-display {
+  position: fixed;
+  bottom: 230px;
+  left: 10px;
+  width: 175px;
+  background: linear-gradient(135deg, rgba(0, 0, 0, 0.85), rgba(30, 30, 50, 0.9));
+  border: 3px solid var(--realm-color, #A0A0A0);
+  border-radius: 12px;
+  padding: 10px;
+  z-index: 100;
+  box-shadow:
+    0 0 20px rgba(0, 0, 0, 0.5),
+    inset 0 0 15px rgba(255, 255, 255, 0.05);
+  transition: all 0.3s ease;
+}
+
+.cultivation-display:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 5px 25px rgba(0, 0, 0, 0.6),
+    0 0 30px var(--realm-color, rgba(160, 160, 160, 0.3)),
+    inset 0 0 15px rgba(255, 255, 255, 0.08);
+}
+
+.cultivation-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.cultivation-icon {
+  font-size: 18px;
+  filter: drop-shadow(0 0 5px var(--realm-color, #A0A0A0));
+}
+
+.cultivation-title {
+  font-family: var(--font-pixel);
+  font-size: 9px;
+  color: var(--realm-color, #A0A0A0);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.cultivation-realm-info {
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.realm-name {
+  font-family: var(--font-pixel);
+  font-size: 10px;
+  color: var(--realm-color, #A0A0A0);
+  margin: 0 0 4px 0;
+  text-shadow: 0 0 10px var(--realm-color, rgba(160, 160, 160, 0.5));
+  animation: realm-pulse 3s ease-in-out infinite;
+}
+
+@keyframes realm-pulse {
+  0%, 100% {
+    text-shadow: 0 0 10px var(--realm-color, rgba(160, 160, 160, 0.5));
+  }
+  50% {
+    text-shadow: 0 0 20px var(--realm-color, rgba(160, 160, 160, 0.8)),
+                 0 0 30px var(--realm-color, rgba(160, 160, 160, 0.4));
+  }
+}
+
+.realm-rank {
+  font-family: var(--font-pixel);
+  font-size: 8px;
+  color: rgba(255, 255, 255, 0.7);
+  margin: 0;
+}
+
+.cultivation-xp-bar {
+  position: relative;
+  height: 16px;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.4));
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 8px;
+  border: 2px solid rgba(255, 255, 255, 0.15);
+}
+
+.cultivation-xp-bar .xp-fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background: linear-gradient(90deg,
+    var(--realm-color, #A0A0A0) 0%,
+    color-mix(in srgb, var(--realm-color, #A0A0A0), white 30%) 50%,
+    var(--realm-color, #A0A0A0) 100%
+  );
+  background-size: 200% 100%;
+  animation: xp-shimmer 2s linear infinite;
+  transition: width 0.5s ease;
+  border-radius: 6px;
+}
+
+@keyframes xp-shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+.cultivation-xp-bar .xp-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: var(--font-pixel);
+  font-size: 6px;
+  color: white;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+  white-space: nowrap;
+  z-index: 1;
+}
+
+.cultivation-description {
+  margin-bottom: 8px;
+}
+
+.cultivation-description p {
+  font-size: 7px;
+  color: rgba(255, 255, 255, 0.6);
+  text-align: center;
+  margin: 0;
+  line-height: 1.4;
+  font-style: italic;
+}
+
+.cultivation-passives {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 8px;
+  max-height: 60px;
+  overflow-y: auto;
+}
+
+.cultivation-passive {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 6px;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 4px;
+  border-left: 2px solid var(--realm-color, #A0A0A0);
+}
+
+.cultivation-passive .passive-icon {
+  font-size: 10px;
+}
+
+.cultivation-passive .passive-name {
+  font-family: var(--font-pixel);
+  font-size: 6px;
+  color: var(--realm-color, #A0A0A0);
+}
+
+.cultivation-passive .passive-effect {
+  font-size: 6px;
+  color: rgba(255, 255, 255, 0.5);
+  margin-left: auto;
+}
+
+.breakthrough-btn {
+  width: 100%;
+  margin-top: 8px;
+  position: relative;
+  overflow: hidden;
+}
+
+.breakthrough-btn:not(.hidden) {
+  animation: breakthrough-glow 1.5s ease-in-out infinite;
+}
+
+@keyframes breakthrough-glow {
+  0%, 100% {
+    box-shadow:
+      0 4px 0 #2d7a50,
+      0 0 15px var(--realm-color, rgba(80, 200, 120, 0.5));
+  }
+  50% {
+    box-shadow:
+      0 4px 0 #2d7a50,
+      0 0 30px var(--realm-color, rgba(80, 200, 120, 0.8)),
+      0 0 50px var(--realm-color, rgba(80, 200, 120, 0.4));
+  }
+}
+
+/* Realm-specific color themes */
+.cultivation-display[data-realm="mortal"] {
+  --realm-color: #A0A0A0;
+}
+
+.cultivation-display[data-realm="qiCondensation"] {
+  --realm-color: #87CEEB;
+}
+
+.cultivation-display[data-realm="foundationEstablishment"] {
+  --realm-color: #8B4513;
+}
+
+.cultivation-display[data-realm="coreFormation"] {
+  --realm-color: #FFD700;
+}
+
+.cultivation-display[data-realm="nascentSoul"] {
+  --realm-color: #9370DB;
+}
+
+.cultivation-display[data-realm="spiritSevering"] {
+  --realm-color: #DC143C;
+}
+
+.cultivation-display[data-realm="daoSeeking"] {
+  --realm-color: #4169E1;
+}
+
+.cultivation-display[data-realm="immortalAscension"] {
+  --realm-color: #FFD700;
+  border-width: 4px;
+}
+
+.cultivation-display[data-realm="trueImmortal"] {
+  --realm-color: #FFFFFF;
+  border-width: 4px;
+  box-shadow:
+    0 0 25px rgba(255, 255, 255, 0.3),
+    inset 0 0 20px rgba(255, 255, 255, 0.1);
+}
+
+.cultivation-display[data-realm="heavenlySovereign"] {
+  --realm-color: #FFD700;
+  border-width: 5px;
+  animation: sovereign-border 3s linear infinite;
+}
+
+@keyframes sovereign-border {
+  0%, 100% {
+    border-color: #FFD700;
+    box-shadow:
+      0 0 30px rgba(255, 215, 0, 0.5),
+      inset 0 0 20px rgba(255, 215, 0, 0.1);
+  }
+  33% {
+    border-color: #FFFFFF;
+    box-shadow:
+      0 0 30px rgba(255, 255, 255, 0.5),
+      inset 0 0 20px rgba(255, 255, 255, 0.1);
+  }
+  66% {
+    border-color: #9370DB;
+    box-shadow:
+      0 0 30px rgba(147, 112, 219, 0.5),
+      inset 0 0 20px rgba(147, 112, 219, 0.1);
+  }
+}
+
+/* Hide on mobile - will use different layout */
+@media (max-width: 768px) {
+  .cultivation-display {
+    position: static;
+    width: 100%;
+    margin: 10px 0;
+    border-radius: 8px;
+  }
 }

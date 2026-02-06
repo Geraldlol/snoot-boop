@@ -1,7 +1,295 @@
 /**
- * waifus.js - The Six Immortal Masters
+ * waifus.js - The Twelve Immortal Masters
  * "A waifu's guidance is worth ten thousand boops."
  */
+
+// ============================================
+// BOND ACTIVITIES - Time-based bonding system
+// ============================================
+const BOND_ACTIVITIES = {
+  teaCeremony: {
+    id: 'teaCeremony',
+    name: 'Tea Ceremony',
+    emoji: '🍵',
+    description: 'Share a quiet moment over tea. A traditional bonding ritual.',
+    duration: 300, // 5 minutes in seconds
+    bondGain: 10,
+    preferredBy: ['mochi', 'fluffington', 'luna'],
+    unlockBond: 0,
+    timeRestriction: null,
+    producesItem: false,
+    afkCompatible: true,
+    dialogue: {
+      start: [
+        "Let us share a cup of tranquility...",
+        "The tea is ready. Please, join me.",
+        "A moment of peace in our busy cultivation~"
+      ],
+      complete: [
+        "That was a lovely ceremony. Thank you for sharing it with me.",
+        "The tea has calmed my spirit. I feel closer to you now~",
+        "Such peaceful moments are treasures..."
+      ]
+    }
+  },
+
+  sparring: {
+    id: 'sparring',
+    name: 'Sparring Match',
+    emoji: '⚔️',
+    description: 'Train together in combat. Builds respect and understanding.',
+    duration: 600, // 10 minutes
+    bondGain: 15,
+    preferredBy: ['nyanta', 'meowlina'],
+    unlockBond: 20,
+    timeRestriction: null,
+    producesItem: false,
+    afkCompatible: false,
+    minigame: 'combat_practice',
+    dialogue: {
+      start: [
+        "Ready yourself, cultivator! Show me your strength!",
+        "The best bonds are forged in battle!",
+        "Let us test our techniques against each other!"
+      ],
+      complete: [
+        "Excellent form! You've grown stronger.",
+        "A worthy opponent! My respect for you has grown.",
+        "That was invigorating! We must do this again~"
+      ]
+    }
+  },
+
+  meditation: {
+    id: 'meditation',
+    name: 'Meditation',
+    emoji: '🧘',
+    description: 'Cultivate together in silence. Deepens spiritual connection.',
+    duration: 900, // 15 minutes
+    bondGain: 20,
+    preferredBy: ['luna', 'fluffington', 'mochi'],
+    unlockBond: 30,
+    timeRestriction: null,
+    producesItem: false,
+    afkCompatible: true,
+    dialogue: {
+      start: [
+        "Close your eyes... let us find inner peace together...",
+        "In stillness, we discover each other's true nature...",
+        "Breathe with me... *slowly inhales*"
+      ],
+      complete: [
+        "I felt our Qi resonate as one...",
+        "Such profound tranquility... Thank you for sharing this with me.",
+        "My cultivation has deepened through our connection~"
+      ]
+    }
+  },
+
+  stargazing: {
+    id: 'stargazing',
+    name: 'Stargazing',
+    emoji: '🌟',
+    description: 'Watch the stars together. Only available at night.',
+    duration: 600, // 10 minutes
+    bondGain: 25,
+    preferredBy: ['luna', 'fluffington'],
+    unlockBond: 40,
+    timeRestriction: 'night', // Only available 22:00 - 06:00
+    producesItem: false,
+    afkCompatible: true,
+    dialogue: {
+      start: [
+        "The stars are beautiful tonight... just like you~",
+        "Each star tells a story... Let me share them with you.",
+        "*looks up at the night sky* ...so many wonders..."
+      ],
+      complete: [
+        "I'll never forget this night with you...",
+        "The stars witnessed our bond growing stronger~",
+        "Perhaps one day, we'll have a star of our own..."
+      ]
+    }
+  },
+
+  cooking: {
+    id: 'cooking',
+    name: 'Cooking Together',
+    emoji: '🍳',
+    description: 'Prepare a meal together. May produce special treats!',
+    duration: 450, // 7.5 minutes
+    bondGain: 18,
+    preferredBy: ['mochi', 'sakura'],
+    unlockBond: 25,
+    timeRestriction: null,
+    producesItem: true,
+    itemPool: [
+      { id: 'homemade_treat', name: 'Homemade Treat', effect: { happiness: 20 }, chance: 0.6 },
+      { id: 'cultivation_meal', name: 'Cultivation Meal', effect: { ppBoost: 1.1, duration: 300 }, chance: 0.3 },
+      { id: 'special_dish', name: 'Special Dish', effect: { bondBonus: 5 }, chance: 0.1 }
+    ],
+    afkCompatible: false,
+    dialogue: {
+      start: [
+        "Let's cook something delicious together~",
+        "The secret ingredient is love! ...and also fish.",
+        "I have a special recipe I want to try with you~"
+      ],
+      complete: [
+        "It smells wonderful! Let's taste it together~",
+        "Cooking with you makes everything taste better!",
+        "We made something special together!"
+      ]
+    }
+  },
+
+  exploring: {
+    id: 'exploring',
+    name: 'Sect Exploration',
+    emoji: '🗺️',
+    description: 'Explore hidden areas together. May discover secrets!',
+    duration: 1200, // 20 minutes
+    bondGain: 30,
+    preferredBy: ['nyanta', 'sakura'],
+    unlockBond: 50,
+    timeRestriction: null,
+    producesItem: false,
+    discoversSecrets: true,
+    secretChance: 0.15,
+    afkCompatible: true,
+    dialogue: {
+      start: [
+        "Adventure awaits! Follow me~",
+        "I know some hidden paths... let me show you.",
+        "The sect holds many mysteries. Let's uncover them together!"
+      ],
+      complete: [
+        "What an adventure! I've learned so much about you.",
+        "Every corner of the sect feels different with you by my side~",
+        "We should explore again soon!"
+      ]
+    }
+  },
+
+  hotSprings: {
+    id: 'hotSprings',
+    name: 'Hot Springs Visit',
+    emoji: '♨️',
+    description: 'Relax at the hot springs. Maximum bond gain!',
+    duration: 600, // 10 minutes
+    bondGain: 35,
+    preferredBy: ['mochi', 'sakura', 'luna', 'nyanta', 'fluffington', 'meowlina'], // Everyone likes this
+    unlockBond: 60,
+    timeRestriction: null,
+    requiresBuilding: 'hot_springs',
+    producesItem: false,
+    afkCompatible: true,
+    dialogue: {
+      start: [
+        "The water is perfect... please, join me~",
+        "Finally, a chance to relax together...",
+        "The hot springs will soothe both body and soul~"
+      ],
+      complete: [
+        "I feel so refreshed... and closer to you than ever.",
+        "Such blissful relaxation... *happy sigh*",
+        "We should make this a regular tradition~"
+      ]
+    }
+  },
+
+  training: {
+    id: 'training',
+    name: 'Joint Training',
+    emoji: '💪',
+    description: 'Practice cultivation techniques together.',
+    duration: 480, // 8 minutes
+    bondGain: 12,
+    preferredBy: ['nyanta', 'meowlina'],
+    unlockBond: 15,
+    timeRestriction: null,
+    producesItem: false,
+    afkCompatible: false,
+    grantsCultivationXP: true,
+    xpAmount: 50,
+    dialogue: {
+      start: [
+        "Let me teach you a new technique~",
+        "Training together makes us both stronger!",
+        "Focus your Qi... like this..."
+      ],
+      complete: [
+        "Your technique has improved significantly!",
+        "I can feel your cultivation advancing~",
+        "You learn quickly. I'm impressed!"
+      ]
+    }
+  },
+
+  reading: {
+    id: 'reading',
+    name: 'Reading Together',
+    emoji: '📚',
+    description: 'Study ancient texts side by side.',
+    duration: 540, // 9 minutes
+    bondGain: 14,
+    preferredBy: ['fluffington', 'luna'],
+    unlockBond: 10,
+    timeRestriction: null,
+    producesItem: false,
+    afkCompatible: true,
+    grantsLoreFragment: true,
+    loreChance: 0.2,
+    dialogue: {
+      start: [
+        "I found an interesting scroll... shall we read it together?",
+        "Knowledge shared is knowledge doubled~",
+        "These ancient texts hold many secrets..."
+      ],
+      complete: [
+        "A most enlightening session!",
+        "I love discussing these ideas with you~",
+        "The wisdom of the ancients flows through us both now."
+      ]
+    }
+  },
+
+  catWatching: {
+    id: 'catWatching',
+    name: 'Cat Watching',
+    emoji: '🐱',
+    description: 'Watch the cats play together. Simple but heartwarming.',
+    duration: 360, // 6 minutes
+    bondGain: 8,
+    preferredBy: ['mochi', 'sakura', 'luna'],
+    unlockBond: 0,
+    timeRestriction: null,
+    producesItem: false,
+    afkCompatible: true,
+    catHappinessBonus: 5,
+    dialogue: {
+      start: [
+        "Look at them play! Aren't they adorable~",
+        "Watching the cats always brings me peace...",
+        "Each cat has its own personality. Let me tell you about them~"
+      ],
+      complete: [
+        "The cats seem happier when we watch over them together.",
+        "Simple moments like this are what I treasure most~",
+        "Your presence calms both me and the cats."
+      ]
+    }
+  }
+};
+
+// Activity preference multiplier when a waifu prefers an activity
+const ACTIVITY_PREFERENCE_BONUS = 1.5;
+
+// Helper to check if it's currently night time
+function isNightTime() {
+  const hour = new Date().getHours();
+  return hour >= 22 || hour < 6;
+}
 
 // Waifu Templates
 const WAIFU_TEMPLATES = {
@@ -325,6 +613,11 @@ class WaifuSystem {
   constructor() {
     this.unlockedWaifus = [];
     this.waifuStates = {};
+
+    // Activity system state
+    this.currentActivity = null;
+    this.activityHistory = [];
+    this.attentionTracker = {}; // Track attention given to each waifu
   }
 
   /**
@@ -528,13 +821,349 @@ class WaifuSystem {
     }
   }
 
+  // ============================================
+  // BOND ACTIVITY SYSTEM
+  // ============================================
+
+  /**
+   * Get available activities for a waifu based on bond level
+   */
+  getAvailableActivities(waifuId) {
+    const waifu = this.waifuStates[waifuId];
+    if (!waifu) return [];
+
+    const available = [];
+    for (const [activityId, activity] of Object.entries(BOND_ACTIVITIES)) {
+      // Check bond level requirement
+      if (waifu.bondLevel < activity.unlockBond) continue;
+
+      // Check time restriction
+      if (activity.timeRestriction === 'night' && !isNightTime()) continue;
+
+      // Check building requirement (if applicable)
+      if (activity.requiresBuilding) {
+        const facilities = window.upgradeSystem?.getPurchasedUpgrades() || {};
+        if (!facilities[activity.requiresBuilding]) continue;
+      }
+
+      // Check if activity is preferred by this waifu
+      const isPreferred = activity.preferredBy.includes(waifuId);
+
+      available.push({
+        ...activity,
+        isPreferred,
+        effectiveBondGain: isPreferred ? Math.floor(activity.bondGain * ACTIVITY_PREFERENCE_BONUS) : activity.bondGain
+      });
+    }
+
+    return available;
+  }
+
+  /**
+   * Start an activity with a waifu
+   */
+  startActivity(waifuId, activityId) {
+    // Check if already in an activity
+    if (this.currentActivity) {
+      return {
+        success: false,
+        error: 'Already in an activity! Complete or cancel the current one first.'
+      };
+    }
+
+    const waifu = this.waifuStates[waifuId];
+    const activity = BOND_ACTIVITIES[activityId];
+
+    if (!waifu) {
+      return { success: false, error: 'Waifu not found or not unlocked.' };
+    }
+
+    if (!activity) {
+      return { success: false, error: 'Unknown activity.' };
+    }
+
+    // Check bond level requirement
+    if (waifu.bondLevel < activity.unlockBond) {
+      return {
+        success: false,
+        error: `Requires bond level ${activity.unlockBond}. Current: ${waifu.bondLevel}`
+      };
+    }
+
+    // Check time restriction
+    if (activity.timeRestriction === 'night' && !isNightTime()) {
+      return {
+        success: false,
+        error: 'This activity is only available at night (22:00 - 06:00).'
+      };
+    }
+
+    // Check building requirement
+    if (activity.requiresBuilding) {
+      const facilities = window.upgradeSystem?.getPurchasedUpgrades() || {};
+      if (!facilities[activity.requiresBuilding]) {
+        return {
+          success: false,
+          error: `Requires the ${activity.requiresBuilding.replace('_', ' ')} facility.`
+        };
+      }
+    }
+
+    // Calculate preference bonus
+    const isPreferred = activity.preferredBy.includes(waifuId);
+    const effectiveBondGain = isPreferred
+      ? Math.floor(activity.bondGain * ACTIVITY_PREFERENCE_BONUS)
+      : activity.bondGain;
+
+    // Start the activity
+    this.currentActivity = {
+      waifuId,
+      activityId,
+      startTime: Date.now(),
+      duration: activity.duration * 1000, // Convert to milliseconds
+      bondGain: effectiveBondGain,
+      isPreferred,
+      completed: false
+    };
+
+    // Get start dialogue
+    const template = WAIFU_TEMPLATES[waifuId];
+    const startDialogue = activity.dialogue.start[
+      Math.floor(Math.random() * activity.dialogue.start.length)
+    ];
+
+    return {
+      success: true,
+      activity: activity,
+      waifuName: template.name,
+      dialogue: startDialogue,
+      duration: activity.duration,
+      bondGain: effectiveBondGain,
+      isPreferred
+    };
+  }
+
+  /**
+   * Get progress of current activity
+   */
+  getActivityProgress() {
+    if (!this.currentActivity) return null;
+
+    const elapsed = Date.now() - this.currentActivity.startTime;
+    const progress = Math.min(1, elapsed / this.currentActivity.duration);
+    const remaining = Math.max(0, this.currentActivity.duration - elapsed);
+
+    return {
+      ...this.currentActivity,
+      activity: BOND_ACTIVITIES[this.currentActivity.activityId],
+      waifu: WAIFU_TEMPLATES[this.currentActivity.waifuId],
+      elapsed,
+      progress,
+      remaining,
+      isComplete: progress >= 1,
+      remainingFormatted: this.formatTime(remaining)
+    };
+  }
+
+  /**
+   * Complete the current activity and collect rewards
+   */
+  completeActivity() {
+    if (!this.currentActivity) {
+      return { success: false, error: 'No activity in progress.' };
+    }
+
+    const progress = this.getActivityProgress();
+
+    if (!progress.isComplete) {
+      return {
+        success: false,
+        error: 'Activity not yet complete!',
+        remaining: progress.remainingFormatted
+      };
+    }
+
+    const activity = BOND_ACTIVITIES[this.currentActivity.activityId];
+    const waifu = this.waifuStates[this.currentActivity.waifuId];
+    const template = WAIFU_TEMPLATES[this.currentActivity.waifuId];
+
+    // Apply bond gain
+    const bondGained = this.currentActivity.bondGain;
+    const oldBondLevel = waifu.bondLevel;
+    waifu.bondLevel = Math.min(100, waifu.bondLevel + bondGained);
+    const newBondLevel = waifu.bondLevel;
+
+    // Track attention
+    this.attentionTracker[this.currentActivity.waifuId] =
+      (this.attentionTracker[this.currentActivity.waifuId] || 0) + 1;
+
+    // Generate rewards
+    const rewards = {
+      bondGained,
+      oldBondLevel,
+      newBondLevel
+    };
+
+    // Check for produced items (cooking)
+    if (activity.producesItem && activity.itemPool) {
+      const roll = Math.random();
+      let cumulative = 0;
+      for (const item of activity.itemPool) {
+        cumulative += item.chance;
+        if (roll <= cumulative) {
+          rewards.item = item;
+          // Add to inventory if gift system exists
+          if (window.giftSystem && window.giftSystem.addToInventory) {
+            window.giftSystem.addToInventory(item.id, 1);
+          }
+          break;
+        }
+      }
+    }
+
+    // Check for secret discovery (exploring)
+    if (activity.discoversSecrets && Math.random() < activity.secretChance) {
+      rewards.secretDiscovered = true;
+      // Could trigger lore system here
+      if (window.loreSystem && window.loreSystem.checkForFragmentDrop) {
+        rewards.loreFragment = window.loreSystem.checkForFragmentDrop();
+      }
+    }
+
+    // Check for cultivation XP (training)
+    if (activity.grantsCultivationXP && activity.xpAmount) {
+      rewards.cultivationXP = activity.xpAmount;
+      if (window.cultivationSystem && window.cultivationSystem.addXP) {
+        window.cultivationSystem.addXP(activity.xpAmount);
+      }
+    }
+
+    // Check for lore fragment (reading)
+    if (activity.grantsLoreFragment && Math.random() < activity.loreChance) {
+      rewards.loreFragment = true;
+    }
+
+    // Check for cat happiness bonus (cat watching)
+    if (activity.catHappinessBonus) {
+      rewards.catHappinessBonus = activity.catHappinessBonus;
+      // Apply to cats if system exists
+      if (window.catSystem && window.catSystem.addHappinessToAll) {
+        window.catSystem.addHappinessToAll(activity.catHappinessBonus);
+      }
+    }
+
+    // Get completion dialogue
+    const completeDialogue = activity.dialogue.complete[
+      Math.floor(Math.random() * activity.dialogue.complete.length)
+    ];
+
+    // Record in history
+    this.activityHistory.push({
+      waifuId: this.currentActivity.waifuId,
+      activityId: this.currentActivity.activityId,
+      completedAt: Date.now(),
+      bondGained
+    });
+
+    // Keep only last 50 activities in history
+    if (this.activityHistory.length > 50) {
+      this.activityHistory = this.activityHistory.slice(-50);
+    }
+
+    // Clear current activity
+    this.currentActivity = null;
+
+    return {
+      success: true,
+      waifuName: template.name,
+      waifuEmoji: template.emoji,
+      activityName: activity.name,
+      dialogue: completeDialogue,
+      rewards
+    };
+  }
+
+  /**
+   * Cancel the current activity (no rewards)
+   */
+  cancelActivity() {
+    if (!this.currentActivity) {
+      return { success: false, error: 'No activity in progress.' };
+    }
+
+    const activity = BOND_ACTIVITIES[this.currentActivity.activityId];
+    const template = WAIFU_TEMPLATES[this.currentActivity.waifuId];
+
+    this.currentActivity = null;
+
+    return {
+      success: true,
+      message: `Cancelled ${activity.name} with ${template.name}.`
+    };
+  }
+
+  /**
+   * Check if an activity is currently in progress
+   */
+  isInActivity() {
+    return this.currentActivity !== null;
+  }
+
+  /**
+   * Get activity history for a specific waifu
+   */
+  getWaifuActivityHistory(waifuId) {
+    return this.activityHistory.filter(h => h.waifuId === waifuId);
+  }
+
+  /**
+   * Calculate harmony/jealousy status based on attention distribution
+   */
+  getHarmonyStatus() {
+    const unlockedCount = this.unlockedWaifus.length;
+    if (unlockedCount <= 1) return { status: 'harmony', bonus: {} };
+
+    const values = Object.values(this.attentionTracker);
+    if (values.length === 0) return { status: 'neutral', bonus: {} };
+
+    const avg = values.reduce((a, b) => a + b, 0) / unlockedCount;
+    const minRatio = Math.min(...values) / (avg || 1);
+
+    if (minRatio >= 0.8) {
+      return { status: 'harmony', bonus: { allBonds: 1.1 }, message: 'All waifus are happy with your attention!' };
+    } else if (minRatio < 0.3) {
+      const neglected = Object.entries(this.attentionTracker)
+        .filter(([_, v]) => v / (avg || 1) < 0.3)
+        .map(([k, _]) => k);
+      return {
+        status: 'jealousy',
+        neglectedWaifus: neglected,
+        message: 'Some waifus feel neglected...'
+      };
+    }
+    return { status: 'neutral', bonus: {} };
+  }
+
+  /**
+   * Format time in MM:SS
+   */
+  formatTime(ms) {
+    const totalSeconds = Math.ceil(ms / 1000);
+    const minutes = Math.floor(totalSeconds / 60);
+    const seconds = totalSeconds % 60;
+    return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+  }
+
   /**
    * Serialize for saving
    */
   serialize() {
     return {
       unlockedWaifus: this.unlockedWaifus,
-      waifuStates: this.waifuStates
+      waifuStates: this.waifuStates,
+      currentActivity: this.currentActivity,
+      activityHistory: this.activityHistory,
+      attentionTracker: this.attentionTracker
     };
   }
 
@@ -548,9 +1177,33 @@ class WaifuSystem {
     if (data.waifuStates) {
       this.waifuStates = data.waifuStates;
     }
+    if (data.currentActivity) {
+      this.currentActivity = data.currentActivity;
+    }
+    if (data.activityHistory) {
+      this.activityHistory = data.activityHistory;
+    }
+    if (data.attentionTracker) {
+      this.attentionTracker = data.attentionTracker;
+    }
+  }
+
+  /**
+   * Check and auto-complete activity if time has passed (for AFK returns)
+   */
+  checkPendingActivity() {
+    if (!this.currentActivity) return null;
+
+    const progress = this.getActivityProgress();
+    if (progress.isComplete) {
+      return this.completeActivity();
+    }
+
+    return null;
   }
 }
 
 // Export
 window.WAIFU_TEMPLATES = WAIFU_TEMPLATES;
+window.BOND_ACTIVITIES = BOND_ACTIVITIES;
 window.WaifuSystem = WaifuSystem;

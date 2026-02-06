@@ -443,7 +443,605 @@ class PrestigeSystem {
   }
 }
 
+// ===================================
+// LAYER 2: REINCARNATION SYSTEM
+// ===================================
+
+const REINCARNATION_SYSTEM = {
+  name: 'Reincarnation',
+  threshold: {
+    rebirths: 7, // Must reach max rebirth tier (Immortal Ascension)
+    lifetimeBP: 10000000000 // 10 billion lifetime BP
+  },
+  currency: 'karmaPoints',
+
+  resets: [
+    'rebirthTier',      // Rebirth tier resets
+    'lifetimeBP',       // Lifetime BP resets (keep 10%)
+    'currencies',       // All currencies reset
+    'cats',             // Cats reset
+    'buildings',        // Buildings reset
+    'equipment'         // Equipment resets
+  ],
+
+  keeps: [
+    'karmaPoints',
+    'reincarnationCount',
+    'achievements',
+    'cosmetics',
+    'gooseAlly',
+    'maxWaifuBonds',    // If reached max bond, remember it
+    'loreFragments'
+  ],
+
+  multiplierPerReincarnation: 2 // 2x, 4x, 8x...
+};
+
+// Past Life Memories - Random buff at reincarnation start
+const PAST_LIFE_MEMORIES = {
+  memory_warrior: {
+    id: 'memory_warrior',
+    name: 'Warrior\'s Echo',
+    description: 'Combat experience from a past life',
+    trigger: { lifetimeBoops: 1000000 },
+    effect: { boopPower: 2.0, critChance: 0.1 },
+    duration: 'permanent_this_run'
+  },
+  memory_merchant: {
+    id: 'memory_merchant',
+    name: 'Merchant\'s Fortune',
+    description: 'Wealth follows you from another life',
+    trigger: { lifetimeBP: 100000000 },
+    effect: { startingBP: 100000, currencyGain: 1.5 },
+    duration: 'permanent_this_run'
+  },
+  memory_lover: {
+    id: 'memory_lover',
+    name: 'Bonds of Eternity',
+    description: 'Your waifus remember you...',
+    trigger: { maxBondCount: 3 },
+    effect: { waifuStartBond: 25, bondGain: 2.0 },
+    duration: 'permanent_this_run'
+  },
+  memory_hunter: {
+    id: 'memory_hunter',
+    name: 'Hunter\'s Instinct',
+    description: 'Cats are drawn to your presence',
+    trigger: { lifetimeCats: 100 },
+    effect: { catDropRate: 2.0, startingCats: 5 },
+    duration: 'permanent_this_run'
+  },
+  memory_cultivator: {
+    id: 'memory_cultivator',
+    name: 'Cultivator\'s Wisdom',
+    description: 'The path to immortality is familiar',
+    trigger: { maxRealmReached: 'spiritSevering' },
+    effect: { cultivationXP: 2.0, startingRealm: 'qiCondensation' },
+    duration: 'permanent_this_run'
+  },
+  memory_goose: {
+    id: 'memory_goose',
+    name: 'Honk of Destiny',
+    description: 'Even the geese respect you',
+    trigger: { gooseBoops: 500 },
+    effect: { gooseRewards: 3.0, gooseSpawnRate: 2.0 },
+    duration: 'permanent_this_run'
+  }
+};
+
+// Karma Shop - Permanent upgrades bought with Karma Points
+const KARMA_SHOP = {
+  categories: {
+    starting: {
+      name: 'Starting Bonuses',
+      items: [
+        { id: 'karma_start_cats', name: 'Feline Legacy', cost: 10, effect: { startingCats: 5 }, repeatable: true, maxPurchases: 10 },
+        { id: 'karma_start_bp', name: 'Inherited Wealth', cost: 5, effect: { startingBP: 100000 }, repeatable: true, maxPurchases: 20 },
+        { id: 'karma_start_pp', name: 'Ancestral Wisdom', cost: 8, effect: { startingPP: 5000 }, repeatable: true, maxPurchases: 10 },
+        { id: 'karma_start_realm', name: 'Reborn Cultivator', cost: 50, effect: { startingRealm: 'qiCondensation' }, repeatable: false }
+      ]
+    },
+    permanent: {
+      name: 'Permanent Bonuses',
+      items: [
+        { id: 'karma_production', name: 'Eternal Production', cost: 25, effect: { permanentProduction: 1.25 }, repeatable: true, maxPurchases: 10 },
+        { id: 'karma_crit', name: 'Karmic Precision', cost: 30, effect: { permanentCrit: 0.05 }, repeatable: true, maxPurchases: 5 },
+        { id: 'karma_afk', name: 'Dream Cultivation', cost: 40, effect: { permanentAFK: 1.5 }, repeatable: false },
+        { id: 'karma_combo', name: 'Eternal Combo', cost: 35, effect: { comboDecayReduction: 0.25 }, repeatable: true, maxPurchases: 3 }
+      ]
+    },
+    unlocks: {
+      name: 'Special Unlocks',
+      items: [
+        { id: 'karma_unlock_grandmother', name: 'Grandmother\'s Blessing', cost: 100, effect: { unlock: 'grandmother_waifu' }, repeatable: false },
+        { id: 'karma_unlock_void', name: 'Void Awakening', cost: 150, effect: { unlock: 'void_element' }, repeatable: false },
+        { id: 'karma_unlock_eighth', name: 'The Forgotten One', cost: 250, effect: { unlock: 'eighth_master' }, repeatable: false },
+        { id: 'karma_unlock_transcendence', name: 'Path to Transcendence', cost: 500, effect: { unlock: 'transcendence_preview' }, repeatable: false }
+      ]
+    }
+  }
+};
+
+// ===================================
+// LAYER 3: TRANSCENDENCE SYSTEM
+// ===================================
+
+const TRANSCENDENCE_SYSTEM = {
+  name: 'Transcendence',
+  threshold: {
+    reincarnations: 5,
+    karmaPoints: 1000,
+    realmReached: 'trueImmortal'
+  },
+  currency: 'transcendencePoints',
+
+  description: 'The ultimate prestige. Near-total reset, but unlocks the true endgame.',
+
+  resets: [
+    'almost_everything' // Near-total reset
+  ],
+
+  keeps: [
+    'transcendencePoints',
+    'transcendenceCount',
+    'metaAchievements',
+    'ultimateCosmetics',
+    'celestialProgress'
+  ],
+
+  unlocks: ['celestial_realm', 'true_endgame', 'story_conclusion']
+};
+
+// Celestial Realm bonuses per Transcendence Point
+const CELESTIAL_BONUSES = {
+  1: { allStats: 1.5, description: '+50% all stats permanently' },
+  3: { startWithMemories: 2, description: 'Start with 2 Past Life Memories' },
+  5: { celestialCats: true, description: 'Unlock Celestial Cat tier' },
+  10: { instantRebirth: true, description: 'Instant rebirth to Tier 3' },
+  25: { karmaGeneration: true, description: 'Passively generate Karma Points' },
+  50: { ultimateForm: true, description: 'Unlock Ultimate Master Forms' }
+};
+
+/**
+ * Enhanced PrestigeSystem with Reincarnation and Transcendence
+ */
+// Add methods to existing PrestigeSystem
+PrestigeSystem.prototype.initializeAdvancedPrestige = function() {
+  // Reincarnation tracking
+  this.reincarnationCount = this.reincarnationCount || 0;
+  this.karmaPoints = this.karmaPoints || 0;
+  this.pastLifeMemory = this.pastLifeMemory || null;
+  this.karmaShopPurchases = this.karmaShopPurchases || {};
+  this.maxWaifuBonds = this.maxWaifuBonds || {};
+  this.maxRealmReached = this.maxRealmReached || 'mortal';
+
+  // Transcendence tracking
+  this.transcendenceCount = this.transcendenceCount || 0;
+  this.transcendencePoints = this.transcendencePoints || 0;
+  this.celestialUnlocks = this.celestialUnlocks || [];
+};
+
+/**
+ * Check if reincarnation is available
+ */
+PrestigeSystem.prototype.canReincarnate = function() {
+  const threshold = REINCARNATION_SYSTEM.threshold;
+
+  if (this.currentTier < 7) {
+    return { can: false, reason: 'Must reach Immortal Ascension rebirth tier first' };
+  }
+
+  if (this.lifetimeBP < threshold.lifetimeBP) {
+    return {
+      can: false,
+      reason: `Need ${this.formatNumber(threshold.lifetimeBP)} lifetime BP (have ${this.formatNumber(this.lifetimeBP)})`
+    };
+  }
+
+  return { can: true };
+};
+
+/**
+ * Calculate karma points earned from reincarnation
+ */
+PrestigeSystem.prototype.calculateKarmaEarned = function() {
+  let karma = Math.floor(this.lifetimeBP / 1000000000); // 1 per billion BP
+  karma += this.totalRebirths * 2;
+  karma += Object.keys(this.maxWaifuBonds).filter(k => this.maxWaifuBonds[k] >= 100).length * 10;
+
+  // Bonus for high cultivation realm
+  const realmBonuses = {
+    'spiritSevering': 5,
+    'daoSeeking': 10,
+    'immortalAscension': 20,
+    'trueImmortal': 50,
+    'heavenlySovereign': 100
+  };
+  karma += realmBonuses[this.maxRealmReached] || 0;
+
+  return Math.max(1, karma);
+};
+
+/**
+ * Perform reincarnation
+ */
+PrestigeSystem.prototype.reincarnate = function(gameState, systems) {
+  const check = this.canReincarnate();
+  if (!check.can) return { success: false, reason: check.reason };
+
+  const karmaEarned = this.calculateKarmaEarned();
+  this.karmaPoints += karmaEarned;
+  this.reincarnationCount++;
+
+  // Keep 10% of lifetime BP
+  const retainedBP = Math.floor(this.lifetimeBP * 0.1);
+
+  // Reset rebirth tier and lifetime stats
+  this.currentTier = 0;
+  this.totalRebirths = 0;
+  this.lifetimeBP = retainedBP;
+  this.unlockedPerks = new Set();
+
+  // Full game reset
+  if (systems.gameState) {
+    this.resetGameState(systems.gameState, systems.masterSystem, systems.catSystem, systems.waifuSystem, systems.upgradeSystem);
+  }
+
+  // Roll Past Life Memory
+  this.pastLifeMemory = this.rollPastLifeMemory();
+
+  // Apply karma shop bonuses
+  this.applyKarmaShopBonuses(gameState, systems);
+
+  // Apply past life memory
+  if (this.pastLifeMemory) {
+    this.applyPastLifeMemory(gameState);
+  }
+
+  return {
+    success: true,
+    karmaEarned,
+    totalKarma: this.karmaPoints,
+    reincarnationCount: this.reincarnationCount,
+    multiplier: Math.pow(REINCARNATION_SYSTEM.multiplierPerReincarnation, this.reincarnationCount),
+    pastLifeMemory: this.pastLifeMemory
+  };
+};
+
+/**
+ * Roll for a Past Life Memory based on previous run stats
+ */
+PrestigeSystem.prototype.rollPastLifeMemory = function() {
+  const eligible = [];
+
+  for (const [id, memory] of Object.entries(PAST_LIFE_MEMORIES)) {
+    const trigger = memory.trigger;
+
+    if (trigger.lifetimeBoops && (this.lifetimeBoops || 0) >= trigger.lifetimeBoops) {
+      eligible.push(memory);
+    }
+    if (trigger.lifetimeBP && this.lifetimeBP >= trigger.lifetimeBP) {
+      eligible.push(memory);
+    }
+    if (trigger.maxBondCount && Object.keys(this.maxWaifuBonds).filter(k => this.maxWaifuBonds[k] >= 100).length >= trigger.maxBondCount) {
+      eligible.push(memory);
+    }
+    if (trigger.lifetimeCats && this.lifetimeCats >= trigger.lifetimeCats) {
+      eligible.push(memory);
+    }
+    if (trigger.gooseBoops && (this.lifetimeGooseBoops || 0) >= trigger.gooseBoops) {
+      eligible.push(memory);
+    }
+  }
+
+  if (eligible.length === 0) return null;
+
+  // Random selection from eligible memories
+  return eligible[Math.floor(Math.random() * eligible.length)];
+};
+
+/**
+ * Apply Past Life Memory effects
+ */
+PrestigeSystem.prototype.applyPastLifeMemory = function(gameState) {
+  if (!this.pastLifeMemory) return;
+
+  const effect = this.pastLifeMemory.effect;
+
+  if (effect.boopPower) gameState.modifiers.boopPower = (gameState.modifiers.boopPower || 1) * effect.boopPower;
+  if (effect.critChance) gameState.modifiers.critChance = (gameState.modifiers.critChance || 0) + effect.critChance;
+  if (effect.startingBP) gameState.boopPoints += effect.startingBP;
+  if (effect.currencyGain) gameState.modifiers.currencyGain = (gameState.modifiers.currencyGain || 1) * effect.currencyGain;
+  if (effect.waifuStartBond && window.waifuSystem) {
+    // Apply starting bond to all waifus
+    for (const waifu of Object.values(window.waifuSystem.waifuStates || {})) {
+      waifu.bondLevel = Math.max(waifu.bondLevel || 0, effect.waifuStartBond);
+    }
+  }
+  if (effect.bondGain) gameState.modifiers.bondGain = (gameState.modifiers.bondGain || 1) * effect.bondGain;
+  if (effect.catDropRate) gameState.modifiers.catDropRate = (gameState.modifiers.catDropRate || 1) * effect.catDropRate;
+  if (effect.startingCats && window.catSystem) {
+    for (let i = 0; i < effect.startingCats; i++) {
+      window.catSystem.recruitCat(0);
+    }
+  }
+  if (effect.cultivationXP) gameState.modifiers.cultivationXP = (gameState.modifiers.cultivationXP || 1) * effect.cultivationXP;
+  if (effect.gooseRewards) gameState.modifiers.gooseRewards = (gameState.modifiers.gooseRewards || 1) * effect.gooseRewards;
+  if (effect.gooseSpawnRate) gameState.modifiers.gooseSpawnRate = (gameState.modifiers.gooseSpawnRate || 1) * effect.gooseSpawnRate;
+};
+
+/**
+ * Purchase from Karma Shop
+ */
+PrestigeSystem.prototype.purchaseKarmaShopItem = function(itemId) {
+  // Find item in shop
+  let item = null;
+  for (const category of Object.values(KARMA_SHOP.categories)) {
+    item = category.items.find(i => i.id === itemId);
+    if (item) break;
+  }
+
+  if (!item) return { success: false, reason: 'Item not found' };
+
+  // Check if already at max purchases
+  const purchases = this.karmaShopPurchases[itemId] || 0;
+  if (!item.repeatable && purchases >= 1) {
+    return { success: false, reason: 'Already purchased' };
+  }
+  if (item.maxPurchases && purchases >= item.maxPurchases) {
+    return { success: false, reason: 'Maximum purchases reached' };
+  }
+
+  // Check karma
+  if (this.karmaPoints < item.cost) {
+    return { success: false, reason: `Need ${item.cost} Karma Points (have ${this.karmaPoints})` };
+  }
+
+  // Purchase
+  this.karmaPoints -= item.cost;
+  this.karmaShopPurchases[itemId] = purchases + 1;
+
+  return {
+    success: true,
+    item,
+    remainingKarma: this.karmaPoints,
+    totalPurchases: this.karmaShopPurchases[itemId]
+  };
+};
+
+/**
+ * Apply Karma Shop bonuses at start
+ */
+PrestigeSystem.prototype.applyKarmaShopBonuses = function(gameState, systems) {
+  for (const [itemId, count] of Object.entries(this.karmaShopPurchases)) {
+    if (count <= 0) continue;
+
+    // Find item
+    let item = null;
+    for (const category of Object.values(KARMA_SHOP.categories)) {
+      item = category.items.find(i => i.id === itemId);
+      if (item) break;
+    }
+
+    if (!item) continue;
+
+    const effect = item.effect;
+    const multiplier = item.repeatable ? count : 1;
+
+    if (effect.startingCats && systems.catSystem) {
+      for (let i = 0; i < effect.startingCats * multiplier; i++) {
+        systems.catSystem.recruitCat(0);
+      }
+    }
+    if (effect.startingBP) gameState.boopPoints += effect.startingBP * multiplier;
+    if (effect.startingPP) gameState.purrPower += effect.startingPP * multiplier;
+    if (effect.permanentProduction) {
+      gameState.modifiers.permanentProduction = (gameState.modifiers.permanentProduction || 1) * Math.pow(effect.permanentProduction, multiplier);
+    }
+    if (effect.permanentCrit) {
+      gameState.modifiers.permanentCrit = (gameState.modifiers.permanentCrit || 0) + (effect.permanentCrit * multiplier);
+    }
+    if (effect.permanentAFK) {
+      gameState.modifiers.permanentAFK = (gameState.modifiers.permanentAFK || 1) * effect.permanentAFK;
+    }
+    if (effect.comboDecayReduction) {
+      gameState.modifiers.comboDecayReduction = (gameState.modifiers.comboDecayReduction || 0) + (effect.comboDecayReduction * multiplier);
+    }
+    if (effect.unlock) {
+      gameState.unlocks = gameState.unlocks || {};
+      gameState.unlocks[effect.unlock] = true;
+    }
+  }
+};
+
+/**
+ * Check if transcendence is available
+ */
+PrestigeSystem.prototype.canTranscend = function() {
+  const threshold = TRANSCENDENCE_SYSTEM.threshold;
+
+  if (this.reincarnationCount < threshold.reincarnations) {
+    return { can: false, reason: `Need ${threshold.reincarnations} reincarnations (have ${this.reincarnationCount})` };
+  }
+
+  if (this.karmaPoints < threshold.karmaPoints) {
+    return { can: false, reason: `Need ${threshold.karmaPoints} Karma Points (have ${this.karmaPoints})` };
+  }
+
+  if (!this.hasReachedRealm(threshold.realmReached)) {
+    return { can: false, reason: `Must reach ${threshold.realmReached} cultivation realm` };
+  }
+
+  return { can: true };
+};
+
+/**
+ * Check if a realm has been reached
+ */
+PrestigeSystem.prototype.hasReachedRealm = function(realmId) {
+  const realmOrder = ['mortal', 'qiCondensation', 'foundationEstablishment', 'coreFormation',
+    'nascentSoul', 'spiritSevering', 'daoSeeking', 'immortalAscension', 'trueImmortal', 'heavenlySovereign'];
+
+  const targetIndex = realmOrder.indexOf(realmId);
+  const currentIndex = realmOrder.indexOf(this.maxRealmReached);
+
+  return currentIndex >= targetIndex;
+};
+
+/**
+ * Perform transcendence
+ */
+PrestigeSystem.prototype.transcend = function(gameState, systems) {
+  const check = this.canTranscend();
+  if (!check.can) return { success: false, reason: check.reason };
+
+  this.transcendencePoints++;
+  this.transcendenceCount++;
+
+  // Near-total reset
+  this.currentTier = 0;
+  this.totalRebirths = 0;
+  this.lifetimeBP = 0;
+  this.lifetimePP = 0;
+  this.lifetimeCats = 0;
+  this.unlockedPerks = new Set();
+
+  this.reincarnationCount = 0;
+  this.karmaPoints = 0;
+  this.pastLifeMemory = null;
+  this.karmaShopPurchases = {};
+
+  // Full game reset
+  if (systems.gameState) {
+    this.resetGameState(systems.gameState, systems.masterSystem, systems.catSystem, systems.waifuSystem, systems.upgradeSystem);
+  }
+
+  // Unlock celestial bonuses
+  this.updateCelestialUnlocks();
+
+  return {
+    success: true,
+    transcendencePoints: this.transcendencePoints,
+    transcendenceCount: this.transcendenceCount,
+    celestialUnlocks: this.celestialUnlocks
+  };
+};
+
+/**
+ * Update celestial unlocks based on transcendence points
+ */
+PrestigeSystem.prototype.updateCelestialUnlocks = function() {
+  this.celestialUnlocks = [];
+
+  for (const [threshold, bonus] of Object.entries(CELESTIAL_BONUSES)) {
+    if (this.transcendencePoints >= parseInt(threshold)) {
+      this.celestialUnlocks.push({ threshold: parseInt(threshold), ...bonus });
+    }
+  }
+};
+
+/**
+ * Get reincarnation multiplier
+ */
+PrestigeSystem.prototype.getReincarnationMultiplier = function() {
+  return Math.pow(REINCARNATION_SYSTEM.multiplierPerReincarnation, this.reincarnationCount);
+};
+
+/**
+ * Get transcendence multiplier
+ */
+PrestigeSystem.prototype.getTranscendenceMultiplier = function() {
+  let mult = 1;
+
+  for (const unlock of this.celestialUnlocks) {
+    if (unlock.allStats) mult *= unlock.allStats;
+  }
+
+  return mult;
+};
+
+/**
+ * Track max waifu bond (for reincarnation bonuses)
+ */
+PrestigeSystem.prototype.trackWaifuBond = function(waifuId, bondLevel) {
+  this.maxWaifuBonds[waifuId] = Math.max(this.maxWaifuBonds[waifuId] || 0, bondLevel);
+};
+
+/**
+ * Track max realm reached
+ */
+PrestigeSystem.prototype.trackRealmReached = function(realmId) {
+  const realmOrder = ['mortal', 'qiCondensation', 'foundationEstablishment', 'coreFormation',
+    'nascentSoul', 'spiritSevering', 'daoSeeking', 'immortalAscension', 'trueImmortal', 'heavenlySovereign'];
+
+  const newIndex = realmOrder.indexOf(realmId);
+  const currentIndex = realmOrder.indexOf(this.maxRealmReached);
+
+  if (newIndex > currentIndex) {
+    this.maxRealmReached = realmId;
+  }
+};
+
+/**
+ * Enhanced serialize with reincarnation/transcendence data
+ */
+const originalSerialize = PrestigeSystem.prototype.serialize;
+PrestigeSystem.prototype.serialize = function() {
+  const base = originalSerialize.call(this);
+
+  return {
+    ...base,
+    // Reincarnation data
+    reincarnationCount: this.reincarnationCount || 0,
+    karmaPoints: this.karmaPoints || 0,
+    pastLifeMemory: this.pastLifeMemory,
+    karmaShopPurchases: this.karmaShopPurchases || {},
+    maxWaifuBonds: this.maxWaifuBonds || {},
+    maxRealmReached: this.maxRealmReached || 'mortal',
+    lifetimeBoops: this.lifetimeBoops || 0,
+    lifetimeGooseBoops: this.lifetimeGooseBoops || 0,
+
+    // Transcendence data
+    transcendenceCount: this.transcendenceCount || 0,
+    transcendencePoints: this.transcendencePoints || 0,
+    celestialUnlocks: this.celestialUnlocks || []
+  };
+};
+
+/**
+ * Enhanced deserialize with reincarnation/transcendence data
+ */
+const originalDeserialize = PrestigeSystem.prototype.deserialize;
+PrestigeSystem.prototype.deserialize = function(data) {
+  originalDeserialize.call(this, data);
+
+  if (!data) return;
+
+  // Reincarnation data
+  this.reincarnationCount = data.reincarnationCount || 0;
+  this.karmaPoints = data.karmaPoints || 0;
+  this.pastLifeMemory = data.pastLifeMemory || null;
+  this.karmaShopPurchases = data.karmaShopPurchases || {};
+  this.maxWaifuBonds = data.maxWaifuBonds || {};
+  this.maxRealmReached = data.maxRealmReached || 'mortal';
+  this.lifetimeBoops = data.lifetimeBoops || 0;
+  this.lifetimeGooseBoops = data.lifetimeGooseBoops || 0;
+
+  // Transcendence data
+  this.transcendenceCount = data.transcendenceCount || 0;
+  this.transcendencePoints = data.transcendencePoints || 0;
+  this.celestialUnlocks = data.celestialUnlocks || [];
+
+  // Recalculate celestial unlocks
+  this.updateCelestialUnlocks();
+};
+
 // Export
 window.REBIRTH_TIERS = REBIRTH_TIERS;
 window.REBIRTH_PERKS = REBIRTH_PERKS;
+window.REINCARNATION_SYSTEM = REINCARNATION_SYSTEM;
+window.PAST_LIFE_MEMORIES = PAST_LIFE_MEMORIES;
+window.KARMA_SHOP = KARMA_SHOP;
+window.TRANSCENDENCE_SYSTEM = TRANSCENDENCE_SYSTEM;
+window.CELESTIAL_BONUSES = CELESTIAL_BONUSES;
 window.PrestigeSystem = PrestigeSystem;

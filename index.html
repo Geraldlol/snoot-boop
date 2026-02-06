@@ -115,6 +115,10 @@
           <div id="combo-display" class="combo-display hidden" role="status" aria-live="polite">
             <span id="combo-count">0</span>x COMBO
           </div>
+          <button id="open-social-btn" class="open-social-btn" aria-label="Social features" title="Social">
+            <span>🏆</span>
+            <span>Sect</span>
+          </button>
           <button id="help-btn" class="header-btn" aria-label="Help and tutorial" title="Help">❓</button>
           <button id="settings-btn" class="header-btn" aria-label="Settings" title="Settings">⚙️</button>
           <div id="master-badge" class="master-badge">
@@ -149,6 +153,31 @@
             <span id="waifu-bonus-text">+10% BP</span>
           </div>
         </aside>
+
+        <!-- Cultivation Realm Display -->
+        <div id="cultivation-display" class="cultivation-display">
+          <div class="cultivation-header">
+            <span class="cultivation-icon">☯️</span>
+            <span class="cultivation-title">Cultivation</span>
+          </div>
+          <div class="cultivation-realm-info">
+            <h3 id="cultivation-realm-name" class="realm-name">Mortal Realm</h3>
+            <p id="cultivation-rank" class="realm-rank">Rank 1</p>
+          </div>
+          <div class="cultivation-xp-bar">
+            <div id="cultivation-xp-fill" class="xp-fill" style="width: 0%"></div>
+            <span id="cultivation-xp-text" class="xp-text">0 / 100 XP</span>
+          </div>
+          <div class="cultivation-description">
+            <p id="cultivation-desc">The beginning of the path.</p>
+          </div>
+          <div id="cultivation-passives" class="cultivation-passives">
+            <!-- Unlocked passives will be listed here -->
+          </div>
+          <button id="breakthrough-btn" class="jade-button small breakthrough-btn hidden" onclick="attemptBreakthrough()">
+            ⚡ Attempt Breakthrough
+          </button>
+        </div>
 
         <!-- Center: Boop Area -->
         <main class="game-main" role="main">
@@ -969,6 +998,7 @@
 
         <div class="waifu-modal-tabs">
           <button class="waifu-tab active" data-waifu-tab="collection">All Waifus</button>
+          <button class="waifu-tab" data-waifu-tab="activities">Activities</button>
           <button class="waifu-tab" data-waifu-tab="gifts">Gift Shop</button>
           <button class="waifu-tab" data-waifu-tab="inventory">My Gifts</button>
         </div>
@@ -977,6 +1007,55 @@
         <div id="waifu-collection-tab" class="waifu-tab-content active">
           <div id="waifu-grid" class="waifu-grid">
             <!-- Populated by JS -->
+          </div>
+        </div>
+
+        <!-- Activities Tab -->
+        <div id="waifu-activities-tab" class="waifu-tab-content">
+          <!-- Current Activity Display -->
+          <div id="current-activity" class="current-activity hidden">
+            <div class="activity-progress-panel">
+              <div class="activity-header">
+                <span id="activity-emoji" class="activity-emoji">🍵</span>
+                <div class="activity-info">
+                  <h4 id="activity-name">Tea Ceremony</h4>
+                  <p id="activity-with">with <span id="activity-waifu-name">Mochi-chan</span></p>
+                </div>
+              </div>
+              <div class="activity-progress-bar">
+                <div id="activity-progress-fill" class="activity-progress-fill" style="width: 0%"></div>
+              </div>
+              <div class="activity-time">
+                <span id="activity-time-remaining">5:00</span> remaining
+              </div>
+              <p id="activity-dialogue" class="activity-dialogue">"The tea is ready..."</p>
+              <div class="activity-actions">
+                <button id="complete-activity-btn" class="jade-button" disabled>Complete Activity</button>
+                <button id="cancel-activity-btn" class="jade-button small danger">Cancel</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Activity Selection -->
+          <div id="activity-selection" class="activity-selection">
+            <div class="activity-waifu-select">
+              <label for="activity-waifu-dropdown">Select Waifu:</label>
+              <select id="activity-waifu-dropdown" class="activity-dropdown">
+                <!-- Populated by JS -->
+              </select>
+            </div>
+
+            <div id="available-activities" class="available-activities">
+              <p class="empty-message">Select a waifu to see available activities.</p>
+            </div>
+          </div>
+
+          <!-- Activity History -->
+          <div class="activity-history-section">
+            <h5 class="activity-history-header">Recent Activities</h5>
+            <div id="activity-history" class="activity-history">
+              <p class="empty-message">No activities completed yet.</p>
+            </div>
           </div>
         </div>
 
@@ -1019,6 +1098,170 @@
 
         <div class="settings-buttons">
           <button id="waifu-modal-close" class="jade-button">Close</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Social Modal -->
+    <div id="social-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="social-title">
+      <div class="modal-content scroll-panel social-modal">
+        <h2 id="social-title">🏆 Celestial Snoot Sect</h2>
+        <p class="social-subtitle">Share your glory with the Seven Masters!</p>
+
+        <!-- Social Tabs -->
+        <div class="social-tabs">
+          <button class="social-tab active" data-social-tab="card">📜 Sect Card</button>
+          <button class="social-tab" data-social-tab="leaderboard">🏅 Leaderboard</button>
+          <button class="social-tab" data-social-tab="saves">💾 Save Sharing</button>
+        </div>
+
+        <!-- Sect Card Tab -->
+        <div id="social-card-tab" class="social-tab-content active">
+          <div class="sect-card-preview">
+            <div class="sect-card-header">
+              <div class="sect-card-portrait">
+                <span id="card-master-emoji">🐉</span>
+              </div>
+              <div class="sect-card-info">
+                <h3 id="card-master-name" class="sect-card-name">Master Name</h3>
+                <p id="card-master-title" class="sect-card-title">Title</p>
+              </div>
+            </div>
+
+            <div class="sect-card-stats">
+              <div class="sect-stat">
+                <span class="sect-stat-label">Total Boops</span>
+                <span id="card-stat-boops" class="sect-stat-value">0</span>
+              </div>
+              <div class="sect-stat">
+                <span class="sect-stat-label">Cats</span>
+                <span id="card-stat-cats" class="sect-stat-value">0</span>
+              </div>
+              <div class="sect-stat">
+                <span class="sect-stat-label">Highest Realm</span>
+                <span id="card-stat-realm" class="sect-stat-value">None</span>
+              </div>
+              <div class="sect-stat">
+                <span class="sect-stat-label">Total Bonds</span>
+                <span id="card-stat-bonds" class="sect-stat-value pink">0</span>
+              </div>
+              <div class="sect-stat">
+                <span class="sect-stat-label">Favorite Waifu</span>
+                <span id="card-stat-waifu" class="sect-stat-value pink">None</span>
+              </div>
+              <div class="sect-stat">
+                <span class="sect-stat-label">Max Combo</span>
+                <span id="card-stat-combo" class="sect-stat-value">0x</span>
+              </div>
+              <div class="sect-stat">
+                <span class="sect-stat-label">Geese Booped</span>
+                <span id="card-stat-goose" class="sect-stat-value gold">0</span>
+              </div>
+              <div class="sect-stat">
+                <span class="sect-stat-label">Achievements</span>
+                <span id="card-achievement-progress" class="sect-stat-value">0/0</span>
+              </div>
+            </div>
+
+            <div class="sect-card-footer">
+              <p style="font-size: 7px; color: #666; margin-bottom: 5px;">Latest Achievement:</p>
+              <p id="card-latest-achievement" style="font-size: 9px; color: var(--gold-accent);">None yet</p>
+              <div class="power-score">
+                <span class="power-score-label">Power Score:</span>
+                <span id="card-stat-power" class="power-score-value">0</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="card-actions">
+            <button id="copy-sect-card" class="jade-button small">📋 Copy Full Card</button>
+            <button id="copy-compact-card" class="jade-button small">📝 Copy Compact</button>
+          </div>
+
+          <!-- The Seven Masters -->
+          <div class="master-badges">
+            <div class="master-badge-mini" data-master="gerald" style="--master-color: #50C878;">
+              <span class="badge-emoji">🐉</span>
+              <span class="badge-name">Gerald</span>
+            </div>
+            <div class="master-badge-mini" data-master="rusty" style="--master-color: #DC143C;">
+              <span class="badge-emoji">👊</span>
+              <span class="badge-name">Rusty</span>
+            </div>
+            <div class="master-badge-mini" data-master="steve" style="--master-color: #4169E1;">
+              <span class="badge-emoji">🌊</span>
+              <span class="badge-name">Steve</span>
+            </div>
+            <div class="master-badge-mini" data-master="andrew" style="--master-color: #FFD700;">
+              <span class="badge-emoji">⚡</span>
+              <span class="badge-name">Andrew</span>
+            </div>
+            <div class="master-badge-mini" data-master="nik" style="--master-color: #483D8B;">
+              <span class="badge-emoji">🌙</span>
+              <span class="badge-name">Nik</span>
+            </div>
+            <div class="master-badge-mini" data-master="yuelin" style="--master-color: #FFB6C1;">
+              <span class="badge-emoji">🪷</span>
+              <span class="badge-name">Yuelin</span>
+            </div>
+            <div class="master-badge-mini" data-master="scott" style="--master-color: #8B4513;">
+              <span class="badge-emoji">⛰️</span>
+              <span class="badge-name">Scott</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Leaderboard Tab -->
+        <div id="social-leaderboard-tab" class="social-tab-content">
+          <div class="leaderboard-controls">
+            <select id="leaderboard-category" class="leaderboard-select">
+              <option value="power">⚡ Power Score</option>
+              <option value="boops">👆 Total Boops</option>
+              <option value="cats">🐱 Cats Recruited</option>
+              <option value="bonds">💕 Total Bonds</option>
+              <option value="goose">🦢 Geese Booped</option>
+              <option value="combo">🔥 Max Combo</option>
+              <option value="achievements">🏆 Achievements</option>
+            </select>
+          </div>
+
+          <div id="leaderboard-entries" class="leaderboard-entries">
+            <p class="empty-message">No entries yet! Submit your score to be first!</p>
+          </div>
+
+          <div class="leaderboard-actions">
+            <button id="submit-score-btn" class="jade-button small">📤 Submit Score</button>
+            <button id="export-leaderboard-btn" class="jade-button small">💾 Export</button>
+            <button id="import-leaderboard-btn" class="jade-button small">📥 Import</button>
+          </div>
+
+          <textarea id="leaderboard-code" class="leaderboard-code" rows="2" placeholder="Paste leaderboard code here to import..."></textarea>
+        </div>
+
+        <!-- Save Sharing Tab -->
+        <div id="social-saves-tab" class="social-tab-content">
+          <div class="save-sharing-section">
+            <h4>📤 Export Your Save</h4>
+            <p style="font-size: 8px; color: #888; margin-bottom: 10px;">Share your progress with friends or backup your save.</p>
+            <div class="save-actions">
+              <button id="export-social-save" class="jade-button small">Export Save</button>
+            </div>
+          </div>
+
+          <div class="save-sharing-section">
+            <h4>📥 Import Save</h4>
+            <p style="font-size: 8px; color: #888; margin-bottom: 10px;">Paste a save code below to preview and import.</p>
+            <textarea id="social-save-code" class="social-save-code" rows="3" placeholder="Paste save code here..."></textarea>
+            <div class="save-actions" style="margin-top: 10px;">
+              <button id="preview-import" class="jade-button small">Preview</button>
+              <button id="confirm-import" class="jade-button small hidden">Confirm Import</button>
+            </div>
+            <div id="import-preview" class="import-preview"></div>
+          </div>
+        </div>
+
+        <div class="settings-buttons">
+          <button id="social-modal-close" class="jade-button">Close</button>
         </div>
       </div>
     </div>
@@ -1133,9 +1376,14 @@
   </div>
 
   <!-- Scripts -->
+  <!-- UI/UX Systems (load first for availability) -->
+  <script src="js/particles.js"></script>
+  <script src="js/notifications.js"></script>
+  <!-- Core Systems -->
   <script src="js/masters.js"></script>
   <script src="js/cats.js"></script>
   <script src="js/waifus.js"></script>
+  <script src="js/activity-ui.js"></script>
   <script src="js/upgrades.js"></script>
   <script src="js/events.js"></script>
   <script src="js/achievements.js"></script>
@@ -1145,6 +1393,8 @@
   <script src="js/minigame.js"></script>
   <script src="js/prestige.js"></script>
   <script src="js/audio.js"></script>
+  <script src="js/buildings.js"></script>
+  <script src="js/economy.js"></script>
   <!-- Phase 3 Systems -->
   <script src="js/elements.js"></script>
   <script src="js/equipment.js"></script>
@@ -1163,6 +1413,11 @@
   <script src="js/catino.js"></script>
   <script src="js/hardcore.js"></script>
   <script src="js/partner-generator.js"></script>
+  <script src="js/cultivation.js"></script>
+  <!-- Time & Events System -->
+  <script src="js/time.js"></script>
+  <!-- Social Features -->
+  <script src="js/social.js"></script>
   <script src="js/save.js"></script>
   <script src="js/game.js"></script>
 </body>

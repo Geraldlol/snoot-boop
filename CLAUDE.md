@@ -1,5 +1,13 @@
 # CLAUDE.md - Snoot Booper: Wuxia Development Guide
 
+> *"The journey of a thousand boops begins with a single snoot."*
+> — The Celestial Snoot Scripture
+
+**Document Version:** 2.0 (Grand Enhancement Edition)
+**Last Updated:** Phase 8 Complete
+
+---
+
 ## Project Overview
 
 **Game:** Snoot Booper: Idle Wuxia Cat Sanctuary
@@ -7,7 +15,14 @@
 **Platform:** Web (Discord-shareable for the boys)
 **Tech Stack:** HTML5, CSS3, Vanilla JavaScript (or React if complexity grows)
 **Vibe:** Cute cats, martial arts mysticism, waifu masters, BOOP THE SNOOTS
-**Inspiration:** Age of Wushu, classic Wuxia novels, Cookie Clicker, cat memes
+**Inspiration:** Age of Wushu, classic Wuxia novels, Cookie Clicker, Hades, Slay the Spire, Vampire Survivors, cat memes
+
+### Design Pillars
+1. **Deep, Layered Progression** — Cookie Clicker depth with meaningful choices
+2. **Wuxia Authenticity** — Age of Wushu theming done right
+3. **Polish & Juice** — Hades-level feedback on every action
+4. **Social Competition** — Built for seven Discord friends to compare and compete
+5. **Respect Player Time** — AFK should feel rewarding, not punishing
 
 ---
 
@@ -59,49 +74,480 @@ Each master should have:
 
 ```
 snoot-booper/
-├── index.html              # Main game entry
+├── index.html                  # Main game entry
 ├── css/
-│   ├── main.css            # Core styles
-│   ├── wuxia-theme.css     # Chinese aesthetic, scrolls, jade
-│   ├── 8bit.css            # Pixel art utilities
-│   └── animations.css      # Qi effects, boops, cultivation
+│   ├── main.css                # Core styles
+│   ├── wuxia-theme.css         # Chinese aesthetic, scrolls, jade
+│   ├── 8bit.css                # Pixel art utilities
+│   ├── animations.css          # Qi effects, boops, cultivation
+│   └── dungeon.css             # Dungeon-specific styles
 ├── js/
-│   ├── game.js             # Main game loop
-│   ├── masters.js          # The Seven Masters system
-│   ├── cats.js             # Cat collection & cultivation
-│   ├── waifus.js           # Waifu master system & bonding
-│   ├── resources.js        # BP, PP, Jade Catnip
-│   ├── cultivation.js      # Upgrade/technique trees
-│   ├── idle.js             # AFK calculations
-│   ├── save.js             # LocalStorage + cloud sync
-│   ├── events.js           # Jianghu random events
-│   ├── sectwar.js          # Competitive features
-│   └── ui.js               # DOM manipulation
+│   ├── core/
+│   │   ├── game.js             # Main game loop & state
+│   │   ├── eventBus.js         # Cross-system communication
+│   │   ├── bigNumber.js        # Late-game number handling
+│   │   └── constants.js        # Global constants
+│   ├── systems/
+│   │   ├── masters.js          # The Seven (Eight) Masters
+│   │   ├── cultivation.js      # Realm progression & tribulations
+│   │   ├── boop.js             # Boop system & techniques
+│   │   ├── cats.js             # Cat collection & cultivation
+│   │   ├── catTeam.js          # Team formation & synergies
+│   │   ├── catFusion.js        # Fusion & evolution
+│   │   ├── waifus.js           # Waifu bonding & teaching
+│   │   ├── goose.js            # The Way of the Goose
+│   │   ├── resources.js        # Multi-currency economy
+│   │   ├── idle.js             # AFK & Dream Realm
+│   │   ├── buildings.js        # Sect buildings & territory
+│   │   ├── equipment.js        # Gear system & sets
+│   │   ├── relics.js           # Dungeon relics
+│   │   └── prestige.js         # Ascension/Reincarnation/Transcendence
+│   ├── dungeons/
+│   │   ├── pagoda.js           # Infinite Pagoda
+│   │   ├── bambooForest.js     # Wave survival mode
+│   │   ├── tournament.js       # Celestial Tournament
+│   │   ├── dreamRealm.js       # Procedural dream dungeon
+│   │   └── gooseDimension.js   # Comedy horror dungeon
+│   ├── ui/
+│   │   ├── screens.js          # Screen management
+│   │   ├── modals.js           # Modal dialogs
+│   │   ├── notifications.js    # Toast & alerts
+│   │   ├── particles.js        # Visual effects
+│   │   └── tutorial.js         # Progressive disclosure
+│   ├── data/
+│   │   ├── save.js             # Save/Load with migration
+│   │   ├── achievements.js     # Achievement tracking
+│   │   ├── lore.js             # Story fragments
+│   │   └── secrets.js          # Easter eggs
+│   ├── social/
+│   │   ├── sectwar.js          # Competitive features
+│   │   ├── sharing.js          # Discord integration
+│   │   └── leaderboard.js      # Rankings
+│   └── events/
+│       ├── random.js           # Jianghu random events
+│       ├── daily.js            # Daily challenges
+│       ├── seasonal.js         # Festivals & holidays
+│       └── time.js             # Day/night & seasons
 ├── assets/
 │   ├── sprites/
-│   │   ├── masters/        # Gerald, Rusty, Steve, etc.
-│   │   ├── cats/           # All cat sprites by realm
-│   │   ├── waifus/         # Six Immortal Masters
-│   │   └── effects/        # Qi, boops, cultivation FX
+│   │   ├── masters/            # Gerald, Rusty, Steve, etc. (per realm)
+│   │   ├── cats/               # All cat sprites by realm & element
+│   │   ├── waifus/             # Twelve Immortal Masters
+│   │   ├── enemies/            # Dungeon enemies
+│   │   ├── geese/              # All goose variants
+│   │   ├── equipment/          # Gear sprites
+│   │   └── effects/            # Qi, boops, tribulation FX
 │   ├── audio/
-│   │   ├── music/          # Chiptune + Chinese instruments
-│   │   └── sfx/            # Boops, mrrps, gongs
-│   ├── backgrounds/        # Sect buildings, mountains
-│   └── fonts/              # Pixel fonts, brush fonts
+│   │   ├── music/              # Chiptune + Chinese instruments
+│   │   ├── sfx/                # Boops (with variation), mrrps, gongs
+│   │   └── voice/              # Waifu voice lines (optional)
+│   ├── backgrounds/            # Sect buildings, dungeons, territories
+│   └── fonts/                  # Pixel fonts, brush fonts
 ├── data/
-│   ├── masters.json        # Seven Masters definitions
-│   ├── cats.json           # Cat collection data
-│   ├── waifus.json         # Waifu stats & dialogue
-│   ├── techniques.json     # Cultivation upgrades
-│   └── events.json         # Random event definitions
-├── PROMPT.md               # Game design document
-├── CLAUDE.md               # This file
-└── README.md               # Setup instructions
+│   ├── masters.json            # Eight Masters definitions
+│   ├── cats.json               # Cat collection (100+ cats)
+│   ├── waifus.json             # Twelve waifus with full dialogue
+│   ├── techniques.json         # Boop techniques & stances
+│   ├── cultivation.json        # Realm requirements & tribulations
+│   ├── equipment.json          # All gear & sets
+│   ├── relics.json             # Dungeon relics
+│   ├── enemies.json            # Enemy definitions
+│   ├── events.json             # Random & seasonal events
+│   ├── achievements.json       # All achievements
+│   ├── lore.json               # Story fragments
+│   └── balance.json            # All scaling curves & formulas
+├── PROMPT.md                   # Game design document
+├── CLAUDE.md                   # This file
+└── README.md                   # Setup instructions
 ```
 
 ---
 
 ## Core Systems Implementation
+
+---
+
+### 0. Master Cultivation Realm System
+
+The primary progression axis for players. Inspired by Xianxia novel cultivation with 10 major realms, each containing 9 sub-ranks.
+
+```javascript
+// cultivation.json - The Path to Immortality
+const CULTIVATION_REALMS = {
+  mortal: {
+    id: 'mortal',
+    name: 'Mortal Realm',
+    order: 1,
+    ranks: 9,
+    description: 'The beginning of the path. You are but a wanderer in the Jianghu.',
+    color: '#A0A0A0',
+    xpBase: 100,
+    xpScale: 1.15,      // Per rank within realm
+    realmScale: 3.0,     // Multiplier when entering this realm
+    tribulation: null,   // No tribulation to enter Mortal
+    unlocks: ['basic_boop', 'cat_sanctuary'],
+    passives: {
+      1: { name: 'Awakened Spirit', effect: { boopPower: 1.1 } },
+      5: { name: 'Mortal Foundation', effect: { ppGeneration: 1.15 } },
+      9: { name: 'Mortal Peak', effect: { critChance: 0.02 } }
+    },
+    spriteVariant: 'mortal'
+  },
+
+  qiCondensation: {
+    id: 'qiCondensation',
+    name: 'Qi Condensation',
+    order: 2,
+    ranks: 9,
+    description: 'You have begun to sense the Qi of the world. The snoots call to you.',
+    color: '#87CEEB',
+    xpBase: 1000,
+    xpScale: 1.15,
+    realmScale: 3.0,
+    tribulation: {
+      name: 'Tribulation of Awakening',
+      type: 'boss',
+      enemy: 'inner_demon_kitten',
+      failPenalty: { xpLoss: 0.5 },
+      rewards: { jadeCatnip: 100 }
+    },
+    unlocks: ['technique_stances', 'cat_training'],
+    passives: {
+      1: { name: 'Qi Sense', effect: { eventDiscovery: 1.1 } },
+      5: { name: 'Meridian Opening', effect: { boopPower: 1.25 } },
+      9: { name: 'Condensation Complete', effect: { afkEfficiency: 1.2 } }
+    },
+    spriteVariant: 'qi_condensation'
+  },
+
+  foundationEstablishment: {
+    id: 'foundationEstablishment',
+    name: 'Foundation Establishment',
+    order: 3,
+    ranks: 9,
+    description: 'Your foundation is set. The cats recognize you as a true cultivator.',
+    color: '#8B4513',
+    xpBase: 10000,
+    xpScale: 1.15,
+    realmScale: 3.0,
+    tribulation: {
+      name: 'Tribulation of Foundation',
+      type: 'survival',
+      waves: 5,
+      failPenalty: { xpLoss: 0.5, catHappiness: -10 },
+      rewards: { jadeCatnip: 500, cat: 'earth_realm_random' }
+    },
+    unlocks: ['cat_teams', 'first_waifu', 'meditation_garden'],
+    passives: {
+      1: { name: 'Stable Foundation', effect: { multiplierDecay: 0.5 } },
+      5: { name: 'Inner Strength', effect: { tribulationPower: 1.2 } },
+      9: { name: 'Foundation Peak', effect: { catCapacity: 10 } }
+    },
+    spriteVariant: 'foundation'
+  },
+
+  coreFormation: {
+    id: 'coreFormation',
+    name: 'Core Formation',
+    order: 4,
+    ranks: 9,
+    description: 'A golden core forms within you. Your boops shake the heavens.',
+    color: '#FFD700',
+    xpBase: 100000,
+    xpScale: 1.15,
+    realmScale: 3.0,
+    tribulation: {
+      name: 'Tribulation of the Golden Core',
+      type: 'boss',
+      enemy: 'shadow_goose',
+      failPenalty: { xpLoss: 0.5, coreDamage: true },
+      rewards: { jadeCatnip: 2000, technique: 'golden_boop' }
+    },
+    unlocks: ['infinite_pagoda', 'equipment_system', 'waifu_teaching'],
+    passives: {
+      1: { name: 'Golden Core', effect: { allStats: 1.1 } },
+      5: { name: 'Core Resonance', effect: { catSynergy: 1.25 } },
+      9: { name: 'Perfect Core', effect: { critDamage: 1.5 } }
+    },
+    spriteVariant: 'core_formation'
+  },
+
+  nascentSoul: {
+    id: 'nascentSoul',
+    name: 'Nascent Soul',
+    order: 5,
+    ranks: 9,
+    description: 'A nascent soul emerges. You are no longer bound by mortal limits.',
+    color: '#9370DB',
+    xpBase: 1000000,
+    xpScale: 1.15,
+    realmScale: 3.0,
+    tribulation: {
+      name: 'Soul Tribulation',
+      type: 'puzzle',
+      challenge: 'soul_fragments',
+      failPenalty: { xpLoss: 0.5, soulDamage: true },
+      rewards: { jadeCatnip: 10000, cat: 'sky_realm_random' }
+    },
+    unlocks: ['dream_realm', 'cat_fusion', 'territory_expansion'],
+    passives: {
+      1: { name: 'Soul Awakening', effect: { offlineGains: 1.5 } },
+      5: { name: 'Soul Projection', effect: { dungeonSpeed: 1.25 } },
+      9: { name: 'Complete Soul', effect: { deathDefiance: 1 } }
+    },
+    spriteVariant: 'nascent_soul'
+  },
+
+  spiritSevering: {
+    id: 'spiritSevering',
+    name: 'Spirit Severing',
+    order: 6,
+    ranks: 9,
+    description: 'You sever ties with the mundane. Only the Dao of Snoot remains.',
+    color: '#DC143C',
+    xpBase: 10000000,
+    xpScale: 1.15,
+    realmScale: 3.0,
+    tribulation: {
+      name: 'Severing Tribulation',
+      type: 'choice',
+      challenge: 'heart_demons',
+      failPenalty: { xpLoss: 0.5, permanentScar: true },
+      rewards: { jadeCatnip: 50000, forbiddenTechnique: 1 }
+    },
+    unlocks: ['ascension_preview', 'legendary_cats', 'waifu_cultivation'],
+    passives: {
+      1: { name: 'Severed Attachments', effect: { immuneToTheft: true } },
+      5: { name: 'Spirit Blade', effect: { boopPower: 2.0 } },
+      9: { name: 'Complete Severance', effect: { allPassives: 1.1 } }
+    },
+    spriteVariant: 'spirit_severing'
+  },
+
+  daoSeeking: {
+    id: 'daoSeeking',
+    name: 'Dao Seeking',
+    order: 7,
+    ranks: 9,
+    description: 'You seek the ultimate truth. What is the Dao of the Snoot?',
+    color: '#4169E1',
+    xpBase: 100000000,
+    xpScale: 1.15,
+    realmScale: 3.0,
+    tribulation: {
+      name: 'Dao Heart Tribulation',
+      type: 'gauntlet',
+      stages: 9,
+      failPenalty: { xpLoss: 0.75, daoWounds: true },
+      rewards: { jadeCatnip: 250000, cat: 'heaven_realm_random' }
+    },
+    unlocks: ['reincarnation_preview', 'divine_cats', 'goose_dimension'],
+    passives: {
+      1: { name: 'Dao Glimpse', effect: { rareEventChance: 2.0 } },
+      5: { name: 'Dao Comprehension', effect: { xpGain: 1.5 } },
+      9: { name: 'Dao Heart', effect: { tribulationSuccess: 1.25 } }
+    },
+    spriteVariant: 'dao_seeking'
+  },
+
+  immortalAscension: {
+    id: 'immortalAscension',
+    name: 'Immortal Ascension',
+    order: 8,
+    ranks: 9,
+    description: 'You stand at the threshold of immortality. The heavens take notice.',
+    color: '#FFD700',
+    xpBase: 1000000000,
+    xpScale: 1.15,
+    realmScale: 3.0,
+    tribulation: {
+      name: 'Heavenly Tribulation',
+      type: 'epic_boss',
+      enemy: 'cosmic_goose',
+      failPenalty: { death: true }, // Full reset without prestige
+      rewards: { heavenlySeals: 10, cat: 'divine_realm_guaranteed' }
+    },
+    unlocks: ['ascension_system', 'eighth_master_hints', 'celestial_realm'],
+    passives: {
+      1: { name: 'Immortal Body', effect: { hpRegen: 2.0 } },
+      5: { name: 'Immortal Qi', effect: { qiCapacity: 2.0 } },
+      9: { name: 'Almost Immortal', effect: { permanentBonus: 1.5 } }
+    },
+    spriteVariant: 'immortal_ascension'
+  },
+
+  trueImmortal: {
+    id: 'trueImmortal',
+    name: 'True Immortal',
+    order: 9,
+    ranks: 9,
+    description: 'You have transcended mortality. The cats bow before your eternal snoot.',
+    color: '#FFFFFF',
+    xpBase: 10000000000,
+    xpScale: 1.15,
+    realmScale: 3.0,
+    tribulation: {
+      name: 'Transcendence Tribulation',
+      type: 'ultimate',
+      challenge: 'face_the_void',
+      failPenalty: { reincarnationForced: true },
+      rewards: { transcendencePoints: 1, legendaryTitle: true }
+    },
+    unlocks: ['transcendence_preview', 'true_form', 'cosmic_cats'],
+    passives: {
+      1: { name: 'Eternal Life', effect: { offlineTimeLimit: null } }, // Unlimited AFK
+      5: { name: 'True Understanding', effect: { allMultipliers: 2.0 } },
+      9: { name: 'True Immortal Peak', effect: { readyForTranscendence: true } }
+    },
+    spriteVariant: 'true_immortal'
+  },
+
+  heavenlySovereign: {
+    id: 'heavenlySovereign',
+    name: 'Heavenly Sovereign',
+    order: 10,
+    ranks: Infinity, // Infinite scaling
+    description: 'You have become one with the heavens. Your snoot IS the Dao.',
+    color: '#FFD700',
+    xpBase: 100000000000,
+    xpScale: 1.2, // Steeper scaling for infinite content
+    realmScale: null, // N/A - infinite
+    tribulation: null, // No more tribulations - you ARE the tribulation
+    unlocks: ['everything'], // All content unlocked
+    passives: {
+      // Every 10 ranks grants a new passive
+      scaling: {
+        every: 10,
+        effect: { allStats: 1.1 }
+      }
+    },
+    spriteVariant: 'heavenly_sovereign'
+  }
+};
+
+// Tribulation System
+class TribulationSystem {
+  constructor(gameState) {
+    this.gameState = gameState;
+    this.activeTribulation = null;
+  }
+
+  canAttemptBreakthrough(targetRealm) {
+    const realm = CULTIVATION_REALMS[targetRealm];
+    const currentXP = this.gameState.cultivationXP;
+    const requiredXP = this.calculateXPRequired(targetRealm);
+
+    return currentXP >= requiredXP;
+  }
+
+  calculateXPRequired(realmId) {
+    const realm = CULTIVATION_REALMS[realmId];
+    let totalXP = 0;
+
+    // Sum XP from all previous realms
+    for (const [id, r] of Object.entries(CULTIVATION_REALMS)) {
+      if (r.order < realm.order) {
+        for (let rank = 1; rank <= r.ranks; rank++) {
+          totalXP += r.xpBase * Math.pow(r.xpScale, rank - 1);
+        }
+        totalXP *= r.realmScale || 1;
+      }
+    }
+
+    return totalXP;
+  }
+
+  startTribulation(targetRealm) {
+    const realm = CULTIVATION_REALMS[targetRealm];
+    if (!realm.tribulation) {
+      // Auto-succeed for realms without tribulations
+      return this.succeedTribulation(targetRealm);
+    }
+
+    this.activeTribulation = {
+      realm: targetRealm,
+      tribulation: realm.tribulation,
+      startTime: Date.now(),
+      attempts: (this.gameState.tribulationAttempts[targetRealm] || 0) + 1
+    };
+
+    return {
+      status: 'started',
+      type: realm.tribulation.type,
+      name: realm.tribulation.name
+    };
+  }
+
+  succeedTribulation(realmId) {
+    const realm = CULTIVATION_REALMS[realmId];
+
+    this.gameState.cultivationRealm = realmId;
+    this.gameState.cultivationRank = 1;
+
+    // Apply unlocks
+    for (const unlock of realm.unlocks) {
+      this.gameState.unlocked[unlock] = true;
+    }
+
+    // Grant rewards
+    if (realm.tribulation?.rewards) {
+      this.grantRewards(realm.tribulation.rewards);
+    }
+
+    this.activeTribulation = null;
+
+    return {
+      status: 'success',
+      newRealm: realm.name,
+      unlocks: realm.unlocks,
+      rewards: realm.tribulation?.rewards
+    };
+  }
+
+  failTribulation() {
+    const realm = CULTIVATION_REALMS[this.activeTribulation.realm];
+    const penalty = realm.tribulation.failPenalty;
+
+    // Apply penalties
+    if (penalty.xpLoss) {
+      this.gameState.cultivationXP *= (1 - penalty.xpLoss);
+    }
+
+    // Grant consolation rewards (always give something)
+    const consolation = {
+      jadeCatnip: Math.floor((realm.tribulation.rewards?.jadeCatnip || 100) * 0.1),
+      message: 'The heavens test those who persist. Rise again, cultivator.'
+    };
+
+    this.activeTribulation = null;
+
+    return {
+      status: 'failed',
+      penalty: penalty,
+      consolation: consolation
+    };
+  }
+}
+
+// Realm-based visual evolution
+const MASTER_SPRITES_BY_REALM = {
+  gerald: {
+    mortal: 'gerald_mortal.png',
+    qiCondensation: 'gerald_qi.png',
+    foundationEstablishment: 'gerald_foundation.png',
+    coreFormation: 'gerald_core.png',
+    nascentSoul: 'gerald_soul.png',
+    spiritSevering: 'gerald_severing.png',
+    daoSeeking: 'gerald_dao.png',
+    immortalAscension: 'gerald_immortal.png',
+    trueImmortal: 'gerald_true.png',
+    heavenlySovereign: 'gerald_sovereign.png'
+  },
+  // ... same structure for all masters
+};
+```
+
+---
 
 ### 1. The Seven Masters System
 
@@ -301,252 +747,1517 @@ class MasterSystem {
 
 ### 2. The Sacred Boop System (Wuxia Enhanced)
 
+The core gameplay loop, now with technique stances, rhythm bonuses, and mastery progression.
+
 ```javascript
-// The heart of the game - now with Qi effects
+// boop.js - The heart of the game
+// "Every snoot must be boopable." — First Sacred Law
+
+// Technique Stances - Unlockable boop styles
+const TECHNIQUE_STANCES = {
+  jadePalm: {
+    id: 'jadePalm',
+    name: 'Jade Palm',
+    description: 'The balanced way. Default stance for all cultivators.',
+    unlockRealm: 'mortal',
+    stats: {
+      boopPower: 1.0,
+      boopSpeed: 1.0,
+      critChance: 0.05,
+      critMultiplier: 10,
+      comboDecay: 2000 // ms before combo resets
+    },
+    special: null,
+    mastery: {
+      maxLevel: 10,
+      xpPerBoop: 1,
+      bonusPerLevel: { boopPower: 0.05 }
+    }
+  },
+
+  ironFinger: {
+    id: 'ironFinger',
+    name: 'Iron Finger',
+    description: 'Slow but devastating. Each boop carries the weight of a mountain.',
+    unlockRealm: 'qiCondensation',
+    stats: {
+      boopPower: 3.0,
+      boopSpeed: 0.5, // Halved speed
+      critChance: 0.15,
+      critMultiplier: 15,
+      comboDecay: 3000
+    },
+    special: {
+      name: 'Mountain Crusher',
+      description: 'Every 10th boop deals 10x damage',
+      trigger: { everyNBoops: 10 },
+      effect: { damageMultiplier: 10 }
+    },
+    mastery: {
+      maxLevel: 10,
+      xpPerBoop: 2, // Fewer boops but more XP each
+      bonusPerLevel: { critMultiplier: 1 }
+    }
+  },
+
+  drunkenPaw: {
+    id: 'drunkenPaw',
+    name: 'Drunken Paw',
+    description: 'Chaotic and unpredictable. Embrace the randomness.',
+    unlockRealm: 'foundationEstablishment',
+    stats: {
+      boopPower: { min: 0.5, max: 5.0 }, // Random range
+      boopSpeed: 1.2,
+      critChance: 0.25,
+      critMultiplier: { min: 5, max: 25 },
+      comboDecay: 1500
+    },
+    special: {
+      name: 'Lucky Stumble',
+      description: '5% chance for JACKPOT (100x damage)',
+      trigger: { chance: 0.05 },
+      effect: { damageMultiplier: 100 }
+    },
+    mastery: {
+      maxLevel: 10,
+      xpPerBoop: 1,
+      bonusPerLevel: { jackpotChance: 0.005 }
+    }
+  },
+
+  shadowStep: {
+    id: 'shadowStep',
+    name: 'Shadow Step',
+    description: 'Rapid strikes with diminishing returns, then a devastating burst.',
+    unlockRealm: 'coreFormation',
+    stats: {
+      boopPower: 0.3, // Low base
+      boopSpeed: 2.0, // Double speed
+      critChance: 0.1,
+      critMultiplier: 8,
+      comboDecay: 1000
+    },
+    special: {
+      name: 'Shadow Burst',
+      description: 'After 20 rapid boops, next boop deals combo × 5 damage',
+      trigger: { afterCombo: 20 },
+      effect: { burstMultiplier: 5 }
+    },
+    mastery: {
+      maxLevel: 10,
+      xpPerBoop: 0.5,
+      bonusPerLevel: { burstMultiplier: 0.5 }
+    }
+  },
+
+  flowingRiver: {
+    id: 'flowingRiver',
+    name: 'Flowing River',
+    description: 'Steady and consistent. Optimized for AFK synergy.',
+    unlockRealm: 'nascentSoul',
+    stats: {
+      boopPower: 1.5,
+      boopSpeed: 0.8,
+      critChance: 0.08,
+      critMultiplier: 12,
+      comboDecay: 5000 // Very long combo window
+    },
+    special: {
+      name: 'Eternal Flow',
+      description: 'Combo never fully resets, minimum 10%',
+      trigger: { always: true },
+      effect: { minComboPercent: 0.1 }
+    },
+    mastery: {
+      maxLevel: 10,
+      xpPerBoop: 1.5,
+      bonusPerLevel: { comboDecay: 500 }
+    }
+  },
+
+  forbiddenTechnique: {
+    id: 'forbiddenTechnique',
+    name: 'Thousand Snoot Annihilation',
+    description: 'THE ULTIMATE TECHNIQUE. Costs Qi to activate.',
+    unlockRealm: 'spiritSevering',
+    unlockCondition: { masterAllStances: true },
+    stats: {
+      boopPower: 10.0,
+      boopSpeed: 3.0,
+      critChance: 0.5,
+      critMultiplier: 50,
+      comboDecay: 500
+    },
+    special: {
+      name: 'Annihilation',
+      description: 'Costs 5 Qi per boop. All boops hit all cats on screen.',
+      trigger: { always: true },
+      effect: { aoe: true, qiCost: 5 }
+    },
+    mastery: {
+      maxLevel: 10,
+      xpPerBoop: 5,
+      bonusPerLevel: { qiCostReduction: 0.3 }
+    }
+  }
+};
+
+// Fusion Techniques - Unlocked by mastering multiple stances
+const FUSION_TECHNIQUES = {
+  jadeMountain: {
+    name: 'Jade Mountain Strike',
+    requires: ['jadePalm', 'ironFinger'],
+    requiredMastery: 5,
+    description: 'Balanced power with devastating follow-ups',
+    effect: { boopPower: 2.0, everyNth: { n: 5, multiplier: 5 } }
+  },
+  drunkenShadow: {
+    name: 'Drunken Shadow Dance',
+    requires: ['drunkenPaw', 'shadowStep'],
+    requiredMastery: 5,
+    description: 'Chaotic rapid strikes with burst potential',
+    effect: { randomMultiplier: { min: 1, max: 3 }, burstAfter: 15 }
+  },
+  riverOfJade: {
+    name: 'River of Jade',
+    requires: ['jadePalm', 'flowingRiver'],
+    requiredMastery: 5,
+    description: 'Endless combos with steady power',
+    effect: { comboNeverResets: true, boopPower: 1.75 }
+  },
+  ultimateSynthesis: {
+    name: 'Celestial Snoot Synthesis',
+    requires: ['jadePalm', 'ironFinger', 'drunkenPaw', 'shadowStep', 'flowingRiver'],
+    requiredMastery: 10,
+    description: 'THE ULTIMATE FUSION. Combines all stance benefits.',
+    effect: { allStancePassives: true, uniqueAnimation: 'celestial_boop' }
+  }
+};
+
 class BoopSystem {
-  constructor() {
-    this.boopCount = 0;
-    this.boopPower = 1;
-    this.critChance = 0.05;
-    this.critMultiplier = 10;
+  constructor(gameState) {
+    this.gameState = gameState;
+    this.currentStance = 'jadePalm';
+    this.stanceMastery = {};
     this.comboCount = 0;
     this.comboTimer = null;
+    this.lastBoopTime = 0;
+    this.rhythmMultiplier = 1.0;
+    this.shadowBurstReady = false;
+  }
+
+  switchStance(stanceId) {
+    const stance = TECHNIQUE_STANCES[stanceId];
+    if (!stance) return { error: 'Unknown stance' };
+
+    // Check unlock condition
+    const playerRealm = this.gameState.cultivationRealm;
+    if (CULTIVATION_REALMS[playerRealm].order < CULTIVATION_REALMS[stance.unlockRealm].order) {
+      return { error: `Requires ${stance.unlockRealm} realm` };
+    }
+
+    if (stance.unlockCondition?.masterAllStances) {
+      const allMastered = Object.keys(TECHNIQUE_STANCES)
+        .filter(id => id !== 'forbiddenTechnique')
+        .every(id => (this.stanceMastery[id] || 0) >= 10);
+      if (!allMastered) {
+        return { error: 'Must master all other stances first' };
+      }
+    }
+
+    this.currentStance = stanceId;
+    return { success: true, stance: stance };
   }
 
   boop(cat, master) {
-    // Calculate base boop with master bonus
-    let isCrit = Math.random() < (this.critChance + (master.passive.critChanceBonus || 0));
-    let bp = this.boopPower;
-    
-    // Combo system (Wuxia chain attacks)
+    const stance = TECHNIQUE_STANCES[this.currentStance];
+    const now = Date.now();
+
+    // Check Qi cost for forbidden technique
+    if (stance.special?.qiCost) {
+      if (this.gameState.qi < stance.special.qiCost) {
+        return { error: 'Not enough Qi!' };
+      }
+      this.gameState.qi -= stance.special.qiCost;
+    }
+
+    // Calculate base boop power (handle random ranges)
+    let basePower = typeof stance.stats.boopPower === 'object'
+      ? this.randomRange(stance.stats.boopPower.min, stance.stats.boopPower.max)
+      : stance.stats.boopPower;
+
+    // Apply mastery bonus
+    const masteryLevel = this.stanceMastery[this.currentStance] || 0;
+    const masteryBonus = masteryLevel * (stance.mastery.bonusPerLevel.boopPower || 0);
+    basePower *= (1 + masteryBonus);
+
+    // Combo system
     this.comboCount++;
     clearTimeout(this.comboTimer);
-    this.comboTimer = setTimeout(() => this.comboCount = 0, 2000);
-    
-    // Combo multiplier
+    this.comboTimer = setTimeout(() => {
+      // Check for Flowing River's minimum combo
+      if (stance.special?.minComboPercent) {
+        this.comboCount = Math.floor(this.comboCount * stance.special.minComboPercent);
+      } else {
+        this.comboCount = 0;
+      }
+    }, stance.stats.comboDecay);
+
     const comboBonus = 1 + (Math.min(this.comboCount, 100) * 0.01);
-    bp *= comboBonus;
-    
-    // Critical boop
-    if (isCrit) {
-      bp *= this.critMultiplier;
-    }
-    
-    // JUICE IT UP - Wuxia style
-    this.playBoopSound(isCrit);
-    this.showQiParticles(cat, isCrit);
-    this.showCultivationText(bp, isCrit, this.comboCount);
+
+    // Rhythm bonus - hitting on beat with music
+    const rhythmBonus = this.calculateRhythmBonus(now);
+
+    // Critical calculation
+    let critChance = stance.stats.critChance + (master.passive.critChanceBonus || 0);
+    let critMult = typeof stance.stats.critMultiplier === 'object'
+      ? this.randomRange(stance.stats.critMultiplier.min, stance.stats.critMultiplier.max)
+      : stance.stats.critMultiplier;
+
+    const isCrit = Math.random() < critChance;
+
+    // Calculate final BP
+    let bp = basePower * comboBonus * rhythmBonus * (isCrit ? critMult : 1);
+
+    // Apply special effects
+    const specialResult = this.processSpecialEffects(stance, bp, isCrit);
+    bp = specialResult.bp;
+
+    // Master bonuses
+    bp *= (master.passive.bpMultiplier || 1);
+
+    // Gain mastery XP
+    this.gainMasteryXP(stance.mastery.xpPerBoop);
+
+    // JUICE IT UP
+    this.playBoopSound(isCrit, this.currentStance);
+    this.showQiParticles(cat, isCrit, specialResult.special);
+    this.showCultivationText(bp, isCrit, this.comboCount, specialResult.special);
     this.wiggleCat(cat);
-    
-    return { bp, isCrit, combo: this.comboCount };
+
+    this.lastBoopTime = now;
+
+    return {
+      bp,
+      isCrit,
+      combo: this.comboCount,
+      rhythm: rhythmBonus > 1,
+      special: specialResult.special,
+      stance: this.currentStance
+    };
   }
-  
-  showCultivationText(bp, isCrit, combo) {
-    const messages = isCrit ? 
-      ['CRITICAL MERIDIAN STRIKE!', 'QI EXPLOSION!', 'HEAVEN-SPLITTING BOOP!'] :
-      [`+${formatNumber(bp)} Qi`, 'Snoot cultivated!', 'Boop successful!'];
-    
-    if (combo >= 50) {
-      messages.push(`${combo} HIT COMBO!`);
+
+  processSpecialEffects(stance, bp, isCrit) {
+    let special = null;
+
+    if (!stance.special) return { bp, special };
+
+    // Mountain Crusher (Iron Finger)
+    if (stance.special.trigger?.everyNBoops) {
+      if (this.gameState.totalBoops % stance.special.trigger.everyNBoops === 0) {
+        bp *= stance.special.effect.damageMultiplier;
+        special = 'MOUNTAIN CRUSHER!';
+      }
     }
-    
-    // Display floating text with Wuxia flair
-    this.displayFloatingText(messages[Math.floor(Math.random() * messages.length)]);
+
+    // Lucky Stumble (Drunken Paw)
+    if (stance.special.trigger?.chance) {
+      const bonusChance = (this.stanceMastery[this.currentStance] || 0) *
+        (stance.mastery.bonusPerLevel.jackpotChance || 0);
+      if (Math.random() < (stance.special.trigger.chance + bonusChance)) {
+        bp *= stance.special.effect.damageMultiplier;
+        special = '🎰 JACKPOT! 🎰';
+      }
+    }
+
+    // Shadow Burst (Shadow Step)
+    if (stance.special.trigger?.afterCombo) {
+      if (this.comboCount === stance.special.trigger.afterCombo) {
+        this.shadowBurstReady = true;
+      }
+      if (this.shadowBurstReady && this.comboCount > stance.special.trigger.afterCombo) {
+        const burstBonus = (this.stanceMastery[this.currentStance] || 0) *
+          (stance.mastery.bonusPerLevel.burstMultiplier || 0);
+        bp *= (this.comboCount * (stance.special.effect.burstMultiplier + burstBonus));
+        special = 'SHADOW BURST!';
+        this.shadowBurstReady = false;
+      }
+    }
+
+    return { bp, special };
   }
+
+  calculateRhythmBonus(now) {
+    // Sync with game music BPM (default 120 BPM = 500ms per beat)
+    const bpm = this.gameState.musicBPM || 120;
+    const beatInterval = 60000 / bpm;
+    const timeSinceLastBoop = now - this.lastBoopTime;
+
+    // Check if boop is on beat (within 50ms tolerance)
+    const beatOffset = timeSinceLastBoop % beatInterval;
+    const onBeat = beatOffset < 50 || beatOffset > (beatInterval - 50);
+
+    if (onBeat) {
+      return 1.25; // 25% bonus for rhythm
+    }
+    return 1.0;
+  }
+
+  gainMasteryXP(amount) {
+    const currentMastery = this.stanceMastery[this.currentStance] || 0;
+    const stance = TECHNIQUE_STANCES[this.currentStance];
+
+    if (currentMastery >= stance.mastery.maxLevel) return;
+
+    const xpNeeded = Math.pow(currentMastery + 1, 2) * 100;
+    this.gameState.stanceMasteryXP[this.currentStance] =
+      (this.gameState.stanceMasteryXP[this.currentStance] || 0) + amount;
+
+    if (this.gameState.stanceMasteryXP[this.currentStance] >= xpNeeded) {
+      this.stanceMastery[this.currentStance] = currentMastery + 1;
+      this.gameState.stanceMasteryXP[this.currentStance] = 0;
+      this.onMasteryLevelUp(this.currentStance, currentMastery + 1);
+    }
+  }
+
+  onMasteryLevelUp(stanceId, newLevel) {
+    const stance = TECHNIQUE_STANCES[stanceId];
+    this.gameState.notifications.push({
+      type: 'mastery',
+      title: `${stance.name} Mastery Level ${newLevel}!`,
+      message: `Your ${stance.name} technique grows stronger.`
+    });
+
+    // Check for fusion technique unlocks
+    this.checkFusionUnlocks();
+  }
+
+  checkFusionUnlocks() {
+    for (const [fusionId, fusion] of Object.entries(FUSION_TECHNIQUES)) {
+      if (this.gameState.unlockedFusions?.includes(fusionId)) continue;
+
+      const allRequired = fusion.requires.every(stanceId =>
+        (this.stanceMastery[stanceId] || 0) >= fusion.requiredMastery
+      );
+
+      if (allRequired) {
+        this.gameState.unlockedFusions = this.gameState.unlockedFusions || [];
+        this.gameState.unlockedFusions.push(fusionId);
+        this.gameState.notifications.push({
+          type: 'fusion_unlocked',
+          title: `FUSION TECHNIQUE UNLOCKED!`,
+          message: `${fusion.name}: ${fusion.description}`
+        });
+      }
+    }
+  }
+
+  randomRange(min, max) {
+    return min + Math.random() * (max - min);
+  }
+
+  // Audio & Visual methods
+  playBoopSound(isCrit, stance) {
+    // Different sounds per stance, with variation
+    const sounds = {
+      jadePalm: ['boop_jade_1', 'boop_jade_2', 'boop_jade_3'],
+      ironFinger: ['boop_iron_1', 'boop_iron_2'],
+      drunkenPaw: ['boop_drunk_1', 'boop_drunk_2', 'boop_drunk_3', 'boop_drunk_4'],
+      shadowStep: ['boop_shadow_1', 'boop_shadow_2'],
+      flowingRiver: ['boop_flow_1', 'boop_flow_2'],
+      forbiddenTechnique: ['boop_forbidden']
+    };
+    const pool = sounds[stance] || sounds.jadePalm;
+    const sound = pool[Math.floor(Math.random() * pool.length)];
+
+    if (isCrit) {
+      // Layer with crit sound
+      this.gameState.audio.play(sound);
+      this.gameState.audio.play('crit_impact');
+    } else {
+      this.gameState.audio.play(sound);
+    }
+  }
+
+  showQiParticles(cat, isCrit, special) { /* ... */ }
+  showCultivationText(bp, isCrit, combo, special) { /* ... */ }
+  wiggleCat(cat) { /* ... */ }
 }
 ```
 
-### 3. Cat Cultivation System
+### 3. Cat Cultivation System (Expanded)
+
+Cats are now their own deep progression system with cultivation realms, techniques, elements, and personalities.
 
 ```javascript
-// cats.json structure - Age of Wushu inspired
-{
-  "cats": [
-    {
-      "id": "shaolin_tabby",
-      "name": "Shaolin Tabby",
-      "school": "shaolin",
-      "realm": "mortal",
-      "description": "A disciplined cat who practices the ways of the temple.",
-      "stats": {
-        "snootMeridians": 1.0,
-        "innerPurr": 1.0,
-        "floofArmor": 1.2,
-        "zoomieSteps": 0.8,
-        "loafMastery": 1.1
-      },
-      "sprite": "cats/shaolin_tabby.png",
-      "quotes": [
-        "Mrrp. (Translation: Balance in all things.)",
-        "*meditates intensely*"
-      ]
-    },
-    {
-      "id": "wudang_persian",
-      "name": "Wudang Persian",
-      "school": "wudang",
-      "realm": "earth",
-      "description": "Graceful and flowing, this cat has mastered inner peace.",
-      "stats": {
-        "snootMeridians": 1.2,
-        "innerPurr": 1.5,
-        "floofArmor": 0.9,
-        "zoomieSteps": 1.3,
-        "loafMastery": 1.4
-      },
-      "sprite": "cats/wudang_persian.png"
-    },
-    {
-      "id": "ceiling_god",
-      "name": "Ceiling Cat, the All-Seeing",
-      "school": "divine",
-      "realm": "divine",
-      "description": "Watches from the heavens. Grants vision of all snoots.",
-      "stats": {
-        "snootMeridians": 5.0,
-        "innerPurr": 10.0,
-        "floofArmor": 5.0,
-        "zoomieSteps": 3.0,
-        "loafMastery": 8.0
-      },
-      "sprite": "cats/ceiling_god.png",
-      "legendary": true,
-      "unlockedBy": "Complete the 'Eyes of Heaven' achievement"
-    }
-  ],
-  
-  "schools": {
-    "shaolin": { "bonus": "stability", "color": "#FF8C00" },
-    "wudang": { "bonus": "grace", "color": "#4682B4" },
-    "emei": { "bonus": "beauty", "color": "#FF69B4" },
-    "beggar": { "bonus": "resourcefulness", "color": "#8B4513" },
-    "scholar": { "bonus": "wisdom", "color": "#9370DB" },
-    "royal_guard": { "bonus": "loyalty", "color": "#FFD700" },
-    "wanderer": { "bonus": "mystery", "color": "#708090" },
-    "divine": { "bonus": "transcendence", "color": "#FFFFFF" }
+// cats.js - "Cats are never wrong." — Second Sacred Law
+
+// Elemental Affinity System (Five Elements + Hidden)
+const CAT_ELEMENTS = {
+  metal: {
+    id: 'metal',
+    name: 'Metal',
+    color: '#C0C0C0',
+    strengths: ['wood'],
+    weaknesses: ['fire'],
+    bonus: { critDamage: 1.2 },
+    resonance: { metal: 1.1, earth: 1.05 }
   },
-  
-  "realms": {
-    "mortal": { "dropRate": 0.60, "ppMultiplier": 1 },
-    "earth": { "dropRate": 0.25, "ppMultiplier": 2 },
-    "sky": { "dropRate": 0.10, "ppMultiplier": 5 },
-    "heaven": { "dropRate": 0.04, "ppMultiplier": 15 },
-    "divine": { "dropRate": 0.01, "ppMultiplier": 50 }
+  wood: {
+    id: 'wood',
+    name: 'Wood',
+    color: '#228B22',
+    strengths: ['earth'],
+    weaknesses: ['metal'],
+    bonus: { hpRegen: 1.2 },
+    resonance: { wood: 1.1, water: 1.05 }
+  },
+  water: {
+    id: 'water',
+    name: 'Water',
+    color: '#4169E1',
+    strengths: ['fire'],
+    weaknesses: ['earth'],
+    bonus: { afkEfficiency: 1.2 },
+    resonance: { water: 1.1, metal: 1.05 }
+  },
+  fire: {
+    id: 'fire',
+    name: 'Fire',
+    color: '#FF4500',
+    strengths: ['metal'],
+    weaknesses: ['water'],
+    bonus: { boopPower: 1.2 },
+    resonance: { fire: 1.1, wood: 1.05 }
+  },
+  earth: {
+    id: 'earth',
+    name: 'Earth',
+    color: '#8B4513',
+    strengths: ['water'],
+    weaknesses: ['wood'],
+    bonus: { defense: 1.2 },
+    resonance: { earth: 1.1, fire: 1.05 }
+  },
+  // Hidden elements - unlocked later
+  void: {
+    id: 'void',
+    name: 'Void',
+    color: '#000000',
+    hidden: true,
+    unlockRealm: 'spiritSevering',
+    strengths: ['all'],
+    weaknesses: [],
+    bonus: { allStats: 1.15 },
+    resonance: { void: 1.2 }
+  },
+  chaos: {
+    id: 'chaos',
+    name: 'Chaos',
+    color: '#FF00FF',
+    hidden: true,
+    unlockCondition: { defeatCobraChicken: true },
+    strengths: [],
+    weaknesses: [],
+    bonus: { randomMultiplier: { min: 0.5, max: 2.0 } },
+    resonance: { chaos: 1.5, void: 1.1 }
+  }
+};
+
+// Cat Personality System
+const CAT_PERSONALITIES = {
+  disciplined: {
+    name: 'Disciplined',
+    description: 'Learns techniques faster',
+    effect: { techniqueXP: 1.25 },
+    preferredWaifus: ['mochi', 'jade'],
+    dialogue: ['*trains diligently*', 'Mrrp. (I will master this.)']
+  },
+  lazy: {
+    name: 'Lazy',
+    description: 'Better AFK gains, slower active',
+    effect: { afkBonus: 1.5, activeBonus: 0.8 },
+    preferredWaifus: ['luna'],
+    dialogue: ['*yawns*', 'Mrrp... (Five more minutes...)']
+  },
+  playful: {
+    name: 'Playful',
+    description: 'Higher happiness, more events',
+    effect: { happinessGain: 1.3, eventChance: 1.2 },
+    preferredWaifus: ['sakura', 'nyanta'],
+    dialogue: ['*zoomies*', 'Mrrp! (Play with me!)']
+  },
+  mysterious: {
+    name: 'Mysterious',
+    description: 'Higher crit chance, finds secrets',
+    effect: { critChance: 0.05, secretFind: 1.5 },
+    preferredWaifus: ['yuki', 'luna'],
+    dialogue: ['*stares knowingly*', '...']
+  },
+  brave: {
+    name: 'Brave',
+    description: 'Bonus vs. Geese, dungeon power',
+    effect: { gooseDamage: 1.5, dungeonPower: 1.2 },
+    preferredWaifus: ['nyanta', 'mei'],
+    dialogue: ['*faces danger*', 'MRRP! (I fear nothing!)']
+  },
+  gluttonous: {
+    name: 'Gluttonous',
+    description: 'Gains more from food, higher maintenance',
+    effect: { foodBonus: 2.0, happinessDecay: 1.2 },
+    preferredWaifus: ['mochi'],
+    dialogue: ['*stares at food*', 'Mrrp? (Is that... fish?)']
+  }
+};
+
+// Cat Techniques (learnable moves)
+const CAT_TECHNIQUES = {
+  // Active techniques (4 slots)
+  pawSwipe: {
+    id: 'pawSwipe',
+    name: 'Paw Swipe',
+    type: 'active',
+    element: 'metal',
+    cooldown: 5,
+    damage: 50,
+    description: 'Basic attack',
+    unlockLevel: 1
+  },
+  hairballBarrage: {
+    id: 'hairballBarrage',
+    name: 'Hairball Barrage',
+    type: 'active',
+    element: 'earth',
+    cooldown: 15,
+    damage: 150,
+    aoe: true,
+    description: 'AOE attack',
+    unlockLevel: 5
+  },
+  nineLivesDance: {
+    id: 'nineLivesDance',
+    name: 'Nine Lives Dance',
+    type: 'active',
+    element: 'void',
+    cooldown: 60,
+    effect: 'revive',
+    description: 'Revive once per dungeon run',
+    unlockLevel: 20,
+    elementRequired: 'void'
+  },
+  // ... more techniques
+
+  // Passive techniques (2 slots)
+  softLanding: {
+    id: 'softLanding',
+    name: 'Soft Landing',
+    type: 'passive',
+    effect: { dodgeChance: 0.1 },
+    description: '+10% dodge chance',
+    unlockLevel: 3
+  },
+  loudPurr: {
+    id: 'loudPurr',
+    name: 'Loud Purr',
+    type: 'passive',
+    effect: { teamHappiness: 1.1 },
+    description: '+10% team happiness',
+    unlockLevel: 8
+  }
+};
+
+// Cat Realms (mirrors player cultivation)
+const CAT_REALMS = {
+  kittenMortal: { order: 1, name: 'Mortal Kitten', ppMult: 1, stats: 1.0 },
+  earthKitten: { order: 2, name: 'Earth Kitten', ppMult: 2, stats: 1.5 },
+  skyKitten: { order: 3, name: 'Sky Kitten', ppMult: 5, stats: 2.0 },
+  heavenKitten: { order: 4, name: 'Heaven Kitten', ppMult: 15, stats: 3.0 },
+  divineBeast: { order: 5, name: 'Divine Beast', ppMult: 50, stats: 5.0 },
+  celestialBeast: { order: 6, name: 'Celestial Beast', ppMult: 200, stats: 10.0 },
+  cosmicEntity: { order: 7, name: 'Cosmic Entity', ppMult: 1000, stats: 25.0 }
+};
+
+// Star System (duplicate cats increase stars)
+const STAR_BONUSES = {
+  1: { stats: 1.0, visualEffect: null },
+  2: { stats: 1.1, visualEffect: 'subtle_glow' },
+  3: { stats: 1.25, visualEffect: 'sparkle' },
+  4: { stats: 1.5, visualEffect: 'aura' },
+  5: { stats: 2.0, visualEffect: 'golden_aura' },
+  6: { stats: 3.0, visualEffect: 'celestial_aura', awakening: true }
+};
+
+// Sample cat data structure
+const SAMPLE_CATS = {
+  shaolin_tabby: {
+    id: 'shaolin_tabby',
+    name: 'Shaolin Tabby',
+    school: 'shaolin',
+    element: 'earth',
+    baseRealm: 'kittenMortal',
+    personality: 'disciplined',
+    description: 'A disciplined cat who practices the ways of the temple.',
+    baseStats: {
+      snootMeridians: 1.0,
+      innerPurr: 1.0,
+      floofArmor: 1.2,
+      zoomieSteps: 0.8,
+      loafMastery: 1.1
+    },
+    learnableTechniques: ['pawSwipe', 'ironPaw', 'templeGuard'],
+    sprite: 'cats/shaolin_tabby.png',
+    quotes: [
+      'Mrrp. (Balance in all things.)',
+      '*meditates intensely*'
+    ]
+  },
+
+  ceiling_god: {
+    id: 'ceiling_god',
+    name: 'Ceiling Cat, the All-Seeing',
+    school: 'divine',
+    element: 'void',
+    baseRealm: 'divineBeast',
+    personality: 'mysterious',
+    legendary: true,
+    description: 'Watches from the heavens. Grants vision of all snoots.',
+    baseStats: {
+      snootMeridians: 5.0,
+      innerPurr: 10.0,
+      floofArmor: 5.0,
+      zoomieSteps: 3.0,
+      loafMastery: 8.0
+    },
+    learnableTechniques: ['allSeeingGaze', 'judgementFromAbove', 'ceilingDrop'],
+    signatureEquipment: 'ceiling_eye',
+    unlockedBy: { achievement: 'eyes_of_heaven' },
+    sprite: 'cats/ceiling_god.png'
+  }
+};
+
+// Cat Team Formation System
+const TEAM_FORMATIONS = {
+  default: {
+    name: 'Standard Formation',
+    positions: ['front', 'front', 'back', 'back'],
+    bonus: null
+  },
+  aggressive: {
+    name: 'Aggressive Formation',
+    positions: ['front', 'front', 'front', 'back'],
+    bonus: { teamAttack: 1.2, teamDefense: 0.9 }
+  },
+  defensive: {
+    name: 'Defensive Formation',
+    positions: ['front', 'back', 'back', 'back'],
+    bonus: { teamAttack: 0.9, teamDefense: 1.3 }
+  },
+  balanced: {
+    name: 'Balanced Formation',
+    positions: ['front', 'mid', 'mid', 'back'],
+    bonus: { teamAttack: 1.1, teamDefense: 1.1 }
+  }
+};
+
+// Team Synergy System
+const TEAM_SYNERGIES = {
+  elementalHarmony: {
+    name: 'Elemental Harmony',
+    condition: { uniqueElements: 4 },
+    bonus: { allStats: 1.15 },
+    description: '4 different elements = +15% all stats'
+  },
+  schoolReunion: {
+    name: 'School Reunion',
+    condition: { sameSchool: 4 },
+    bonus: { schoolBonus: 2.0 },
+    description: '4 cats from same school = 2x school bonus'
+  },
+  personalityClash: {
+    name: 'Personality Clash',
+    condition: { specificPair: ['brave', 'lazy'] },
+    bonus: { eventChance: 1.5, comedyDialogue: true },
+    description: 'Brave + Lazy cat = funny interactions'
+  },
+  legendaryPresence: {
+    name: 'Legendary Presence',
+    condition: { legendaryCount: 1 },
+    bonus: { teamMorale: 1.25 },
+    description: 'Having a legendary cat inspires the team'
+  },
+  // Specific cat combos
+  ceilingAndFloor: {
+    name: 'Ceiling and Floor',
+    condition: { specificCats: ['ceiling_god', 'basement_cat'] },
+    bonus: { universalVision: true, dungeonMapReveal: true },
+    description: 'Ceiling Cat + Basement Cat = see all'
+  }
+};
+
+class CatSystem {
+  constructor(gameState) {
+    this.gameState = gameState;
+    this.activeTeam = { cats: [], formation: 'default', reserve: null };
+  }
+
+  // Cat Cultivation
+  cultivateCat(catId, xpAmount) {
+    const cat = this.gameState.getCat(catId);
+    cat.cultivationXP += xpAmount;
+
+    const currentRealm = CAT_REALMS[cat.realm];
+    const xpNeeded = currentRealm.order * 1000 * Math.pow(1.5, cat.cultivationLevel);
+
+    if (cat.cultivationXP >= xpNeeded) {
+      this.levelUpCat(cat);
+    }
+  }
+
+  levelUpCat(cat) {
+    cat.cultivationLevel++;
+    cat.cultivationXP = 0;
+
+    // Check for realm breakthrough
+    const currentRealm = CAT_REALMS[cat.realm];
+    if (cat.cultivationLevel >= 9) {
+      const nextRealm = Object.values(CAT_REALMS)
+        .find(r => r.order === currentRealm.order + 1);
+      if (nextRealm) {
+        this.breakthroughCatRealm(cat, nextRealm);
+      }
+    }
+
+    // Check for technique unlocks
+    this.checkTechniqueUnlocks(cat);
+  }
+
+  // Star System
+  addDuplicateCat(catId) {
+    const cat = this.gameState.getCat(catId);
+    if (!cat) {
+      // New cat
+      return this.addNewCat(catId);
+    }
+
+    // Duplicate - increase stars
+    if (cat.stars < 6) {
+      cat.stars++;
+      this.recalculateStats(cat);
+      return { type: 'star_up', newStars: cat.stars };
+    } else {
+      // Max stars - convert to resources
+      return {
+        type: 'max_stars',
+        reward: { jadeCatnip: 100 * CAT_REALMS[cat.realm].order }
+      };
+    }
+  }
+
+  // Team Management
+  setTeam(catIds, formationId) {
+    if (catIds.length > 4) return { error: 'Max 4 cats in team' };
+
+    this.activeTeam.cats = catIds.map(id => this.gameState.getCat(id));
+    this.activeTeam.formation = formationId || 'default';
+
+    this.calculateTeamSynergies();
+    this.applyFormationBonus();
+
+    return { success: true, synergies: this.activeTeam.synergies };
+  }
+
+  calculateTeamSynergies() {
+    const team = this.activeTeam.cats;
+    const activeSynergies = [];
+
+    for (const [synergyId, synergy] of Object.entries(TEAM_SYNERGIES)) {
+      if (this.checkSynergyCondition(team, synergy.condition)) {
+        activeSynergies.push({ id: synergyId, ...synergy });
+      }
+    }
+
+    this.activeTeam.synergies = activeSynergies;
+  }
+
+  checkSynergyCondition(team, condition) {
+    if (condition.uniqueElements) {
+      const elements = new Set(team.map(c => c.element));
+      return elements.size >= condition.uniqueElements;
+    }
+    if (condition.sameSchool) {
+      const schools = team.map(c => c.school);
+      return schools.every(s => s === schools[0]) && team.length >= condition.sameSchool;
+    }
+    if (condition.legendaryCount) {
+      return team.filter(c => c.legendary).length >= condition.legendaryCount;
+    }
+    if (condition.specificCats) {
+      return condition.specificCats.every(id => team.some(c => c.id === id));
+    }
+    return false;
+  }
+
+  // Elemental Resonance
+  calculateElementalBonus(team) {
+    let totalBonus = 1.0;
+
+    for (let i = 0; i < team.length; i++) {
+      for (let j = i + 1; j < team.length; j++) {
+        const elem1 = CAT_ELEMENTS[team[i].element];
+        const elem2 = CAT_ELEMENTS[team[j].element];
+
+        // Check resonance
+        if (elem1.resonance[team[j].element]) {
+          totalBonus *= elem1.resonance[team[j].element];
+        }
+      }
+    }
+
+    return totalBonus;
+  }
+}
+
+// Cat Fusion System
+const FUSION_RECIPES = {
+  yin_yang_cat: {
+    name: 'Yin-Yang Cat',
+    ingredients: [
+      { element: 'fire', minStars: 3 },
+      { element: 'water', minStars: 3 }
+    ],
+    result: {
+      id: 'yin_yang_cat',
+      element: 'void',
+      realm: 'heavenKitten',
+      unique: true
+    }
+  },
+  chaos_kitty: {
+    name: 'Chaos Kitty',
+    ingredients: [
+      { id: 'goose_touched_cat' },
+      { personality: 'brave', minStars: 5 }
+    ],
+    result: {
+      id: 'chaos_kitty',
+      element: 'chaos',
+      realm: 'divineBeast',
+      unique: true
+    }
+  },
+  legendary_loaf: {
+    name: 'The Eternal Loaf',
+    ingredients: [
+      { school: 'any', count: 5, minStars: 4 } // 5 different 4-star cats
+    ],
+    result: {
+      id: 'eternal_loaf',
+      legendary: true,
+      unique: true
+    }
+  }
+};
+
+class CatFusionSystem {
+  constructor(gameState) {
+    this.gameState = gameState;
+  }
+
+  canFuse(recipe) {
+    const fusionRecipe = FUSION_RECIPES[recipe];
+    if (!fusionRecipe) return { canFuse: false, reason: 'Unknown recipe' };
+
+    for (const ingredient of fusionRecipe.ingredients) {
+      if (!this.hasIngredient(ingredient)) {
+        return { canFuse: false, reason: 'Missing ingredients', missing: ingredient };
+      }
+    }
+
+    if (fusionRecipe.result.unique && this.gameState.hasCat(fusionRecipe.result.id)) {
+      return { canFuse: false, reason: 'Already own this unique cat' };
+    }
+
+    return { canFuse: true };
+  }
+
+  performFusion(recipeId, ingredientCatIds) {
+    const check = this.canFuse(recipeId);
+    if (!check.canFuse) return check;
+
+    const recipe = FUSION_RECIPES[recipeId];
+
+    // Remove ingredient cats
+    for (const catId of ingredientCatIds) {
+      this.gameState.removeCat(catId);
+    }
+
+    // Create fused cat
+    const fusedCat = this.createFusedCat(recipe.result);
+    this.gameState.addCat(fusedCat);
+
+    return {
+      success: true,
+      newCat: fusedCat,
+      message: `${recipe.name} has been born!`
+    };
+  }
+
+  hasIngredient(requirement) {
+    const cats = this.gameState.cats;
+
+    if (requirement.id) {
+      return cats.some(c => c.id === requirement.id);
+    }
+    if (requirement.element) {
+      return cats.some(c =>
+        c.element === requirement.element &&
+        c.stars >= (requirement.minStars || 1)
+      );
+    }
+    if (requirement.count) {
+      const matching = cats.filter(c => c.stars >= (requirement.minStars || 1));
+      return matching.length >= requirement.count;
+    }
+    return false;
   }
 }
 ```
 
-### 4. Waifu Master System
+### 4. Waifu Master System (Expanded to 12+)
+
+Deep bonding system with activities, teaching schools, and waifu cultivation.
 
 ```javascript
-// waifus.json - The Six Immortal Masters
-{
-  "waifus": [
-    {
-      "id": "mochi",
-      "name": "Mochi-chan",
-      "title": "The Welcoming Dawn",
-      "role": "Innkeeper of the Celestial Teahouse",
-      "cultivationStyle": "Hospitality Arts",
-      "bonus": {
-        "type": "bpMultiplier",
-        "value": 1.10,
-        "description": "+10% BP from all boops"
-      },
-      "unlockCondition": "starter",
-      "maxBondReward": "cat:lucky_teacup",
-      "giftAffinities": {
-        "loves": ["rare_tea", "jade_cup", "silk_ribbon"],
-        "likes": ["yarn_ball", "fish_treats"],
-        "neutral": ["catnip", "bells"],
-        "dislikes": ["loud_toys", "spicy_food"]
-      },
-      "dialogues": {
-        "greeting": [
-          "Welcome back to the teahouse, cultivator~",
-          "The cats have been waiting for you, nya~"
-        ],
-        "lowBond": [
-          "Every guest is a friend. Every snoot, a blessing.",
-          "Would you like some tea while you cultivate?"
-        ],
-        "midBond": [
-          "Your dedication to the sect is admirable!",
-          "The cats speak highly of your booping technique~"
-        ],
-        "highBond": [
-          "You've become like family to us all.",
-          "I... I made this tea specially for you. *blush*"
-        ],
-        "maxBond": [
-          "With you by my side, our teahouse will flourish forever.",
-          "You are the greatest cultivator I have ever known, nya~"
-        ]
-      },
-      "sprite": "waifus/mochi.png",
-      "color": "#FFB7C5"
-    },
-    {
-      "id": "luna",
-      "name": "Luna Whiskerbell",
-      "title": "The Midnight Watcher",
-      "role": "Night Cultivation Instructor",
-      "cultivationStyle": "Yin Energy Arts",
-      "bonus": {
-        "type": "afkMultiplier",
-        "value": 1.50,
-        "description": "+50% offline gains"
-      },
-      "unlockCondition": { "type": "afkTime", "value": 86400 },
-      "maxBondReward": "cat:moonlight_siamese",
-      "dialogues": {
-        "greeting": [
-          "*yawn* Oh... you're here... good...",
-          "The night shift... is peaceful..."
-        ],
-        "lowBond": [
-          "While others sleep... we cultivate... *yawn*",
-          "The moon... watches over our snoots..."
-        ],
-        "highBond": [
-          "I feel... most awake... when you're here...",
-          "Stay with me... through the night...? *sleepy smile*"
-        ]
-      },
-      "sprite": "waifus/luna.png",
-      "color": "#C4A7E7"
-    },
-    {
-      "id": "nyanta",
-      "name": "Captain Nyanta",
-      "title": "The Sea Sovereign",
-      "role": "Expedition Leader",
-      "cultivationStyle": "Adventure Arts",
-      "bonus": {
-        "type": "expeditionUnlock",
-        "value": true,
-        "description": "Unlocks rare cat expeditions"
-      },
-      "unlockCondition": { "type": "catCount", "value": 50 },
-      "maxBondReward": "cat:kraken_kitty",
-      "dialogues": {
-        "greeting": [
-          "YARR! Welcome aboard, matey!",
-          "The seas be calm and full of snoots today!"
-        ],
-        "lowBond": [
-          "The greatest snoots lie beyond the horizon!",
-          "Adventure awaits! Set sail for boops!"
-        ],
-        "highBond": [
-          "Ye be the finest first mate a captain could ask for!",
-          "Together we'll find the legendary treasures of the Jianghu!"
-        ]
-      },
-      "sprite": "waifus/nyanta.png",
-      "color": "#8B0000"
+// waifus.js - The Twelve Immortal Masters (and secrets)
+// "The Sect comes first." — Third Sacred Law (but waifus are important too)
+
+// Bond Activities - Different ways to increase bond
+const BOND_ACTIVITIES = {
+  teaCeremony: {
+    id: 'teaCeremony',
+    name: 'Tea Ceremony',
+    duration: 300, // 5 minutes
+    bondGain: 10,
+    preferredBy: ['mochi', 'jade', 'luna'],
+    description: 'Share a quiet moment over tea',
+    unlockBond: 0
+  },
+  sparring: {
+    id: 'sparring',
+    name: 'Sparring Match',
+    duration: 600,
+    bondGain: 15,
+    preferredBy: ['mei', 'nyanta', 'crimson'],
+    minigame: 'combat_practice',
+    description: 'Train together in combat',
+    unlockBond: 20
+  },
+  meditation: {
+    id: 'meditation',
+    name: 'Meditation',
+    duration: 900,
+    bondGain: 20,
+    preferredBy: ['luna', 'yuki', 'jade'],
+    afkCompatible: true,
+    description: 'Cultivate together in silence',
+    unlockBond: 30
+  },
+  stargazing: {
+    id: 'stargazing',
+    name: 'Stargazing',
+    duration: 600,
+    bondGain: 25,
+    preferredBy: ['luna', 'yuki', 'grandmother'],
+    timeRestriction: 'night',
+    description: 'Watch the stars together',
+    unlockBond: 40
+  },
+  cooking: {
+    id: 'cooking',
+    name: 'Cooking Together',
+    duration: 450,
+    bondGain: 18,
+    preferredBy: ['mochi', 'sakura'],
+    producesItem: true,
+    description: 'Prepare a meal together',
+    unlockBond: 25
+  },
+  exploring: {
+    id: 'exploring',
+    name: 'Sect Exploration',
+    duration: 1200,
+    bondGain: 30,
+    preferredBy: ['nyanta', 'sakura', 'mei'],
+    discoversSecrets: true,
+    description: 'Explore hidden areas together',
+    unlockBond: 50
+  },
+  hotSprings: {
+    id: 'hotSprings',
+    name: 'Hot Springs Visit',
+    duration: 600,
+    bondGain: 35,
+    preferredBy: ['all'],
+    requiresBuilding: 'hot_springs',
+    description: 'Relax at the hot springs',
+    unlockBond: 60
+  }
+};
+
+// Waifu Teaching Schools
+const WAIFU_SCHOOLS = {
+  hospitalityArts: {
+    id: 'hospitalityArts',
+    name: 'Hospitality Arts',
+    teacher: 'mochi',
+    techniques: ['welcomingBoop', 'teaTimeHealing', 'guestProtection'],
+    masteryExams: [
+      { level: 1, type: 'serve_100_teas', reward: 'technique:welcomingBoop' },
+      { level: 2, type: 'happiness_threshold', value: 1000, reward: 'technique:teaTimeHealing' },
+      { level: 3, type: 'boss_fight', enemy: 'angry_customer', reward: 'technique:guestProtection' }
+    ],
+    schoolBonus: { catHappiness: 1.2 }
+  },
+  yinEnergyArts: {
+    id: 'yinEnergyArts',
+    name: 'Yin Energy Arts',
+    teacher: 'luna',
+    techniques: ['moonlightBoop', 'dreamWalking', 'nightVision'],
+    masteryExams: [
+      { level: 1, type: 'afk_hours', value: 24, reward: 'technique:moonlightBoop' },
+      { level: 2, type: 'night_boops', value: 10000, reward: 'technique:dreamWalking' },
+      { level: 3, type: 'dream_realm_clear', floor: 10, reward: 'technique:nightVision' }
+    ],
+    schoolBonus: { afkEfficiency: 1.3 }
+  },
+  adventureArts: {
+    id: 'adventureArts',
+    name: 'Adventure Arts',
+    teacher: 'nyanta',
+    techniques: ['treasureHunter', 'seaLegs', 'captainCommand'],
+    masteryExams: [
+      { level: 1, type: 'expeditions_complete', value: 10, reward: 'technique:treasureHunter' },
+      { level: 2, type: 'rare_cats_found', value: 20, reward: 'technique:seaLegs' },
+      { level: 3, type: 'boss_fight', enemy: 'kraken', reward: 'technique:captainCommand' }
+    ],
+    schoolBonus: { expeditionSpeed: 1.5 }
+  },
+  combatArts: {
+    id: 'combatArts',
+    name: 'Combat Arts',
+    teacher: 'mei',
+    techniques: ['fierceStrike', 'battleCry', 'warriorSpirit'],
+    masteryExams: [
+      { level: 1, type: 'dungeon_floors', value: 50, reward: 'technique:fierceStrike' },
+      { level: 2, type: 'enemies_defeated', value: 10000, reward: 'technique:battleCry' },
+      { level: 3, type: 'pagoda_floor', value: 100, reward: 'technique:warriorSpirit' }
+    ],
+    schoolBonus: { dungeonDamage: 1.25 }
+  },
+  // ... more schools for each waifu
+};
+
+// Jealousy/Harmony System
+const ATTENTION_BALANCE = {
+  harmonyThreshold: 0.8, // 80% balance = harmony
+  jealousyThreshold: 0.3, // <30% of average = jealousy
+
+  calculateHarmony(waifuAttention) {
+    const values = Object.values(waifuAttention);
+    const avg = values.reduce((a, b) => a + b, 0) / values.length;
+    const minRatio = Math.min(...values) / avg;
+
+    if (minRatio >= this.harmonyThreshold) {
+      return { status: 'harmony', bonus: { allBonds: 1.1 } };
+    } else if (minRatio < this.jealousyThreshold) {
+      const jealous = Object.entries(waifuAttention)
+        .filter(([_, v]) => v / avg < this.jealousyThreshold)
+        .map(([k, _]) => k);
+      return {
+        status: 'jealousy',
+        jealousWaifus: jealous,
+        penalty: null, // Never punishing, just funny dialogue
+        dialogue: true
+      };
     }
-  ]
+    return { status: 'neutral' };
+  }
+};
+
+// The Twelve Immortal Masters (Full List)
+const WAIFUS = {
+  // === STARTER WAIFUS (Available from start) ===
+  mochi: {
+    id: 'mochi',
+    name: 'Mochi-chan',
+    title: 'The Welcoming Dawn',
+    role: 'Innkeeper of the Celestial Teahouse',
+    school: 'hospitalityArts',
+    element: 'earth',
+    personality: 'warm',
+    bonus: { type: 'bpMultiplier', value: 1.10 },
+    unlockCondition: 'starter',
+    maxBondReward: { cat: 'lucky_teacup_cat', technique: 'perfect_hospitality' },
+    giftAffinities: {
+      loves: ['rare_tea', 'jade_cup', 'silk_ribbon'],
+      likes: ['yarn_ball', 'fish_treats'],
+      neutral: ['catnip', 'bells'],
+      dislikes: ['loud_toys', 'spicy_food']
+    },
+    cultivation: {
+      currentRealm: 'foundationEstablishment',
+      canCultivate: true,
+      helpReward: { jadeCatnip: 1000, technique: 'tea_blessing' }
+    },
+    sprite: 'waifus/mochi.png',
+    color: '#FFB7C5',
+    voiceLines: {
+      greeting: { morning: 'Good morning~', evening: 'Welcome back, nya~' },
+      jealous: "Hmph! You've been spending time with others... *pouts cutely*",
+      harmony: "Everyone is getting along so well! This makes me happy~"
+    }
+  },
+
+  // === UNLOCKABLE WAIFUS ===
+  luna: {
+    id: 'luna',
+    name: 'Luna Whiskerbell',
+    title: 'The Midnight Watcher',
+    role: 'Night Cultivation Instructor',
+    school: 'yinEnergyArts',
+    element: 'water',
+    personality: 'sleepy',
+    bonus: { type: 'afkMultiplier', value: 1.50 },
+    unlockCondition: { type: 'afkTime', value: 86400 },
+    maxBondReward: { cat: 'moonlight_siamese', technique: 'eternal_slumber' },
+    giftAffinities: {
+      loves: ['pillow', 'moon_charm', 'warm_blanket'],
+      likes: ['chamomile_tea', 'quiet_toys'],
+      neutral: ['most_things'],
+      dislikes: ['loud_noises', 'bright_lights', 'coffee']
+    },
+    sprite: 'waifus/luna.png',
+    color: '#C4A7E7',
+    voiceLines: {
+      greeting: { morning: '*yawn* ...morning already...?', night: 'Ah... the moon is beautiful tonight...' },
+      jealous: "It's fine... I'll just... sleep... *sad yawn*",
+      harmony: "Everyone... resting peacefully... that's nice... zzz..."
+    }
+  },
+
+  nyanta: {
+    id: 'nyanta',
+    name: 'Captain Nyanta',
+    title: 'The Sea Sovereign',
+    role: 'Expedition Leader',
+    school: 'adventureArts',
+    element: 'water',
+    personality: 'boisterous',
+    bonus: { type: 'expeditionUnlock', value: true },
+    unlockCondition: { type: 'catCount', value: 50 },
+    maxBondReward: { cat: 'kraken_kitty', technique: 'sea_shanty_boop' },
+    giftAffinities: {
+      loves: ['treasure_map', 'rum_barrel', 'golden_compass'],
+      likes: ['fish', 'rope', 'sea_shells'],
+      neutral: ['land_food'],
+      dislikes: ['anchors', 'landlubber_talk']
+    },
+    sprite: 'waifus/nyanta.png',
+    color: '#8B0000'
+  },
+
+  mei: {
+    id: 'mei',
+    name: 'Mei Ironpaw',
+    title: 'The Unbreakable',
+    role: 'Combat Instructor',
+    school: 'combatArts',
+    element: 'metal',
+    personality: 'fierce',
+    bonus: { type: 'dungeonDamage', value: 1.25 },
+    unlockCondition: { type: 'pagodaFloor', value: 20 },
+    maxBondReward: { cat: 'iron_tiger', technique: 'iron_paw_strike' },
+    giftAffinities: {
+      loves: ['training_weights', 'battle_scars_ointment', 'protein_treats'],
+      likes: ['simple_food', 'bandages'],
+      neutral: ['fancy_things'],
+      dislikes: ['weakness', 'giving_up']
+    },
+    sprite: 'waifus/mei.png',
+    color: '#C0C0C0'
+  },
+
+  sakura: {
+    id: 'sakura',
+    name: 'Sakura Petalpaw',
+    title: 'The Eternal Spring',
+    role: 'Garden Keeper',
+    school: 'natureArts',
+    element: 'wood',
+    personality: 'gentle',
+    bonus: { type: 'catHappiness', value: 1.20 },
+    unlockCondition: { type: 'building', building: 'meditation_garden', level: 3 },
+    maxBondReward: { cat: 'cherry_blossom_cat', technique: 'petal_dance' },
+    sprite: 'waifus/sakura.png',
+    color: '#FFB7C5'
+  },
+
+  yuki: {
+    id: 'yuki',
+    name: 'Yuki Frostwhisker',
+    title: 'The Silent Snow',
+    role: 'Meditation Master',
+    school: 'stillnessArts',
+    element: 'water',
+    personality: 'serene',
+    bonus: { type: 'meditationEfficiency', value: 1.50 },
+    unlockCondition: { type: 'meditationHours', value: 100 },
+    maxBondReward: { cat: 'ice_crystal_cat', technique: 'frozen_clarity' },
+    sprite: 'waifus/yuki.png',
+    color: '#E0FFFF'
+  },
+
+  jade: {
+    id: 'jade',
+    name: 'Jade Silkpaw',
+    title: 'The Refined',
+    role: 'Etiquette Instructor',
+    school: 'graceArts',
+    element: 'earth',
+    personality: 'elegant',
+    bonus: { type: 'critDamage', value: 1.30 },
+    unlockCondition: { type: 'prestigeCount', value: 1 },
+    maxBondReward: { cat: 'jade_emperor_cat', technique: 'elegant_strike' },
+    sprite: 'waifus/jade.png',
+    color: '#50C878'
+  },
+
+  crimson: {
+    id: 'crimson',
+    name: 'Crimson Blazepaw',
+    title: 'The Inferno',
+    role: 'Forge Master',
+    school: 'forgeArts',
+    element: 'fire',
+    personality: 'passionate',
+    bonus: { type: 'equipmentCrafting', value: 1.40 },
+    unlockCondition: { type: 'equipmentCrafted', value: 50 },
+    maxBondReward: { cat: 'phoenix_cat', technique: 'flame_forged_boop' },
+    sprite: 'waifus/crimson.png',
+    color: '#FF4500'
+  },
+
+  // === HIDDEN/SECRET WAIFUS ===
+  grandmother: {
+    id: 'grandmother',
+    name: 'Grandmother Whiskers',
+    title: 'The All-Knowing',
+    role: 'Sect Elder',
+    school: 'ancientArts',
+    element: 'void',
+    personality: 'wise',
+    hidden: true,
+    bonus: { type: 'allStats', value: 1.15 },
+    unlockCondition: { type: 'loreFragments', value: 50 },
+    maxBondReward: { cat: 'ancient_guardian', technique: 'elder_wisdom' },
+    sprite: 'waifus/grandmother.png',
+    color: '#D3D3D3',
+    specialDialogue: {
+      knowsSecrets: true,
+      hintSystem: true
+    }
+  },
+
+  rival: {
+    id: 'rival',
+    name: 'Scarlet Shadowclaw',
+    title: 'The Rival',
+    role: 'Competing Sect Leader',
+    school: 'rivalArts',
+    element: 'fire',
+    personality: 'tsundere',
+    hidden: true,
+    antiWaifu: true, // Starts as antagonist
+    bonus: { type: 'competitiveBonus', value: 1.25 },
+    unlockCondition: { type: 'defeatInTournament', times: 3 },
+    maxBondReward: { cat: 'reformed_rival_cat', technique: 'begrudging_respect' },
+    sprite: 'waifus/rival.png',
+    color: '#8B0000',
+    specialDialogue: {
+      startAsEnemy: true,
+      redemptionArc: true
+    }
+  },
+
+  void_waifu: {
+    id: 'void_waifu',
+    name: '???',
+    title: 'The Forgotten',
+    role: 'Unknown',
+    school: 'voidArts',
+    element: 'void',
+    personality: 'mysterious',
+    hidden: true,
+    transcendenceOnly: true,
+    bonus: { type: 'voidPower', value: 2.0 },
+    unlockCondition: { type: 'transcendence', value: true },
+    maxBondReward: { cat: 'void_cat', technique: 'reality_boop' },
+    sprite: 'waifus/void.png',
+    color: '#000000'
+  },
+
+  honk_maiden: {
+    id: 'honk_maiden',
+    name: 'The Honk Maiden',
+    title: 'Avatar of Chaos',
+    role: 'Goose Whisperer',
+    school: 'chaosArts',
+    element: 'chaos',
+    personality: 'chaotic',
+    hidden: true,
+    bonus: { type: 'gooseBonus', value: 2.0 },
+    unlockCondition: { type: 'gooseBoops', value: 1000, cobraChickenDefeated: true },
+    maxBondReward: { cat: 'goose_cat_hybrid', technique: 'HONK_BOOP' },
+    sprite: 'waifus/honk_maiden.png',
+    color: '#FFFFFF',
+    specialDialogue: {
+      speaksInHonks: true,
+      translationNeeded: true
+    }
+  }
+};
+
+class WaifuSystem {
+  constructor(gameState) {
+    this.gameState = gameState;
+    this.activeWaifu = null;
+    this.attentionTracker = {};
+    this.currentActivity = null;
+  }
+
+  // Bond Level Rewards
+  getBondRewards(waifuId, bondLevel) {
+    const rewards = [];
+    const thresholds = [10, 25, 50, 75, 100];
+
+    for (const threshold of thresholds) {
+      if (bondLevel >= threshold) {
+        rewards.push(BOND_REWARDS[waifuId]?.[threshold] || GENERIC_BOND_REWARDS[threshold]);
+      }
+    }
+
+    return rewards;
+  }
+
+  // Activity System
+  startActivity(waifuId, activityId) {
+    const waifu = WAIFUS[waifuId];
+    const activity = BOND_ACTIVITIES[activityId];
+
+    if (!activity) return { error: 'Unknown activity' };
+    if (this.gameState.waifuBonds[waifuId] < activity.unlockBond) {
+      return { error: `Requires bond level ${activity.unlockBond}` };
+    }
+    if (activity.timeRestriction === 'night' && !this.gameState.isNightTime()) {
+      return { error: 'This activity is only available at night' };
+    }
+
+    this.currentActivity = {
+      waifuId,
+      activityId,
+      startTime: Date.now(),
+      duration: activity.duration * 1000
+    };
+
+    // Preference bonus
+    const isPreferred = activity.preferredBy.includes(waifuId) ||
+      activity.preferredBy.includes('all');
+    const bondGain = isPreferred ? activity.bondGain * 1.5 : activity.bondGain;
+
+    return {
+      started: true,
+      duration: activity.duration,
+      bondGain,
+      isPreferred
+    };
+  }
+
+  completeActivity() {
+    if (!this.currentActivity) return null;
+
+    const activity = BOND_ACTIVITIES[this.currentActivity.activityId];
+    const waifuId = this.currentActivity.waifuId;
+
+    // Calculate bond gain
+    const isPreferred = activity.preferredBy.includes(waifuId);
+    let bondGain = isPreferred ? activity.bondGain * 1.5 : activity.bondGain;
+
+    // Harmony bonus
+    const harmonyStatus = ATTENTION_BALANCE.calculateHarmony(this.attentionTracker);
+    if (harmonyStatus.status === 'harmony') {
+      bondGain *= harmonyStatus.bonus.allBonds;
+    }
+
+    // Apply bond
+    this.gameState.waifuBonds[waifuId] =
+      Math.min(100, (this.gameState.waifuBonds[waifuId] || 0) + bondGain);
+
+    // Track attention
+    this.attentionTracker[waifuId] = (this.attentionTracker[waifuId] || 0) + 1;
+
+    // Check for special outcomes
+    const result = {
+      bondGained: bondGain,
+      newBondLevel: this.gameState.waifuBonds[waifuId]
+    };
+
+    if (activity.producesItem) {
+      result.item = this.generateActivityItem(activity, waifuId);
+    }
+
+    if (activity.discoversSecrets) {
+      result.secret = this.checkSecretDiscovery(waifuId);
+    }
+
+    this.currentActivity = null;
+    return result;
+  }
+
+  // Waifu Cultivation (help them break through)
+  helpWaifuCultivate(waifuId) {
+    const waifu = WAIFUS[waifuId];
+    if (!waifu.cultivation?.canCultivate) {
+      return { error: 'This waifu cannot cultivate further' };
+    }
+
+    // Requires high bond
+    if (this.gameState.waifuBonds[waifuId] < 75) {
+      return { error: 'Requires bond level 75+' };
+    }
+
+    // Requires resources
+    const cost = { jadeCatnip: 10000, destinyThreads: 100 };
+    if (!this.gameState.canAfford(cost)) {
+      return { error: 'Insufficient resources' };
+    }
+
+    this.gameState.spend(cost);
+
+    // Breakthrough attempt
+    const success = Math.random() < 0.7; // 70% base success
+    if (success) {
+      return {
+        success: true,
+        rewards: waifu.cultivation.helpReward,
+        newRealm: this.advanceWaifuRealm(waifuId)
+      };
+    } else {
+      return {
+        success: false,
+        consolation: { jadeCatnip: cost.jadeCatnip * 0.1 }
+      };
+    }
+  }
 }
 ```
 
@@ -2341,12 +4052,422 @@ const SURVIVAL_EVOLUTIONS = {
 };
 ```
 
-### 1. Prestige/Ascension System
+### Additional Dungeon Types
+
+Beyond the Infinite Pagoda and Wave Survival, these dungeons provide variety and challenge.
 
 ```javascript
-// ascension.js - "To reach the highest heavens, one must first return to nothing."
+// dungeons/additional.js - "The Jianghu holds many secrets."
 
-const ASCENSION_THRESHOLD = 1e9; // 1 Billion PP
+// === THE BAMBOO FOREST === (Survival Mode)
+const BAMBOO_FOREST = {
+  id: 'bamboo_forest',
+  name: 'The Bamboo Forest',
+  type: 'survival',
+  description: 'Survive as long as possible against endless waves of enemies.',
+  unlockCondition: { pagodaFloor: 30 },
+  rules: {
+    duration: 30 * 60, // 30 minutes to "win"
+    singleCat: true,
+    autoAttack: true,
+    levelUpChoices: 3,
+    bossEvery: 5 * 60 // Boss every 5 minutes
+  },
+  rewards: {
+    perMinute: { jadeCatnip: 10 },
+    completion: { cat: 'bamboo_guardian', technique: 'forest_walk' },
+    highScore: 'leaderboard'
+  }
+};
+
+// === THE CELESTIAL TOURNAMENT ===
+const CELESTIAL_TOURNAMENT = {
+  id: 'celestial_tournament',
+  name: 'The Celestial Tournament',
+  type: 'pvp_bracket',
+  description: 'Face AI versions of the other Six Masters in bracket combat.',
+  unlockCondition: { cultivationRealm: 'coreFormation' },
+  rules: {
+    rounds: 6, // Face all 6 other masters
+    teamSize: 4,
+    preparation: true,
+    masterAbilities: true // AI uses master passives
+  },
+  opponents: {
+    gerald: { difficulty: 'balanced', aiStyle: 'meditation_bursts' },
+    rusty: { difficulty: 'aggressive', aiStyle: 'constant_pressure' },
+    steve: { difficulty: 'strategic', aiStyle: 'optimal_timing' },
+    andrew: { difficulty: 'fast', aiStyle: 'speed_rush' },
+    nik: { difficulty: 'critical', aiStyle: 'crit_fishing' },
+    yuelin: { difficulty: 'sustain', aiStyle: 'healing_focus' },
+    scott: { difficulty: 'tank', aiStyle: 'stack_and_wait' }
+  },
+  rewards: {
+    perWin: { sectReputation: 100 },
+    champion: { title: 'Tournament Champion', cosmetic: 'champion_crown' },
+    weekly: { jadeCatnip: 5000 }
+  }
+};
+
+// === THE DREAM REALM ===
+const DREAM_REALM = {
+  id: 'dream_realm',
+  name: 'The Dream Realm',
+  type: 'procedural_story',
+  description: 'A surreal dungeon generated from YOUR play data.',
+  unlockCondition: { cultivationRealm: 'nascentSoul' },
+  rules: {
+    generatedFrom: ['playtime', 'favoriteCats', 'waifuBonds', 'achievements'],
+    floors: 'variable',
+    narrative: true,
+    surrealModifiers: true
+  },
+  generation: {
+    // Uses player data to create personalized content
+    favoriteWaifuAppears: true,
+    mostUsedCatsBecomeAllies: true,
+    failedTribulationsBecomeBosses: true,
+    achievementsUnlockAreas: true
+  },
+  modifiers: [
+    { id: 'gravity_shift', description: 'Up is down, down is up' },
+    { id: 'time_loop', description: 'Every 5th floor repeats' },
+    { id: 'mirror_world', description: 'Fight shadow versions of your team' },
+    { id: 'memory_lane', description: 'Relive past game moments as challenges' }
+  ],
+  rewards: {
+    loreFragments: true,
+    dreamEssence: 'currency',
+    exclusiveCat: 'dream_walker_cat'
+  }
+};
+
+// === THE GOOSE DIMENSION ===
+const GOOSE_DIMENSION = {
+  id: 'goose_dimension',
+  name: 'The Goose Dimension',
+  type: 'comedy_horror',
+  description: 'EVERYTHING is geese. HONK.',
+  unlockCondition: { cobraChickenDefeated: true, gooseBoops: 500 },
+  rules: {
+    allEnemiesAreGeese: true,
+    environmentIsGoose: true, // Goose trees, goose floors, goose sky
+    honkMeter: true, // Fill the HONK meter to progress
+    sanityMechanic: true // Cats lose sanity, affects abilities
+  },
+  enemies: {
+    normal: ['goose', 'goose_with_knife', 'goose_in_disguise'],
+    elite: ['mecha_goose', 'goose_hydra', 'stealth_goose'],
+    boss: ['the_original_goose', 'goose_king', 'cosmic_honk']
+  },
+  finalBoss: {
+    name: 'THE PRIMORDIAL HONK',
+    description: 'The first goose. The last goose. The eternal goose.',
+    phases: 5,
+    rewards: {
+      title: 'Goose Dimension Survivor',
+      cat: 'goose_touched_cat',
+      permanent: { gooseSpawnRate: 0.5, gooseRewards: 2.0 }
+    }
+  },
+  jokes: {
+    fourthWallBreaks: true,
+    randomHonks: true,
+    gooseStealingUI: true, // Goose steals buttons occasionally
+    breadCrumbCurrency: true // HONK
+  }
+};
+
+// === MEMORY FRAGMENTS DUNGEON ===
+const MEMORY_FRAGMENTS = {
+  id: 'memory_fragments',
+  name: 'Memory Fragments',
+  type: 'story_dungeon',
+  description: 'Short story-driven dungeons that unlock lore pieces.',
+  unlockCondition: { loreFragmentsCollected: 10 },
+  structure: {
+    chaptersPerMaster: 3,
+    chaptersPerWaifu: 2,
+    secretChapters: 5
+  },
+  chapters: {
+    gerald_ch1: {
+      name: 'The Founding',
+      description: 'How Gerald discovered the Snoot Scrolls',
+      enemies: 'memory_shadows',
+      reward: { lore: 'gerald_origin', cat: 'memory_jade_cat' }
+    },
+    rusty_ch1: {
+      name: 'The Redemption',
+      description: 'Rusty\'s life before joining the Sect',
+      enemies: 'past_bandits',
+      reward: { lore: 'rusty_origin', technique: 'reformed_strike' }
+    },
+    // ... more chapters for all masters and waifus
+    secret_ch1: {
+      name: 'The Eighth Master',
+      description: '???',
+      unlockCondition: { allMasterLoreComplete: true },
+      reward: { lore: 'eighth_master_truth', unlocks: 'eighth_master' }
+    }
+  }
+};
+```
+
+### Expanded Equipment System
+
+Six equipment slots with deep customization.
+
+```javascript
+// equipment.js - Expanded system
+
+const EQUIPMENT_SLOTS = {
+  weapon: { name: 'Weapon', primary: true },
+  armor: { name: 'Armor', primary: true },
+  accessory: { name: 'Accessory', primary: false },
+  mount: { name: 'Mount', primary: false, unlockRealm: 'coreFormation' },
+  companion: { name: 'Companion', primary: false, unlockRealm: 'nascentSoul' },
+  secretScroll: { name: 'Secret Technique Scroll', primary: false, unlockRealm: 'spiritSevering' }
+};
+
+// Equipment can cultivate (level up)
+const EQUIPMENT_CULTIVATION = {
+  maxLevel: 100,
+  xpPerFloor: (floorNum) => floorNum * 10,
+  breakpoints: {
+    10: { stats: 1.2, visualUpgrade: true },
+    25: { stats: 1.5, newPassive: true },
+    50: { stats: 2.0, visualUpgrade: true, evolveOption: true },
+    75: { stats: 3.0, newPassive: true },
+    100: { stats: 5.0, mythicTransform: true }
+  }
+};
+
+// Socket System
+const SOCKET_SYSTEM = {
+  maxSockets: { common: 0, uncommon: 1, rare: 2, epic: 3, legendary: 4, mythic: 6 },
+  spiritStones: {
+    attack_stone: { stats: { attack: 10 }, stackable: true },
+    defense_stone: { stats: { defense: 10 }, stackable: true },
+    crit_stone: { stats: { critChance: 0.02 }, stackable: false },
+    void_stone: { stats: { voidDamage: 0.1 }, rarity: 'legendary' },
+    chaos_stone: { stats: { randomBonus: true }, rarity: 'mythic' }
+  }
+};
+
+// Transmog System
+const TRANSMOG_SYSTEM = {
+  description: 'Separate appearance from stats',
+  unlockCondition: { equipmentCrafted: 100 },
+  cost: { jadeCatnip: 100 },
+  restrictions: {
+    sameSlotOnly: true,
+    mustOwnAppearance: true
+  }
+};
+
+// More Equipment Sets
+const ADDITIONAL_SETS = {
+  goose_slayer: {
+    name: 'Goose Slayer Set',
+    pieces: ['anti_goose_blade', 'honk_proof_armor', 'goose_tracker'],
+    bonuses: {
+      2: { gooseDamage: 1.5 },
+      3: { gooseSpawnWarning: true, gooseRewards: 1.5 }
+    }
+  },
+  waifu_blessed: {
+    name: 'Waifu Blessed Set',
+    pieces: ['heart_pendant', 'bond_ring', 'devotion_cloak', 'blessed_paws'],
+    bonuses: {
+      2: { bondGain: 1.25 },
+      4: { waifuSkillCooldown: 0.5, harmonyCost: 0 }
+    }
+  },
+  afk_master: {
+    name: 'AFK Master Set',
+    pieces: ['meditation_mat', 'auto_boop_gloves', 'time_dilation_hat'],
+    bonuses: {
+      2: { afkEfficiency: 1.5 },
+      3: { afkCap: 48, dreamRealmAuto: true }
+    }
+  },
+  prestige_legacy: {
+    name: 'Prestige Legacy Set',
+    pieces: ['seal_of_heavens', 'reincarnation_band', 'karma_cloak'],
+    obtainedFrom: 'prestige_only',
+    bonuses: {
+      2: { heavenlySealGain: 1.25 },
+      3: { startingBonus: 'random_legendary_cat' }
+    }
+  }
+};
+```
+
+---
+
+### 1. Prestige/Ascension System (Three Layers)
+
+### Multi-Currency Economy
+
+Nine currencies create interesting choices throughout the game.
+
+```javascript
+// economy.js - "Wealth without wisdom is poverty."
+
+const CURRENCIES = {
+  boopPoints: {
+    id: 'bp',
+    name: 'Boop Points',
+    icon: '👆',
+    source: 'Active booping',
+    primarySink: 'Cat recruitment, basic upgrades',
+    interestingChoice: 'Spend now vs. save for expensive cats',
+    color: '#E94560'
+  },
+
+  purrPower: {
+    id: 'pp',
+    name: 'Purr Power',
+    icon: '😺',
+    source: 'Passive cat generation',
+    primarySink: 'Technique upgrades, buildings',
+    interestingChoice: 'Invest in PP generation vs. spend PP',
+    color: '#FFD700'
+  },
+
+  qi: {
+    id: 'qi',
+    name: 'Qi',
+    icon: '✨',
+    source: 'Cultivation + booping',
+    primarySink: 'Realm breakthroughs, abilities',
+    interestingChoice: 'Use for power or save for tribulations',
+    color: '#00BFFF',
+    cap: (realm) => CULTIVATION_REALMS[realm].qiCap || 100
+  },
+
+  jadeCatnip: {
+    id: 'jc',
+    name: 'Jade Catnip',
+    icon: '💎',
+    source: 'Rare drops, events, achievements',
+    primarySink: 'High-tier cat recruitment, waifu gifts',
+    interestingChoice: 'Which rare cat to target',
+    color: '#50C878',
+    premium: true
+  },
+
+  spiritStones: {
+    id: 'ss',
+    name: 'Spirit Stones',
+    icon: '💠',
+    source: 'Dungeons, PvP',
+    primarySink: 'Equipment enhancement, socketing',
+    interestingChoice: 'Socket for stats vs. trade for materials',
+    color: '#9370DB'
+  },
+
+  heavenlySeals: {
+    id: 'hs',
+    name: 'Heavenly Seals',
+    icon: '🔮',
+    source: 'Prestige/Ascension only',
+    primarySink: 'Permanent upgrades',
+    interestingChoice: 'Which permanent bonus to buy',
+    color: '#FFFFFF',
+    prestige: true
+  },
+
+  sectReputation: {
+    id: 'rep',
+    name: 'Sect Reputation',
+    icon: '🏆',
+    source: 'Social features, events, achievements',
+    primarySink: 'Cosmetics, titles',
+    interestingChoice: 'Flex vs. functional unlocks',
+    color: '#FFD700'
+  },
+
+  waifuTokens: {
+    id: 'wt',
+    name: 'Waifu Tokens',
+    icon: '💕',
+    source: 'Bond activities',
+    primarySink: 'Gifts, special interactions',
+    interestingChoice: 'Which waifu to invest in',
+    color: '#FFB6C1'
+  },
+
+  gooseFeathers: {
+    id: 'gf',
+    name: 'Goose Feathers',
+    icon: '🪶',
+    source: 'Goose kills only',
+    primarySink: 'Joke shop with actually good items',
+    interestingChoice: 'Humor vs. power tradeoff',
+    color: '#F5F5F5',
+    special: 'goose_only'
+  }
+};
+
+// Conversion rates (where applicable)
+const CURRENCY_CONVERSIONS = {
+  bp_to_pp: { rate: 1000, direction: 'bp > pp' }, // 1000 BP = 1 PP
+  jc_to_bp: { rate: 10000, direction: 'jc > bp' }, // 1 JC = 10000 BP
+  gf_to_jc: { rate: 100, direction: 'gf > jc' } // 100 GF = 1 JC
+};
+```
+
+### Three-Layer Prestige System
+
+```javascript
+// prestige.js - "To reach the highest heavens, one must first return to nothing."
+
+// === LAYER 1: ASCENSION ===
+const ASCENSION = {
+  name: 'Ascension',
+  threshold: 1e9, // 1 Billion PP
+  currency: 'heavenlySeals',
+
+  resets: [
+    'cultivationRealm', // Back to Mortal
+    'catsBelow', 'immortal', // Lose non-immortal cats
+    'currencies', // BP, PP, Qi, Spirit Stones reset
+    'buildings', // Buildings reset
+    'equipment' // Equipment resets
+  ],
+
+  keeps: [
+    'heavenlySeals',
+    'permanentUpgrades',
+    'waifuBondProgress', // Halved but not reset
+    'achievements',
+    'cosmetics',
+    'gooseAlly',
+    'unlockedMasters',
+    'forbiddenTechniques',
+    'loreFragments'
+  ],
+
+  gains: {
+    ascensionMultiplier: (count) => 1 + (count * 0.5), // 1.5x, 2x, 2.5x...
+    heavenlySeals: 'calculated',
+    unlocks: ['heavenly_decree']
+  },
+
+  newMechanic: {
+    name: 'Heavenly Decree',
+    description: 'Choose a permanent modifier for this ascension run',
+    options: [
+      { id: 'speed', name: 'Decree of Swiftness', effect: { boopSpeed: 1.5 } },
+      { id: 'wealth', name: 'Decree of Prosperity', effect: { currencyGain: 1.5 } },
+      { id: 'fortune', name: 'Decree of Fortune', effect: { rareCatChance: 2.0 } },
+      { id: 'bonds', name: 'Decree of Bonds', effect: { waifuBondGain: 2.0 } },
+      { id: 'combat', name: 'Decree of War', effect: { dungeonPower: 1.5 } }
+    ]
+  }
+};
 
 const HEAVENLY_SEAL_BONUSES = {
   1: { productionMult: 1.10, desc: '+10% all production permanently' },
@@ -2354,8 +4475,202 @@ const HEAVENLY_SEAL_BONUSES = {
   10: { unlocks: 'forbidden_techniques', desc: 'Unlock Forbidden Techniques tree' },
   25: { startingWaifu: { bondPercent: 0.5 }, desc: 'Start with a random Waifu at 50% bond' },
   50: { gooseMoodBonus: 1, desc: 'Geese spawn with +1 mood level' },
-  100: { unlocks: 'eighth_master', desc: 'Unlock The Eighth Master' }
+  100: { unlocks: 'eighth_master', desc: 'Unlock The Eighth Master' },
+  200: { unlocks: 'reincarnation_preview', desc: 'Glimpse the path beyond Ascension' },
+  500: { allStats: 2.0, desc: 'Double all stats permanently' }
 };
+
+// === LAYER 2: REINCARNATION ===
+const REINCARNATION = {
+  name: 'Reincarnation',
+  threshold: { ascensions: 10, heavenlySeals: 500 },
+  currency: 'karmaPoints',
+
+  resets: [
+    ...ASCENSION.resets,
+    'ascensionCount', // Ascension count resets
+    'heavenlySeals' // Partial seal reset (keep 10%)
+  ],
+
+  keeps: [
+    'karmaPoints',
+    'reincarnationKarma',
+    'coreUnlocks', // Key progression unlocks
+    'waifuMaxBonds', // If reached max bond, remember it
+    'achievementsPlus', // Achievements + meta achievements
+    'cosmeticsPlus',
+    'loreComplete' // Completed lore stays
+  ],
+
+  gains: {
+    karmaPoints: 'calculated',
+    reincarnationMultiplier: (count) => Math.pow(2, count), // 2x, 4x, 8x...
+    unlocks: ['past_life_memories', 'karma_shop']
+  },
+
+  newMechanic: {
+    name: 'Past Life Memories',
+    description: 'Start with a random powerful buff based on previous runs',
+    examples: [
+      { id: 'memory_warrior', trigger: 'previous_high_combat', effect: { combatPower: 3.0 } },
+      { id: 'memory_merchant', trigger: 'previous_high_wealth', effect: { startingBP: 1e6 } },
+      { id: 'memory_lover', trigger: 'previous_max_bond', effect: { waifuStartBond: 50 } },
+      { id: 'memory_hunter', trigger: 'previous_many_cats', effect: { catDropRate: 2.0 } }
+    ]
+  }
+};
+
+const KARMA_SHOP = {
+  categories: {
+    starting: [
+      { id: 'start_cats', cost: 10, effect: { startingCats: 5 }, repeatable: true },
+      { id: 'start_bp', cost: 5, effect: { startingBP: 1e6 }, repeatable: true },
+      { id: 'start_realm', cost: 50, effect: { startingRealm: 'qiCondensation' } }
+    ],
+    permanent: [
+      { id: 'perm_production', cost: 25, effect: { permanentProduction: 1.25 }, repeatable: true },
+      { id: 'perm_crit', cost: 30, effect: { permanentCrit: 0.05 }, repeatable: true },
+      { id: 'perm_afk', cost: 40, effect: { permanentAFK: 1.5 } }
+    ],
+    unlocks: [
+      { id: 'unlock_secret_waifu', cost: 100, effect: { unlock: 'grandmother' } },
+      { id: 'unlock_void_element', cost: 150, effect: { unlock: 'void_element' } },
+      { id: 'unlock_transcendence', cost: 500, effect: { unlock: 'transcendence_preview' } }
+    ]
+  }
+};
+
+// === LAYER 3: TRANSCENDENCE ===
+const TRANSCENDENCE = {
+  name: 'Transcendence',
+  threshold: { reincarnations: 5, karmaPoints: 1000, trueImmortalReached: true },
+  currency: 'transcendencePoints',
+
+  description: 'The ultimate prestige. Near-total reset, but unlocks the true endgame.',
+
+  resets: [
+    'almost_everything' // Near-total reset
+  ],
+
+  keeps: [
+    'transcendencePoints',
+    'metaAchievements',
+    'ultimateCosmetics',
+    'celestialProgress' // Progress in Celestial Realm
+  ],
+
+  gains: {
+    transcendencePoints: 1, // Very rare
+    unlocks: ['celestial_realm', 'true_endgame', 'story_conclusion']
+  },
+
+  celestialRealm: {
+    description: 'An entirely new progression track. Snoot Booper 2 within Snoot Booper.',
+    features: [
+      'New cultivaiton system',
+      'Celestial cats',
+      'The true story conclusion',
+      'Infinite scaling content',
+      'Leaderboard eternal'
+    ]
+  }
+};
+
+class PrestigeSystem {
+  constructor(gameState) {
+    this.gameState = gameState;
+  }
+
+  // Check what prestiges are available
+  getAvailablePrestiges() {
+    const available = [];
+
+    if (this.canAscend()) available.push('ascension');
+    if (this.canReincarnate()) available.push('reincarnation');
+    if (this.canTranscend()) available.push('transcendence');
+
+    return available;
+  }
+
+  canAscend() {
+    return this.gameState.purrPower >= ASCENSION.threshold;
+  }
+
+  canReincarnate() {
+    return this.gameState.totalAscensions >= REINCARNATION.threshold.ascensions &&
+      this.gameState.heavenlySeals >= REINCARNATION.threshold.heavenlySeals;
+  }
+
+  canTranscend() {
+    return this.gameState.totalReincarnations >= TRANSCENDENCE.threshold.reincarnations &&
+      this.gameState.karmaPoints >= TRANSCENDENCE.threshold.karmaPoints &&
+      this.gameState.reachedRealm === 'trueImmortal';
+  }
+
+  // Preview what you'll get
+  previewPrestige(type) {
+    switch (type) {
+      case 'ascension':
+        return {
+          sealsEarned: this.calculateSealsEarned(),
+          multiplier: ASCENSION.gains.ascensionMultiplier(this.gameState.totalAscensions + 1),
+          newUnlocks: this.getNewAscensionUnlocks()
+        };
+      case 'reincarnation':
+        return {
+          karmaEarned: this.calculateKarmaEarned(),
+          sealRetention: Math.floor(this.gameState.heavenlySeals * 0.1),
+          multiplier: REINCARNATION.gains.reincarnationMultiplier(this.gameState.totalReincarnations + 1),
+          newUnlocks: this.getNewReincarnationUnlocks()
+        };
+      case 'transcendence':
+        return {
+          transcendencePoints: 1,
+          celestialRealmAccess: true,
+          warning: 'This is the ultimate reset. Are you ready to begin anew?'
+        };
+    }
+  }
+
+  performPrestige(type, options = {}) {
+    switch (type) {
+      case 'ascension':
+        return this.performAscension(options.decree);
+      case 'reincarnation':
+        return this.performReincarnation();
+      case 'transcendence':
+        return this.performTranscendence();
+    }
+  }
+
+  calculateSealsEarned() {
+    const pp = this.gameState.purrPower;
+    const cats = this.gameState.cats.length;
+    const waifuBonds = Object.values(this.gameState.waifuBonds).reduce((a, b) => a + b, 0);
+    const gooseBoops = this.gameState.gooseBoops;
+    const pagodaFloor = this.gameState.highestPagodaFloor;
+
+    let seals = Math.floor(Math.log10(pp) - 8);
+    seals += Math.floor(cats / 20);
+    seals += Math.floor(waifuBonds / 100);
+    seals += Math.floor(gooseBoops / 50);
+    seals += Math.floor(pagodaFloor / 10);
+
+    return Math.max(1, seals);
+  }
+
+  calculateKarmaEarned() {
+    const seals = this.gameState.heavenlySeals;
+    const ascensions = this.gameState.totalAscensions;
+    const maxBonds = Object.values(this.gameState.waifuBonds).filter(b => b >= 100).length;
+
+    let karma = Math.floor(seals / 50);
+    karma += ascensions * 2;
+    karma += maxBonds * 10;
+
+    return Math.max(1, karma);
+  }
+}
 
 const FORBIDDEN_TECHNIQUES = {
   void_palm: {
@@ -2522,98 +4837,337 @@ const EIGHTH_MASTER = {
 };
 ```
 
-### 2. Building System
+### 2. Building System (Expanded to 15+)
+
+Each building has deep sub-systems and visual evolution.
 
 ```javascript
 // buildings.js - "A great sect needs great halls."
 
 const BUILDINGS = {
+  // === CORE BUILDINGS ===
   cat_pagoda: {
     id: 'cat_pagoda',
     name: 'Cat Pagoda',
+    category: 'core',
     description: '+10 cat capacity per level',
     baseCost: 10000,
     costScale: 1.5,
     maxLevel: 10,
-    effect: (level) => ({ catCapacity: level * 10 })
+    effect: (level) => ({ catCapacity: level * 10 }),
+    visualUpgrades: [1, 5, 10], // Sprite changes at these levels
+    subSystem: null
   },
+
   meditation_garden: {
-    id: 'meditation_garden', 
+    id: 'meditation_garden',
     name: 'Meditation Garden',
-    description: '+25% PP when idle >1 hour',
+    category: 'core',
+    description: '+25% PP when idle, environmental bonuses',
     baseCost: 50000,
     costScale: 2.0,
-    maxLevel: 5,
-    effect: (level) => ({ idlePPBonus: 0.25 * level, idleThreshold: 3600 })
+    maxLevel: 10,
+    effect: (level) => ({
+      idlePPBonus: 0.25 * level,
+      idleThreshold: Math.max(600, 3600 - (level * 300)), // Less time needed at higher levels
+      seasonalBonus: level >= 5
+    }),
+    subSystem: {
+      type: 'garden_cultivation',
+      features: ['herb_growing', 'spirit_stone_formation', 'seasonal_events'],
+      minigame: 'zen_garden'
+    }
   },
-  waifu_quarters: {
-    id: 'waifu_quarters',
-    name: 'Waifu Quarters', 
-    description: 'Waifus give daily gifts',
-    baseCost: 100000,
-    costScale: 2.5,
-    maxLevel: 3,
-    effect: (level) => ({ dailyGifts: level })
-  },
-  goose_watchtower: {
-    id: 'goose_watchtower',
-    name: 'Goose Watchtower',
-    description: '+5% Goose spawn rate, early warning',
-    baseCost: 250000,
-    costScale: 2.0,
-    maxLevel: 5,
-    effect: (level) => ({ 
-      gooseSpawnBonus: 0.05 * level, 
-      gooseWarning: level >= 1 
-    })
-  },
-  hall_of_legends: {
-    id: 'hall_of_legends',
-    name: 'Hall of Legends',
-    description: 'Display achievements, visitor bonus',
-    baseCost: 500000,
-    costScale: 3.0,
-    maxLevel: 1,
-    effect: () => ({ achievementDisplay: true, visitorBonus: 1.1 })
-  },
-  celestial_kitchen: {
-    id: 'celestial_kitchen',
-    name: 'Celestial Kitchen',
-    description: 'Auto-feed cats, happiness decay -50%',
-    baseCost: 1000000,
-    costScale: 2.0,
-    maxLevel: 3,
-    effect: (level) => ({ 
-      autoFeed: true, 
-      happinessDecayReduction: 0.5 * level 
-    })
-  },
+
   training_dojo: {
     id: 'training_dojo',
     name: 'Training Dojo',
-    description: 'Cats slowly gain cultivation EXP',
-    baseCost: 2500000,
-    costScale: 2.5,
-    maxLevel: 5,
-    effect: (level) => ({ catExpPerHour: 10 * level })
+    category: 'core',
+    description: 'Cats train techniques, sparring matches',
+    baseCost: 100000,
+    costScale: 2.0,
+    maxLevel: 10,
+    effect: (level) => ({
+      catExpPerHour: 10 * level,
+      techniqueSlots: 4 + Math.floor(level / 3),
+      sparringBonus: level >= 5 ? 1.5 : 1.0
+    }),
+    subSystem: {
+      type: 'training',
+      features: ['technique_learning', 'sparring_arena', 'training_dummies'],
+      unlocks: { 5: 'advanced_techniques', 10: 'secret_techniques' }
+    }
   },
+
+  // === PRODUCTION BUILDINGS ===
+  alchemy_lab: {
+    id: 'alchemy_lab',
+    name: 'Alchemy Laboratory',
+    category: 'production',
+    description: 'Craft potions, materials, and cat treats',
+    baseCost: 250000,
+    costScale: 2.5,
+    maxLevel: 10,
+    effect: (level) => ({
+      recipeSlots: 2 + level,
+      craftingSpeed: 1 + (level * 0.1),
+      rareIngredientChance: level * 0.02
+    }),
+    subSystem: {
+      type: 'crafting',
+      features: ['recipe_discovery', 'ingredient_storage', 'auto_craft'],
+      minigame: 'potion_brewing',
+      recipes: {
+        basic: ['health_potion', 'qi_potion', 'happiness_treat'],
+        advanced: ['realm_boost_elixir', 'goose_repellent', 'waifu_gift'],
+        legendary: ['eternal_catnip', 'void_essence', 'transcendence_pill']
+      }
+    }
+  },
+
+  library: {
+    id: 'library',
+    name: 'Sect Library',
+    category: 'production',
+    description: 'Research techniques, unlock lore',
+    baseCost: 500000,
+    costScale: 2.0,
+    maxLevel: 10,
+    effect: (level) => ({
+      researchSpeed: 1 + (level * 0.15),
+      loreDropBonus: level * 0.05,
+      techniqueUnlockCost: Math.max(0.5, 1 - (level * 0.05))
+    }),
+    subSystem: {
+      type: 'research',
+      features: ['technique_research', 'lore_collection', 'forbidden_section'],
+      unlocks: { 5: 'ancient_texts', 10: 'forbidden_knowledge' }
+    }
+  },
+
   treasury_vault: {
     id: 'treasury_vault',
     name: 'Treasury Vault',
-    description: 'AFK BP generation',
-    baseCost: 5000000,
+    category: 'production',
+    description: 'Generate passive BP, store valuables',
+    baseCost: 1000000,
     costScale: 3.0,
-    maxLevel: 5,
-    effect: (level) => ({ afkBPPerSecond: 100 * level })
+    maxLevel: 10,
+    effect: (level) => ({
+      afkBPPerSecond: 100 * Math.pow(level, 1.5),
+      currencyCap: 1 + (level * 0.1),
+      theftProtection: level >= 5
+    }),
+    subSystem: {
+      type: 'storage',
+      features: ['currency_interest', 'item_vault', 'security_system']
+    }
   },
+
+  // === SOCIAL BUILDINGS ===
+  waifu_quarters: {
+    id: 'waifu_quarters',
+    name: 'Waifu Quarters',
+    category: 'social',
+    description: 'Waifu housing, daily gifts, special events',
+    baseCost: 200000,
+    costScale: 2.5,
+    maxLevel: 10,
+    effect: (level) => ({
+      dailyGifts: level,
+      bondGainBonus: 1 + (level * 0.05),
+      waifuCapacity: 6 + Math.floor(level / 2)
+    }),
+    subSystem: {
+      type: 'housing',
+      features: ['room_customization', 'gift_schedule', 'special_events'],
+      unlocks: { 5: 'couple_activities', 10: 'harmony_system' }
+    }
+  },
+
+  hot_springs: {
+    id: 'hot_springs',
+    name: 'Hot Springs',
+    category: 'social',
+    description: 'Recovery, bond events, relaxation',
+    baseCost: 750000,
+    costScale: 2.0,
+    maxLevel: 5,
+    effect: (level) => ({
+      catHappinessRegen: level * 10,
+      bondActivityBonus: 1.5 + (level * 0.1),
+      postDungeonRecovery: level >= 3
+    }),
+    subSystem: {
+      type: 'activity',
+      features: ['group_soaking', 'waifu_events', 'cat_spa'],
+      specialEvents: ['full_moon_soak', 'festival_bath', 'couples_retreat']
+    }
+  },
+
+  arena: {
+    id: 'arena',
+    name: 'Combat Arena',
+    category: 'social',
+    description: 'PvP matches, tournaments, rankings',
+    baseCost: 2000000,
+    costScale: 2.0,
+    maxLevel: 5,
+    effect: (level) => ({
+      matchmakingSpeed: 1 + (level * 0.2),
+      rankRewards: level,
+      spectatorBonus: level >= 3
+    }),
+    subSystem: {
+      type: 'pvp',
+      features: ['ranked_matches', 'tournaments', 'spectate_friends'],
+      unlocks: { 3: 'weekly_tournament', 5: 'championship' }
+    }
+  },
+
   portal_gate: {
     id: 'portal_gate',
     name: 'Portal Gate',
-    description: 'Visit friends\' sects',
-    baseCost: 10000000,
-    costScale: 1.0, // Only 1 level
+    category: 'social',
+    description: 'Visit friends\' sects, trading',
+    baseCost: 5000000,
+    costScale: 1.0,
     maxLevel: 1,
-    effect: () => ({ sectVisits: true })
+    effect: () => ({
+      sectVisits: true,
+      trading: true,
+      giftSending: true
+    }),
+    subSystem: {
+      type: 'social',
+      features: ['sect_tourism', 'gift_exchange', 'collaborative_events']
+    }
+  },
+
+  // === UTILITY BUILDINGS ===
+  celestial_kitchen: {
+    id: 'celestial_kitchen',
+    name: 'Celestial Kitchen',
+    category: 'utility',
+    description: 'Auto-feed cats, cook buffs',
+    baseCost: 500000,
+    costScale: 2.0,
+    maxLevel: 10,
+    effect: (level) => ({
+      autoFeed: true,
+      happinessDecayReduction: 0.5 + (level * 0.05),
+      mealBuffDuration: 1 + (level * 0.1)
+    }),
+    subSystem: {
+      type: 'cooking',
+      features: ['recipe_collection', 'cat_preferences', 'feast_events'],
+      recipes: {
+        meals: ['basic_kibble', 'gourmet_fish', 'celestial_feast'],
+        buffs: ['speed_snack', 'power_protein', 'lucky_treat']
+      }
+    }
+  },
+
+  goose_watchtower: {
+    id: 'goose_watchtower',
+    name: 'Goose Watchtower',
+    category: 'utility',
+    description: 'Goose detection, traps, rewards',
+    baseCost: 250000,
+    costScale: 2.0,
+    maxLevel: 10,
+    effect: (level) => ({
+      gooseSpawnBonus: 0.05 * level,
+      gooseWarning: level >= 1,
+      gooseRewardBonus: 1 + (level * 0.1),
+      gooseTraps: level >= 5 ? Math.floor(level / 5) : 0
+    }),
+    subSystem: {
+      type: 'goose_management',
+      features: ['early_warning', 'trap_placement', 'goose_research'],
+      unlocks: { 5: 'goose_traps', 10: 'goose_summoning' }
+    }
+  },
+
+  observatory: {
+    id: 'observatory',
+    name: 'Celestial Observatory',
+    category: 'utility',
+    description: 'Track time, predict events, star bonuses',
+    baseCost: 1500000,
+    costScale: 2.0,
+    maxLevel: 5,
+    effect: (level) => ({
+      eventPrediction: level,
+      celestialBonusWindow: level * 60, // Minutes of bonus active
+      nightBonus: 1 + (level * 0.1)
+    }),
+    subSystem: {
+      type: 'astrology',
+      features: ['event_calendar', 'celestial_alignment', 'horoscope'],
+      predictions: ['rare_cat_sighting', 'golden_goose', 'waifu_event']
+    }
+  },
+
+  // === SPECIAL BUILDINGS ===
+  hall_of_legends: {
+    id: 'hall_of_legends',
+    name: 'Hall of Legends',
+    category: 'special',
+    description: 'Display achievements, visitor bonuses',
+    baseCost: 3000000,
+    costScale: 3.0,
+    maxLevel: 5,
+    effect: (level) => ({
+      achievementDisplay: true,
+      visitorBonus: 1 + (level * 0.05),
+      legendaryShowcase: level >= 3,
+      sectPrestige: level * 100
+    }),
+    subSystem: {
+      type: 'museum',
+      features: ['trophy_room', 'cat_gallery', 'lore_archive']
+    }
+  },
+
+  goose_pen: {
+    id: 'goose_pen',
+    name: 'Goose Pen',
+    category: 'special',
+    description: 'Yes, really. Tamed geese.',
+    baseCost: 10000000,
+    costScale: 2.0,
+    maxLevel: 5,
+    unlockCondition: { cobraChickenDefeated: true },
+    effect: (level) => ({
+      tamedGeese: level,
+      gooseIncomePerHour: 100 * level,
+      chaosEvents: true
+    }),
+    subSystem: {
+      type: 'goose_husbandry',
+      features: ['goose_breeding', 'goose_racing', 'honk_choir'],
+      comedy: true
+    }
+  },
+
+  pagoda_entrance: {
+    id: 'pagoda_entrance',
+    name: 'Pagoda Entrance',
+    category: 'special',
+    description: 'Dungeon prep, relic storage',
+    baseCost: 5000000,
+    costScale: 2.0,
+    maxLevel: 5,
+    effect: (level) => ({
+      dungeonPrepTime: Math.max(0, 30 - (level * 5)),
+      relicStorage: 5 + (level * 5),
+      checkpointSaves: level
+    }),
+    subSystem: {
+      type: 'dungeon_prep',
+      features: ['formation_planning', 'relic_management', 'party_templates']
+    }
   }
 };
 
@@ -3485,58 +6039,139 @@ function renderMasterSelect() {
 
 ---
 
-## Testing Checklist
+## Testing Checklist (Expanded)
 
 ### Core Mechanics
 - [ ] Boop registers correctly, Qi particles appear
-- [ ] Each Master's passive works correctly
+- [ ] Each Master's passive works correctly (all 8 masters)
 - [ ] Combo system tracks and displays properly
 - [ ] Critical boops trigger at correct rate (+ Nik bonus)
 - [ ] PP generates while tab is open
 - [ ] PP generates correctly while AFK (+ Steve bonus)
-- [ ] All Seven Masters are selectable
+- [ ] All Eight Masters are selectable (Eighth unlocks at 100 seals)
 
-### Cat System
-- [ ] All realms (Mortal→Divine) can be obtained
-- [ ] All schools (Shaolin, Wudang, etc.) represented
-- [ ] Cat stats affect gameplay correctly
+### Cultivation System (NEW)
+- [ ] All 10 realms progress correctly (Mortal → Heavenly Sovereign)
+- [ ] XP scaling follows exponential curves
+- [ ] Tribulations trigger at realm boundaries
+- [ ] Tribulation failure gives consolation rewards
+- [ ] Realm passives unlock at correct thresholds
+- [ ] Player sprite evolves with realm
+- [ ] Realm-specific dialogue from NPCs/waifus
+
+### Technique Stances (NEW)
+- [ ] All 6 stances unlock at correct realms
+- [ ] Stance switching works mid-session
+- [ ] Each stance's special ability triggers correctly
+- [ ] Mastery XP tracks per stance
+- [ ] Fusion techniques unlock when requirements met
+- [ ] Rhythm bonus triggers when on-beat
+- [ ] Forbidden Technique costs Qi correctly
+
+### Cat System (EXPANDED)
+- [ ] All cat realms (Kitten Mortal → Cosmic Entity) obtainable
+- [ ] Cat cultivation XP and leveling works
+- [ ] All 7 elements (5 basic + void + chaos) function correctly
+- [ ] Element resonance bonuses calculate properly
+- [ ] Cat personality affects technique learning
+- [ ] Star system (1-6) upgrades on duplicates
+- [ ] Cat team of 4+1 reserve functions
+- [ ] Formation bonuses apply correctly
+- [ ] Team synergies detect and apply
+- [ ] Cat fusion recipes work
 - [ ] Legendary cats require proper unlock conditions
-- [ ] Andrew's rare cat bonus works
 
-### Waifu System
-- [ ] All six waifus unlockable via conditions
-- [ ] Bond levels persist and increase correctly
+### Waifu System (EXPANDED)
+- [ ] All 12+ waifus unlockable via conditions
+- [ ] Hidden waifus (Grandmother, Rival, etc.) unlock correctly
+- [ ] Bond levels persist and increase correctly (0-100)
+- [ ] Bond activities (tea, sparring, etc.) work
+- [ ] Activity preferences give bonus bond
 - [ ] Gift affinities working (love/like/neutral/dislike)
 - [ ] Dialogue changes with bond level
-- [ ] Max bond rewards legendary cat
+- [ ] Max bond rewards legendary cat + technique
+- [ ] Waifu teaching schools function
+- [ ] Mastery exams challenge and reward
+- [ ] Jealousy/harmony system tracks attention
+- [ ] Waifu cultivation (helping them breakthrough) works
 
-### Save/Load
+### Dungeon Systems (EXPANDED)
+- [ ] Infinite Pagoda 100+ floors function
+- [ ] Boss every 10th floor
+- [ ] Floor modifiers apply correctly
+- [ ] Relics drop and stack bonuses
+- [ ] Branching paths offer choices
+- [ ] Checkpoints save every 10 floors
+- [ ] Bamboo Forest survival mode works
+- [ ] Celestial Tournament bracket functions
+- [ ] Dream Realm generates from player data
+- [ ] Goose Dimension is sufficiently chaotic
+- [ ] Memory Fragments unlock lore
+
+### Equipment System (EXPANDED)
+- [ ] All 6 slots equip correctly (weapon, armor, accessory, mount, companion, scroll)
+- [ ] Equipment cultivation (leveling gear) works
+- [ ] Socket system functions
+- [ ] Set bonuses apply at thresholds
+- [ ] Transmog separates appearance from stats
+- [ ] Equipment evolution triggers with right materials
+
+### Economy & Prestige (NEW)
+- [ ] All 9 currencies track correctly
+- [ ] Currency conversions work where applicable
+- [ ] Ascension triggers at 1B PP
+- [ ] Heavenly Seals calculate and award correctly
+- [ ] Heavenly Decree choice applies
+- [ ] Reincarnation triggers after 10 ascensions
+- [ ] Karma Points calculate and award
+- [ ] Past Life Memories grant random buff
+- [ ] Transcendence triggers at requirements
+- [ ] Celestial Realm unlocks post-transcendence
+
+### Buildings (EXPANDED)
+- [ ] All 15+ buildings purchasable and upgradeable
+- [ ] Building sub-systems function (alchemy recipes, etc.)
+- [ ] Territory expansion unlocks
+- [ ] Building visual upgrades at thresholds
+
+### Events & Time
+- [ ] Day/night cycle affects gameplay
+- [ ] Seasonal bonuses apply
+- [ ] Daily events rotate
+- [ ] Weekly sect challenges function
+- [ ] Monthly festivals trigger
+- [ ] Random Jianghu events spawn
+- [ ] Hidden events trigger on conditions
+
+### Save/Load (EXPANDED)
 - [ ] Auto-save triggers every 30 seconds
-- [ ] Master selection persists
-- [ ] AFK calculations correct (Steve's bonus applied)
-- [ ] Goose Ally selection persists
-- [ ] Export/Import for sharing works
+- [ ] All new systems persist in save
+- [ ] Prestige data persists correctly
 - [ ] Version migration doesn't break saves
+- [ ] Export/Import for sharing works
+- [ ] BigNumber values save/load correctly
 
 ### Goose System 🦢
-- [ ] Geese spawn at correct rate (~2% per minute)
-- [ ] All mood states behave correctly (speed, dodge, rewards)
-- [ ] Legendary Geese spawn at correct rarities
-- [ ] Untitled Goose steals resources on escape
-- [ ] Golden Goose drops premium currency
-- [ ] Cobra Chicken requires 1000 boops to appear
-- [ ] Cobra Chicken requires multiple hits to defeat
-- [ ] Goose Ally system unlocks after Cobra Chicken
-- [ ] All four Goose Allies apply bonuses correctly
-- [ ] Cats scatter/fear when Goose appears
-- [ ] Brave Heart buff applies to courageous cats
-- [ ] Ceiling Cat immune to Goose fear
-- [ ] HJÖNK achievement triggers on Golden Goose crit
+- [ ] Geese spawn at correct rate
+- [ ] Goose Dimension dungeon functions
+- [ ] Goose Pen building works (tamed geese)
+- [ ] Honk Maiden waifu unlocks correctly
 
-### Sect War (Multiplayer Prep)
-- [ ] Stats tracked for leaderboard
-- [ ] Export format includes competitive data
-- [ ] Friend comparison data structure ready
+### Social Features
+- [ ] Sect visits work via Portal Gate
+- [ ] Gift exchange functions
+- [ ] Leaderboards update
+- [ ] Tournament matchmaking works
+
+### The Seven Masters Test
+Before shipping, verify each Master has compelling content:
+- [ ] Gerald: Meditation and balance feel rewarding
+- [ ] Rusty: Combat is satisfying and impactful
+- [ ] Steve: AFK builds are viable and rewarding
+- [ ] Andrew: Speed runs and events are exciting
+- [ ] Nik: Crit builds feel powerful
+- [ ] Yuelin: Story/bond content is engaging
+- [ ] Scott: Stacking strategies are viable
 
 ---
 
@@ -3680,3 +6315,56 @@ comboMult = 1 + (min(comboCount, 100) * 0.01)
 
 *"When the Seven Masters unite, no snoot shall go un-booped."*
 — The Celestial Snoot Scripture 🐱⚔️✨
+
+---
+
+## Version History
+
+### Version 2.0 - Grand Enhancement Edition
+
+**Summary:** Comprehensive expansion of all systems to create deep, layered progression that keeps players hooked for months.
+
+#### Major Additions
+
+| System | Changes |
+|--------|---------|
+| **Cultivation** | Expanded from 5 tiers to 10 realms × 9 ranks (90 levels), added Tribulation bosses |
+| **Boop System** | Added 6 Technique Stances with mastery progression, rhythm bonuses, fusion techniques |
+| **Cat Collection** | Added cat cultivation, 7 elements, personalities, techniques, teams (4+1), fusion recipes, 6-star system |
+| **Waifus** | Expanded from 6 to 12+ waifus, added teaching schools, bond activities, harmony/jealousy, waifu cultivation |
+| **Dungeons** | Added 5 dungeon types (Pagoda, Bamboo Forest, Tournament, Dream Realm, Goose Dimension), Slay the Spire-style relics |
+| **Equipment** | Expanded to 6 slots, added set bonuses, socketing, equipment cultivation, transmog |
+| **Economy** | Added 9 currencies with meaningful choices |
+| **Prestige** | Expanded to 3 layers (Ascension → Reincarnation → Transcendence) |
+| **Buildings** | Expanded to 15+ buildings with deep sub-systems |
+| **Events** | Added daily/weekly/monthly/hidden event layers |
+
+#### New Systems
+- Tribulation system with boss fights for realm breakthroughs
+- Dream Realm dungeon that generates from player data
+- Goose Dimension comedy horror dungeon
+- Past Life Memories buff system for reincarnation
+- Heavenly Decree run modifiers for ascension
+- Karma Shop for permanent upgrades
+- Celestial Realm true endgame content
+
+#### Architecture Changes
+- Modular file structure with event bus for cross-system communication
+- BigNumber support for late-game values
+- Comprehensive save system with migration support
+- All balance values externalized to JSON files
+
+### Version 1.0 - Original Release
+- Core boop mechanics
+- Seven Masters
+- Basic cat collection (5 realms)
+- Six waifus
+- Goose system
+- Infinite Pagoda
+- Basic buildings
+- Single-layer prestige
+
+---
+
+*"The Sect does not ship features. We ship experiences."*
+— Implementation Philosophy
