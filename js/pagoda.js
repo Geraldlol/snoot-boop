@@ -1729,6 +1729,144 @@ class PagodaSystem {
   }
 
   /**
+   * Auto-clear floors up to a target floor (fastest achieved floor)
+   * Returns rewards earned from auto-clearing
+   */
+  autoClear(targetFloor = null) {
+    // Default to highest floor minus 1 (so player still fights something new)
+    const maxAutoClear = targetFloor || Math.max(0, this.highestFloor - 1);
+
+    if (maxAutoClear <= 0) {
+      return { success: false, message: 'No floors to auto-clear yet!' };
+    }
+
+    if (this.inRun) {
+      return { success: false, message: 'Cannot auto-clear while in a run!' };
+    }
+
+    // Calculate rewards for auto-clearing
+    let totalBp = 0;
+    let totalTokens = 0;
+
+    for (let floor = 1; floor <= maxAutoClear; floor++) {
+      // BP per floor (reduced rate for auto-clear - 50%)
+      totalBp += Math.floor(floor * 5 * 0.5);
+
+      // Tokens per floor (reduced rate - 50%)
+      totalTokens += Math.floor(0.5);
+
+      // Boss floors give bonus
+      if (floor % 10 === 0) {
+        totalBp += Math.floor(floor * 20 * 0.5);
+        totalTokens += Math.floor(floor / 10);
+      }
+    }
+
+    // Add tokens
+    this.tokens += totalTokens;
+
+    // Update stats
+    this.stats.totalFloors += maxAutoClear;
+    this.stats.totalKills += maxAutoClear;
+    this.stats.bossKills += Math.floor(maxAutoClear / 10);
+
+    // Start a new run at the target floor
+    this.inRun = true;
+    this.currentFloor = maxAutoClear;
+    this.combatState = COMBAT_STATES.IDLE;
+    this.combatLog = [];
+
+    // Reset run rewards
+    this.runRewards = {
+      bp: totalBp,
+      tokens: totalTokens,
+      materials: [],
+      equipment: [],
+      techniques: [],
+      consumables: []
+    };
+
+    // Calculate player stats
+    this.calculatePlayerStats([]);
+
+    // Reset cooldowns
+    for (const cmdId of Object.keys(this.commands)) {
+      this.cooldowns[cmdId] = 0;
+    }
+
+    // Apply starting shields from upgrades
+    this.playerShields = this.upgrades.startingShields;
+
+    // Clear buffs/debuffs
+    this.activeBuffs = [];
+    this.activeDebuffs = [];
+    this.floorModifiers = [];
+    this.enemyDebuffs = [];
+    this.dodgeCharges = 0;
+    this.counterActive = null;
+    this.deathSaveActive = false;
+    this.reviveCharges = 0;
+    this.extraTurns = 0;
+    this.lootMultiplier = 1;
+    this.usedOnceSkills = [];
+
+    this.stats.totalRuns++;
+
+    this.logCombat(`⚡ AUTO-CLEARED to Floor ${maxAutoClear}!`);
+    this.logCombat(`Earned: ${totalBp} BP, ${totalTokens} tokens`);
+
+    if (window.audioSystem) {
+      window.audioSystem.playSFX('dungeonStart');
+    }
+
+    // Advance to next floor
+    this.advanceFloor();
+
+    return {
+      success: true,
+      message: `Auto-cleared to floor ${maxAutoClear}!`,
+      rewards: { bp: totalBp, tokens: totalTokens },
+      currentFloor: this.currentFloor
+    };
+  }
+
+  /**
+   * Get auto-clear info for UI
+   */
+  getAutoClearInfo() {
+    const maxAutoClear = Math.max(0, this.highestFloor - 1);
+
+    if (maxAutoClear <= 0) {
+      return {
+        available: false,
+        targetFloor: 0,
+        estimatedBp: 0,
+        estimatedTokens: 0
+      };
+    }
+
+    // Estimate rewards
+    let estimatedBp = 0;
+    let estimatedTokens = 0;
+
+    for (let floor = 1; floor <= maxAutoClear; floor++) {
+      estimatedBp += Math.floor(floor * 5 * 0.5);
+      estimatedTokens += Math.floor(0.5);
+      if (floor % 10 === 0) {
+        estimatedBp += Math.floor(floor * 20 * 0.5);
+        estimatedTokens += Math.floor(floor / 10);
+      }
+    }
+
+    return {
+      available: true,
+      targetFloor: maxAutoClear,
+      estimatedBp: estimatedBp,
+      estimatedTokens: estimatedTokens
+    };
+  }
+
+  /**
    * Reset system (for prestige)
    */
   reset(keepUpgrades = false) {

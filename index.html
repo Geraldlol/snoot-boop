@@ -178,6 +178,7 @@
             <button class="tab-btn" data-tab="partners">💕 Partners</button>
             <button class="tab-btn" data-tab="facilities">☯️ Sect</button>
             <button class="tab-btn" data-tab="techniques">📜 Skills</button>
+            <button class="tab-btn" data-tab="shop">🦅 Shop</button>
             <button class="tab-btn" data-tab="stats">📊 Stats</button>
           </div>
 
@@ -229,6 +230,10 @@
               </div>
               <button id="start-pagoda-btn" class="jade-button pagoda-start-btn">
                 Enter the Pagoda
+              </button>
+              <button id="auto-clear-btn" class="jade-button auto-clear-btn hidden" onclick="autoClearPagoda()">
+                ⚡ Auto-Clear
+                <span id="auto-clear-info" class="auto-clear-info"></span>
               </button>
               <div id="pagoda-combat" class="pagoda-combat hidden">
                 <div class="combat-enemy">
@@ -606,6 +611,51 @@
                 <div id="consumables-list" class="consumables-grid">
                   <p class="empty-message">Collect consumables from the Pagoda.</p>
                 </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Shop Tab -->
+          <div id="shop-tab" class="tab-content">
+            <div class="shop-panel">
+              <div class="shop-header">
+                <div class="shop-keeper">
+                  <span class="shop-keeper-portrait">🦅</span>
+                  <div class="shop-keeper-info">
+                    <h4 class="shop-keeper-name">BombayClyde</h4>
+                    <p class="shop-keeper-title">Licensed Merchant of the Flying Eagle Stronghold</p>
+                  </div>
+                </div>
+                <div class="shop-lore">
+                  <p class="lore-text">"Welcome, cultivator! All transactions here follow the sacred laws of the <span class="highlight">Flying Eagle Stronghold</span>. The Seven Masters have sworn to uphold these ancient trade agreements - no funny business, fair prices, and absolutely NO refunds on catnip."</p>
+                </div>
+              </div>
+
+              <div class="shop-balance">
+                <span>💰 BP: </span>
+                <span id="shop-bp-display" class="shop-bp">0</span>
+                <span class="shop-balance-divider">|</span>
+                <span>🌿 Jade Catnip: </span>
+                <span id="shop-jade-display" class="shop-jade">0</span>
+              </div>
+
+              <div class="shop-categories">
+                <button class="shop-cat-btn active" data-category="equipment">⚔️ Equipment</button>
+                <button class="shop-cat-btn" data-category="materials">📦 Materials</button>
+                <button class="shop-cat-btn" data-category="consumables">🧪 Consumables</button>
+                <button class="shop-cat-btn" data-category="special">✨ Special</button>
+              </div>
+
+              <div class="shop-dialogue" id="shop-dialogue">
+                <p>"The Flying Eagle Stronghold guarantees quality! ...mostly."</p>
+              </div>
+
+              <div id="shop-items" class="shop-items">
+                <!-- Items populated by JS -->
+              </div>
+
+              <div class="shop-footer">
+                <p class="shop-footer-text">🦅 "By the wings of the Flying Eagle, may your snoots be ever boopable." - Ancient Merchant Blessing</p>
               </div>
             </div>
           </div>
@@ -1071,8 +1121,10 @@
     <!-- Mobile More Menu -->
     <div id="mobile-more-menu" class="mobile-more-menu hidden">
       <button class="more-menu-btn" data-tab="equipment">⚙️ Equipment</button>
+      <button class="more-menu-btn" data-tab="forge">🔨 Forge</button>
       <button class="more-menu-btn" data-tab="catino">🎰 Casino</button>
       <button class="more-menu-btn" data-tab="partners">💕 Partners</button>
+      <button class="more-menu-btn" data-tab="shop">🦅 Shop</button>
       <button class="more-menu-btn" data-tab="facilities">☯️ Sect</button>
       <button class="more-menu-btn" data-tab="techniques">📜 Skills</button>
       <button class="more-menu-btn" data-tab="stats">📊 Stats</button>

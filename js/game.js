@@ -282,6 +282,7 @@ const elements = {
   partnersTab: document.getElementById('partners-tab'),
   techniquesTab: document.getElementById('techniques-tab'),
   forgeTab: document.getElementById('forge-tab'),
+  shopTab: document.getElementById('shop-tab'),
 
   // Mobile Navigation
   mobileNav: document.getElementById('mobile-nav'),
@@ -977,6 +978,9 @@ function switchTab(tabId) {
   if (elements.forgeTab) {
     elements.forgeTab.classList.toggle('active', tabId === 'forge');
   }
+  if (elements.shopTab) {
+    elements.shopTab.classList.toggle('active', tabId === 'shop');
+  }
 
   // Update content when switching tabs
   if (tabId === 'stats') {
@@ -1002,6 +1006,8 @@ function switchTab(tabId) {
     renderTechniquesPanel();
   } else if (tabId === 'forge') {
     renderForgeTab();
+  } else if (tabId === 'shop') {
+    renderShop();
   }
 }
 
@@ -1020,7 +1026,9 @@ const TAB_TITLES = {
   facilities: '☯️ Sect Facilities',
   techniques: '📜 Skills & Techniques',
   stats: '📊 Stats',
-  waifu: '💝 Waifu Master'
+  waifu: '💝 Waifu Master',
+  shop: '🦅 BombayClyde\'s Shop',
+  forge: '🔨 Forge'
 };
 
 let mobileMoreMenuOpen = false;
@@ -4065,6 +4073,9 @@ function renderPagoda() {
     if (startBtn) startBtn.classList.remove('hidden');
     if (combatDiv) combatDiv.classList.add('hidden');
   }
+
+  // Update auto-clear button
+  updateAutoClearButton();
 }
 
 function updatePagodaCombat() {
@@ -4122,6 +4133,44 @@ function startPagodaRun() {
     renderPagoda();
   }
 }
+
+function autoClearPagoda() {
+  if (!pagodaSystem) return;
+
+  const result = pagodaSystem.autoClear();
+
+  if (result.success) {
+    // Add rewards to game state
+    gameState.boopPoints += result.rewards.bp;
+    updateResourceDisplay();
+    showNotification(`⚡ Auto-cleared to Floor ${result.currentFloor - 1}! +${formatNumber(result.rewards.bp)} BP`, 'success');
+    renderPagoda();
+  } else {
+    showNotification(result.message, 'error');
+  }
+}
+
+function updateAutoClearButton() {
+  const autoClearBtn = document.getElementById('auto-clear-btn');
+  const autoClearInfo = document.getElementById('auto-clear-info');
+
+  if (!pagodaSystem || !autoClearBtn) return;
+
+  const info = pagodaSystem.getAutoClearInfo();
+
+  if (info.available && !pagodaSystem.inRun) {
+    autoClearBtn.classList.remove('hidden');
+    autoClearBtn.disabled = false;
+    if (autoClearInfo) {
+      autoClearInfo.textContent = `Skip to Floor ${info.targetFloor} (~${formatNumber(info.estimatedBp)} BP)`;
+    }
+  } else {
+    autoClearBtn.classList.add('hidden');
+  }
+}
+
+// Make auto-clear available globally
+window.autoClearPagoda = autoClearPagoda;
 
 function executePagodaCommand(cmdId) {
   if (!pagodaSystem) return;
@@ -4981,6 +5030,486 @@ window.upgradeSelectedItem = upgradeSelectedItem;
 window.enchantSelectedItem = enchantSelectedItem;
 window.removeEnchant = removeEnchant;
 window.renderForgeTab = renderForgeTab;
+
+// ===================================
+// SHOP SYSTEM - BOMBAYCLYDE'S EMPORIUM
+// "Following the Laws of Flying Eagle Stronghold"
+// ===================================
+
+const SHOP_ITEMS = {
+  equipment: [
+    {
+      id: 'shop_iron_collar',
+      name: 'Iron Collar of the Eagle',
+      description: 'Standard issue collar from the Flying Eagle armory. Sturdy and reliable.',
+      slot: 'collar',
+      rarity: 'uncommon',
+      baseStats: { defense: 8, hp: 25 },
+      price: { bp: 5000 },
+      stock: 3
+    },
+    {
+      id: 'shop_jade_paws',
+      name: 'Jade Paw Wraps',
+      description: 'Wrapped in jade-infused silk. The Stronghold reserves these for promising warriors.',
+      slot: 'paws',
+      rarity: 'rare',
+      baseStats: { attack: 12, critChance: 3 },
+      price: { bp: 15000 },
+      stock: 2
+    },
+    {
+      id: 'shop_eagle_helm',
+      name: 'Flying Eagle Helm',
+      description: 'Emblazoned with the soaring eagle. Only those who follow the laws may wear it.',
+      slot: 'hat',
+      rarity: 'rare',
+      baseStats: { defense: 15, wisdom: 10 },
+      price: { bp: 20000, jadeCatnip: 5 },
+      stock: 1
+    },
+    {
+      id: 'shop_stronghold_blade',
+      name: 'Stronghold Talon Blade',
+      description: 'Forged in the Flying Eagle smithy. Sharp as talons, true as honor.',
+      slot: 'weapon',
+      rarity: 'epic',
+      baseStats: { attack: 35, critDamage: 15 },
+      price: { bp: 50000, jadeCatnip: 15 },
+      stock: 1
+    }
+  ],
+  materials: [
+    {
+      id: 'upgrade_stone_common',
+      name: 'Common Upgrade Stone',
+      description: 'Basic material for equipment enhancement. Mined from the Stronghold quarry.',
+      price: { bp: 500 },
+      stock: 10
+    },
+    {
+      id: 'upgrade_stone_rare',
+      name: 'Rare Upgrade Stone',
+      description: 'Quality material refined by Stronghold artisans.',
+      price: { bp: 2500 },
+      stock: 5
+    },
+    {
+      id: 'upgrade_stone_epic',
+      name: 'Epic Upgrade Stone',
+      description: 'Precious material. BombayClyde had to pull some strings for these.',
+      price: { bp: 10000, jadeCatnip: 3 },
+      stock: 3
+    },
+    {
+      id: 'enchant_scroll_common',
+      name: 'Enchantment Scroll',
+      description: 'Basic scroll for imbuing equipment with mystical properties.',
+      price: { bp: 1500 },
+      stock: 5
+    },
+    {
+      id: 'enchant_scroll_rare',
+      name: 'Rare Enchantment Scroll',
+      description: 'Contains ancient Flying Eagle enchantments.',
+      price: { bp: 5000, jadeCatnip: 2 },
+      stock: 3
+    }
+  ],
+  consumables: [
+    {
+      id: 'qi_potion_small',
+      name: 'Minor Qi Potion',
+      description: 'Brewed by Stronghold alchemists. Restores a small amount of energy.',
+      effect: { type: 'instant_pp', value: 1000 },
+      price: { bp: 800 },
+      stock: 10
+    },
+    {
+      id: 'qi_potion_large',
+      name: 'Major Qi Potion',
+      description: 'Premium brew. The Masters swear by it.',
+      effect: { type: 'instant_pp', value: 10000 },
+      price: { bp: 5000 },
+      stock: 5
+    },
+    {
+      id: 'lucky_charm',
+      name: 'Eagle\'s Fortune Charm',
+      description: 'Doubles critical chance for 5 minutes. May the Eagle watch over you!',
+      effect: { type: 'buff', stat: 'critChance', multiplier: 2, duration: 300 },
+      price: { bp: 3000 },
+      stock: 3
+    },
+    {
+      id: 'boop_boost',
+      name: 'Boop Power Incense',
+      description: 'Ancient incense that empowers your boops for 10 minutes.',
+      effect: { type: 'buff', stat: 'boopPower', multiplier: 1.5, duration: 600 },
+      price: { bp: 4000, jadeCatnip: 1 },
+      stock: 3
+    }
+  ],
+  special: [
+    {
+      id: 'golden_feather_bundle',
+      name: 'Golden Feather Bundle',
+      description: 'Rare feathers from the legendary Golden Goose. Even BombayClyde is impressed you can afford these.',
+      price: { jadeCatnip: 50 },
+      reward: { goldenFeathers: 10 },
+      stock: 1
+    },
+    {
+      id: 'destiny_thread_spool',
+      name: 'Spool of Destiny',
+      description: 'Threads woven from fate itself. Use them wisely, cultivator.',
+      price: { bp: 100000 },
+      reward: { destinyThreads: 25 },
+      stock: 2
+    },
+    {
+      id: 'jade_catnip_pouch',
+      name: 'Jade Catnip Pouch',
+      description: 'The good stuff. BombayClyde keeps a stash for special customers.',
+      price: { bp: 50000 },
+      reward: { jadeCatnip: 10 },
+      stock: 3
+    }
+  ]
+};
+
+// Track shop state
+let shopCategory = 'equipment';
+let shopStock = null;
+
+function initShopStock() {
+  if (shopStock) return;
+  shopStock = {};
+  for (const [category, items] of Object.entries(SHOP_ITEMS)) {
+    for (const item of items) {
+      shopStock[item.id] = item.stock;
+    }
+  }
+}
+
+function getShopStock(itemId) {
+  initShopStock();
+  return shopStock[itemId] ?? 0;
+}
+
+function decrementShopStock(itemId) {
+  initShopStock();
+  if (shopStock[itemId] > 0) {
+    shopStock[itemId]--;
+    return true;
+  }
+  return false;
+}
+
+function canAffordShopItem(item) {
+  if (!item.price) return false;
+  if (item.price.bp && gameState.boopPoints < item.price.bp) return false;
+  if (item.price.jadeCatnip && gameState.jadeCatnip < item.price.jadeCatnip) return false;
+  if (item.price.goldenFeathers && gameState.goldenFeathers < item.price.goldenFeathers) return false;
+  return true;
+}
+
+function formatShopPrice(price) {
+  const parts = [];
+  if (price.bp) parts.push(`💰 ${formatNumber(price.bp)} BP`);
+  if (price.jadeCatnip) parts.push(`🌿 ${price.jadeCatnip} Jade Catnip`);
+  if (price.goldenFeathers) parts.push(`✨ ${price.goldenFeathers} Golden Feathers`);
+  return parts.join(' + ');
+}
+
+function purchaseShopItem(itemId) {
+  initShopStock();
+
+  // Find the item
+  let item = null;
+  let category = null;
+  for (const [cat, items] of Object.entries(SHOP_ITEMS)) {
+    const found = items.find(i => i.id === itemId);
+    if (found) {
+      item = found;
+      category = cat;
+      break;
+    }
+  }
+
+  if (!item) {
+    console.warn('[Shop] Item not found:', itemId);
+    return false;
+  }
+
+  // Check stock
+  if (getShopStock(itemId) <= 0) {
+    showNotification('Out of Stock! BombayClyde shrugs: "Fresh out, friend. Check back later."', 'error');
+    return false;
+  }
+
+  // Check affordability
+  if (!canAffordShopItem(item)) {
+    showNotification('Cannot Afford! BombayClyde: "Come back when you have the coin, friend."', 'error');
+    return false;
+  }
+
+  // Deduct price
+  if (item.price.bp) gameState.boopPoints -= item.price.bp;
+  if (item.price.jadeCatnip) gameState.jadeCatnip -= item.price.jadeCatnip;
+  if (item.price.goldenFeathers) gameState.goldenFeathers -= item.price.goldenFeathers;
+
+  // Deliver the goods
+  let successMsg = '';
+
+  if (category === 'equipment') {
+    // Create new equipment and add to inventory
+    const newEquip = {
+      id: `equip_${Date.now()}`,
+      templateId: item.id,
+      name: item.name,
+      slot: item.slot,
+      rarity: item.rarity,
+      stats: { ...item.baseStats },
+      upgradeLevel: 0,
+      enchantments: []
+    };
+    if (!gameState.equipmentInventory) gameState.equipmentInventory = [];
+    gameState.equipmentInventory.push(newEquip);
+    successMsg = `${item.name} added to your inventory!`;
+
+  } else if (category === 'materials') {
+    // Add materials to crafting system
+    if (craftingSystem && craftingSystem.materials) {
+      craftingSystem.materials[item.id] = (craftingSystem.materials[item.id] || 0) + 1;
+    }
+    successMsg = `Received 1x ${item.name}!`;
+
+  } else if (category === 'consumables') {
+    // Apply consumable effect
+    if (item.effect) {
+      if (item.effect.type === 'instant_pp') {
+        gameState.purrPower += item.effect.value;
+        successMsg = `+${formatNumber(item.effect.value)} PP!`;
+      } else if (item.effect.type === 'buff') {
+        applyShopBuff(item.effect);
+        successMsg = `${item.name} activated for ${item.effect.duration}s!`;
+      }
+    }
+
+  } else if (category === 'special') {
+    // Add special rewards
+    if (item.reward) {
+      if (item.reward.goldenFeathers) gameState.goldenFeathers += item.reward.goldenFeathers;
+      if (item.reward.destinyThreads) gameState.destinyThreads += item.reward.destinyThreads;
+      if (item.reward.jadeCatnip) gameState.jadeCatnip += item.reward.jadeCatnip;
+
+      const rewards = [];
+      if (item.reward.goldenFeathers) rewards.push(`${item.reward.goldenFeathers} Golden Feathers`);
+      if (item.reward.destinyThreads) rewards.push(`${item.reward.destinyThreads} Destiny Threads`);
+      if (item.reward.jadeCatnip) rewards.push(`${item.reward.jadeCatnip} Jade Catnip`);
+      successMsg = `Received: ${rewards.join(', ')}!`;
+    }
+  }
+
+  // Decrement stock
+  decrementShopStock(itemId);
+
+  // Show success with sneaky BombayClyde flavor
+  const sneakyResponses = [
+    `"Pleasure doing business! ${successMsg} No refunds!"`,
+    `"A wise purchase! ${successMsg} ...probably!"`,
+    `"You won\'t regret this! ${successMsg} Terms and conditions apply!"`,
+    `"SOLD to the cultivator! ${successMsg} All sales FINAL!"`,
+    `"An excellent choice! ${successMsg} I barely made any profit... *wink*"`
+  ];
+  const sneakyResponse = sneakyResponses[Math.floor(Math.random() * sneakyResponses.length)];
+  showNotification(`BombayClyde: ${sneakyResponse}`, 'success');
+
+  // Play sound
+  if (audioSystem) audioSystem.playSFX('powerup');
+
+  // Update displays
+  updateResourceDisplay();
+  renderShop();
+
+  return true;
+}
+
+// Shop buffs tracking
+let activeShopBuffs = [];
+
+function applyShopBuff(effect) {
+  const buff = {
+    stat: effect.stat,
+    multiplier: effect.multiplier,
+    endTime: Date.now() + (effect.duration * 1000)
+  };
+
+  activeShopBuffs.push(buff);
+
+  // Apply the buff
+  if (effect.stat === 'critChance') {
+    gameState.critChance *= effect.multiplier;
+  } else if (effect.stat === 'boopPower') {
+    gameState.boopPower *= effect.multiplier;
+  }
+
+  // Schedule removal
+  setTimeout(() => removeShopBuff(buff), effect.duration * 1000);
+}
+
+function removeShopBuff(buff) {
+  const index = activeShopBuffs.indexOf(buff);
+  if (index > -1) {
+    activeShopBuffs.splice(index, 1);
+
+    // Remove the buff effect
+    if (buff.stat === 'critChance') {
+      gameState.critChance /= buff.multiplier;
+    } else if (buff.stat === 'boopPower') {
+      gameState.boopPower /= buff.multiplier;
+    }
+
+    showNotification(`Buff Expired: Your ${buff.stat} boost has worn off.`, 'info');
+  }
+}
+
+const BOMBAYCLYDE_DIALOGUES = {
+  equipment: [
+    '"90% off! ...from what I paid. You\'re basically robbing ME here!"',
+    '"This blade was owned by THREE legendary warriors! They all died, but unrelated!"',
+    '"Flying Eagle CERTIFIED! The certificate is around here somewhere..."',
+    '"Buy two, get none free! INCREDIBLE deal, friend!"',
+    '"This armor stopped 99 arrows. The 100th is your problem."',
+    '"My grandmother made this collar. She was... mostly a blacksmith."',
+    '"Limited time offer! Time limit: until I change my mind!"'
+  ],
+  materials: [
+    '"Upgrade stones, fresh from the... stone place! Very legitimate!"',
+    '"These materials are SO good, I mark them up 500% out of RESPECT."',
+    '"Straight from Flying Eagle mines! The child labor rumors are EXAGGERATED."',
+    '"Buy now! These prices are a CRIME! ...which is why I\'m selling fast."',
+    '"Premium scrolls! The smudged writing adds MYSTERY!"',
+    '"Each stone is hand-picked by someone. Probably. I didn\'t ask."'
+  ],
+  consumables: [
+    '"Side effects may include: winning! And also mild explosions."',
+    '"This potion is 100% natural! Naturally overpriced, that is!"',
+    '"Brewed by a master alchemist! He\'s in hiding now, but still a master!"',
+    '"Doubles your power! Disclaimer: math is approximate."',
+    '"The expiration date is a SUGGESTION, cultivator!"',
+    '"These buffs are PERMANENT! For the duration they last!"',
+    '"Tested on cats! They seemed fine! ...the ones that survived!"'
+  ],
+  special: [
+    '"These items fell off the back of a very legal wagon!"',
+    '"So rare, I had to make up a rarity! Ultra-Hyper-Legendary!"',
+    '"The Flying Eagle Stronghold DEFINITELY knows I have these. Probably."',
+    '"I\'m basically PAYING you to take these! Emotionally, not financially."',
+    '"Once-in-a-lifetime deal! Offer valid for YOUR lifetime specifically."',
+    '"This item grants THREE wishes! Wishing it worked counts as one."',
+    '"Acquired through \'legitimate channels\'. The quotation marks are decorative!"'
+  ]
+};
+
+function renderShop() {
+  const itemsContainer = document.getElementById('shop-items');
+  const categoryBtns = document.querySelectorAll('.shop-cat-btn');
+  const bpDisplay = document.getElementById('shop-bp-display');
+  const jadeDisplay = document.getElementById('shop-jade-display');
+  const dialogueEl = document.getElementById('shop-dialogue');
+
+  if (!itemsContainer) return;
+
+  // Update resource displays
+  if (bpDisplay) {
+    bpDisplay.textContent = formatNumber(gameState.boopPoints);
+  }
+  if (jadeDisplay) {
+    jadeDisplay.textContent = gameState.jadeCatnip || 0;
+  }
+
+  // Update BombayClyde's dialogue
+  if (dialogueEl) {
+    const dialogues = BOMBAYCLYDE_DIALOGUES[shopCategory] || BOMBAYCLYDE_DIALOGUES.equipment;
+    const randomDialogue = dialogues[Math.floor(Math.random() * dialogues.length)];
+    dialogueEl.innerHTML = `<p>${randomDialogue}</p>`;
+  }
+
+  initShopStock();
+
+  // Update category buttons
+  categoryBtns.forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.category === shopCategory);
+  });
+
+  // Get items for current category
+  const items = SHOP_ITEMS[shopCategory] || [];
+
+  if (items.length === 0) {
+    itemsContainer.innerHTML = '<div class="shop-empty">No items available in this category.</div>';
+    return;
+  }
+
+  itemsContainer.innerHTML = items.map(item => {
+    const stock = getShopStock(item.id);
+    const canAfford = canAffordShopItem(item);
+    const rarityClass = item.rarity || 'common';
+
+    return `
+      <div class="shop-item ${rarityClass} ${stock <= 0 ? 'out-of-stock' : ''} ${!canAfford ? 'cannot-afford' : ''}">
+        <div class="shop-item-header">
+          <span class="shop-item-name">${item.name}</span>
+          <span class="shop-item-stock">${stock > 0 ? `Stock: ${stock}` : 'SOLD OUT'}</span>
+        </div>
+        <div class="shop-item-description">${item.description}</div>
+        ${item.baseStats ? `
+          <div class="shop-item-stats">
+            ${Object.entries(item.baseStats).map(([stat, val]) => `<span>${stat}: +${val}</span>`).join(' ')}
+          </div>
+        ` : ''}
+        ${item.effect ? `
+          <div class="shop-item-effect">
+            Effect: ${item.effect.type === 'instant_pp' ? `+${formatNumber(item.effect.value)} PP` :
+                     `${item.effect.multiplier}x ${item.effect.stat} for ${item.effect.duration}s`}
+          </div>
+        ` : ''}
+        ${item.reward ? `
+          <div class="shop-item-reward">
+            Rewards: ${Object.entries(item.reward).map(([k, v]) => `${v} ${k.replace(/([A-Z])/g, ' $1')}`).join(', ')}
+          </div>
+        ` : ''}
+        <div class="shop-item-footer">
+          <span class="shop-item-price ${canAfford ? 'affordable' : 'expensive'}">${formatShopPrice(item.price)}</span>
+          <button class="shop-buy-btn" onclick="purchaseShopItem('${item.id}')" ${stock <= 0 || !canAfford ? 'disabled' : ''}>
+            ${stock <= 0 ? 'Sold Out' : (canAfford ? 'Purchase' : 'Cannot Afford')}
+          </button>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function switchShopCategory(category) {
+  shopCategory = category;
+  renderShop();
+}
+
+// Initialize shop category buttons
+document.addEventListener('DOMContentLoaded', () => {
+  const categoryBtns = document.querySelectorAll('.shop-cat-btn');
+  categoryBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      switchShopCategory(btn.dataset.category);
+    });
+  });
+});
+
+// Make shop functions globally available
+window.purchaseShopItem = purchaseShopItem;
+window.switchShopCategory = switchShopCategory;
+window.renderShop = renderShop;
 
 // ===================================
 // RESET GAME
