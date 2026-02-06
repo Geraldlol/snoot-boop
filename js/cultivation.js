@@ -979,4 +979,105 @@ class CultivationSystem {
 window.CultivationSystem = CultivationSystem;
 window.CULTIVATION_REALMS = CULTIVATION_REALMS;
 
+// ===================================
+// DATA LOADER INTEGRATION
+// ===================================
+
+/**
+ * Load cultivation data from JSON and merge with hardcoded defaults.
+ * Hardcoded values serve as fallback if JSON not available.
+ */
+function loadCultivationDataFromJSON(data) {
+  if (!data) return;
+
+  // Update CULTIVATION_REALMS from JSON
+  if (data.realms) {
+    for (const [realmId, realmData] of Object.entries(data.realms)) {
+      if (CULTIVATION_REALMS[realmId]) {
+        // Merge JSON data with existing, JSON takes precedence
+        Object.assign(CULTIVATION_REALMS[realmId], realmData);
+
+        // Handle special case for Infinity ranks (JSON stores as null)
+        if (realmData.ranks === null && realmId === 'heavenlySovereign') {
+          CULTIVATION_REALMS[realmId].ranks = Infinity;
+        }
+
+        // Handle special case for Infinity offline time limit
+        if (realmData.passives) {
+          for (const [rank, passive] of Object.entries(realmData.passives)) {
+            if (passive.effect?.offlineTimeLimit === null) {
+              CULTIVATION_REALMS[realmId].passives[rank].effect.offlineTimeLimit = Infinity;
+            }
+          }
+        }
+      } else {
+        // New realm from JSON
+        CULTIVATION_REALMS[realmId] = realmData;
+        if (realmData.ranks === null) {
+          CULTIVATION_REALMS[realmId].ranks = Infinity;
+        }
+      }
+    }
+  }
+
+  // Store tribulation types if present
+  if (data.tribulationTypes) {
+    window.TRIBULATION_TYPES = data.tribulationTypes;
+  }
+
+  // Store prestige layers data if present
+  if (data.prestigeLayers) {
+    window.PRESTIGE_LAYERS = data.prestigeLayers;
+  }
+
+  // Store heavenly seal bonuses if present
+  if (data.heavenlySealBonuses) {
+    window.HEAVENLY_SEAL_BONUSES = data.heavenlySealBonuses;
+  }
+
+  // Store karma shop if present
+  if (data.karmaShop) {
+    window.KARMA_SHOP = data.karmaShop;
+  }
+
+  console.log('Cultivation data loaded from JSON');
+}
+
+// Integration with dataLoader when available
+if (window.dataLoader) {
+  dataLoader.onReady(() => {
+    const data = dataLoader.get('cultivation');
+    if (data) {
+      loadCultivationDataFromJSON(data);
+    }
+  });
+} else {
+  // If dataLoader doesn't exist yet, set up a listener for when it becomes available
+  Object.defineProperty(window, 'dataLoader', {
+    configurable: true,
+    set: function(loader) {
+      Object.defineProperty(window, 'dataLoader', {
+        configurable: true,
+        writable: true,
+        value: loader
+      });
+      // Now that dataLoader is available, register our callback
+      if (loader && loader.onReady) {
+        loader.onReady(() => {
+          const data = loader.get('cultivation');
+          if (data) {
+            loadCultivationDataFromJSON(data);
+          }
+        });
+      }
+    },
+    get: function() {
+      return undefined;
+    }
+  });
+}
+
+// Export the loader function for manual use if needed
+window.loadCultivationDataFromJSON = loadCultivationDataFromJSON;
+
 console.log('Cultivation System loaded!');

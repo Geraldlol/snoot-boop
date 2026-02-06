@@ -573,3 +573,241 @@ class AchievementSystem {
 window.ACHIEVEMENT_CATEGORIES = ACHIEVEMENT_CATEGORIES;
 window.ACHIEVEMENTS = ACHIEVEMENTS;
 window.AchievementSystem = AchievementSystem;
+
+// ===================================
+// DATA LOADER INTEGRATION
+// ===================================
+
+/**
+ * Load achievement data from JSON and merge with hardcoded defaults.
+ * Hardcoded values serve as fallback if JSON not available.
+ */
+function loadAchievementDataFromJSON(data) {
+  if (!data) return;
+
+  console.log('[AchievementSystem] Loading achievement data from JSON...');
+
+  // Update ACHIEVEMENT_CATEGORIES from JSON
+  if (data.categories) {
+    for (const [categoryId, categoryData] of Object.entries(data.categories)) {
+      if (ACHIEVEMENT_CATEGORIES[categoryId]) {
+        // Merge with existing category
+        ACHIEVEMENT_CATEGORIES[categoryId] = {
+          ...ACHIEVEMENT_CATEGORIES[categoryId],
+          ...categoryData,
+          // Preserve emoji from hardcoded if not in JSON
+          emoji: categoryData.emoji || ACHIEVEMENT_CATEGORIES[categoryId].emoji
+        };
+      } else {
+        // New category from JSON
+        ACHIEVEMENT_CATEGORIES[categoryId] = {
+          id: categoryId,
+          emoji: '🏆',
+          ...categoryData
+        };
+      }
+    }
+    console.log(`[AchievementSystem] Loaded ${Object.keys(data.categories).length} categories from JSON`);
+  }
+
+  // Update ACHIEVEMENTS from JSON
+  if (data.achievements) {
+    for (const [achievementId, achievementData] of Object.entries(data.achievements)) {
+      if (ACHIEVEMENTS[achievementId]) {
+        // Merge JSON data with existing, JSON takes precedence
+        // Preserve hardcoded condition function and emoji if not in JSON
+        const existing = ACHIEVEMENTS[achievementId];
+        ACHIEVEMENTS[achievementId] = {
+          ...existing,
+          ...achievementData,
+          // Keep existing condition function - it can't be represented in JSON
+          condition: existing.condition,
+          // Preserve emoji from hardcoded if not in JSON
+          emoji: achievementData.emoji || existing.emoji
+        };
+
+        // If JSON provides condition data (not function), create a new condition function
+        if (achievementData.condition && typeof achievementData.condition === 'object') {
+          ACHIEVEMENTS[achievementId].condition = createConditionFromJSON(achievementData.condition);
+        }
+      } else {
+        // New achievement from JSON
+        const newAchievement = {
+          id: achievementId,
+          emoji: '🏆',
+          ...achievementData
+        };
+
+        // Create condition function from JSON condition object
+        if (achievementData.condition && typeof achievementData.condition === 'object') {
+          newAchievement.condition = createConditionFromJSON(achievementData.condition);
+        } else {
+          // Default condition that always returns false (requires manual trigger)
+          newAchievement.condition = () => false;
+        }
+
+        ACHIEVEMENTS[achievementId] = newAchievement;
+      }
+    }
+    console.log(`[AchievementSystem] Loaded ${Object.keys(data.achievements).length} achievements from JSON`);
+  }
+
+  console.log('[AchievementSystem] Achievement data loaded from JSON');
+}
+
+/**
+ * Create a condition function from a JSON condition object
+ * Supports various condition types like totalBoops, catCount, realm, etc.
+ */
+function createConditionFromJSON(conditionObj) {
+  return (state) => {
+    for (const [key, value] of Object.entries(conditionObj)) {
+      switch (key) {
+        // Numeric comparisons
+        case 'totalBoops':
+          if ((state.totalBoops || 0) < value) return false;
+          break;
+        case 'criticalBoops':
+          if ((state.criticalBoops || 0) < value) return false;
+          break;
+        case 'maxCombo':
+          if ((state.maxCombo || 0) < value) return false;
+          break;
+        case 'catCount':
+        case 'catsRecruited':
+          if ((state.catCount || 0) < value) return false;
+          break;
+        case 'legendaryCats':
+          if ((state.legendaryCats || 0) < value) return false;
+          break;
+        case 'waifusUnlocked':
+          if ((state.waifusUnlocked || 0) < value) return false;
+          break;
+        case 'maxBondWaifus':
+          if ((state.maxBondWaifus || 0) < value) return false;
+          break;
+        case 'gooseBoops':
+          if ((state.gooseBoops || 0) < value) return false;
+          break;
+        case 'pagodaHighestFloor':
+          if ((state.pagodaHighestFloor || 0) < value) return false;
+          break;
+        case 'bambooSurvivalTime':
+          if ((state.bambooSurvivalTime || 0) < value) return false;
+          break;
+        case 'tournamentWins':
+          if ((state.tournamentWins || 0) < value) return false;
+          break;
+        case 'sectWarWins':
+          if ((state.sectWarWins || 0) < value) return false;
+          break;
+        case 'ascensions':
+          if ((state.ascensions || 0) < value) return false;
+          break;
+        case 'reincarnations':
+          if ((state.reincarnations || 0) < value) return false;
+          break;
+        case 'transcendences':
+          if ((state.transcendences || 0) < value) return false;
+          break;
+        case 'harmonyDuration':
+          if ((state.harmonyDuration || 0) < value) return false;
+          break;
+        case 'moonClicks':
+          if ((state.moonClicks || 0) < value) return false;
+          break;
+        case 'noBoopMinutes':
+          if ((state.noBoopMinutes || 0) < value) return false;
+          break;
+        case 'perfectRhythmBoops':
+          if ((state.perfectRhythmBoops || 0) < value) return false;
+          break;
+        case 'unhappyCats':
+          if ((state.unhappyCats || 0) < value) return false;
+          break;
+        case 'achievementCount':
+          if ((state.achievementCount || 0) < value) return false;
+          break;
+
+        // Boolean checks
+        case 'rageGooseBooped':
+        case 'cobraChickenDefeated':
+        case 'gooseAlly':
+        case 'goldenGooseCrit':
+        case 'primordialHonkDefeated':
+        case 'allWaifusMaxBond':
+        case 'catNamedNyan':
+        case 'eighthMasterUnlocked':
+          if (value === true && !state[key]) return false;
+          break;
+
+        // Exact match (like bpExact)
+        case 'bpExact':
+          if (state.boopPoints !== value) return false;
+          break;
+
+        // Realm check (string comparison)
+        case 'realm':
+          if (state.cultivationRealm !== value) return false;
+          break;
+
+        // Has specific cat
+        case 'hasCat':
+          if (!state.ownedCatIds?.includes(value)) return false;
+          break;
+
+        default:
+          // Generic check - if state has the key with a numeric value
+          if (typeof value === 'number') {
+            if ((state[key] || 0) < value) return false;
+          } else if (typeof value === 'boolean') {
+            if (value && !state[key]) return false;
+          }
+          break;
+      }
+    }
+    return true;
+  };
+}
+
+// Integration with dataLoader when available
+if (window.dataLoader) {
+  dataLoader.onReady('achievements', (data) => {
+    const achievementsData = data || dataLoader.get('achievements');
+    if (achievementsData) {
+      loadAchievementDataFromJSON(achievementsData);
+    }
+  });
+} else {
+  // If dataLoader doesn't exist yet, set up a listener for when it becomes available
+  const checkDataLoader = () => {
+    if (window.dataLoader) {
+      dataLoader.onReady('achievements', (data) => {
+        const achievementsData = data || dataLoader.get('achievements');
+        if (achievementsData) {
+          loadAchievementDataFromJSON(achievementsData);
+        }
+      });
+      return true;
+    }
+    return false;
+  };
+
+  // Try immediately
+  if (!checkDataLoader()) {
+    // Set up a delayed check
+    const interval = setInterval(() => {
+      if (checkDataLoader()) {
+        clearInterval(interval);
+      }
+    }, 100);
+
+    // Stop checking after 5 seconds
+    setTimeout(() => clearInterval(interval), 5000);
+  }
+}
+
+// Export the loader function for manual use if needed
+window.loadAchievementDataFromJSON = loadAchievementDataFromJSON;
+
+console.log('[AchievementSystem] Achievement System loaded!');

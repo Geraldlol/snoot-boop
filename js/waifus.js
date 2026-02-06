@@ -1,12 +1,15 @@
 /**
  * waifus.js - The Twelve Immortal Masters
  * "A waifu's guidance is worth ten thousand boops."
+ *
+ * Data can be loaded from data/waifus.json via dataLoader.
+ * Hardcoded values serve as fallback if JSON not available.
  */
 
 // ============================================
 // BOND ACTIVITIES - Time-based bonding system
 // ============================================
-const BOND_ACTIVITIES = {
+let BOND_ACTIVITIES = {
   teaCeremony: {
     id: 'teaCeremony',
     name: 'Tea Ceremony',
@@ -283,7 +286,71 @@ const BOND_ACTIVITIES = {
 };
 
 // Activity preference multiplier when a waifu prefers an activity
-const ACTIVITY_PREFERENCE_BONUS = 1.5;
+let ACTIVITY_PREFERENCE_BONUS = 1.5;
+
+// ============================================
+// WAIFU SCHOOLS - Teaching and technique system
+// ============================================
+let WAIFU_SCHOOLS = {
+  hospitalityArts: {
+    id: 'hospitalityArts',
+    name: 'Hospitality Arts',
+    teacher: 'mochi',
+    techniques: ['welcomingBoop', 'teaTimeHealing', 'guestProtection'],
+    masteryExams: [
+      { level: 1, type: 'serve_100_teas', reward: 'technique:welcomingBoop' },
+      { level: 2, type: 'happiness_threshold', value: 1000, reward: 'technique:teaTimeHealing' },
+      { level: 3, type: 'boss_fight', enemy: 'angry_customer', reward: 'technique:guestProtection' }
+    ],
+    schoolBonus: { catHappiness: 1.2 }
+  },
+  yinEnergyArts: {
+    id: 'yinEnergyArts',
+    name: 'Yin Energy Arts',
+    teacher: 'luna',
+    techniques: ['moonlightBoop', 'dreamWalking', 'nightVision'],
+    masteryExams: [
+      { level: 1, type: 'afk_hours', value: 24, reward: 'technique:moonlightBoop' },
+      { level: 2, type: 'night_boops', value: 10000, reward: 'technique:dreamWalking' },
+      { level: 3, type: 'dream_realm_clear', floor: 10, reward: 'technique:nightVision' }
+    ],
+    schoolBonus: { afkEfficiency: 1.3 }
+  },
+  adventureArts: {
+    id: 'adventureArts',
+    name: 'Adventure Arts',
+    teacher: 'nyanta',
+    techniques: ['treasureHunter', 'seaLegs', 'captainCommand'],
+    masteryExams: [
+      { level: 1, type: 'expeditions_complete', value: 10, reward: 'technique:treasureHunter' },
+      { level: 2, type: 'rare_cats_found', value: 20, reward: 'technique:seaLegs' },
+      { level: 3, type: 'boss_fight', enemy: 'kraken', reward: 'technique:captainCommand' }
+    ],
+    schoolBonus: { expeditionSpeed: 1.5 }
+  },
+  combatArts: {
+    id: 'combatArts',
+    name: 'Combat Arts',
+    teacher: 'mei',
+    techniques: ['fierceStrike', 'battleCry', 'warriorSpirit'],
+    masteryExams: [
+      { level: 1, type: 'dungeon_floors', value: 50, reward: 'technique:fierceStrike' },
+      { level: 2, type: 'enemies_defeated', value: 10000, reward: 'technique:battleCry' },
+      { level: 3, type: 'pagoda_floor', value: 100, reward: 'technique:warriorSpirit' }
+    ],
+    schoolBonus: { dungeonDamage: 1.25 }
+  }
+};
+
+// ============================================
+// ATTENTION BALANCE - Harmony/Jealousy system
+// ============================================
+let ATTENTION_BALANCE = {
+  harmonyThreshold: 0.8,    // 80% balance = harmony
+  jealousyThreshold: 0.3,   // <30% of average = jealousy
+  harmonyBonus: { allBonds: 1.1 },
+  jealousyPenalty: null     // No penalty, just funny dialogue
+};
 
 // Helper to check if it's currently night time
 function isNightTime() {
@@ -291,8 +358,10 @@ function isNightTime() {
   return hour >= 22 || hour < 6;
 }
 
-// Waifu Templates
-const WAIFU_TEMPLATES = {
+// ============================================
+// WAIFU TEMPLATES - Full waifu definitions
+// ============================================
+let WAIFU_TEMPLATES = {
   mochi: {
     id: 'mochi',
     name: 'Mochi-chan',
@@ -686,7 +755,15 @@ class WaifuSystem {
       // Skip if already unlocked
       if (this.waifuStates[id]) continue;
 
+      // Skip hidden waifus unless conditions met
+      if (template.hidden && !this.checkHiddenCondition(template, gameState)) continue;
+
+      // Skip transcendence-only waifus
+      if (template.transcendenceOnly && !gameState.hasTranscended) continue;
+
       const condition = template.unlockCondition;
+      if (!condition) continue;
+
       let shouldUnlock = false;
 
       switch (condition.type) {
@@ -694,10 +771,10 @@ class WaifuSystem {
           shouldUnlock = true;
           break;
         case 'catCount':
-          shouldUnlock = gameState.catCount >= condition.value;
+          shouldUnlock = (gameState.catCount || 0) >= condition.value;
           break;
         case 'afkTime':
-          shouldUnlock = gameState.totalAfkTime >= condition.value;
+          shouldUnlock = (gameState.totalAfkTime || 0) >= condition.value;
           break;
         case 'allBasicUpgrades':
           shouldUnlock = gameState.allBasicUpgradesPurchased;
@@ -705,6 +782,34 @@ class WaifuSystem {
         case 'maxBondAll':
           shouldUnlock = this.unlockedWaifus.length >= 5 &&
             this.unlockedWaifus.every(w => w.bondLevel >= 100);
+          break;
+        case 'pagodaFloor':
+          shouldUnlock = (gameState.highestPagodaFloor || 0) >= condition.value;
+          break;
+        case 'building':
+          shouldUnlock = this.checkBuildingCondition(condition, gameState);
+          break;
+        case 'meditationHours':
+          shouldUnlock = (gameState.meditationHours || 0) >= condition.value;
+          break;
+        case 'prestigeCount':
+          shouldUnlock = (gameState.prestigeCount || gameState.totalAscensions || 0) >= condition.value;
+          break;
+        case 'equipmentCrafted':
+          shouldUnlock = (gameState.equipmentCrafted || 0) >= condition.value;
+          break;
+        case 'loreFragments':
+          shouldUnlock = (gameState.loreFragmentsCollected || 0) >= condition.value;
+          break;
+        case 'defeatInTournament':
+          shouldUnlock = (gameState.tournamentWins || 0) >= condition.times;
+          break;
+        case 'transcendence':
+          shouldUnlock = gameState.hasTranscended === true;
+          break;
+        case 'gooseBoops':
+          shouldUnlock = (gameState.gooseBoops || 0) >= condition.value &&
+            (!condition.cobraChickenDefeated || gameState.cobraChickenDefeated);
           break;
       }
 
@@ -715,6 +820,37 @@ class WaifuSystem {
     }
 
     return newUnlocks;
+  }
+
+  /**
+   * Check building-based unlock condition
+   */
+  checkBuildingCondition(condition, gameState) {
+    const buildingLevel = gameState.buildings?.[condition.building] || 0;
+    return buildingLevel >= (condition.level || 1);
+  }
+
+  /**
+   * Check if hidden waifu conditions are met
+   */
+  checkHiddenCondition(template, gameState) {
+    const condition = template.unlockCondition;
+    if (!condition) return false;
+
+    // Hidden waifus need their specific conditions met
+    switch (condition.type) {
+      case 'loreFragments':
+        return (gameState.loreFragmentsCollected || 0) >= condition.value;
+      case 'defeatInTournament':
+        return (gameState.tournamentWins || 0) >= condition.times;
+      case 'transcendence':
+        return gameState.hasTranscended === true;
+      case 'gooseBoops':
+        return (gameState.gooseBoops || 0) >= condition.value &&
+          (!condition.cobraChickenDefeated || gameState.cobraChickenDefeated);
+      default:
+        return false;
+    }
   }
 
   /**
@@ -1129,15 +1265,21 @@ class WaifuSystem {
     const avg = values.reduce((a, b) => a + b, 0) / unlockedCount;
     const minRatio = Math.min(...values) / (avg || 1);
 
-    if (minRatio >= 0.8) {
-      return { status: 'harmony', bonus: { allBonds: 1.1 }, message: 'All waifus are happy with your attention!' };
-    } else if (minRatio < 0.3) {
+    // Use ATTENTION_BALANCE settings (can be loaded from JSON)
+    const harmonyThreshold = ATTENTION_BALANCE.harmonyThreshold || 0.8;
+    const jealousyThreshold = ATTENTION_BALANCE.jealousyThreshold || 0.3;
+    const harmonyBonus = ATTENTION_BALANCE.harmonyBonus || { allBonds: 1.1 };
+
+    if (minRatio >= harmonyThreshold) {
+      return { status: 'harmony', bonus: harmonyBonus, message: 'All waifus are happy with your attention!' };
+    } else if (minRatio < jealousyThreshold) {
       const neglected = Object.entries(this.attentionTracker)
-        .filter(([_, v]) => v / (avg || 1) < 0.3)
+        .filter(([_, v]) => v / (avg || 1) < jealousyThreshold)
         .map(([k, _]) => k);
       return {
         status: 'jealousy',
         neglectedWaifus: neglected,
+        penalty: ATTENTION_BALANCE.jealousyPenalty,
         message: 'Some waifus feel neglected...'
       };
     }
@@ -1201,9 +1343,292 @@ class WaifuSystem {
 
     return null;
   }
+
+  // ============================================
+  // SCHOOL SYSTEM METHODS
+  // ============================================
+
+  /**
+   * Get waifu's teaching school
+   */
+  getWaifuSchool(waifuId) {
+    const template = WAIFU_TEMPLATES[waifuId];
+    if (!template || !template.school) return null;
+    return WAIFU_SCHOOLS[template.school] || null;
+  }
+
+  /**
+   * Get all available schools
+   */
+  getAllSchools() {
+    return { ...WAIFU_SCHOOLS };
+  }
+
+  /**
+   * Get school by ID
+   */
+  getSchool(schoolId) {
+    return WAIFU_SCHOOLS[schoolId] || null;
+  }
+
+  /**
+   * Check if player can take mastery exam
+   */
+  canTakeMasteryExam(waifuId, examLevel, gameState) {
+    const waifu = this.waifuStates[waifuId];
+    if (!waifu) return { canTake: false, reason: 'Waifu not unlocked' };
+
+    const school = this.getWaifuSchool(waifuId);
+    if (!school) return { canTake: false, reason: 'Waifu has no school' };
+
+    const exam = school.masteryExams?.find(e => e.level === examLevel);
+    if (!exam) return { canTake: false, reason: 'Exam not found' };
+
+    // Check bond level (need at least 25 per exam level)
+    const requiredBond = examLevel * 25;
+    if (waifu.bondLevel < requiredBond) {
+      return { canTake: false, reason: `Requires bond level ${requiredBond}` };
+    }
+
+    return { canTake: true, exam };
+  }
+
+  /**
+   * Get waifu cultivation info for helping them breakthrough
+   */
+  getWaifuCultivation(waifuId) {
+    const template = WAIFU_TEMPLATES[waifuId];
+    if (!template) return null;
+    return template.cultivation || null;
+  }
+
+  /**
+   * Check if player can help waifu cultivate
+   */
+  canHelpCultivate(waifuId, gameState) {
+    const waifu = this.waifuStates[waifuId];
+    if (!waifu) return { canHelp: false, reason: 'Waifu not unlocked' };
+
+    const template = WAIFU_TEMPLATES[waifuId];
+    if (!template.cultivation?.canCultivate) {
+      return { canHelp: false, reason: 'Waifu cannot cultivate further' };
+    }
+
+    // Requires high bond (75+)
+    if (waifu.bondLevel < 75) {
+      return { canHelp: false, reason: 'Requires bond level 75+' };
+    }
+
+    return { canHelp: true, reward: template.cultivation.helpReward };
+  }
 }
 
-// Export
+// ============================================
+// DATA LOADER INTEGRATION
+// ============================================
+
+/**
+ * Initialize waifu data from JSON if available
+ * Falls back to hardcoded data if dataLoader not ready
+ */
+function initWaifuDataFromJSON() {
+  if (!window.dataLoader) {
+    console.log('[WaifuSystem] No dataLoader found, using hardcoded waifu data');
+    return;
+  }
+
+  dataLoader.onReady(() => {
+    const waifuData = dataLoader.get('waifus');
+    if (!waifuData) {
+      console.log('[WaifuSystem] No waifu data in dataLoader, using hardcoded values');
+      return;
+    }
+
+    console.log('[WaifuSystem] Loading waifu data from JSON...');
+
+    // Update WAIFU_TEMPLATES (waifus object in JSON)
+    if (waifuData.waifus) {
+      // Merge JSON waifus with hardcoded, JSON takes precedence
+      const jsonWaifus = waifuData.waifus;
+      for (const [waifuId, waifuDef] of Object.entries(jsonWaifus)) {
+        // Convert JSON format to match expected WAIFU_TEMPLATES structure
+        const template = convertJSONWaifuToTemplate(waifuDef);
+        if (template) {
+          WAIFU_TEMPLATES[waifuId] = template;
+        }
+      }
+      console.log(`[WaifuSystem] Loaded ${Object.keys(jsonWaifus).length} waifus from JSON`);
+    }
+
+    // Update BOND_ACTIVITIES
+    if (waifuData.bondActivities) {
+      for (const [activityId, activityDef] of Object.entries(waifuData.bondActivities)) {
+        // Merge with existing activity or add new one
+        // Preserve hardcoded dialogue if JSON doesn't have it
+        const existingActivity = BOND_ACTIVITIES[activityId];
+        BOND_ACTIVITIES[activityId] = {
+          ...existingActivity,
+          ...activityDef,
+          // Ensure dialogue is preserved from hardcoded if not in JSON
+          dialogue: activityDef.dialogue || (existingActivity ? existingActivity.dialogue : null)
+        };
+      }
+      console.log(`[WaifuSystem] Loaded ${Object.keys(waifuData.bondActivities).length} activities from JSON`);
+    }
+
+    // Update WAIFU_SCHOOLS
+    if (waifuData.waifuSchools) {
+      for (const [schoolId, schoolDef] of Object.entries(waifuData.waifuSchools)) {
+        WAIFU_SCHOOLS[schoolId] = schoolDef;
+      }
+      console.log(`[WaifuSystem] Loaded ${Object.keys(waifuData.waifuSchools).length} schools from JSON`);
+    }
+
+    // Update ATTENTION_BALANCE settings
+    if (waifuData.attentionBalance) {
+      ATTENTION_BALANCE = {
+        ...ATTENTION_BALANCE,
+        ...waifuData.attentionBalance
+      };
+      console.log('[WaifuSystem] Loaded attention balance settings from JSON');
+    }
+
+    // Update exports after loading
+    window.WAIFU_TEMPLATES = WAIFU_TEMPLATES;
+    window.BOND_ACTIVITIES = BOND_ACTIVITIES;
+    window.WAIFU_SCHOOLS = WAIFU_SCHOOLS;
+    window.ATTENTION_BALANCE = ATTENTION_BALANCE;
+
+    console.log('[WaifuSystem] Data loading complete');
+  });
+}
+
+/**
+ * Convert JSON waifu format to WAIFU_TEMPLATES format
+ * Handles differences between JSON structure and expected template structure
+ */
+function convertJSONWaifuToTemplate(jsonWaifu) {
+  if (!jsonWaifu || !jsonWaifu.id) return null;
+
+  // Build the template object with all expected fields
+  const template = {
+    id: jsonWaifu.id,
+    name: jsonWaifu.name,
+    title: jsonWaifu.title,
+    role: jsonWaifu.role,
+    cultivationStyle: jsonWaifu.school ? `${jsonWaifu.school.charAt(0).toUpperCase() + jsonWaifu.school.slice(1)} Arts` : 'Unknown Arts',
+    description: jsonWaifu.description || `A mysterious master of the ${jsonWaifu.school || 'unknown'} school.`,
+    emoji: jsonWaifu.emoji || getDefaultEmoji(jsonWaifu.personality),
+    color: jsonWaifu.color || '#FFFFFF',
+    bonus: jsonWaifu.bonus || { type: 'bpMultiplier', value: 1.0 },
+    unlockCondition: normalizeUnlockCondition(jsonWaifu.unlockCondition),
+    maxBondReward: jsonWaifu.maxBondReward,
+    giftAffinities: jsonWaifu.giftAffinities || {
+      loves: [],
+      likes: [],
+      neutral: [],
+      dislikes: []
+    },
+    // Convert voiceLines to dialogues format if needed
+    dialogues: convertVoiceLinesToDialogues(jsonWaifu.voiceLines, jsonWaifu.personality),
+    // Additional fields from JSON
+    school: jsonWaifu.school,
+    element: jsonWaifu.element,
+    personality: jsonWaifu.personality,
+    hidden: jsonWaifu.hidden || false,
+    antiWaifu: jsonWaifu.antiWaifu || false,
+    transcendenceOnly: jsonWaifu.transcendenceOnly || false,
+    cultivation: jsonWaifu.cultivation,
+    sprite: jsonWaifu.sprite,
+    specialDialogue: jsonWaifu.specialDialogue
+  };
+
+  return template;
+}
+
+/**
+ * Normalize unlock condition from JSON format
+ */
+function normalizeUnlockCondition(condition) {
+  if (!condition) return { type: 'starter' };
+  if (condition === 'starter') return { type: 'starter' };
+  if (typeof condition === 'object') return condition;
+  return { type: 'starter' };
+}
+
+/**
+ * Convert voiceLines from JSON to dialogues format
+ */
+function convertVoiceLinesToDialogues(voiceLines, personality) {
+  // Default dialogues structure
+  const defaultDialogues = {
+    greeting: ['Welcome, cultivator.'],
+    lowBond: ['Let us train together.'],
+    midBond: ['You show great promise.'],
+    highBond: ['I enjoy your company.'],
+    maxBond: ['You mean everything to me.'],
+    onBoop: ['Nice boop!'],
+    onCritical: ['Amazing!']
+  };
+
+  if (!voiceLines) return defaultDialogues;
+
+  // Build dialogues from voiceLines
+  const dialogues = { ...defaultDialogues };
+
+  // Convert greeting object to array
+  if (voiceLines.greeting) {
+    if (typeof voiceLines.greeting === 'object') {
+      dialogues.greeting = Object.values(voiceLines.greeting);
+    } else if (Array.isArray(voiceLines.greeting)) {
+      dialogues.greeting = voiceLines.greeting;
+    }
+  }
+
+  // Map voice lines to bond levels
+  if (voiceLines.jealous) {
+    dialogues.midBond = [...(dialogues.midBond || []), voiceLines.jealous];
+  }
+  if (voiceLines.harmony) {
+    dialogues.highBond = [...(dialogues.highBond || []), voiceLines.harmony];
+  }
+  if (voiceLines.maxBond) {
+    dialogues.maxBond = [voiceLines.maxBond];
+  }
+
+  return dialogues;
+}
+
+/**
+ * Get default emoji based on personality
+ */
+function getDefaultEmoji(personality) {
+  const emojiMap = {
+    warm: '🍡',
+    sleepy: '🌙',
+    boisterous: '🏴‍☠️',
+    fierce: '⚔️',
+    gentle: '🌸',
+    serene: '❄️',
+    elegant: '💎',
+    passionate: '🔥',
+    wise: '📜',
+    tsundere: '😤',
+    mysterious: '❓',
+    chaotic: '🦢'
+  };
+  return emojiMap[personality] || '✨';
+}
+
+// Initialize data from JSON when script loads
+initWaifuDataFromJSON();
+
+// ============================================
+// EXPORTS
+// ============================================
 window.WAIFU_TEMPLATES = WAIFU_TEMPLATES;
 window.BOND_ACTIVITIES = BOND_ACTIVITIES;
+window.WAIFU_SCHOOLS = WAIFU_SCHOOLS;
+window.ATTENTION_BALANCE = ATTENTION_BALANCE;
 window.WaifuSystem = WaifuSystem;
+window.initWaifuDataFromJSON = initWaifuDataFromJSON;

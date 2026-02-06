@@ -4,13 +4,16 @@
  *
  * Relics provide run-wide powerful buffs that stack and synergize,
  * creating unique builds each dungeon run.
+ *
+ * Data can be loaded from data/relics.json via dataLoader.
+ * Hardcoded values serve as fallback if JSON not available.
  */
 
 // ============================================================================
-// RELIC DATABASE - 35+ Relics across 5 rarities
+// RELIC DATABASE - 35+ Relics across 5 rarities (can be overridden by JSON)
 // ============================================================================
 
-const RELICS = {
+let RELICS = {
   // ============================================================================
   // COMMON RELICS (Most frequent drops, foundational bonuses)
   // ============================================================================
@@ -631,8 +634,8 @@ const RELICS = {
   }
 };
 
-// Rarity weights for generation
-const RELIC_RARITIES = {
+// Rarity weights for generation (can be overridden by JSON)
+let RELIC_RARITIES = {
   common: { weight: 55, color: '#9CA3AF', glowColor: 'rgba(156, 163, 175, 0.5)' },
   rare: { weight: 28, color: '#3B82F6', glowColor: 'rgba(59, 130, 246, 0.5)' },
   epic: { weight: 12, color: '#A855F7', glowColor: 'rgba(168, 85, 247, 0.5)' },
@@ -640,8 +643,8 @@ const RELIC_RARITIES = {
   mythic: { weight: 1, color: '#EF4444', glowColor: 'rgba(239, 68, 68, 0.5)' }
 };
 
-// Floor requirements for higher rarity relics
-const RELIC_FLOOR_REQUIREMENTS = {
+// Floor requirements for higher rarity relics (can be overridden by JSON)
+let RELIC_FLOOR_REQUIREMENTS = {
   common: 1,
   rare: 5,
   epic: 15,
@@ -1384,6 +1387,245 @@ class RelicSystem {
 
     return choices;
   }
+
+  /**
+   * Check for active synergies based on owned relics
+   * @returns {Array} Array of active synergy objects
+   */
+  getActiveSynergies() {
+    const activeSynergies = [];
+    const synergies = window.RELIC_SYNERGIES || RELIC_SYNERGIES;
+
+    for (const [synergyId, synergy] of Object.entries(synergies)) {
+      // Check if we have all required relics
+      const hasAllRequired = synergy.requires.every(relicId =>
+        this.activeRelics.includes(relicId)
+      );
+
+      if (hasAllRequired) {
+        activeSynergies.push({
+          id: synergyId,
+          ...synergy
+        });
+      }
+    }
+
+    return activeSynergies;
+  }
+
+  /**
+   * Check if a specific synergy is active
+   * @param {string} synergyId - The synergy ID to check
+   * @returns {boolean} Whether the synergy is active
+   */
+  hasSynergy(synergyId) {
+    const synergies = window.RELIC_SYNERGIES || RELIC_SYNERGIES;
+    const synergy = synergies[synergyId];
+
+    if (!synergy) return false;
+
+    return synergy.requires.every(relicId =>
+      this.activeRelics.includes(relicId)
+    );
+  }
+
+  /**
+   * Get synergy bonus modifiers
+   * @returns {Object} Combined bonus modifiers from all active synergies
+   */
+  getSynergyModifiers() {
+    const modifiers = {};
+    const activeSynergies = this.getActiveSynergies();
+
+    for (const synergy of activeSynergies) {
+      const bonus = synergy.bonus;
+
+      // Apply bonus values to modifiers
+      for (const [key, value] of Object.entries(bonus)) {
+        if (key === 'type' || key === 'description') continue;
+
+        if (typeof value === 'number') {
+          modifiers[key] = (modifiers[key] || 0) + value;
+        } else if (typeof value === 'boolean') {
+          modifiers[key] = value;
+        }
+      }
+    }
+
+    return modifiers;
+  }
+
+  /**
+   * Get relic data by ID (from current data source)
+   * @param {string} relicId - The relic ID
+   * @returns {Object|null} The relic data or null
+   */
+  getRelicData(relicId) {
+    return RELICS[relicId] || null;
+  }
+}
+
+// ============================================================================
+// RELIC SYNERGIES (can be overridden by JSON)
+// ============================================================================
+
+let RELIC_SYNERGIES = {
+  catTriumvirate: {
+    name: 'Cat Triumvirate',
+    requires: ['ceiling_blessing', 'longcat_essence', 'ancient_hairball'],
+    bonus: {
+      type: 'ultimateCatPower',
+      allStats: 0.5,
+      description: '+50% all stats'
+    }
+  },
+  gooseMaster: {
+    name: 'Goose Master',
+    requires: ['goose_horn', 'golden_goose_feather'],
+    bonus: {
+      type: 'gooseAlly',
+      permanentGoose: true,
+      description: 'A goose permanently fights alongside you'
+    }
+  },
+  chaosEmbrace: {
+    name: 'Chaos Embrace',
+    requires: ['chaos_crystal', 'primordial_honk'],
+    bonus: {
+      type: 'chaosMode',
+      randomEffectsPerFloor: 3,
+      description: '3 random effects activate each floor'
+    }
+  },
+  voidMastery: {
+    name: 'Void Mastery',
+    requires: ['void_shard', 'void_heart'],
+    bonus: {
+      type: 'voidMastery',
+      voidDamageBonus: 1.0,
+      description: 'Double void damage'
+    }
+  },
+  phoenixRebirth: {
+    name: 'Phoenix Rebirth',
+    requires: ['phoenix_feather', 'eternal_catnip'],
+    bonus: {
+      type: 'phoenixBlessing',
+      reviveWithFullHp: true,
+      description: 'Revives restore 100% HP'
+    }
+  }
+};
+
+// ============================================================================
+// JSON DATA LOADING
+// ============================================================================
+
+/**
+ * Load relic data from JSON file
+ * Merges with hardcoded fallback data
+ */
+function loadRelicData() {
+  // Check if dataLoader is available
+  if (typeof window.dataLoader === 'undefined') {
+    console.warn('[Relics] dataLoader not available, using hardcoded data');
+    return;
+  }
+
+  // Load relics.json
+  window.dataLoader.load('relics', 'data/relics.json').then(data => {
+    if (data) {
+      applyRelicData(data);
+    }
+  }).catch(err => {
+    console.warn('[Relics] Failed to load relics.json, using hardcoded data:', err);
+  });
+}
+
+/**
+ * Apply loaded JSON data to relic constants
+ * @param {Object} data - The loaded JSON data
+ */
+function applyRelicData(data) {
+  if (!data) return;
+
+  // Override relics if provided
+  if (data.relics) {
+    // Merge relics, preserving hardcoded ones not in JSON
+    RELICS = { ...RELICS, ...data.relics };
+    window.RELICS = RELICS;
+  }
+
+  // Override rarities if provided
+  if (data.rarities) {
+    const newRarities = {};
+    for (const [id, rarityData] of Object.entries(data.rarities)) {
+      newRarities[id] = {
+        weight: rarityData.weight || calculateWeightFromDropChance(rarityData.dropChance),
+        color: rarityData.color,
+        glowColor: rarityData.glowColor || `${rarityData.color}80`,
+        dropChance: rarityData.dropChance
+      };
+    }
+    RELIC_RARITIES = { ...RELIC_RARITIES, ...newRarities };
+    window.RELIC_RARITIES = RELIC_RARITIES;
+  }
+
+  // Override floor requirements if provided
+  if (data.floorRequirements) {
+    RELIC_FLOOR_REQUIREMENTS = { ...RELIC_FLOOR_REQUIREMENTS, ...data.floorRequirements };
+    window.RELIC_FLOOR_REQUIREMENTS = RELIC_FLOOR_REQUIREMENTS;
+  }
+
+  // Override synergies if provided
+  if (data.relicSynergies) {
+    RELIC_SYNERGIES = { ...RELIC_SYNERGIES, ...data.relicSynergies };
+    window.RELIC_SYNERGIES = RELIC_SYNERGIES;
+  }
+
+  console.log('[Relics] Data loaded from JSON and merged with fallbacks');
+
+  // Emit event for systems that need to know when data is updated
+  if (window.eventBus) {
+    window.eventBus.emit('relicDataLoaded', {
+      relics: RELICS,
+      rarities: RELIC_RARITIES,
+      floorRequirements: RELIC_FLOOR_REQUIREMENTS,
+      synergies: RELIC_SYNERGIES
+    });
+  }
+}
+
+/**
+ * Convert drop chance to weight (for compatibility with JSON format)
+ * @param {number} dropChance - The drop chance (0-1)
+ * @returns {number} The weight for rarity rolling
+ */
+function calculateWeightFromDropChance(dropChance) {
+  if (!dropChance) return 50;
+  // Convert drop chance to weight (higher drop chance = higher weight)
+  return Math.round(dropChance * 100);
+}
+
+// ============================================================================
+// DATALOADER INTEGRATION
+// ============================================================================
+
+// Register callback for when dataLoader is ready
+if (typeof window.dataLoader !== 'undefined') {
+  window.dataLoader.onReady('relics', (data) => {
+    if (data) {
+      applyRelicData(data);
+    }
+  });
+}
+
+// Try to load relic data when this script loads
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', loadRelicData);
+} else {
+  // DOM already loaded, try to load now
+  setTimeout(loadRelicData, 0);
 }
 
 // ============================================================================
@@ -1394,9 +1636,20 @@ class RelicSystem {
 window.RELICS = RELICS;
 window.RELIC_RARITIES = RELIC_RARITIES;
 window.RELIC_FLOOR_REQUIREMENTS = RELIC_FLOOR_REQUIREMENTS;
+window.RELIC_SYNERGIES = RELIC_SYNERGIES;
 window.RelicSystem = RelicSystem;
+window.loadRelicData = loadRelicData;
+window.applyRelicData = applyRelicData;
 
 // ES6 module export (if using modules)
 if (typeof module !== 'undefined' && module.exports) {
-  module.exports = { RELICS, RELIC_RARITIES, RELIC_FLOOR_REQUIREMENTS, RelicSystem };
+  module.exports = {
+    RELICS,
+    RELIC_RARITIES,
+    RELIC_FLOOR_REQUIREMENTS,
+    RELIC_SYNERGIES,
+    RelicSystem,
+    loadRelicData,
+    applyRelicData
+  };
 }

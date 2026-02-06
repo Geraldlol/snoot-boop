@@ -1,10 +1,13 @@
 /**
  * equipment.js - Cat Equipment System
  * "A well-equipped cat is a formidable cultivator."
+ *
+ * Data can be loaded from data/equipment.json via dataLoader.
+ * Hardcoded values serve as fallback if JSON not available.
  */
 
-// Equipment Slots
-const EQUIPMENT_SLOTS = {
+// Equipment Slots (can be overridden by JSON)
+let EQUIPMENT_SLOTS = {
   hat: { id: 'hat', name: 'Hat', emoji: '🎩', primaryStats: ['critChance', 'wisdom'] },
   collar: { id: 'collar', name: 'Collar', emoji: '📿', primaryStats: ['hp', 'defense'] },
   weapon: { id: 'weapon', name: 'Weapon', emoji: '⚔️', primaryStats: ['attack', 'boopDamage'] },
@@ -13,8 +16,8 @@ const EQUIPMENT_SLOTS = {
   tail: { id: 'tail', name: 'Tail', emoji: '🎀', primaryStats: ['luck', 'specialEffect'] }
 };
 
-// Equipment Rarities
-const EQUIPMENT_RARITIES = {
+// Equipment Rarities (can be overridden by JSON)
+let EQUIPMENT_RARITIES = {
   common: { id: 'common', name: 'Common', color: '#9CA3AF', multiplier: 1.0, maxSubs: 1 },
   uncommon: { id: 'uncommon', name: 'Uncommon', color: '#10B981', multiplier: 1.25, maxSubs: 2 },
   rare: { id: 'rare', name: 'Rare', color: '#3B82F6', multiplier: 1.5, maxSubs: 3 },
@@ -24,8 +27,8 @@ const EQUIPMENT_RARITIES = {
   transcendent: { id: 'transcendent', name: 'Transcendent', color: '#EC4899', multiplier: 10.0, maxSubs: 6 }
 };
 
-// Equipment Sets
-const EQUIPMENT_SETS = {
+// Equipment Sets (can be overridden by JSON)
+let EQUIPMENT_SETS = {
   jade_emperor: {
     id: 'jade_emperor',
     name: 'Jade Emperor',
@@ -94,8 +97,8 @@ const EQUIPMENT_SETS = {
   }
 };
 
-// Equipment Templates
-const EQUIPMENT_TEMPLATES = {
+// Equipment Templates (can be overridden by JSON)
+let EQUIPMENT_TEMPLATES = {
   // === HATS ===
   training_cap: {
     id: 'training_cap',
@@ -1548,9 +1551,265 @@ class EquipmentSystem {
   }
 }
 
-// Export
+// ============================================================================
+// SOCKET SYSTEM (can be overridden by JSON)
+// ============================================================================
+let SOCKET_SYSTEM = {
+  maxSockets: {
+    common: 0,
+    uncommon: 1,
+    rare: 2,
+    epic: 3,
+    legendary: 4,
+    mythic: 6,
+    transcendent: 6
+  },
+  spiritStones: {
+    attack_stone: { stats: { attack: 10 }, stackable: true, rarity: 'common' },
+    defense_stone: { stats: { defense: 10 }, stackable: true, rarity: 'common' },
+    hp_stone: { stats: { hp: 50 }, stackable: true, rarity: 'common' },
+    crit_stone: { stats: { critChance: 0.02 }, stackable: false, rarity: 'rare' },
+    crit_damage_stone: { stats: { critDamage: 0.1 }, stackable: false, rarity: 'rare' },
+    speed_stone: { stats: { attackSpeed: 0.05 }, stackable: true, rarity: 'uncommon' },
+    void_stone: { stats: { voidDamage: 0.1 }, rarity: 'legendary' },
+    chaos_stone: { stats: { randomBonus: true }, rarity: 'mythic' }
+  }
+};
+
+// ============================================================================
+// EQUIPMENT CULTIVATION (can be overridden by JSON)
+// ============================================================================
+let EQUIPMENT_CULTIVATION = {
+  maxLevel: 100,
+  xpPerFloor: (floorNum) => floorNum * 10,
+  breakpoints: {
+    10: { stats: 1.2, visualUpgrade: true },
+    25: { stats: 1.5, newPassive: true },
+    50: { stats: 2.0, visualUpgrade: true, evolveOption: true },
+    75: { stats: 3.0, newPassive: true },
+    100: { stats: 5.0, mythicTransform: true }
+  }
+};
+
+// ============================================================================
+// WEAPON EVOLUTIONS (can be overridden by JSON)
+// ============================================================================
+let WEAPON_EVOLUTIONS = {
+  laser_pointer: {
+    requires: 'battery_pack',
+    maxLevel: 100,
+    result: 'orbital_laser_array'
+  },
+  fish_blade: {
+    requires: 'chef_hat',
+    maxLevel: 100,
+    result: 'sashimi_slasher'
+  },
+  yarn_ball_weapon: {
+    requires: 'caffeine_pills',
+    maxLevel: 100,
+    result: 'infinite_yarn_dimension'
+  },
+  cardboard_sword: {
+    requires: 'duct_tape',
+    maxLevel: 100,
+    result: 'mega_cardboard_mech'
+  }
+};
+
+// ============================================================================
+// JSON DATA LOADING
+// ============================================================================
+
+/**
+ * Load equipment data from JSON file
+ * Merges with hardcoded fallback data
+ */
+function loadEquipmentData() {
+  // Check if dataLoader is available
+  if (typeof window.dataLoader === 'undefined') {
+    console.warn('[Equipment] dataLoader not available, using hardcoded data');
+    return;
+  }
+
+  // Load equipment.json
+  window.dataLoader.load('equipment', 'data/equipment.json').then(data => {
+    if (data) {
+      applyEquipmentData(data);
+    }
+  }).catch(err => {
+    console.warn('[Equipment] Failed to load equipment.json, using hardcoded data:', err);
+  });
+}
+
+/**
+ * Apply loaded JSON data to equipment constants
+ * @param {Object} data - The loaded JSON data
+ */
+function applyEquipmentData(data) {
+  if (!data) return;
+
+  // Override slots if provided
+  if (data.slots) {
+    // Convert JSON format to match expected format
+    const newSlots = {};
+    for (const [id, slotData] of Object.entries(data.slots)) {
+      newSlots[id] = {
+        id: id,
+        name: slotData.name,
+        emoji: slotData.emoji || getDefaultSlotEmoji(id),
+        primaryStats: slotData.primaryStats || [],
+        primary: slotData.primary,
+        unlockRealm: slotData.unlockRealm
+      };
+    }
+    EQUIPMENT_SLOTS = { ...EQUIPMENT_SLOTS, ...newSlots };
+    window.EQUIPMENT_SLOTS = EQUIPMENT_SLOTS;
+  }
+
+  // Override rarities if provided
+  if (data.rarities) {
+    const newRarities = {};
+    for (const [id, rarityData] of Object.entries(data.rarities)) {
+      newRarities[id] = {
+        id: id,
+        name: rarityData.name || id.charAt(0).toUpperCase() + id.slice(1),
+        color: rarityData.color,
+        multiplier: rarityData.statMult || rarityData.multiplier || 1.0,
+        maxSubs: rarityData.maxSockets || rarityData.maxSubs || 0
+      };
+    }
+    EQUIPMENT_RARITIES = { ...EQUIPMENT_RARITIES, ...newRarities };
+    window.EQUIPMENT_RARITIES = EQUIPMENT_RARITIES;
+  }
+
+  // Override equipment templates if provided
+  if (data.equipment) {
+    EQUIPMENT_TEMPLATES = { ...EQUIPMENT_TEMPLATES, ...data.equipment };
+    window.EQUIPMENT_TEMPLATES = EQUIPMENT_TEMPLATES;
+  }
+
+  // Override sets if provided
+  if (data.sets) {
+    EQUIPMENT_SETS = { ...EQUIPMENT_SETS, ...data.sets };
+    window.EQUIPMENT_SETS = EQUIPMENT_SETS;
+  }
+
+  // Override socket system if provided
+  if (data.spiritStones) {
+    SOCKET_SYSTEM.spiritStones = { ...SOCKET_SYSTEM.spiritStones, ...data.spiritStones };
+    window.SOCKET_SYSTEM = SOCKET_SYSTEM;
+  }
+
+  // Override cultivation system if provided
+  if (data.cultivation) {
+    // Merge cultivation data, keeping functions intact
+    const cultivation = data.cultivation;
+    if (cultivation.maxLevel) EQUIPMENT_CULTIVATION.maxLevel = cultivation.maxLevel;
+    if (cultivation.breakpoints) EQUIPMENT_CULTIVATION.breakpoints = cultivation.breakpoints;
+    // xpPerFloor needs to stay as a function if it's a string formula
+    if (cultivation.xpPerFloor && typeof cultivation.xpPerFloor === 'string') {
+      // Convert formula string to function (e.g., "floorNum * 10")
+      try {
+        EQUIPMENT_CULTIVATION.xpPerFloor = new Function('floorNum', `return ${cultivation.xpPerFloor};`);
+      } catch (e) {
+        console.warn('[Equipment] Could not parse xpPerFloor formula:', e);
+      }
+    }
+    window.EQUIPMENT_CULTIVATION = EQUIPMENT_CULTIVATION;
+  }
+
+  // Override weapon evolutions if provided
+  if (data.weaponEvolutions) {
+    WEAPON_EVOLUTIONS = { ...WEAPON_EVOLUTIONS, ...data.weaponEvolutions };
+    window.WEAPON_EVOLUTIONS = WEAPON_EVOLUTIONS;
+  }
+
+  console.log('[Equipment] Data loaded from JSON and merged with fallbacks');
+
+  // Emit event for systems that need to know when data is updated
+  if (window.eventBus) {
+    window.eventBus.emit('equipmentDataLoaded', {
+      slots: EQUIPMENT_SLOTS,
+      rarities: EQUIPMENT_RARITIES,
+      templates: EQUIPMENT_TEMPLATES,
+      sets: EQUIPMENT_SETS,
+      socketSystem: SOCKET_SYSTEM,
+      cultivation: EQUIPMENT_CULTIVATION,
+      evolutions: WEAPON_EVOLUTIONS
+    });
+  }
+}
+
+/**
+ * Get default emoji for equipment slot
+ * @param {string} slotId - The slot ID
+ * @returns {string} Default emoji
+ */
+function getDefaultSlotEmoji(slotId) {
+  const defaults = {
+    hat: '🎩',
+    collar: '📿',
+    weapon: '⚔️',
+    armor: '🛡️',
+    paws: '🐾',
+    tail: '🎀',
+    accessory: '💍',
+    mount: '🐴',
+    companion: '🐕'
+  };
+  return defaults[slotId] || '📦';
+}
+
+// ============================================================================
+// DATALOADER INTEGRATION
+// ============================================================================
+
+// Register callback for when dataLoader is ready
+if (typeof window.dataLoader !== 'undefined') {
+  window.dataLoader.onReady('equipment', (data) => {
+    if (data) {
+      applyEquipmentData(data);
+    }
+  });
+}
+
+// Try to load equipment data when this script loads
+// (dataLoader should be loaded first in the HTML)
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', loadEquipmentData);
+} else {
+  // DOM already loaded, try to load now
+  setTimeout(loadEquipmentData, 0);
+}
+
+// ============================================================================
+// EXPORTS
+// ============================================================================
+
 window.EQUIPMENT_SLOTS = EQUIPMENT_SLOTS;
 window.EQUIPMENT_RARITIES = EQUIPMENT_RARITIES;
 window.EQUIPMENT_SETS = EQUIPMENT_SETS;
 window.EQUIPMENT_TEMPLATES = EQUIPMENT_TEMPLATES;
+window.SOCKET_SYSTEM = SOCKET_SYSTEM;
+window.EQUIPMENT_CULTIVATION = EQUIPMENT_CULTIVATION;
+window.WEAPON_EVOLUTIONS = WEAPON_EVOLUTIONS;
 window.EquipmentSystem = EquipmentSystem;
+window.loadEquipmentData = loadEquipmentData;
+window.applyEquipmentData = applyEquipmentData;
+
+// ES6 module export
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = {
+    EQUIPMENT_SLOTS,
+    EQUIPMENT_RARITIES,
+    EQUIPMENT_SETS,
+    EQUIPMENT_TEMPLATES,
+    SOCKET_SYSTEM,
+    EQUIPMENT_CULTIVATION,
+    WEAPON_EVOLUTIONS,
+    EquipmentSystem,
+    loadEquipmentData,
+    applyEquipmentData
+  };
+}

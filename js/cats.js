@@ -1669,6 +1669,454 @@ class CatSystem {
 }
 
 // =============================================================================
+// TEAM FORMATION SYSTEM
+// =============================================================================
+
+/**
+ * Team Formations - Different tactical arrangements for cat teams
+ */
+const TEAM_FORMATIONS = {
+  default: {
+    id: 'default',
+    name: 'Standard Formation',
+    positions: ['front', 'front', 'back', 'back'],
+    bonus: null
+  },
+  aggressive: {
+    id: 'aggressive',
+    name: 'Aggressive Formation',
+    positions: ['front', 'front', 'front', 'back'],
+    bonus: { teamAttack: 1.2, teamDefense: 0.9 }
+  },
+  defensive: {
+    id: 'defensive',
+    name: 'Defensive Formation',
+    positions: ['front', 'back', 'back', 'back'],
+    bonus: { teamAttack: 0.9, teamDefense: 1.3 }
+  },
+  balanced: {
+    id: 'balanced',
+    name: 'Balanced Formation',
+    positions: ['front', 'mid', 'mid', 'back'],
+    bonus: { teamAttack: 1.1, teamDefense: 1.1 }
+  }
+};
+
+// =============================================================================
+// TEAM SYNERGY SYSTEM
+// =============================================================================
+
+/**
+ * Team Synergies - Bonuses for specific team compositions
+ */
+const TEAM_SYNERGIES = {
+  elementalHarmony: {
+    id: 'elementalHarmony',
+    name: 'Elemental Harmony',
+    condition: { uniqueElements: 4 },
+    bonus: { allStats: 1.15 },
+    description: '4 different elements = +15% all stats'
+  },
+  schoolReunion: {
+    id: 'schoolReunion',
+    name: 'School Reunion',
+    condition: { sameSchool: 4 },
+    bonus: { schoolBonus: 2.0 },
+    description: '4 cats from same school = 2x school bonus'
+  },
+  personalityClash: {
+    id: 'personalityClash',
+    name: 'Personality Clash',
+    condition: { specificPair: ['brave', 'lazy'] },
+    bonus: { eventChance: 1.5, comedyDialogue: true },
+    description: 'Brave + Lazy cat = funny interactions'
+  },
+  legendaryPresence: {
+    id: 'legendaryPresence',
+    name: 'Legendary Presence',
+    condition: { legendaryCount: 1 },
+    bonus: { teamMorale: 1.25 },
+    description: 'Having a legendary cat inspires the team'
+  },
+  ceilingAndFloor: {
+    id: 'ceilingAndFloor',
+    name: 'Ceiling and Floor',
+    condition: { specificCats: ['ceiling_god', 'basement_cat'] },
+    bonus: { universalVision: true, dungeonMapReveal: true },
+    description: 'Ceiling Cat + Basement Cat = see all'
+  },
+  longAndAntiLong: {
+    id: 'longAndAntiLong',
+    name: 'Infinite Opposition',
+    condition: { specificCats: ['longcat', 'tacgnol'] },
+    bonus: { infiniteStretch: true, teamLength: 9999 },
+    description: 'Longcat + Tacgnol = infinite team length'
+  },
+  chaosSquad: {
+    id: 'chaosSquad',
+    name: 'Chaos Squad',
+    condition: { elementCount: { chaos: 2 } },
+    bonus: { randomEvents: 2.0, unpredictability: true },
+    description: '2+ Chaos cats = double random events'
+  },
+  voidTrio: {
+    id: 'voidTrio',
+    name: 'Void Trio',
+    condition: { elementCount: { void: 3 } },
+    bonus: { dimensionalPower: 1.5, phaseChance: 0.1 },
+    description: '3 Void cats = phase through attacks'
+  }
+};
+
+// =============================================================================
+// CAT FUSION SYSTEM
+// =============================================================================
+
+/**
+ * Fusion Recipes - Combine cats to create new ones
+ */
+const FUSION_RECIPES = {
+  yin_yang_cat: {
+    id: 'yin_yang_cat',
+    name: 'Yin-Yang Cat',
+    ingredients: [
+      { element: 'fire', minStars: 3 },
+      { element: 'water', minStars: 3 }
+    ],
+    result: {
+      id: 'yin_yang_cat',
+      element: 'void',
+      realm: 'divineBeast',
+      unique: true
+    }
+  },
+  chaos_kitty: {
+    id: 'chaos_kitty',
+    name: 'Chaos Kitty',
+    ingredients: [
+      { id: 'goose_touched_cat' },
+      { personality: 'brave', minStars: 5 }
+    ],
+    result: {
+      id: 'chaos_kitty',
+      element: 'chaos',
+      realm: 'divineBeast',
+      unique: true
+    }
+  },
+  legendary_loaf: {
+    id: 'legendary_loaf',
+    name: 'The Eternal Loaf',
+    ingredients: [
+      { school: 'any', count: 5, minStars: 4 }
+    ],
+    result: {
+      id: 'eternal_loaf',
+      legendary: true,
+      unique: true
+    }
+  }
+};
+
+// =============================================================================
+// CAT FUSION SYSTEM CLASS
+// =============================================================================
+
+/**
+ * CatFusionSystem - Handles cat fusion mechanics
+ */
+class CatFusionSystem {
+  constructor(gameState) {
+    this.gameState = gameState;
+  }
+
+  /**
+   * Check if a fusion recipe can be performed
+   */
+  canFuse(recipeId) {
+    const recipe = FUSION_RECIPES[recipeId];
+    if (!recipe) return { canFuse: false, reason: 'Unknown recipe' };
+
+    for (const ingredient of recipe.ingredients) {
+      if (!this.hasIngredient(ingredient)) {
+        return { canFuse: false, reason: 'Missing ingredients', missing: ingredient };
+      }
+    }
+
+    if (recipe.result.unique && this.gameState.hasCat && this.gameState.hasCat(recipe.result.id)) {
+      return { canFuse: false, reason: 'Already own this unique cat' };
+    }
+
+    return { canFuse: true };
+  }
+
+  /**
+   * Perform a fusion
+   */
+  performFusion(recipeId, ingredientCatIds) {
+    const check = this.canFuse(recipeId);
+    if (!check.canFuse) return check;
+
+    const recipe = FUSION_RECIPES[recipeId];
+
+    // Remove ingredient cats
+    for (const catId of ingredientCatIds) {
+      if (this.gameState.removeCat) {
+        this.gameState.removeCat(catId);
+      }
+    }
+
+    // Create fused cat
+    const fusedCat = this.createFusedCat(recipe.result);
+    if (this.gameState.addCat) {
+      this.gameState.addCat(fusedCat);
+    }
+
+    return {
+      success: true,
+      newCat: fusedCat,
+      message: `${recipe.name} has been born!`
+    };
+  }
+
+  /**
+   * Check if the game state has the required ingredient
+   */
+  hasIngredient(requirement) {
+    const cats = this.gameState.cats || [];
+
+    if (requirement.id) {
+      return cats.some(c => c.id === requirement.id || c.templateId === requirement.id);
+    }
+    if (requirement.element) {
+      return cats.some(c =>
+        c.element === requirement.element &&
+        (c.stars || 1) >= (requirement.minStars || 1)
+      );
+    }
+    if (requirement.personality) {
+      return cats.some(c =>
+        c.personality === requirement.personality &&
+        (c.stars || 1) >= (requirement.minStars || 1)
+      );
+    }
+    if (requirement.count) {
+      const matching = cats.filter(c => (c.stars || 1) >= (requirement.minStars || 1));
+      return matching.length >= requirement.count;
+    }
+    return false;
+  }
+
+  /**
+   * Create a fused cat from a recipe result
+   */
+  createFusedCat(result) {
+    // Get template if exists, otherwise create basic structure
+    const template = CAT_TEMPLATES[result.id] || {
+      id: result.id,
+      name: result.id.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' '),
+      realm: result.realm || 'divineBeast',
+      element: result.element || 'void',
+      legendary: result.legendary || false,
+      baseStats: {
+        snootMeridians: 3.0,
+        innerPurr: 3.0,
+        floofArmor: 3.0,
+        zoomieSteps: 3.0,
+        loafMastery: 3.0
+      }
+    };
+
+    return {
+      instanceId: Date.now(),
+      templateId: template.id,
+      name: template.name,
+      realm: result.realm || template.realm,
+      element: result.element || template.element,
+      legendary: result.legendary || template.legendary || false,
+      stars: 1,
+      cultivationLevel: 1,
+      happiness: 100,
+      obtainedAt: Date.now(),
+      stats: { ...template.baseStats },
+      techniques: { active: [null, null, null, null], passive: [null, null] },
+      learnedTechniques: [],
+      techniqueXP: {},
+      equipment: { weapon: null, armor: null, accessory: null }
+    };
+  }
+}
+
+// =============================================================================
+// DATA LOADER INTEGRATION
+// =============================================================================
+
+/**
+ * Load cat data from JSON and merge with hardcoded defaults.
+ * Hardcoded values serve as fallback if JSON not available.
+ */
+function loadCatDataFromJSON(data) {
+  if (!data) return;
+
+  // Update CAT_REALMS from JSON (mapped from catRealms in JSON)
+  if (data.catRealms) {
+    for (const [realmId, realmData] of Object.entries(data.catRealms)) {
+      if (CAT_REALMS[realmId]) {
+        // Merge JSON data with existing, JSON takes precedence
+        // Map JSON keys to our expected keys
+        if (realmData.ppMult !== undefined) {
+          CAT_REALMS[realmId].ppMultiplier = realmData.ppMult;
+        }
+        if (realmData.stats !== undefined) {
+          CAT_REALMS[realmId].statsMultiplier = realmData.stats;
+        }
+        if (realmData.name !== undefined) {
+          CAT_REALMS[realmId].name = realmData.name;
+        }
+        if (realmData.order !== undefined) {
+          CAT_REALMS[realmId].order = realmData.order;
+        }
+      }
+    }
+  }
+
+  // Update CAT_ELEMENTS from JSON
+  if (data.elements) {
+    for (const [elementId, elementData] of Object.entries(data.elements)) {
+      if (CAT_ELEMENTS[elementId]) {
+        Object.assign(CAT_ELEMENTS[elementId], elementData);
+      } else {
+        // New element from JSON
+        CAT_ELEMENTS[elementId] = { id: elementId, ...elementData };
+      }
+    }
+  }
+
+  // Update CAT_PERSONALITIES from JSON
+  if (data.personalities) {
+    for (const [personalityId, personalityData] of Object.entries(data.personalities)) {
+      if (CAT_PERSONALITIES[personalityId]) {
+        Object.assign(CAT_PERSONALITIES[personalityId], personalityData);
+      } else {
+        // New personality from JSON
+        CAT_PERSONALITIES[personalityId] = { id: personalityId, ...personalityData };
+      }
+    }
+  }
+
+  // Update STAR_BONUSES from JSON
+  if (data.starBonuses) {
+    for (const [starLevel, bonusData] of Object.entries(data.starBonuses)) {
+      const level = parseInt(starLevel);
+      if (STAR_BONUSES[level]) {
+        Object.assign(STAR_BONUSES[level], bonusData);
+      } else {
+        STAR_BONUSES[level] = bonusData;
+      }
+    }
+  }
+
+  // Update CAT_TEMPLATES from JSON (mapped from cats in JSON)
+  if (data.cats) {
+    for (const [catId, catData] of Object.entries(data.cats)) {
+      // Map JSON format to our expected format
+      const mappedData = { ...catData };
+      if (catData.baseRealm && !catData.realm) {
+        mappedData.realm = catData.baseRealm;
+      }
+
+      if (CAT_TEMPLATES[catId]) {
+        Object.assign(CAT_TEMPLATES[catId], mappedData);
+      } else {
+        // New cat template from JSON
+        CAT_TEMPLATES[catId] = { id: catId, ...mappedData };
+      }
+    }
+  }
+
+  // Update TEAM_FORMATIONS from JSON
+  if (data.teamFormations) {
+    for (const [formationId, formationData] of Object.entries(data.teamFormations)) {
+      if (TEAM_FORMATIONS[formationId]) {
+        Object.assign(TEAM_FORMATIONS[formationId], formationData);
+      } else {
+        TEAM_FORMATIONS[formationId] = { id: formationId, ...formationData };
+      }
+    }
+  }
+
+  // Update TEAM_SYNERGIES from JSON
+  if (data.teamSynergies) {
+    for (const [synergyId, synergyData] of Object.entries(data.teamSynergies)) {
+      if (TEAM_SYNERGIES[synergyId]) {
+        Object.assign(TEAM_SYNERGIES[synergyId], synergyData);
+      } else {
+        TEAM_SYNERGIES[synergyId] = { id: synergyId, ...synergyData };
+      }
+    }
+  }
+
+  // Update FUSION_RECIPES from JSON
+  if (data.fusionRecipes) {
+    for (const [recipeId, recipeData] of Object.entries(data.fusionRecipes)) {
+      if (FUSION_RECIPES[recipeId]) {
+        Object.assign(FUSION_RECIPES[recipeId], recipeData);
+      } else {
+        FUSION_RECIPES[recipeId] = { id: recipeId, ...recipeData };
+      }
+    }
+  }
+
+  console.log('[CatSystem] Cat data loaded from JSON');
+}
+
+// Integration with dataLoader when available
+if (window.dataLoader) {
+  dataLoader.onReady('cats', (data) => {
+    if (data) {
+      loadCatDataFromJSON(data);
+    }
+  });
+  // Also try to get already-loaded data
+  const existingData = dataLoader.get('cats');
+  if (existingData) {
+    loadCatDataFromJSON(existingData);
+  }
+} else {
+  // If dataLoader doesn't exist yet, set up a listener for when it becomes available
+  const descriptor = Object.getOwnPropertyDescriptor(window, 'dataLoader');
+  if (!descriptor || descriptor.configurable) {
+    const existingSetter = descriptor?.set;
+
+    Object.defineProperty(window, 'dataLoader', {
+      configurable: true,
+      set: function(loader) {
+        Object.defineProperty(window, 'dataLoader', {
+          configurable: true,
+          writable: true,
+          value: loader
+        });
+        // Call existing setter if there was one
+        if (existingSetter) {
+          existingSetter.call(window, loader);
+        }
+        // Now that dataLoader is available, register our callback
+        if (loader && loader.onReady) {
+          loader.onReady('cats', (data) => {
+            if (data) {
+              loadCatDataFromJSON(data);
+            }
+          });
+        }
+      },
+      get: function() {
+        return undefined;
+      }
+    });
+  }
+}
+
+// =============================================================================
 // EXPORTS
 // =============================================================================
 
@@ -1682,4 +2130,9 @@ window.REALMS = REALMS; // Legacy compatibility
 window.SCHOOLS = SCHOOLS;
 window.CAT_TEMPLATES = CAT_TEMPLATES;
 window.RECRUITMENT_COSTS = RECRUITMENT_COSTS;
+window.TEAM_FORMATIONS = TEAM_FORMATIONS;
+window.TEAM_SYNERGIES = TEAM_SYNERGIES;
+window.FUSION_RECIPES = FUSION_RECIPES;
 window.CatSystem = CatSystem;
+window.CatFusionSystem = CatFusionSystem;
+window.loadCatDataFromJSON = loadCatDataFromJSON;

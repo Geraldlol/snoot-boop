@@ -1680,3 +1680,215 @@ window.WEEKLY_CHALLENGES = WEEKLY_CHALLENGES;
 window.MONTHLY_FESTIVALS = MONTHLY_FESTIVALS;
 window.HIDDEN_EVENTS = HIDDEN_EVENTS;
 window.EventSystem = EventSystem;
+
+// ===================================
+// DATA LOADER INTEGRATION
+// ===================================
+
+/**
+ * Load event data from JSON and merge with hardcoded defaults.
+ * Hardcoded values serve as fallback if JSON not available.
+ */
+function loadEventDataFromJSON(data) {
+  if (!data) return;
+
+  console.log('[EventSystem] Loading event data from JSON...');
+
+  // Update RANDOM EVENTS from JSON (randomEvents in JSON)
+  if (data.randomEvents) {
+    for (const [eventId, eventData] of Object.entries(data.randomEvents)) {
+      if (EVENT_TEMPLATES[eventId]) {
+        // Merge JSON data with existing, JSON takes precedence
+        // Preserve hardcoded emoji and dialogue if not in JSON
+        const existing = EVENT_TEMPLATES[eventId];
+        EVENT_TEMPLATES[eventId] = {
+          ...existing,
+          ...eventData,
+          emoji: eventData.emoji || existing.emoji,
+          dialogue: eventData.dialogue || existing.dialogue
+        };
+      } else {
+        // New event from JSON - add default emoji if missing
+        EVENT_TEMPLATES[eventId] = {
+          emoji: '✨',
+          ...eventData
+        };
+      }
+    }
+    console.log(`[EventSystem] Loaded ${Object.keys(data.randomEvents).length} random events from JSON`);
+  }
+
+  // Update DAILY EVENTS from JSON
+  if (data.dailyEvents) {
+    // Store as separate global for daily system to use
+    window.DAILY_EVENTS = data.dailyEvents;
+    console.log(`[EventSystem] Loaded ${Object.keys(data.dailyEvents).length} daily events from JSON`);
+  }
+
+  // Update WEEKLY CHALLENGES/EVENTS from JSON
+  if (data.weeklyEvents) {
+    for (const [eventId, eventData] of Object.entries(data.weeklyEvents)) {
+      if (WEEKLY_CHALLENGES[eventId]) {
+        // Merge with existing
+        Object.assign(WEEKLY_CHALLENGES[eventId], eventData);
+      } else {
+        // New weekly event from JSON
+        WEEKLY_CHALLENGES[eventId] = eventData;
+      }
+    }
+    console.log(`[EventSystem] Loaded ${Object.keys(data.weeklyEvents).length} weekly events from JSON`);
+  }
+
+  // Update MONTHLY FESTIVALS from JSON (seasonalEvents in JSON)
+  if (data.seasonalEvents) {
+    // Store seasonal events separately
+    window.SEASONAL_EVENTS = data.seasonalEvents;
+
+    // Also try to map to monthly festivals if they have month conditions
+    for (const [eventId, eventData] of Object.entries(data.seasonalEvents)) {
+      // If event has a month-based start condition, add to MONTHLY_FESTIVALS
+      if (eventData.startCondition?.month) {
+        const months = Array.isArray(eventData.startCondition.month)
+          ? eventData.startCondition.month
+          : [eventData.startCondition.month];
+
+        for (const month of months) {
+          if (MONTHLY_FESTIVALS[month]) {
+            // Merge with existing monthly festival
+            MONTHLY_FESTIVALS[month] = {
+              ...MONTHLY_FESTIVALS[month],
+              ...eventData,
+              emoji: eventData.emoji || MONTHLY_FESTIVALS[month].emoji
+            };
+          } else {
+            // Add new monthly festival
+            MONTHLY_FESTIVALS[month] = {
+              emoji: '🎉',
+              ...eventData
+            };
+          }
+        }
+      }
+    }
+    console.log(`[EventSystem] Loaded ${Object.keys(data.seasonalEvents).length} seasonal events from JSON`);
+  }
+
+  // Update HIDDEN EVENTS from JSON
+  if (data.hiddenEvents) {
+    for (const [eventId, eventData] of Object.entries(data.hiddenEvents)) {
+      if (HIDDEN_EVENTS[eventId]) {
+        // Merge with existing - preserve triggerCondition functions
+        const existing = HIDDEN_EVENTS[eventId];
+        HIDDEN_EVENTS[eventId] = {
+          ...existing,
+          ...eventData,
+          emoji: eventData.emoji || existing.emoji,
+          dialogue: eventData.dialogue || existing.dialogue,
+          // Keep existing triggerCondition function if JSON doesn't provide one
+          triggerCondition: existing.triggerCondition
+        };
+      } else {
+        // New hidden event from JSON
+        // Convert triggerCondition object to function if needed
+        const newEvent = {
+          emoji: '🔮',
+          ...eventData
+        };
+
+        // Create triggerCondition function from JSON conditions
+        if (eventData.triggerCondition && typeof eventData.triggerCondition === 'object') {
+          newEvent.triggerCondition = createTriggerConditionFromJSON(eventData.triggerCondition);
+        }
+
+        HIDDEN_EVENTS[eventId] = newEvent;
+      }
+    }
+    console.log(`[EventSystem] Loaded ${Object.keys(data.hiddenEvents).length} hidden events from JSON`);
+  }
+
+  console.log('[EventSystem] Event data loaded from JSON');
+}
+
+/**
+ * Create a trigger condition function from JSON condition object
+ */
+function createTriggerConditionFromJSON(condition) {
+  return (gameState) => {
+    // Check each condition in the object
+    for (const [key, value] of Object.entries(condition)) {
+      switch (key) {
+        case 'loreFragments':
+          if ((gameState.loreFragmentsCollected || 0) < value) return false;
+          break;
+        case 'nightTime':
+          if (value && window.timeSystem && !window.timeSystem.isNightTime()) return false;
+          break;
+        case 'lookUpCount':
+          if ((gameState.lookUpCount || 0) < value) return false;
+          break;
+        case 'gooseBoops':
+          if ((gameState.gooseBoops || 0) < value) return false;
+          break;
+        case 'neverKilledGoose':
+          if (value && gameState.gooseKills > 0) return false;
+          break;
+        case 'allWaifuHarmony':
+          if (value && window.waifuSystem && !window.waifuSystem.isHarmonyActive()) return false;
+          break;
+        case 'bondMin':
+          if (window.waifuSystem) {
+            const minBond = window.waifuSystem.getMinBondLevel();
+            if (minBond < value) return false;
+          }
+          break;
+        default:
+          // Unknown condition, check gameState directly
+          if (gameState[key] !== undefined && gameState[key] < value) return false;
+          break;
+      }
+    }
+    return true;
+  };
+}
+
+// Integration with dataLoader when available
+if (window.dataLoader) {
+  dataLoader.onReady('events', (data) => {
+    const eventsData = data || dataLoader.get('events');
+    if (eventsData) {
+      loadEventDataFromJSON(eventsData);
+    }
+  });
+} else {
+  // If dataLoader doesn't exist yet, set up a listener for when it becomes available
+  const checkDataLoader = () => {
+    if (window.dataLoader) {
+      dataLoader.onReady('events', (data) => {
+        const eventsData = data || dataLoader.get('events');
+        if (eventsData) {
+          loadEventDataFromJSON(eventsData);
+        }
+      });
+      return true;
+    }
+    return false;
+  };
+
+  // Try immediately
+  if (!checkDataLoader()) {
+    // Set up a delayed check
+    const interval = setInterval(() => {
+      if (checkDataLoader()) {
+        clearInterval(interval);
+      }
+    }, 100);
+
+    // Stop checking after 5 seconds
+    setTimeout(() => clearInterval(interval), 5000);
+  }
+}
+
+// Export the loader function for manual use if needed
+window.loadEventDataFromJSON = loadEventDataFromJSON;
+
+console.log('[EventSystem] Event System loaded!');

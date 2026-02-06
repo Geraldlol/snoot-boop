@@ -1698,6 +1698,8 @@ function rollConsumableDrop(floorNum, isBoss) {
 }
 
 // Export everything
+window.TECHNIQUE_STANCES = TECHNIQUE_STANCES;
+window.FUSION_TECHNIQUES = FUSION_TECHNIQUES;
 window.SECRET_TECHNIQUES = SECRET_TECHNIQUES;
 window.LEGENDARY_INTERNALS = LEGENDARY_INTERNALS;
 window.HIDDEN_SKILLS = HIDDEN_SKILLS;
@@ -1706,3 +1708,128 @@ window.CULTIVATION_CONSUMABLES = CULTIVATION_CONSUMABLES;
 window.TechniqueSystem = TechniqueSystem;
 window.rollBossTechniqueDrop = rollBossTechniqueDrop;
 window.rollConsumableDrop = rollConsumableDrop;
+
+// ===================================
+// DATA LOADER INTEGRATION
+// ===================================
+
+/**
+ * Load technique data from JSON and merge with hardcoded defaults.
+ * Hardcoded values serve as fallback if JSON not available.
+ */
+function loadTechniqueDataFromJSON(data) {
+  if (!data) return;
+
+  // Update TECHNIQUE_STANCES from JSON
+  if (data.stances) {
+    for (const [stanceId, stanceData] of Object.entries(data.stances)) {
+      if (TECHNIQUE_STANCES[stanceId]) {
+        // Merge JSON data with existing, JSON takes precedence
+        // But preserve hardcoded emoji if not in JSON
+        const existingEmoji = TECHNIQUE_STANCES[stanceId].emoji;
+        Object.assign(TECHNIQUE_STANCES[stanceId], stanceData);
+        if (!stanceData.emoji && existingEmoji) {
+          TECHNIQUE_STANCES[stanceId].emoji = existingEmoji;
+        }
+
+        // Handle nested stats with min/max objects (e.g., drunkenPaw)
+        if (stanceData.stats?.boopPower?.min !== undefined) {
+          TECHNIQUE_STANCES[stanceId].stats.boopPowerMin = stanceData.stats.boopPower.min;
+          TECHNIQUE_STANCES[stanceId].stats.boopPowerMax = stanceData.stats.boopPower.max;
+          delete TECHNIQUE_STANCES[stanceId].stats.boopPower;
+        }
+        if (stanceData.stats?.critMultiplier?.min !== undefined) {
+          TECHNIQUE_STANCES[stanceId].stats.critMultiplierMin = stanceData.stats.critMultiplier.min;
+          TECHNIQUE_STANCES[stanceId].stats.critMultiplierMax = stanceData.stats.critMultiplier.max;
+          delete TECHNIQUE_STANCES[stanceId].stats.critMultiplier;
+        }
+      } else {
+        // New stance from JSON
+        TECHNIQUE_STANCES[stanceId] = stanceData;
+      }
+    }
+  }
+
+  // Update FUSION_TECHNIQUES from JSON
+  if (data.fusionTechniques) {
+    for (const [fusionId, fusionData] of Object.entries(data.fusionTechniques)) {
+      if (FUSION_TECHNIQUES[fusionId]) {
+        // Preserve emoji if not in JSON
+        const existingEmoji = FUSION_TECHNIQUES[fusionId].emoji;
+        Object.assign(FUSION_TECHNIQUES[fusionId], fusionData);
+        if (!fusionData.emoji && existingEmoji) {
+          FUSION_TECHNIQUES[fusionId].emoji = existingEmoji;
+        }
+      } else {
+        // New fusion from JSON
+        FUSION_TECHNIQUES[fusionId] = fusionData;
+      }
+    }
+  }
+
+  // Store cat techniques if present
+  if (data.catTechniques) {
+    window.CAT_TECHNIQUES = data.catTechniques;
+  }
+
+  // Store waifu techniques if present
+  if (data.waifuTechniques) {
+    window.WAIFU_TECHNIQUES = data.waifuTechniques;
+  }
+
+  // Store forbidden techniques if present (prestige-related)
+  if (data.forbiddenTechniques) {
+    window.FORBIDDEN_TECHNIQUES = data.forbiddenTechniques;
+  }
+
+  console.log('Technique data loaded from JSON');
+}
+
+// Integration with dataLoader when available
+if (window.dataLoader) {
+  dataLoader.onReady(() => {
+    const data = dataLoader.get('techniques');
+    if (data) {
+      loadTechniqueDataFromJSON(data);
+    }
+  });
+} else {
+  // If dataLoader doesn't exist yet, set up a listener for when it becomes available
+  // Only set up if cultivation.js hasn't already
+  const descriptor = Object.getOwnPropertyDescriptor(window, 'dataLoader');
+  if (!descriptor || descriptor.configurable) {
+    const existingSetter = descriptor?.set;
+
+    Object.defineProperty(window, 'dataLoader', {
+      configurable: true,
+      set: function(loader) {
+        Object.defineProperty(window, 'dataLoader', {
+          configurable: true,
+          writable: true,
+          value: loader
+        });
+        // Call existing setter if there was one
+        if (existingSetter) {
+          existingSetter.call(window, loader);
+        }
+        // Now that dataLoader is available, register our callback
+        if (loader && loader.onReady) {
+          loader.onReady(() => {
+            const data = loader.get('techniques');
+            if (data) {
+              loadTechniqueDataFromJSON(data);
+            }
+          });
+        }
+      },
+      get: function() {
+        return undefined;
+      }
+    });
+  }
+}
+
+// Export the loader function for manual use if needed
+window.loadTechniqueDataFromJSON = loadTechniqueDataFromJSON;
+
+console.log('Technique System loaded!');
