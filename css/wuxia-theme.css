@@ -1,0 +1,876 @@
+/* ===================================
+   WUXIA THEME
+   Chinese Aesthetic Styling
+   Inspired by Age of Wushu & Traditional Chinese Art
+   =================================== */
+
+/* --- Extended Wuxia Color Variables --- */
+:root {
+  /* Extended background colors */
+  --bg-ink: #0f0f1a;
+  --bg-bamboo: #1a2a1a;
+  --bg-temple: #2a1a1a;
+  --bg-silk: #faf0e6;
+
+  /* Chinese red (vermillion) */
+  --vermillion: #e34234;
+  --vermillion-light: #ff6b5b;
+  --vermillion-dark: #b32d22;
+
+  /* Ink colors */
+  --ink-black: #1a1a1a;
+  --ink-gray: #4a4a4a;
+  --ink-wash: rgba(26, 26, 26, 0.7);
+
+  /* Realm-specific glow colors */
+  --realm-qi-glow: rgba(135, 206, 235, 0.5);
+  --realm-foundation-glow: rgba(139, 69, 19, 0.5);
+  --realm-core-glow: rgba(255, 215, 0, 0.5);
+  --realm-nascent-glow: rgba(147, 112, 219, 0.5);
+  --realm-spirit-glow: rgba(220, 20, 60, 0.5);
+  --realm-dao-glow: rgba(65, 105, 225, 0.5);
+  --realm-immortal-glow: rgba(255, 215, 0, 0.7);
+  --realm-true-glow: rgba(255, 255, 255, 0.8);
+  --realm-sovereign-glow: linear-gradient(45deg, gold, white, gold);
+
+  /* Element colors (Five Elements + Hidden) */
+  --element-metal: #C0C0C0;
+  --element-wood: #228B22;
+  --element-water: #4169E1;
+  --element-fire: #FF4500;
+  --element-earth: #8B4513;
+  --element-void: #000000;
+  --element-chaos: #FF00FF;
+}
+
+/* ===================================
+   WUXIA BORDER STYLES
+   Decorative Chinese borders
+   =================================== */
+
+.wuxia-border {
+  position: relative;
+  border: 3px solid var(--jade-dark);
+  border-radius: 4px;
+}
+
+.wuxia-border::before,
+.wuxia-border::after {
+  content: '';
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  border: 2px solid var(--gold-accent);
+}
+
+.wuxia-border::before {
+  top: -4px;
+  left: -4px;
+  border-right: none;
+  border-bottom: none;
+}
+
+.wuxia-border::after {
+  bottom: -4px;
+  right: -4px;
+  border-left: none;
+  border-top: none;
+}
+
+/* Corner ornaments variant */
+.wuxia-border.ornate::before,
+.wuxia-border.ornate::after {
+  width: 20px;
+  height: 20px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath fill='%23FFD700' d='M0 0h8v2H2v6H0V0zm20 20h-8v-2h6v-6h2v8z'/%3E%3C/svg%3E") no-repeat;
+  border: none;
+}
+
+/* Jade border variant */
+.wuxia-border.jade-border {
+  border-color: var(--jade);
+  box-shadow:
+    0 0 10px rgba(80, 200, 120, 0.2),
+    inset 0 0 10px rgba(80, 200, 120, 0.1);
+}
+
+.wuxia-border.jade-border::before,
+.wuxia-border.jade-border::after {
+  border-color: var(--jade-light);
+}
+
+/* Crimson border (for warnings/combat) */
+.wuxia-border.crimson-border {
+  border-color: var(--rusty-crimson);
+  box-shadow:
+    0 0 10px rgba(220, 20, 60, 0.2),
+    inset 0 0 10px rgba(220, 20, 60, 0.1);
+}
+
+.wuxia-border.crimson-border::before,
+.wuxia-border.crimson-border::after {
+  border-color: var(--vermillion-light);
+}
+
+/* ===================================
+   SCROLL PANEL VARIANTS
+   Different scroll styles for different contexts
+   =================================== */
+
+/* Ancient scroll variant */
+.scroll-panel.ancient {
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.05'/%3E%3C/svg%3E"),
+    linear-gradient(to bottom,
+      var(--bg-parchment) 0%,
+      var(--bg-parchment-dark) 50%,
+      var(--bg-parchment) 100%
+    );
+  border-width: 6px;
+  border-image: repeating-linear-gradient(
+    45deg,
+    var(--scott-brown),
+    var(--scott-brown) 2px,
+    #6b3810 2px,
+    #6b3810 4px
+  ) 6;
+}
+
+/* Jade scroll variant */
+.scroll-panel.jade-scroll {
+  background: linear-gradient(135deg,
+    rgba(80, 200, 120, 0.1) 0%,
+    rgba(61, 153, 112, 0.2) 50%,
+    rgba(80, 200, 120, 0.1) 100%
+  );
+  border-color: var(--jade-dark);
+  box-shadow:
+    inset 0 0 30px rgba(80, 200, 120, 0.1),
+    4px 4px 0 rgba(0, 0, 0, 0.3),
+    0 0 20px rgba(80, 200, 120, 0.2);
+  color: var(--text-light);
+}
+
+/* Dark/night scroll */
+.scroll-panel.night-scroll {
+  background: linear-gradient(135deg,
+    var(--bg-dark) 0%,
+    var(--bg-light) 50%,
+    var(--bg-dark) 100%
+  );
+  border-color: var(--nik-purple);
+  color: var(--text-light);
+  box-shadow:
+    inset 0 0 20px rgba(72, 61, 139, 0.2),
+    4px 4px 0 rgba(0, 0, 0, 0.5);
+}
+
+/* Sealed/forbidden scroll */
+.scroll-panel.sealed {
+  background: linear-gradient(135deg,
+    #1a0a0a 0%,
+    #2a1515 50%,
+    #1a0a0a 100%
+  );
+  border-color: var(--rusty-crimson);
+  color: var(--text-light);
+  box-shadow:
+    inset 0 0 30px rgba(220, 20, 60, 0.2),
+    4px 4px 0 rgba(139, 0, 0, 0.5),
+    0 0 15px rgba(220, 20, 60, 0.3);
+}
+
+.scroll-panel.sealed::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: repeating-linear-gradient(
+    45deg,
+    transparent,
+    transparent 10px,
+    rgba(220, 20, 60, 0.05) 10px,
+    rgba(220, 20, 60, 0.05) 20px
+  );
+  pointer-events: none;
+}
+
+/* ===================================
+   REALM GLOW EFFECTS
+   Visual indication of cultivation realm
+   =================================== */
+
+.realm-glow {
+  position: relative;
+}
+
+.realm-glow::after {
+  content: '';
+  position: absolute;
+  top: -5px;
+  left: -5px;
+  right: -5px;
+  bottom: -5px;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0.6;
+  z-index: -1;
+}
+
+/* Mortal - subtle gray */
+.realm-glow.mortal::after {
+  box-shadow: 0 0 15px var(--realm-mortal);
+}
+
+/* Qi Condensation - sky blue */
+.realm-glow.qi-condensation::after {
+  box-shadow: 0 0 20px var(--realm-qi-glow);
+  animation: realm-pulse 3s ease-in-out infinite;
+}
+
+/* Foundation Establishment - earthy brown */
+.realm-glow.foundation::after {
+  box-shadow: 0 0 25px var(--realm-foundation-glow);
+  animation: realm-pulse 2.5s ease-in-out infinite;
+}
+
+/* Core Formation - golden */
+.realm-glow.core-formation::after {
+  box-shadow: 0 0 30px var(--realm-core-glow);
+  animation: realm-pulse-intense 2s ease-in-out infinite;
+}
+
+/* Nascent Soul - purple */
+.realm-glow.nascent-soul::after {
+  box-shadow: 0 0 35px var(--realm-nascent-glow);
+  animation: realm-pulse-intense 1.8s ease-in-out infinite;
+}
+
+/* Spirit Severing - crimson */
+.realm-glow.spirit-severing::after {
+  box-shadow: 0 0 40px var(--realm-spirit-glow);
+  animation: realm-pulse-danger 1.5s ease-in-out infinite;
+}
+
+/* Dao Seeking - royal blue */
+.realm-glow.dao-seeking::after {
+  box-shadow: 0 0 45px var(--realm-dao-glow), 0 0 80px rgba(65, 105, 225, 0.3);
+  animation: realm-pulse-ascend 2s ease-in-out infinite;
+}
+
+/* Immortal Ascension - brilliant gold */
+.realm-glow.immortal-ascension::after {
+  box-shadow:
+    0 0 50px var(--realm-immortal-glow),
+    0 0 100px rgba(255, 215, 0, 0.3);
+  animation: realm-pulse-divine 1.5s ease-in-out infinite;
+}
+
+/* True Immortal - pure white */
+.realm-glow.true-immortal::after {
+  box-shadow:
+    0 0 60px var(--realm-true-glow),
+    0 0 120px rgba(255, 255, 255, 0.4);
+  animation: realm-pulse-transcend 1.2s ease-in-out infinite;
+}
+
+/* Heavenly Sovereign - rainbow shifting */
+.realm-glow.heavenly-sovereign::after {
+  box-shadow:
+    0 0 80px rgba(255, 215, 0, 0.6),
+    0 0 150px rgba(255, 255, 255, 0.5);
+  animation: realm-sovereign-shift 3s linear infinite;
+}
+
+@keyframes realm-pulse {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 0.7; }
+}
+
+@keyframes realm-pulse-intense {
+  0%, 100% { opacity: 0.5; transform: scale(1); }
+  50% { opacity: 0.9; transform: scale(1.02); }
+}
+
+@keyframes realm-pulse-danger {
+  0%, 100% { opacity: 0.5; }
+  25% { opacity: 0.9; }
+  50% { opacity: 0.6; }
+  75% { opacity: 0.95; }
+}
+
+@keyframes realm-pulse-ascend {
+  0%, 100% {
+    opacity: 0.6;
+    filter: hue-rotate(0deg);
+  }
+  50% {
+    opacity: 1;
+    filter: hue-rotate(30deg);
+  }
+}
+
+@keyframes realm-pulse-divine {
+  0%, 100% {
+    opacity: 0.7;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+}
+
+@keyframes realm-pulse-transcend {
+  0%, 100% {
+    opacity: 0.8;
+    filter: brightness(1);
+  }
+  50% {
+    opacity: 1;
+    filter: brightness(1.3);
+  }
+}
+
+@keyframes realm-sovereign-shift {
+  0% { filter: hue-rotate(0deg); }
+  100% { filter: hue-rotate(360deg); }
+}
+
+/* ===================================
+   CULTIVATION TEXT STYLES
+   Brushstroke-inspired text
+   =================================== */
+
+.cultivation-text {
+  font-family: var(--font-pixel);
+  text-shadow:
+    2px 2px 0 rgba(0, 0, 0, 0.8),
+    0 0 10px currentColor;
+  letter-spacing: 2px;
+}
+
+.cultivation-text.small {
+  font-size: 10px;
+  letter-spacing: 1px;
+}
+
+.cultivation-text.medium {
+  font-size: 14px;
+  letter-spacing: 2px;
+}
+
+.cultivation-text.large {
+  font-size: 20px;
+  letter-spacing: 3px;
+}
+
+.cultivation-text.xl {
+  font-size: 28px;
+  letter-spacing: 4px;
+}
+
+/* Realm-colored text */
+.cultivation-text.mortal { color: var(--realm-mortal); }
+.cultivation-text.qi { color: #87CEEB; }
+.cultivation-text.foundation { color: var(--realm-earth); }
+.cultivation-text.core { color: var(--realm-heaven); }
+.cultivation-text.nascent { color: #9370DB; }
+.cultivation-text.spirit { color: var(--rusty-crimson); }
+.cultivation-text.dao { color: var(--steve-blue); }
+.cultivation-text.immortal { color: var(--gold-accent); }
+.cultivation-text.true { color: #FFFFFF; }
+.cultivation-text.sovereign {
+  background: linear-gradient(90deg, gold, white, gold);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Brushstroke effect for headers */
+.brushstroke-header {
+  position: relative;
+  display: inline-block;
+  font-family: var(--font-pixel);
+  font-size: 18px;
+  color: var(--text-light);
+  padding: 10px 30px;
+}
+
+.brushstroke-header::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    var(--jade) 20%,
+    var(--jade-light) 50%,
+    var(--jade) 80%,
+    transparent 100%
+  );
+}
+
+.brushstroke-header::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+  width: 8px;
+  height: 8px;
+  background: var(--jade);
+  border-radius: 50%;
+  box-shadow: 0 0 10px var(--jade);
+}
+
+/* ===================================
+   QI CONTAINER & METER
+   Qi energy display styling
+   =================================== */
+
+.qi-container {
+  position: relative;
+  background: linear-gradient(180deg,
+    rgba(0, 0, 0, 0.6) 0%,
+    rgba(0, 0, 0, 0.4) 100%
+  );
+  border: 3px solid var(--qi-blue);
+  border-radius: 8px;
+  padding: 15px;
+  overflow: hidden;
+}
+
+.qi-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(0, 191, 255, 0.1) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 100%, rgba(0, 191, 255, 0.1) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+.qi-bar-container {
+  position: relative;
+  width: 100%;
+  height: 20px;
+  background: rgba(0, 0, 0, 0.5);
+  border: 2px solid var(--qi-blue);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.qi-bar {
+  height: 100%;
+  background: linear-gradient(90deg,
+    var(--qi-blue) 0%,
+    #00E5FF 50%,
+    var(--qi-blue) 100%
+  );
+  background-size: 200% 100%;
+  animation: qi-flow-bar 2s linear infinite;
+  transition: width 0.3s ease;
+  box-shadow: 0 0 10px var(--qi-blue);
+}
+
+.qi-bar.full {
+  animation: qi-full-pulse 0.5s ease-in-out infinite alternate;
+}
+
+@keyframes qi-flow-bar {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 200% 50%; }
+}
+
+@keyframes qi-full-pulse {
+  0% {
+    box-shadow: 0 0 10px var(--qi-blue);
+    filter: brightness(1);
+  }
+  100% {
+    box-shadow: 0 0 25px var(--qi-blue), 0 0 40px rgba(0, 191, 255, 0.5);
+    filter: brightness(1.2);
+  }
+}
+
+.qi-label {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--font-pixel);
+  font-size: 10px;
+  color: var(--qi-blue);
+  margin-top: 8px;
+}
+
+.qi-value {
+  color: var(--text-light);
+}
+
+/* ===================================
+   ELEMENT INDICATORS
+   Five Elements + Hidden elements
+   =================================== */
+
+.element-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-family: var(--font-pixel);
+  font-size: 8px;
+  text-transform: uppercase;
+}
+
+.element-badge.metal {
+  background: linear-gradient(135deg, #D4D4D4, #A0A0A0);
+  color: #333;
+  border: 2px solid #808080;
+  text-shadow: 1px 1px 0 #fff;
+}
+
+.element-badge.wood {
+  background: linear-gradient(135deg, #3CB371, #228B22);
+  color: #fff;
+  border: 2px solid #006400;
+}
+
+.element-badge.water {
+  background: linear-gradient(135deg, #6495ED, #4169E1);
+  color: #fff;
+  border: 2px solid #0000CD;
+}
+
+.element-badge.fire {
+  background: linear-gradient(135deg, #FF6347, #FF4500);
+  color: #fff;
+  border: 2px solid #CC0000;
+}
+
+.element-badge.earth {
+  background: linear-gradient(135deg, #CD853F, #8B4513);
+  color: #fff;
+  border: 2px solid #5C3317;
+}
+
+.element-badge.void {
+  background: linear-gradient(135deg, #2a2a2a, #000000);
+  color: #fff;
+  border: 2px solid #444;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
+}
+
+.element-badge.chaos {
+  background: linear-gradient(135deg, #FF00FF, #8B008B, #FF00FF);
+  background-size: 200% 200%;
+  animation: chaos-shift 2s linear infinite;
+  color: #fff;
+  border: 2px solid #FF00FF;
+  box-shadow: 0 0 15px rgba(255, 0, 255, 0.5);
+}
+
+@keyframes chaos-shift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* ===================================
+   MASTER COLOR UTILITIES
+   Quick color classes for The Seven Masters
+   =================================== */
+
+.master-gerald {
+  --master-color: var(--gerald-jade);
+  color: var(--gerald-jade);
+}
+
+.master-rusty {
+  --master-color: var(--rusty-crimson);
+  color: var(--rusty-crimson);
+}
+
+.master-steve {
+  --master-color: var(--steve-blue);
+  color: var(--steve-blue);
+}
+
+.master-andrew {
+  --master-color: var(--andrew-gold);
+  color: var(--andrew-gold);
+}
+
+.master-nik {
+  --master-color: var(--nik-purple);
+  color: var(--nik-purple);
+}
+
+.master-yuelin {
+  --master-color: var(--yuelin-pink);
+  color: var(--yuelin-pink);
+}
+
+.master-scott {
+  --master-color: var(--scott-brown);
+  color: var(--scott-brown);
+}
+
+/* Master glow borders */
+.master-border {
+  border: 3px solid var(--master-color, var(--jade));
+  box-shadow: 0 0 15px var(--master-color, var(--jade));
+}
+
+/* ===================================
+   WUXIA DECORATIVE ELEMENTS
+   Flourishes and ornaments
+   =================================== */
+
+/* Section divider */
+.wuxia-divider {
+  position: relative;
+  height: 20px;
+  margin: 20px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.wuxia-divider::before,
+.wuxia-divider::after {
+  content: '';
+  flex: 1;
+  height: 2px;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    var(--jade-dark) 20%,
+    var(--jade) 50%,
+    var(--jade-dark) 80%,
+    transparent 100%
+  );
+}
+
+.wuxia-divider::after {
+  transform: scaleX(-1);
+}
+
+.wuxia-divider-icon {
+  width: 20px;
+  height: 20px;
+  background: var(--jade);
+  transform: rotate(45deg);
+  margin: 0 15px;
+  box-shadow: 0 0 10px var(--jade);
+}
+
+/* Floating cloud decoration */
+.wuxia-clouds {
+  position: absolute;
+  width: 100%;
+  height: 100px;
+  pointer-events: none;
+  overflow: hidden;
+  opacity: 0.15;
+}
+
+.wuxia-clouds::before,
+.wuxia-clouds::after {
+  content: '';
+  position: absolute;
+  width: 200px;
+  height: 60px;
+  background:
+    radial-gradient(ellipse at center, rgba(255,255,255,0.4) 0%, transparent 70%);
+  animation: cloud-drift 20s linear infinite;
+}
+
+.wuxia-clouds::after {
+  top: 20px;
+  animation-delay: -10s;
+  animation-duration: 25s;
+}
+
+@keyframes cloud-drift {
+  0% { transform: translateX(-200px); }
+  100% { transform: translateX(calc(100vw + 200px)); }
+}
+
+/* Seal stamp effect */
+.wuxia-seal {
+  display: inline-block;
+  padding: 8px 12px;
+  border: 3px solid var(--rusty-crimson);
+  color: var(--rusty-crimson);
+  font-family: var(--font-pixel);
+  font-size: 10px;
+  transform: rotate(-5deg);
+  position: relative;
+}
+
+.wuxia-seal::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: repeating-linear-gradient(
+    90deg,
+    transparent,
+    transparent 2px,
+    rgba(220, 20, 60, 0.1) 2px,
+    rgba(220, 20, 60, 0.1) 4px
+  );
+}
+
+/* ===================================
+   WUXIA CARD STYLES
+   Cards with Chinese aesthetic
+   =================================== */
+
+.wuxia-card {
+  background: linear-gradient(145deg,
+    rgba(26, 26, 46, 0.9) 0%,
+    rgba(22, 33, 62, 0.9) 100%
+  );
+  border: 2px solid var(--jade-dark);
+  border-radius: 8px;
+  padding: 15px;
+  position: relative;
+  overflow: hidden;
+}
+
+.wuxia-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    var(--jade) 50%,
+    transparent 100%
+  );
+}
+
+.wuxia-card-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(80, 200, 120, 0.3);
+}
+
+.wuxia-card-title {
+  font-family: var(--font-pixel);
+  font-size: 12px;
+  color: var(--jade-light);
+}
+
+.wuxia-card-content {
+  font-family: var(--font-pixel);
+  font-size: 10px;
+  color: var(--text-light);
+  line-height: 1.6;
+}
+
+/* Golden variant for legendary items */
+.wuxia-card.legendary {
+  border-color: var(--gold-accent);
+  box-shadow:
+    0 0 20px rgba(255, 215, 0, 0.3),
+    inset 0 0 30px rgba(255, 215, 0, 0.1);
+}
+
+.wuxia-card.legendary::before {
+  background: linear-gradient(90deg,
+    transparent 0%,
+    var(--gold-accent) 50%,
+    transparent 100%
+  );
+}
+
+/* ===================================
+   TRIBULATION EFFECTS
+   Special styling for breakthrough events
+   =================================== */
+
+.tribulation-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(ellipse at center,
+    rgba(0, 0, 0, 0.7) 0%,
+    rgba(0, 0, 0, 0.95) 100%
+  );
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tribulation-container {
+  position: relative;
+  text-align: center;
+  padding: 40px;
+}
+
+.tribulation-title {
+  font-family: var(--font-pixel);
+  font-size: 24px;
+  color: var(--gold-accent);
+  text-shadow:
+    0 0 20px var(--gold-accent),
+    0 0 40px rgba(255, 215, 0, 0.5);
+  animation: tribulation-text-pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes tribulation-text-pulse {
+  0%, 100% {
+    transform: scale(1);
+    text-shadow: 0 0 20px var(--gold-accent), 0 0 40px rgba(255, 215, 0, 0.5);
+  }
+  50% {
+    transform: scale(1.05);
+    text-shadow: 0 0 40px var(--gold-accent), 0 0 80px rgba(255, 215, 0, 0.8);
+  }
+}
+
+.tribulation-lightning {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  background:
+    linear-gradient(transparent, transparent),
+    repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 98%,
+      rgba(255, 215, 0, 0.8) 98%,
+      rgba(255, 215, 0, 0.8) 100%
+    );
+  opacity: 0;
+  animation: lightning-flash 0.5s linear infinite;
+}
+
+@keyframes lightning-flash {
+  0%, 90% { opacity: 0; }
+  92% { opacity: 1; }
+  94% { opacity: 0; }
+  96% { opacity: 0.8; }
+  98% { opacity: 0; }
+  100% { opacity: 0; }
+}

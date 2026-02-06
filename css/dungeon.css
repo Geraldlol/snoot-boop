@@ -1,0 +1,1182 @@
+/* ===================================
+   DUNGEON STYLES
+   Roguelike Dungeon Specific Styling
+   The Infinite Pagoda, Dream Realm, Goose Dimension
+   =================================== */
+
+/* ===================================
+   DUNGEON CONTAINER & LAYOUT
+   Main dungeon screen structure
+   =================================== */
+
+.dungeon-container {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  grid-template-columns: 200px 1fr 200px;
+  gap: 10px;
+  height: 100vh;
+  max-height: 100vh;
+  padding: 10px;
+  background: linear-gradient(180deg,
+    var(--bg-dark) 0%,
+    #0f0f1f 50%,
+    var(--bg-dark) 100%
+  );
+  overflow: hidden;
+}
+
+.dungeon-header {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  background: rgba(0, 0, 0, 0.5);
+  border: 2px solid var(--jade-dark);
+  border-radius: 8px;
+}
+
+.dungeon-sidebar-left {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.dungeon-main {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background: rgba(0, 0, 0, 0.3);
+  border: 2px solid rgba(80, 200, 120, 0.3);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.dungeon-sidebar-right {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.dungeon-footer {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  padding: 10px;
+}
+
+/* ===================================
+   FLOOR INDICATOR
+   Current floor display
+   =================================== */
+
+.floor-indicator {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 10px 20px;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(80, 200, 120, 0.1) 20%,
+    rgba(80, 200, 120, 0.2) 50%,
+    rgba(80, 200, 120, 0.1) 80%,
+    transparent 100%
+  );
+  border-radius: 8px;
+}
+
+.floor-number {
+  font-family: var(--font-pixel);
+  font-size: 24px;
+  color: var(--gold-accent);
+  text-shadow:
+    0 0 10px var(--gold-accent),
+    2px 2px 0 #000;
+}
+
+.floor-label {
+  font-family: var(--font-pixel);
+  font-size: 10px;
+  color: var(--text-light);
+  opacity: 0.8;
+}
+
+.floor-type {
+  padding: 4px 12px;
+  border-radius: 4px;
+  font-family: var(--font-pixel);
+  font-size: 8px;
+  text-transform: uppercase;
+}
+
+.floor-type.combat {
+  background: rgba(220, 20, 60, 0.3);
+  border: 1px solid var(--rusty-crimson);
+  color: var(--rusty-crimson);
+}
+
+.floor-type.elite {
+  background: rgba(147, 112, 219, 0.3);
+  border: 1px solid #9370DB;
+  color: #DDA0DD;
+}
+
+.floor-type.boss {
+  background: rgba(255, 69, 0, 0.3);
+  border: 1px solid #FF4500;
+  color: #FF6347;
+  animation: boss-floor-pulse 1s ease-in-out infinite;
+}
+
+.floor-type.treasure {
+  background: rgba(255, 215, 0, 0.3);
+  border: 1px solid var(--gold-accent);
+  color: var(--gold-accent);
+}
+
+.floor-type.shop {
+  background: rgba(80, 200, 120, 0.3);
+  border: 1px solid var(--jade);
+  color: var(--jade-light);
+}
+
+.floor-type.event {
+  background: rgba(65, 105, 225, 0.3);
+  border: 1px solid var(--steve-blue);
+  color: #87CEEB;
+}
+
+@keyframes boss-floor-pulse {
+  0%, 100% { box-shadow: 0 0 5px rgba(255, 69, 0, 0.5); }
+  50% { box-shadow: 0 0 20px rgba(255, 69, 0, 0.8); }
+}
+
+/* ===================================
+   ENEMY GRID
+   Enemy positioning and display
+   =================================== */
+
+.enemy-grid {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  gap: 15px;
+  padding: 20px;
+  position: relative;
+}
+
+.enemy-slot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  background: rgba(0, 0, 0, 0.3);
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.enemy-slot.occupied {
+  border-color: rgba(220, 20, 60, 0.5);
+  background: rgba(220, 20, 60, 0.1);
+}
+
+.enemy-slot.targeted {
+  border-color: var(--gold-accent);
+  box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+}
+
+.enemy-sprite {
+  width: 64px;
+  height: 64px;
+  image-rendering: pixelated;
+  transition: transform 0.2s ease;
+}
+
+.enemy-slot:hover .enemy-sprite {
+  transform: scale(1.1);
+}
+
+.enemy-name {
+  font-family: var(--font-pixel);
+  font-size: 8px;
+  color: var(--text-light);
+  margin-top: 8px;
+  text-align: center;
+}
+
+.enemy-hp-bar {
+  width: 80%;
+  height: 8px;
+  background: rgba(0, 0, 0, 0.5);
+  border: 1px solid #666;
+  border-radius: 2px;
+  margin-top: 5px;
+  overflow: hidden;
+}
+
+.enemy-hp-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #ff4444, #ff6666);
+  transition: width 0.3s ease;
+  box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.3);
+}
+
+.enemy-hp-fill.low {
+  background: linear-gradient(90deg, #ff0000, #cc0000);
+  animation: hp-low-pulse 0.5s ease-in-out infinite;
+}
+
+@keyframes hp-low-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+/* ===================================
+   PARTY FORMATION
+   Cat team display
+   =================================== */
+
+.party-formation {
+  background: rgba(0, 0, 0, 0.5);
+  border: 2px solid var(--jade-dark);
+  border-radius: 8px;
+  padding: 10px;
+}
+
+.party-title {
+  font-family: var(--font-pixel);
+  font-size: 10px;
+  color: var(--jade);
+  text-align: center;
+  margin-bottom: 10px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(80, 200, 120, 0.3);
+}
+
+.party-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+}
+
+.party-cat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 8px;
+  background: rgba(0, 0, 0, 0.3);
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.party-cat.active {
+  border-color: var(--jade);
+  box-shadow: 0 0 10px rgba(80, 200, 120, 0.3);
+}
+
+.party-cat.down {
+  opacity: 0.5;
+  filter: grayscale(100%);
+  border-color: rgba(255, 0, 0, 0.5);
+}
+
+.party-cat-sprite {
+  width: 32px;
+  height: 32px;
+  image-rendering: pixelated;
+}
+
+.party-cat-name {
+  font-family: var(--font-pixel);
+  font-size: 6px;
+  color: var(--text-light);
+  margin-top: 4px;
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
+}
+
+.party-cat-hp {
+  width: 100%;
+  height: 4px;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 2px;
+  margin-top: 4px;
+  overflow: hidden;
+}
+
+.party-cat-hp-fill {
+  height: 100%;
+  background: var(--jade);
+  transition: width 0.3s ease;
+}
+
+.party-cat-hp-fill.medium {
+  background: var(--gold-accent);
+}
+
+.party-cat-hp-fill.low {
+  background: var(--rusty-crimson);
+}
+
+/* Reserve cat slot */
+.party-reserve {
+  grid-column: 1 / -1;
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px dashed rgba(80, 200, 120, 0.3);
+}
+
+.party-reserve-label {
+  font-family: var(--font-pixel);
+  font-size: 6px;
+  color: #888;
+  text-align: center;
+  margin-bottom: 5px;
+}
+
+/* ===================================
+   RELIC SLOTS
+   Dungeon relic display
+   =================================== */
+
+.relic-container {
+  background: rgba(0, 0, 0, 0.5);
+  border: 2px solid var(--gold-accent);
+  border-radius: 8px;
+  padding: 10px;
+}
+
+.relic-title {
+  font-family: var(--font-pixel);
+  font-size: 10px;
+  color: var(--gold-accent);
+  text-align: center;
+  margin-bottom: 10px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(255, 215, 0, 0.3);
+}
+
+.relic-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.relic-slot {
+  width: 100%;
+  aspect-ratio: 1;
+  background: rgba(0, 0, 0, 0.4);
+  border: 2px dashed rgba(255, 215, 0, 0.3);
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.relic-slot.filled {
+  border-style: solid;
+  border-color: var(--gold-accent);
+  background: rgba(255, 215, 0, 0.1);
+}
+
+.relic-slot:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
+}
+
+.relic-icon {
+  width: 24px;
+  height: 24px;
+  image-rendering: pixelated;
+}
+
+/* Rarity-based styling */
+.relic-slot.rarity-common { border-color: #808080; }
+.relic-slot.rarity-rare { border-color: #4169E1; }
+.relic-slot.rarity-epic {
+  border-color: #9932CC;
+  animation: relic-epic-glow 2s ease-in-out infinite;
+}
+.relic-slot.rarity-legendary {
+  border-color: var(--gold-accent);
+  animation: relic-legendary-glow 1.5s ease-in-out infinite;
+}
+.relic-slot.rarity-mythic {
+  border-color: #FF4500;
+  animation: relic-mythic-glow 1s ease-in-out infinite;
+}
+
+@keyframes relic-epic-glow {
+  0%, 100% { box-shadow: 0 0 5px rgba(153, 50, 204, 0.3); }
+  50% { box-shadow: 0 0 15px rgba(153, 50, 204, 0.6); }
+}
+
+@keyframes relic-legendary-glow {
+  0%, 100% { box-shadow: 0 0 5px rgba(255, 215, 0, 0.4); }
+  50% { box-shadow: 0 0 20px rgba(255, 215, 0, 0.7); }
+}
+
+@keyframes relic-mythic-glow {
+  0%, 100% { box-shadow: 0 0 8px rgba(255, 69, 0, 0.5); }
+  50% { box-shadow: 0 0 25px rgba(255, 69, 0, 0.9); }
+}
+
+/* ===================================
+   QI METER
+   Qi bar for abilities
+   =================================== */
+
+.qi-meter {
+  background: rgba(0, 0, 0, 0.5);
+  border: 2px solid var(--qi-blue);
+  border-radius: 8px;
+  padding: 10px;
+}
+
+.qi-meter-title {
+  font-family: var(--font-pixel);
+  font-size: 10px;
+  color: var(--qi-blue);
+  text-align: center;
+  margin-bottom: 8px;
+}
+
+.qi-meter-bar {
+  width: 100%;
+  height: 16px;
+  background: rgba(0, 0, 0, 0.6);
+  border: 2px solid rgba(0, 191, 255, 0.5);
+  border-radius: 4px;
+  overflow: hidden;
+  position: relative;
+}
+
+.qi-meter-fill {
+  height: 100%;
+  background: linear-gradient(90deg,
+    #0066cc 0%,
+    var(--qi-blue) 50%,
+    #00ccff 100%
+  );
+  background-size: 200% 100%;
+  animation: qi-shimmer 2s linear infinite;
+  transition: width 0.3s ease;
+  box-shadow: 0 0 10px var(--qi-blue);
+}
+
+@keyframes qi-shimmer {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 200% 50%; }
+}
+
+.qi-meter-segments {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  pointer-events: none;
+}
+
+.qi-meter-segment {
+  flex: 1;
+  border-right: 2px solid rgba(0, 0, 0, 0.3);
+}
+
+.qi-meter-segment:last-child {
+  border-right: none;
+}
+
+.qi-meter-value {
+  font-family: var(--font-pixel);
+  font-size: 8px;
+  color: var(--text-light);
+  text-align: center;
+  margin-top: 5px;
+}
+
+/* ===================================
+   BOOP COMMANDS
+   Combat ability buttons
+   =================================== */
+
+.boop-commands {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.boop-command {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 12px 20px;
+  background: linear-gradient(180deg,
+    rgba(80, 200, 120, 0.2) 0%,
+    rgba(0, 0, 0, 0.4) 100%
+  );
+  border: 3px solid var(--jade-dark);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 100px;
+}
+
+.boop-command:hover:not(:disabled) {
+  transform: translateY(-3px);
+  border-color: var(--jade);
+  box-shadow: 0 5px 20px rgba(80, 200, 120, 0.4);
+}
+
+.boop-command:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+.boop-command:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  filter: grayscale(50%);
+}
+
+.boop-command-icon {
+  font-size: 24px;
+  margin-bottom: 5px;
+}
+
+.boop-command-name {
+  font-family: var(--font-pixel);
+  font-size: 8px;
+  color: var(--text-light);
+  text-align: center;
+}
+
+.boop-command-cost {
+  font-family: var(--font-pixel);
+  font-size: 6px;
+  color: var(--qi-blue);
+  margin-top: 4px;
+}
+
+/* Specific command colors */
+.boop-command.power {
+  border-color: var(--gold-accent);
+  background: linear-gradient(180deg, rgba(255, 215, 0, 0.2), rgba(0, 0, 0, 0.4));
+}
+
+.boop-command.heal {
+  border-color: #32CD32;
+  background: linear-gradient(180deg, rgba(50, 205, 50, 0.2), rgba(0, 0, 0, 0.4));
+}
+
+.boop-command.shield {
+  border-color: var(--steve-blue);
+  background: linear-gradient(180deg, rgba(65, 105, 225, 0.2), rgba(0, 0, 0, 0.4));
+}
+
+.boop-command.mega {
+  border-color: var(--rusty-crimson);
+  background: linear-gradient(180deg, rgba(220, 20, 60, 0.2), rgba(0, 0, 0, 0.4));
+}
+
+.boop-command.emergency {
+  border-color: #FF00FF;
+  background: linear-gradient(180deg, rgba(255, 0, 255, 0.2), rgba(0, 0, 0, 0.4));
+  animation: emergency-pulse 1s ease-in-out infinite;
+}
+
+@keyframes emergency-pulse {
+  0%, 100% { box-shadow: 0 0 5px rgba(255, 0, 255, 0.3); }
+  50% { box-shadow: 0 0 15px rgba(255, 0, 255, 0.6); }
+}
+
+/* ===================================
+   LOOT POPUP
+   Loot drop display
+   =================================== */
+
+.loot-popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: linear-gradient(180deg, #2a2a4a, #1a1a2e);
+  border: 4px solid var(--gold-accent);
+  border-radius: 12px;
+  padding: 30px;
+  z-index: 1000;
+  min-width: 300px;
+  max-width: 500px;
+  animation: loot-popup-appear 0.5s ease-out;
+}
+
+@keyframes loot-popup-appear {
+  0% {
+    transform: translate(-50%, -50%) scale(0.5);
+    opacity: 0;
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(1.05);
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+}
+
+.loot-popup-header {
+  font-family: var(--font-pixel);
+  font-size: 16px;
+  color: var(--gold-accent);
+  text-align: center;
+  margin-bottom: 20px;
+  text-shadow: 0 0 10px var(--gold-accent);
+}
+
+.loot-items {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.loot-item {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 10px;
+  background: rgba(0, 0, 0, 0.3);
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  animation: loot-item-slide 0.3s ease-out;
+  animation-fill-mode: both;
+}
+
+.loot-item:nth-child(1) { animation-delay: 0.1s; }
+.loot-item:nth-child(2) { animation-delay: 0.2s; }
+.loot-item:nth-child(3) { animation-delay: 0.3s; }
+.loot-item:nth-child(4) { animation-delay: 0.4s; }
+.loot-item:nth-child(5) { animation-delay: 0.5s; }
+
+@keyframes loot-item-slide {
+  0% {
+    transform: translateX(-20px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.loot-item-icon {
+  width: 32px;
+  height: 32px;
+  image-rendering: pixelated;
+}
+
+.loot-item-info {
+  flex: 1;
+}
+
+.loot-item-name {
+  font-family: var(--font-pixel);
+  font-size: 10px;
+  color: var(--text-light);
+}
+
+.loot-item-desc {
+  font-family: var(--font-pixel);
+  font-size: 7px;
+  color: #888;
+  margin-top: 3px;
+}
+
+.loot-item-amount {
+  font-family: var(--font-pixel);
+  font-size: 12px;
+  color: var(--gold-accent);
+}
+
+/* Rarity borders for loot */
+.loot-item.common { border-color: #808080; }
+.loot-item.uncommon { border-color: #32CD32; }
+.loot-item.rare { border-color: #4169E1; }
+.loot-item.epic { border-color: #9932CC; }
+.loot-item.legendary {
+  border-color: var(--gold-accent);
+  background: rgba(255, 215, 0, 0.1);
+}
+.loot-item.mythic {
+  border-color: #FF4500;
+  background: rgba(255, 69, 0, 0.1);
+}
+
+/* ===================================
+   BOSS HEALTHBAR
+   Boss HP display
+   =================================== */
+
+.boss-healthbar {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80%;
+  max-width: 600px;
+  padding: 15px;
+  background: rgba(0, 0, 0, 0.8);
+  border: 3px solid var(--rusty-crimson);
+  border-bottom: none;
+  border-radius: 12px 12px 0 0;
+}
+
+.boss-name {
+  font-family: var(--font-pixel);
+  font-size: 14px;
+  color: var(--rusty-crimson);
+  text-align: center;
+  margin-bottom: 10px;
+  text-shadow: 0 0 10px rgba(220, 20, 60, 0.5);
+}
+
+.boss-hp-container {
+  width: 100%;
+  height: 24px;
+  background: rgba(0, 0, 0, 0.5);
+  border: 3px solid #660000;
+  border-radius: 4px;
+  overflow: hidden;
+  position: relative;
+}
+
+.boss-hp-bar {
+  height: 100%;
+  background: linear-gradient(90deg,
+    #8B0000 0%,
+    #DC143C 50%,
+    #FF4444 100%
+  );
+  transition: width 0.5s ease;
+  position: relative;
+}
+
+.boss-hp-bar::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 50%;
+  background: linear-gradient(180deg,
+    rgba(255, 255, 255, 0.3) 0%,
+    transparent 100%
+  );
+}
+
+.boss-hp-segments {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  pointer-events: none;
+}
+
+.boss-hp-segment {
+  flex: 1;
+  border-right: 2px solid rgba(0, 0, 0, 0.5);
+}
+
+.boss-hp-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: var(--font-pixel);
+  font-size: 10px;
+  color: white;
+  text-shadow: 1px 1px 2px #000;
+}
+
+/* Boss phases */
+.boss-phase-indicator {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.boss-phase {
+  width: 12px;
+  height: 12px;
+  background: rgba(0, 0, 0, 0.5);
+  border: 2px solid #666;
+  border-radius: 50%;
+}
+
+.boss-phase.active {
+  background: var(--rusty-crimson);
+  border-color: #FF4444;
+  box-shadow: 0 0 10px rgba(220, 20, 60, 0.5);
+}
+
+.boss-phase.cleared {
+  background: #333;
+  border-color: #444;
+}
+
+/* ===================================
+   DUNGEON THEME VARIANTS
+   Specific dungeon type styling
+   =================================== */
+
+/* Infinite Pagoda - Classic jade theme */
+.dungeon-pagoda {
+  background: linear-gradient(180deg,
+    #0a1a1a 0%,
+    #0f2a20 50%,
+    #0a1a1a 100%
+  );
+}
+
+.dungeon-pagoda .dungeon-header {
+  border-color: var(--jade);
+}
+
+.dungeon-pagoda .floor-indicator {
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(80, 200, 120, 0.15) 20%,
+    rgba(80, 200, 120, 0.25) 50%,
+    rgba(80, 200, 120, 0.15) 80%,
+    transparent 100%
+  );
+}
+
+/* Dream Realm - Purple/ethereal theme */
+.dungeon-dream {
+  background: linear-gradient(180deg,
+    #1a0a2a 0%,
+    #2a1a4a 50%,
+    #1a0a2a 100%
+  );
+}
+
+.dungeon-dream .dungeon-header {
+  border-color: #9370DB;
+}
+
+.dungeon-dream .floor-indicator {
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(147, 112, 219, 0.15) 20%,
+    rgba(147, 112, 219, 0.25) 50%,
+    rgba(147, 112, 219, 0.15) 80%,
+    transparent 100%
+  );
+}
+
+.dungeon-dream .floor-number {
+  color: #DDA0DD;
+}
+
+.dungeon-dream::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background:
+    radial-gradient(ellipse at 20% 30%, rgba(147, 112, 219, 0.1) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 70%, rgba(138, 43, 226, 0.1) 0%, transparent 50%);
+  pointer-events: none;
+  animation: dream-drift 20s ease-in-out infinite;
+}
+
+@keyframes dream-drift {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
+
+/* Goose Dimension - Chaotic/comedy horror */
+.dungeon-goose {
+  background: linear-gradient(180deg,
+    #1a1a1a 0%,
+    #2a2a2a 25%,
+    #0a0a0a 50%,
+    #2a2a2a 75%,
+    #1a1a1a 100%
+  );
+}
+
+.dungeon-goose .dungeon-header {
+  border-color: var(--goose-white);
+}
+
+.dungeon-goose .floor-indicator {
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(245, 245, 245, 0.1) 20%,
+    rgba(245, 245, 245, 0.2) 50%,
+    rgba(245, 245, 245, 0.1) 80%,
+    transparent 100%
+  );
+}
+
+.dungeon-goose .floor-number {
+  color: var(--goose-white);
+}
+
+/* Random goose appearance effect */
+.dungeon-goose::after {
+  content: 'HONK';
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: var(--font-pixel);
+  font-size: 100px;
+  color: transparent;
+  pointer-events: none;
+  animation: goose-honk 10s ease-in-out infinite;
+}
+
+@keyframes goose-honk {
+  0%, 95%, 100% { color: transparent; }
+  96% { color: rgba(245, 245, 245, 0.1); }
+  97% { color: rgba(245, 245, 245, 0.3); }
+  98% { color: rgba(245, 245, 245, 0.1); }
+}
+
+/* Celestial Tournament - Royal/competitive */
+.dungeon-tournament {
+  background: linear-gradient(180deg,
+    #1a1a30 0%,
+    #2a2a50 50%,
+    #1a1a30 100%
+  );
+}
+
+.dungeon-tournament .dungeon-header {
+  border-color: var(--gold-accent);
+  background: linear-gradient(180deg,
+    rgba(255, 215, 0, 0.1) 0%,
+    rgba(0, 0, 0, 0.5) 100%
+  );
+}
+
+.dungeon-tournament .floor-indicator {
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(255, 215, 0, 0.15) 20%,
+    rgba(255, 215, 0, 0.25) 50%,
+    rgba(255, 215, 0, 0.15) 80%,
+    transparent 100%
+  );
+}
+
+/* ===================================
+   DUNGEON ANIMATIONS
+   Combat and transition effects
+   =================================== */
+
+@keyframes dungeon-enter {
+  0% {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.dungeon-enter {
+  animation: dungeon-enter 0.5s ease-out;
+}
+
+@keyframes enemy-spawn {
+  0% {
+    opacity: 0;
+    transform: scale(0) rotate(-180deg);
+  }
+  60% {
+    transform: scale(1.2) rotate(10deg);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+  }
+}
+
+.enemy-spawn {
+  animation: enemy-spawn 0.5s ease-out;
+}
+
+@keyframes damage-flash {
+  0%, 100% {
+    filter: brightness(1);
+    transform: translateX(0);
+  }
+  10% {
+    filter: brightness(2) saturate(0);
+    transform: translateX(-5px);
+  }
+  20% {
+    filter: brightness(1.5);
+    transform: translateX(5px);
+  }
+  30% {
+    filter: brightness(2) saturate(0);
+    transform: translateX(-3px);
+  }
+  40% {
+    filter: brightness(1.2);
+    transform: translateX(3px);
+  }
+}
+
+.damage-flash {
+  animation: damage-flash 0.4s ease-out;
+}
+
+@keyframes loot-float {
+  0% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-60px) scale(1.5);
+  }
+}
+
+.loot-float {
+  animation: loot-float 1s ease-out forwards;
+}
+
+@keyframes enemy-death {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+    filter: brightness(1);
+  }
+  30% {
+    filter: brightness(3) saturate(0);
+    transform: scale(1.2);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0);
+    filter: brightness(0);
+  }
+}
+
+.enemy-death {
+  animation: enemy-death 0.6s ease-out forwards;
+}
+
+@keyframes boss-intro {
+  0% {
+    opacity: 0;
+    transform: translateY(100px) scale(0.5);
+  }
+  50% {
+    opacity: 1;
+    transform: translateY(-20px) scale(1.1);
+  }
+  70% {
+    transform: translateY(10px) scale(0.95);
+  }
+  100% {
+    transform: translateY(0) scale(1);
+  }
+}
+
+.boss-intro {
+  animation: boss-intro 1s ease-out;
+}
+
+@keyframes floor-transition {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  51% {
+    transform: scale(1.05);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.floor-transition {
+  animation: floor-transition 0.8s ease-in-out;
+}
+
+/* Victory/defeat effects */
+@keyframes victory-glow {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(80, 200, 120, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 60px rgba(80, 200, 120, 0.8), 0 0 100px rgba(255, 215, 0, 0.5);
+  }
+}
+
+.victory-glow {
+  animation: victory-glow 1s ease-in-out infinite;
+}
+
+@keyframes defeat-fade {
+  0% {
+    filter: brightness(1) saturate(1);
+  }
+  100% {
+    filter: brightness(0.3) saturate(0);
+  }
+}
+
+.defeat-fade {
+  animation: defeat-fade 2s ease-out forwards;
+}
+
+/* Combat impact effect */
+@keyframes combat-impact {
+  0% {
+    transform: scale(0.5);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(2);
+    opacity: 0;
+  }
+}
+
+.combat-impact {
+  position: absolute;
+  width: 50px;
+  height: 50px;
+  border: 3px solid var(--gold-accent);
+  border-radius: 50%;
+  animation: combat-impact 0.4s ease-out forwards;
+  pointer-events: none;
+}

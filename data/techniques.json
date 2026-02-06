@@ -1,0 +1,523 @@
+{
+  "stances": {
+    "jadePalm": {
+      "id": "jadePalm",
+      "name": "Jade Palm",
+      "description": "The balanced way. Default stance for all cultivators.",
+      "unlockRealm": "mortal",
+      "stats": {
+        "boopPower": 1.0,
+        "boopSpeed": 1.0,
+        "critChance": 0.05,
+        "critMultiplier": 10,
+        "comboDecay": 2000
+      },
+      "special": null,
+      "mastery": {
+        "maxLevel": 10,
+        "xpPerBoop": 1,
+        "bonusPerLevel": { "boopPower": 0.05 }
+      },
+      "sprite": "techniques/jade_palm.png",
+      "color": "#50C878"
+    },
+    "ironFinger": {
+      "id": "ironFinger",
+      "name": "Iron Finger",
+      "description": "Slow but devastating. Each boop carries the weight of a mountain.",
+      "unlockRealm": "qiCondensation",
+      "stats": {
+        "boopPower": 3.0,
+        "boopSpeed": 0.5,
+        "critChance": 0.15,
+        "critMultiplier": 15,
+        "comboDecay": 3000
+      },
+      "special": {
+        "name": "Mountain Crusher",
+        "description": "Every 10th boop deals 10x damage",
+        "trigger": { "everyNBoops": 10 },
+        "effect": { "damageMultiplier": 10 }
+      },
+      "mastery": {
+        "maxLevel": 10,
+        "xpPerBoop": 2,
+        "bonusPerLevel": { "critMultiplier": 1 }
+      },
+      "sprite": "techniques/iron_finger.png",
+      "color": "#C0C0C0"
+    },
+    "drunkenPaw": {
+      "id": "drunkenPaw",
+      "name": "Drunken Paw",
+      "description": "Chaotic and unpredictable. Embrace the randomness.",
+      "unlockRealm": "foundationEstablishment",
+      "stats": {
+        "boopPower": { "min": 0.5, "max": 5.0 },
+        "boopSpeed": 1.2,
+        "critChance": 0.25,
+        "critMultiplier": { "min": 5, "max": 25 },
+        "comboDecay": 1500
+      },
+      "special": {
+        "name": "Lucky Stumble",
+        "description": "5% chance for JACKPOT (100x damage)",
+        "trigger": { "chance": 0.05 },
+        "effect": { "damageMultiplier": 100 }
+      },
+      "mastery": {
+        "maxLevel": 10,
+        "xpPerBoop": 1,
+        "bonusPerLevel": { "jackpotChance": 0.005 }
+      },
+      "sprite": "techniques/drunken_paw.png",
+      "color": "#8B4513"
+    },
+    "shadowStep": {
+      "id": "shadowStep",
+      "name": "Shadow Step",
+      "description": "Rapid strikes with diminishing returns, then a devastating burst.",
+      "unlockRealm": "coreFormation",
+      "stats": {
+        "boopPower": 0.3,
+        "boopSpeed": 2.0,
+        "critChance": 0.1,
+        "critMultiplier": 8,
+        "comboDecay": 1000
+      },
+      "special": {
+        "name": "Shadow Burst",
+        "description": "After 20 rapid boops, next boop deals combo x 5 damage",
+        "trigger": { "afterCombo": 20 },
+        "effect": { "burstMultiplier": 5 }
+      },
+      "mastery": {
+        "maxLevel": 10,
+        "xpPerBoop": 0.5,
+        "bonusPerLevel": { "burstMultiplier": 0.5 }
+      },
+      "sprite": "techniques/shadow_step.png",
+      "color": "#483D8B"
+    },
+    "flowingRiver": {
+      "id": "flowingRiver",
+      "name": "Flowing River",
+      "description": "Steady and consistent. Optimized for AFK synergy.",
+      "unlockRealm": "nascentSoul",
+      "stats": {
+        "boopPower": 1.5,
+        "boopSpeed": 0.8,
+        "critChance": 0.08,
+        "critMultiplier": 12,
+        "comboDecay": 5000
+      },
+      "special": {
+        "name": "Eternal Flow",
+        "description": "Combo never fully resets, minimum 10%",
+        "trigger": { "always": true },
+        "effect": { "minComboPercent": 0.1 }
+      },
+      "mastery": {
+        "maxLevel": 10,
+        "xpPerBoop": 1.5,
+        "bonusPerLevel": { "comboDecay": 500 }
+      },
+      "sprite": "techniques/flowing_river.png",
+      "color": "#4169E1"
+    },
+    "forbiddenTechnique": {
+      "id": "forbiddenTechnique",
+      "name": "Thousand Snoot Annihilation",
+      "description": "THE ULTIMATE TECHNIQUE. Costs Qi to activate.",
+      "unlockRealm": "spiritSevering",
+      "unlockCondition": { "masterAllStances": true },
+      "stats": {
+        "boopPower": 10.0,
+        "boopSpeed": 3.0,
+        "critChance": 0.5,
+        "critMultiplier": 50,
+        "comboDecay": 500
+      },
+      "special": {
+        "name": "Annihilation",
+        "description": "Costs 5 Qi per boop. All boops hit all cats on screen.",
+        "trigger": { "always": true },
+        "effect": { "aoe": true, "qiCost": 5 }
+      },
+      "mastery": {
+        "maxLevel": 10,
+        "xpPerBoop": 5,
+        "bonusPerLevel": { "qiCostReduction": 0.3 }
+      },
+      "sprite": "techniques/forbidden.png",
+      "color": "#FF0000"
+    }
+  },
+  "fusionTechniques": {
+    "jadeMountain": {
+      "id": "jadeMountain",
+      "name": "Jade Mountain Strike",
+      "requires": ["jadePalm", "ironFinger"],
+      "requiredMastery": 5,
+      "description": "Balanced power with devastating follow-ups",
+      "effect": { "boopPower": 2.0, "everyNth": { "n": 5, "multiplier": 5 } },
+      "sprite": "techniques/jade_mountain.png",
+      "color": "#50C878"
+    },
+    "drunkenShadow": {
+      "id": "drunkenShadow",
+      "name": "Drunken Shadow Dance",
+      "requires": ["drunkenPaw", "shadowStep"],
+      "requiredMastery": 5,
+      "description": "Chaotic rapid strikes with burst potential",
+      "effect": { "randomMultiplier": { "min": 1, "max": 3 }, "burstAfter": 15 },
+      "sprite": "techniques/drunken_shadow.png",
+      "color": "#4B0082"
+    },
+    "riverOfJade": {
+      "id": "riverOfJade",
+      "name": "River of Jade",
+      "requires": ["jadePalm", "flowingRiver"],
+      "requiredMastery": 5,
+      "description": "Endless combos with steady power",
+      "effect": { "comboNeverResets": true, "boopPower": 1.75 },
+      "sprite": "techniques/river_of_jade.png",
+      "color": "#00CED1"
+    },
+    "ironRiver": {
+      "id": "ironRiver",
+      "name": "Iron River Flow",
+      "requires": ["ironFinger", "flowingRiver"],
+      "requiredMastery": 5,
+      "description": "Heavy hits that never stop coming",
+      "effect": { "boopPower": 2.5, "comboDecay": 8000 },
+      "sprite": "techniques/iron_river.png",
+      "color": "#708090"
+    },
+    "shadowDrunk": {
+      "id": "shadowDrunk",
+      "name": "Shadow Drunk Fist",
+      "requires": ["shadowStep", "drunkenPaw"],
+      "requiredMastery": 7,
+      "description": "Unpredictable burst damage",
+      "effect": { "burstChance": 0.15, "burstMultiplier": 20 },
+      "sprite": "techniques/shadow_drunk.png",
+      "color": "#800080"
+    },
+    "ultimateSynthesis": {
+      "id": "ultimateSynthesis",
+      "name": "Celestial Snoot Synthesis",
+      "requires": ["jadePalm", "ironFinger", "drunkenPaw", "shadowStep", "flowingRiver"],
+      "requiredMastery": 10,
+      "description": "THE ULTIMATE FUSION. Combines all stance benefits.",
+      "effect": { "allStancePassives": true, "uniqueAnimation": "celestial_boop" },
+      "sprite": "techniques/ultimate_synthesis.png",
+      "color": "#FFD700"
+    }
+  },
+  "catTechniques": {
+    "active": {
+      "pawSwipe": {
+        "id": "pawSwipe",
+        "name": "Paw Swipe",
+        "type": "active",
+        "element": "metal",
+        "cooldown": 5,
+        "damage": 50,
+        "description": "Basic attack",
+        "unlockLevel": 1
+      },
+      "hairballBarrage": {
+        "id": "hairballBarrage",
+        "name": "Hairball Barrage",
+        "type": "active",
+        "element": "earth",
+        "cooldown": 15,
+        "damage": 150,
+        "aoe": true,
+        "description": "AOE attack",
+        "unlockLevel": 5
+      },
+      "nineLivesDance": {
+        "id": "nineLivesDance",
+        "name": "Nine Lives Dance",
+        "type": "active",
+        "element": "void",
+        "cooldown": 60,
+        "effect": "revive",
+        "description": "Revive once per dungeon run",
+        "unlockLevel": 20,
+        "elementRequired": "void"
+      },
+      "flowingStrike": {
+        "id": "flowingStrike",
+        "name": "Flowing Strike",
+        "type": "active",
+        "element": "water",
+        "cooldown": 8,
+        "damage": 80,
+        "description": "Water-element strike",
+        "unlockLevel": 3
+      },
+      "ironPaw": {
+        "id": "ironPaw",
+        "name": "Iron Paw",
+        "type": "active",
+        "element": "metal",
+        "cooldown": 10,
+        "damage": 120,
+        "description": "Heavy metal strike",
+        "unlockLevel": 8
+      },
+      "templeGuard": {
+        "id": "templeGuard",
+        "name": "Temple Guard",
+        "type": "active",
+        "element": "earth",
+        "cooldown": 20,
+        "effect": "shield",
+        "shieldAmount": 200,
+        "description": "Creates a protective shield",
+        "unlockLevel": 10
+      },
+      "healingPurr": {
+        "id": "healingPurr",
+        "name": "Healing Purr",
+        "type": "active",
+        "element": "wood",
+        "cooldown": 15,
+        "heal": 100,
+        "description": "Heals self",
+        "unlockLevel": 5
+      },
+      "demonClaw": {
+        "id": "demonClaw",
+        "name": "Demon Claw",
+        "type": "active",
+        "element": "fire",
+        "cooldown": 12,
+        "damage": 200,
+        "selfDamage": 50,
+        "description": "Powerful attack that hurts self",
+        "unlockLevel": 15
+      },
+      "voidStep": {
+        "id": "voidStep",
+        "name": "Void Step",
+        "type": "active",
+        "element": "void",
+        "cooldown": 30,
+        "effect": "phase",
+        "duration": 5,
+        "description": "Become intangible for 5 seconds",
+        "unlockLevel": 25
+      },
+      "chaosHonk": {
+        "id": "chaosHonk",
+        "name": "Chaos Honk",
+        "type": "active",
+        "element": "chaos",
+        "cooldown": 20,
+        "damage": { "min": 50, "max": 500 },
+        "description": "Random damage honk",
+        "unlockLevel": 10
+      }
+    },
+    "passive": {
+      "softLanding": {
+        "id": "softLanding",
+        "name": "Soft Landing",
+        "type": "passive",
+        "effect": { "dodgeChance": 0.1 },
+        "description": "+10% dodge chance",
+        "unlockLevel": 3
+      },
+      "loudPurr": {
+        "id": "loudPurr",
+        "name": "Loud Purr",
+        "type": "passive",
+        "effect": { "teamHappiness": 1.1 },
+        "description": "+10% team happiness",
+        "unlockLevel": 8
+      },
+      "ironWill": {
+        "id": "ironWill",
+        "name": "Iron Will",
+        "type": "passive",
+        "effect": { "damageReduction": 0.1 },
+        "description": "-10% damage taken",
+        "unlockLevel": 12
+      },
+      "nimblePaws": {
+        "id": "nimblePaws",
+        "name": "Nimble Paws",
+        "type": "passive",
+        "effect": { "attackSpeed": 1.15 },
+        "description": "+15% attack speed",
+        "unlockLevel": 6
+      },
+      "sharpenedClaws": {
+        "id": "sharpenedClaws",
+        "name": "Sharpened Claws",
+        "type": "passive",
+        "effect": { "critChance": 0.05 },
+        "description": "+5% critical chance",
+        "unlockLevel": 10
+      },
+      "voidAffinity": {
+        "id": "voidAffinity",
+        "name": "Void Affinity",
+        "type": "passive",
+        "effect": { "voidDamage": 1.25 },
+        "description": "+25% void damage",
+        "unlockLevel": 20,
+        "elementRequired": "void"
+      },
+      "chaosEmbrace": {
+        "id": "chaosEmbrace",
+        "name": "Chaos Embrace",
+        "type": "passive",
+        "effect": { "chaosDamage": 1.25, "randomEvents": 1.5 },
+        "description": "+25% chaos damage, +50% random events",
+        "unlockLevel": 20,
+        "elementRequired": "chaos"
+      }
+    }
+  },
+  "waifuTechniques": {
+    "welcomingBoop": {
+      "id": "welcomingBoop",
+      "name": "Welcoming Boop",
+      "school": "hospitalityArts",
+      "description": "+10% BP from boops when used",
+      "effect": { "bpBonus": 1.1 },
+      "cooldown": 60
+    },
+    "teaTimeHealing": {
+      "id": "teaTimeHealing",
+      "name": "Tea Time Healing",
+      "school": "hospitalityArts",
+      "description": "Heal all cats by 20%",
+      "effect": { "teamHeal": 0.2 },
+      "cooldown": 120
+    },
+    "guestProtection": {
+      "id": "guestProtection",
+      "name": "Guest Protection",
+      "school": "hospitalityArts",
+      "description": "Shield all cats for 5 seconds",
+      "effect": { "teamShield": 5 },
+      "cooldown": 180
+    },
+    "moonlightBoop": {
+      "id": "moonlightBoop",
+      "name": "Moonlight Boop",
+      "school": "yinEnergyArts",
+      "description": "+50% AFK gains for 1 hour",
+      "effect": { "afkBonus": 1.5, "duration": 3600 },
+      "cooldown": 3600
+    },
+    "dreamWalking": {
+      "id": "dreamWalking",
+      "name": "Dream Walking",
+      "school": "yinEnergyArts",
+      "description": "Skip 5 dream realm floors",
+      "effect": { "skipFloors": 5 },
+      "cooldown": 300
+    },
+    "nightVision": {
+      "id": "nightVision",
+      "name": "Night Vision",
+      "school": "yinEnergyArts",
+      "description": "Reveal all enemies on current floor",
+      "effect": { "revealAll": true },
+      "cooldown": 60
+    },
+    "treasureHunter": {
+      "id": "treasureHunter",
+      "name": "Treasure Hunter",
+      "school": "adventureArts",
+      "description": "+25% loot drops for 10 minutes",
+      "effect": { "lootBonus": 1.25, "duration": 600 },
+      "cooldown": 600
+    },
+    "seaLegs": {
+      "id": "seaLegs",
+      "name": "Sea Legs",
+      "school": "adventureArts",
+      "description": "Immune to debuffs for 30 seconds",
+      "effect": { "debuffImmune": 30 },
+      "cooldown": 120
+    },
+    "captainCommand": {
+      "id": "captainCommand",
+      "name": "Captain's Command",
+      "school": "adventureArts",
+      "description": "All cats attack 50% faster for 20 seconds",
+      "effect": { "teamAttackSpeed": 1.5, "duration": 20 },
+      "cooldown": 180
+    },
+    "fierceStrike": {
+      "id": "fierceStrike",
+      "name": "Fierce Strike",
+      "school": "combatArts",
+      "description": "Deal massive damage to one enemy",
+      "effect": { "singleTargetDamage": 5000 },
+      "cooldown": 30
+    },
+    "battleCry": {
+      "id": "battleCry",
+      "name": "Battle Cry",
+      "school": "combatArts",
+      "description": "+30% team damage for 15 seconds",
+      "effect": { "teamDamage": 1.3, "duration": 15 },
+      "cooldown": 90
+    },
+    "warriorSpirit": {
+      "id": "warriorSpirit",
+      "name": "Warrior Spirit",
+      "school": "combatArts",
+      "description": "Revive all fallen cats at 50% HP",
+      "effect": { "teamRevive": 0.5 },
+      "cooldown": 300
+    }
+  },
+  "forbiddenTechniques": {
+    "voidPalm": {
+      "name": "Void Palm",
+      "description": "Boops hit all cats on screen",
+      "cost": { "heavenlySeals": 5 },
+      "effect": { "aoeBoops": true }
+    },
+    "timeReversalSutra": {
+      "name": "Time Reversal Sutra",
+      "description": "AFK time cap increased to 48 hours",
+      "cost": { "heavenlySeals": 10 },
+      "effect": { "afkCapHours": 48 }
+    },
+    "reincarnationWheel": {
+      "name": "Reincarnation Wheel",
+      "description": "Merge duplicate cats to upgrade realm",
+      "cost": { "heavenlySeals": 15 },
+      "effect": { "catMerging": true }
+    },
+    "heavenDefyingSnoot": {
+      "name": "Heaven Defying Snoot",
+      "description": "1% chance for cats to spawn one realm higher",
+      "cost": { "heavenlySeals": 25 },
+      "effect": { "realmUpgradeChance": 0.01 }
+    },
+    "eternalCultivation": {
+      "name": "Eternal Cultivation",
+      "description": "Cats gain XP while offline",
+      "cost": { "heavenlySeals": 20 },
+      "effect": { "offlineCatXP": true }
+    },
+    "karmaManipulation": {
+      "name": "Karma Manipulation",
+      "description": "+10% karma gain from all sources",
+      "cost": { "heavenlySeals": 30 },
+      "effect": { "karmaGain": 1.1 }
+    }
+  }
+}

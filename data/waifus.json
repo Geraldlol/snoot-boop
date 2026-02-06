@@ -1,0 +1,578 @@
+{
+  "bondActivities": {
+    "teaCeremony": {
+      "id": "teaCeremony",
+      "name": "Tea Ceremony",
+      "duration": 300,
+      "bondGain": 10,
+      "preferredBy": ["mochi", "jade", "luna"],
+      "description": "Share a quiet moment over tea",
+      "unlockBond": 0
+    },
+    "sparring": {
+      "id": "sparring",
+      "name": "Sparring Match",
+      "duration": 600,
+      "bondGain": 15,
+      "preferredBy": ["mei", "nyanta", "crimson"],
+      "minigame": "combat_practice",
+      "description": "Train together in combat",
+      "unlockBond": 20
+    },
+    "meditation": {
+      "id": "meditation",
+      "name": "Meditation",
+      "duration": 900,
+      "bondGain": 20,
+      "preferredBy": ["luna", "yuki", "jade"],
+      "afkCompatible": true,
+      "description": "Cultivate together in silence",
+      "unlockBond": 30
+    },
+    "stargazing": {
+      "id": "stargazing",
+      "name": "Stargazing",
+      "duration": 600,
+      "bondGain": 25,
+      "preferredBy": ["luna", "yuki", "grandmother"],
+      "timeRestriction": "night",
+      "description": "Watch the stars together",
+      "unlockBond": 40
+    },
+    "cooking": {
+      "id": "cooking",
+      "name": "Cooking Together",
+      "duration": 450,
+      "bondGain": 18,
+      "preferredBy": ["mochi", "sakura"],
+      "producesItem": true,
+      "description": "Prepare a meal together",
+      "unlockBond": 25
+    },
+    "exploring": {
+      "id": "exploring",
+      "name": "Sect Exploration",
+      "duration": 1200,
+      "bondGain": 30,
+      "preferredBy": ["nyanta", "sakura", "mei"],
+      "discoversSecrets": true,
+      "description": "Explore hidden areas together",
+      "unlockBond": 50
+    },
+    "hotSprings": {
+      "id": "hotSprings",
+      "name": "Hot Springs Visit",
+      "duration": 600,
+      "bondGain": 35,
+      "preferredBy": ["all"],
+      "requiresBuilding": "hot_springs",
+      "description": "Relax at the hot springs",
+      "unlockBond": 60
+    }
+  },
+  "waifuSchools": {
+    "hospitalityArts": {
+      "id": "hospitalityArts",
+      "name": "Hospitality Arts",
+      "teacher": "mochi",
+      "techniques": ["welcomingBoop", "teaTimeHealing", "guestProtection"],
+      "masteryExams": [
+        { "level": 1, "type": "serve_100_teas", "reward": "technique:welcomingBoop" },
+        { "level": 2, "type": "happiness_threshold", "value": 1000, "reward": "technique:teaTimeHealing" },
+        { "level": 3, "type": "boss_fight", "enemy": "angry_customer", "reward": "technique:guestProtection" }
+      ],
+      "schoolBonus": { "catHappiness": 1.2 }
+    },
+    "yinEnergyArts": {
+      "id": "yinEnergyArts",
+      "name": "Yin Energy Arts",
+      "teacher": "luna",
+      "techniques": ["moonlightBoop", "dreamWalking", "nightVision"],
+      "masteryExams": [
+        { "level": 1, "type": "afk_hours", "value": 24, "reward": "technique:moonlightBoop" },
+        { "level": 2, "type": "night_boops", "value": 10000, "reward": "technique:dreamWalking" },
+        { "level": 3, "type": "dream_realm_clear", "floor": 10, "reward": "technique:nightVision" }
+      ],
+      "schoolBonus": { "afkEfficiency": 1.3 }
+    },
+    "adventureArts": {
+      "id": "adventureArts",
+      "name": "Adventure Arts",
+      "teacher": "nyanta",
+      "techniques": ["treasureHunter", "seaLegs", "captainCommand"],
+      "masteryExams": [
+        { "level": 1, "type": "expeditions_complete", "value": 10, "reward": "technique:treasureHunter" },
+        { "level": 2, "type": "rare_cats_found", "value": 20, "reward": "technique:seaLegs" },
+        { "level": 3, "type": "boss_fight", "enemy": "kraken", "reward": "technique:captainCommand" }
+      ],
+      "schoolBonus": { "expeditionSpeed": 1.5 }
+    },
+    "combatArts": {
+      "id": "combatArts",
+      "name": "Combat Arts",
+      "teacher": "mei",
+      "techniques": ["fierceStrike", "battleCry", "warriorSpirit"],
+      "masteryExams": [
+        { "level": 1, "type": "dungeon_floors", "value": 50, "reward": "technique:fierceStrike" },
+        { "level": 2, "type": "enemies_defeated", "value": 10000, "reward": "technique:battleCry" },
+        { "level": 3, "type": "pagoda_floor", "value": 100, "reward": "technique:warriorSpirit" }
+      ],
+      "schoolBonus": { "dungeonDamage": 1.25 }
+    },
+    "natureArts": {
+      "id": "natureArts",
+      "name": "Nature Arts",
+      "teacher": "sakura",
+      "techniques": ["petalDance", "natureBond", "seasonalBlessing"],
+      "masteryExams": [
+        { "level": 1, "type": "garden_level", "value": 5, "reward": "technique:petalDance" },
+        { "level": 2, "type": "cat_happiness_total", "value": 5000, "reward": "technique:natureBond" },
+        { "level": 3, "type": "seasonal_event", "count": 4, "reward": "technique:seasonalBlessing" }
+      ],
+      "schoolBonus": { "catHappiness": 1.2 }
+    },
+    "stillnessArts": {
+      "id": "stillnessArts",
+      "name": "Stillness Arts",
+      "teacher": "yuki",
+      "techniques": ["frozenClarity", "stillMind", "winterCalm"],
+      "masteryExams": [
+        { "level": 1, "type": "meditation_hours", "value": 50, "reward": "technique:frozenClarity" },
+        { "level": 2, "type": "no_boop_minutes", "value": 30, "reward": "technique:stillMind" },
+        { "level": 3, "type": "max_combo_without_moving", "value": 100, "reward": "technique:winterCalm" }
+      ],
+      "schoolBonus": { "meditationEfficiency": 1.5 }
+    },
+    "graceArts": {
+      "id": "graceArts",
+      "name": "Grace Arts",
+      "teacher": "jade",
+      "techniques": ["elegantStrike", "refinedPoise", "nobleAura"],
+      "masteryExams": [
+        { "level": 1, "type": "perfect_boops", "value": 100, "reward": "technique:elegantStrike" },
+        { "level": 2, "type": "waifu_harmony", "duration": 7200, "reward": "technique:refinedPoise" },
+        { "level": 3, "type": "prestige_count", "value": 3, "reward": "technique:nobleAura" }
+      ],
+      "schoolBonus": { "critDamage": 1.3 }
+    },
+    "forgeArts": {
+      "id": "forgeArts",
+      "name": "Forge Arts",
+      "teacher": "crimson",
+      "techniques": ["flameForgedBoop", "heatTreatment", "masterSmith"],
+      "masteryExams": [
+        { "level": 1, "type": "equipment_crafted", "value": 25, "reward": "technique:flameForgedBoop" },
+        { "level": 2, "type": "equipment_enhanced", "value": 50, "reward": "technique:heatTreatment" },
+        { "level": 3, "type": "legendary_crafted", "value": 1, "reward": "technique:masterSmith" }
+      ],
+      "schoolBonus": { "equipmentCrafting": 1.4 }
+    }
+  },
+  "waifus": {
+    "mochi": {
+      "id": "mochi",
+      "name": "Mochi-chan",
+      "title": "The Welcoming Dawn",
+      "role": "Innkeeper of the Celestial Teahouse",
+      "school": "hospitalityArts",
+      "element": "earth",
+      "personality": "warm",
+      "bonus": { "type": "bpMultiplier", "value": 1.10 },
+      "unlockCondition": "starter",
+      "maxBondReward": { "cat": "lucky_teacup_cat", "technique": "perfect_hospitality" },
+      "giftAffinities": {
+        "loves": ["rare_tea", "jade_cup", "silk_ribbon"],
+        "likes": ["yarn_ball", "fish_treats"],
+        "neutral": ["catnip", "bells"],
+        "dislikes": ["loud_toys", "spicy_food"]
+      },
+      "cultivation": {
+        "currentRealm": "foundationEstablishment",
+        "canCultivate": true,
+        "helpReward": { "jadeCatnip": 1000, "technique": "tea_blessing" }
+      },
+      "sprite": "waifus/mochi.png",
+      "color": "#FFB7C5",
+      "voiceLines": {
+        "greeting": { "morning": "Good morning~! Would you like some tea?", "evening": "Welcome back, nya~" },
+        "jealous": "Hmph! You've been spending time with others... *pouts cutely*",
+        "harmony": "Everyone is getting along so well! This makes me happy~",
+        "maxBond": "I... I want to be by your side forever. Will you let me?"
+      }
+    },
+    "luna": {
+      "id": "luna",
+      "name": "Luna Whiskerbell",
+      "title": "The Midnight Watcher",
+      "role": "Night Cultivation Instructor",
+      "school": "yinEnergyArts",
+      "element": "water",
+      "personality": "sleepy",
+      "bonus": { "type": "afkMultiplier", "value": 1.50 },
+      "unlockCondition": { "type": "afkTime", "value": 86400 },
+      "maxBondReward": { "cat": "moonlight_siamese", "technique": "eternal_slumber" },
+      "giftAffinities": {
+        "loves": ["pillow", "moon_charm", "warm_blanket"],
+        "likes": ["chamomile_tea", "quiet_toys"],
+        "neutral": ["most_things"],
+        "dislikes": ["loud_noises", "bright_lights", "coffee"]
+      },
+      "cultivation": {
+        "currentRealm": "coreFormation",
+        "canCultivate": true,
+        "helpReward": { "jadeCatnip": 2000, "technique": "lunar_blessing" }
+      },
+      "sprite": "waifus/luna.png",
+      "color": "#C4A7E7",
+      "voiceLines": {
+        "greeting": { "morning": "*yawn* ...morning already...?", "night": "Ah... the moon is beautiful tonight..." },
+        "jealous": "It's fine... I'll just... sleep... *sad yawn*",
+        "harmony": "Everyone... resting peacefully... that's nice... zzz...",
+        "maxBond": "I... only feel truly awake... when I'm with you..."
+      }
+    },
+    "nyanta": {
+      "id": "nyanta",
+      "name": "Captain Nyanta",
+      "title": "The Sea Sovereign",
+      "role": "Expedition Leader",
+      "school": "adventureArts",
+      "element": "water",
+      "personality": "boisterous",
+      "bonus": { "type": "expeditionUnlock", "value": true },
+      "unlockCondition": { "type": "catCount", "value": 50 },
+      "maxBondReward": { "cat": "kraken_kitty", "technique": "sea_shanty_boop" },
+      "giftAffinities": {
+        "loves": ["treasure_map", "rum_barrel", "golden_compass"],
+        "likes": ["fish", "rope", "sea_shells"],
+        "neutral": ["land_food"],
+        "dislikes": ["anchors", "landlubber_talk"]
+      },
+      "cultivation": {
+        "currentRealm": "nascentSoul",
+        "canCultivate": true,
+        "helpReward": { "jadeCatnip": 3000, "technique": "captain_authority" }
+      },
+      "sprite": "waifus/nyanta.png",
+      "color": "#8B0000",
+      "voiceLines": {
+        "greeting": { "morning": "Ahoy! Ready to set sail?", "evening": "The sea calls, but so do you~" },
+        "jealous": "Hmph! You'd rather be with landlubbers than sail with me?!",
+        "harmony": "A good crew is worth more than any treasure!",
+        "maxBond": "You're the greatest treasure I've ever found, mate."
+      }
+    },
+    "mei": {
+      "id": "mei",
+      "name": "Mei Ironpaw",
+      "title": "The Unbreakable",
+      "role": "Combat Instructor",
+      "school": "combatArts",
+      "element": "metal",
+      "personality": "fierce",
+      "bonus": { "type": "dungeonDamage", "value": 1.25 },
+      "unlockCondition": { "type": "pagodaFloor", "value": 20 },
+      "maxBondReward": { "cat": "iron_tiger", "technique": "iron_paw_strike" },
+      "giftAffinities": {
+        "loves": ["training_weights", "battle_scars_ointment", "protein_treats"],
+        "likes": ["simple_food", "bandages"],
+        "neutral": ["fancy_things"],
+        "dislikes": ["weakness", "giving_up"]
+      },
+      "cultivation": {
+        "currentRealm": "coreFormation",
+        "canCultivate": true,
+        "helpReward": { "jadeCatnip": 2500, "technique": "iron_will" }
+      },
+      "sprite": "waifus/mei.png",
+      "color": "#C0C0C0",
+      "voiceLines": {
+        "greeting": { "morning": "Ready to train? No excuses!", "evening": "Good work today. Rest well." },
+        "jealous": "Tch! Fine, go waste time with others. See if I care!",
+        "harmony": "A strong sect requires strong bonds. ...Good.",
+        "maxBond": "You... you make me want to be stronger. For you."
+      }
+    },
+    "sakura": {
+      "id": "sakura",
+      "name": "Sakura Petalpaw",
+      "title": "The Eternal Spring",
+      "role": "Garden Keeper",
+      "school": "natureArts",
+      "element": "wood",
+      "personality": "gentle",
+      "bonus": { "type": "catHappiness", "value": 1.20 },
+      "unlockCondition": { "type": "building", "building": "meditation_garden", "level": 3 },
+      "maxBondReward": { "cat": "cherry_blossom_cat", "technique": "petal_dance" },
+      "giftAffinities": {
+        "loves": ["flower_seeds", "garden_tools", "spring_water"],
+        "likes": ["natural_treats", "wooden_toys"],
+        "neutral": ["most_things"],
+        "dislikes": ["pollution", "wilted_flowers"]
+      },
+      "cultivation": {
+        "currentRealm": "foundationEstablishment",
+        "canCultivate": true,
+        "helpReward": { "jadeCatnip": 1500, "technique": "bloom_blessing" }
+      },
+      "sprite": "waifus/sakura.png",
+      "color": "#FFB7C5",
+      "voiceLines": {
+        "greeting": { "morning": "The flowers are blooming beautifully today~", "evening": "The garden rests, and so should you." },
+        "jealous": "Oh... the flowers look a little sad today...",
+        "harmony": "When hearts bloom together, spring is eternal~",
+        "maxBond": "You've helped my heart bloom in ways I never expected..."
+      }
+    },
+    "yuki": {
+      "id": "yuki",
+      "name": "Yuki Frostwhisker",
+      "title": "The Silent Snow",
+      "role": "Meditation Master",
+      "school": "stillnessArts",
+      "element": "water",
+      "personality": "serene",
+      "bonus": { "type": "meditationEfficiency", "value": 1.50 },
+      "unlockCondition": { "type": "meditationHours", "value": 100 },
+      "maxBondReward": { "cat": "ice_crystal_cat", "technique": "frozen_clarity" },
+      "giftAffinities": {
+        "loves": ["ice_crystal", "snow_globe", "white_flowers"],
+        "likes": ["cold_treats", "quiet_music"],
+        "neutral": ["warm_things"],
+        "dislikes": ["loud_noises", "crowded_places"]
+      },
+      "cultivation": {
+        "currentRealm": "nascentSoul",
+        "canCultivate": true,
+        "helpReward": { "jadeCatnip": 3000, "technique": "winter_calm" }
+      },
+      "sprite": "waifus/yuki.png",
+      "color": "#E0FFFF",
+      "voiceLines": {
+        "greeting": { "morning": "...the morning frost is beautiful...", "night": "...the stars are clear tonight..." },
+        "jealous": "...",
+        "harmony": "...peaceful...",
+        "maxBond": "...you are the warmth in my winter..."
+      }
+    },
+    "jade": {
+      "id": "jade",
+      "name": "Jade Silkpaw",
+      "title": "The Refined",
+      "role": "Etiquette Instructor",
+      "school": "graceArts",
+      "element": "earth",
+      "personality": "elegant",
+      "bonus": { "type": "critDamage", "value": 1.30 },
+      "unlockCondition": { "type": "prestigeCount", "value": 1 },
+      "maxBondReward": { "cat": "jade_emperor_cat", "technique": "elegant_strike" },
+      "giftAffinities": {
+        "loves": ["jade_jewelry", "silk_robes", "fine_tea"],
+        "likes": ["quality_crafts", "elegant_accessories"],
+        "neutral": ["common_items"],
+        "dislikes": ["crude_items", "poor_manners"]
+      },
+      "cultivation": {
+        "currentRealm": "coreFormation",
+        "canCultivate": true,
+        "helpReward": { "jadeCatnip": 2500, "technique": "refined_grace" }
+      },
+      "sprite": "waifus/jade.png",
+      "color": "#50C878",
+      "voiceLines": {
+        "greeting": { "morning": "Good morning. I trust you slept well?", "evening": "A productive day deserves a peaceful evening." },
+        "jealous": "I see. Your attention lies elsewhere. How... disappointing.",
+        "harmony": "A harmonious sect reflects well on all of us.",
+        "maxBond": "I... never expected to find someone who understands me so completely."
+      }
+    },
+    "crimson": {
+      "id": "crimson",
+      "name": "Crimson Blazepaw",
+      "title": "The Inferno",
+      "role": "Forge Master",
+      "school": "forgeArts",
+      "element": "fire",
+      "personality": "passionate",
+      "bonus": { "type": "equipmentCrafting", "value": 1.40 },
+      "unlockCondition": { "type": "equipmentCrafted", "value": 50 },
+      "maxBondReward": { "cat": "phoenix_cat", "technique": "flame_forged_boop" },
+      "giftAffinities": {
+        "loves": ["rare_ores", "forge_blueprints", "fire_crystals"],
+        "likes": ["metal_scraps", "coal"],
+        "neutral": ["most_things"],
+        "dislikes": ["water", "cold_things"]
+      },
+      "cultivation": {
+        "currentRealm": "nascentSoul",
+        "canCultivate": true,
+        "helpReward": { "jadeCatnip": 3500, "technique": "blazing_forge" }
+      },
+      "sprite": "waifus/crimson.png",
+      "color": "#FF4500",
+      "voiceLines": {
+        "greeting": { "morning": "The forge is hot and ready!", "evening": "Another day of creation complete!" },
+        "jealous": "Hmph! The flames don't wait for anyone!",
+        "harmony": "A good team is like a well-forged blade!",
+        "maxBond": "You... you've forged something in my heart I can't unmake."
+      }
+    },
+    "grandmother": {
+      "id": "grandmother",
+      "name": "Grandmother Whiskers",
+      "title": "The All-Knowing",
+      "role": "Sect Elder",
+      "school": "ancientArts",
+      "element": "void",
+      "personality": "wise",
+      "hidden": true,
+      "bonus": { "type": "allStats", "value": 1.15 },
+      "unlockCondition": { "type": "loreFragments", "value": 50 },
+      "maxBondReward": { "cat": "ancient_guardian", "technique": "elder_wisdom" },
+      "giftAffinities": {
+        "loves": ["ancient_scrolls", "memory_crystals", "herbal_tea"],
+        "likes": ["comfortable_items", "old_stories"],
+        "neutral": ["new_things"],
+        "dislikes": ["disrespect", "impatience"]
+      },
+      "cultivation": {
+        "currentRealm": "spiritSevering",
+        "canCultivate": true,
+        "helpReward": { "jadeCatnip": 5000, "technique": "ancient_knowledge" }
+      },
+      "sprite": "waifus/grandmother.png",
+      "color": "#D3D3D3",
+      "voiceLines": {
+        "greeting": { "morning": "Ah, young one. Sit, let me tell you a story.", "evening": "The old bones rest well when surrounded by family." },
+        "jealous": "Hoho... even this old woman can feel lonely...",
+        "harmony": "This reminds me of the old days, when the sect was young...",
+        "maxBond": "You remind me of someone I loved long ago... in a good way."
+      },
+      "specialDialogue": {
+        "knowsSecrets": true,
+        "hintSystem": true
+      }
+    },
+    "rival": {
+      "id": "rival",
+      "name": "Scarlet Shadowclaw",
+      "title": "The Rival",
+      "role": "Competing Sect Leader",
+      "school": "rivalArts",
+      "element": "fire",
+      "personality": "tsundere",
+      "hidden": true,
+      "antiWaifu": true,
+      "bonus": { "type": "competitiveBonus", "value": 1.25 },
+      "unlockCondition": { "type": "defeatInTournament", "times": 3 },
+      "maxBondReward": { "cat": "reformed_rival_cat", "technique": "begrudging_respect" },
+      "giftAffinities": {
+        "loves": ["victory_trophy", "rare_techniques", "challenge_scroll"],
+        "likes": ["training_items", "competitive_games"],
+        "neutral": ["most_things"],
+        "dislikes": ["pity", "easy_wins"]
+      },
+      "cultivation": {
+        "currentRealm": "nascentSoul",
+        "canCultivate": true,
+        "helpReward": { "jadeCatnip": 4000, "technique": "rivalry_power" }
+      },
+      "sprite": "waifus/rival.png",
+      "color": "#8B0000",
+      "voiceLines": {
+        "greeting": { "morning": "D-Don't think I came to see you or anything!", "evening": "I was just... passing by. That's all!" },
+        "jealous": "I-I don't care who you spend time with! Hmph!",
+        "harmony": "...Fine. Maybe your sect isn't completely terrible.",
+        "maxBond": "I... I don't hate you. In fact, I... I... UGH, this is embarrassing!"
+      },
+      "specialDialogue": {
+        "startAsEnemy": true,
+        "redemptionArc": true
+      }
+    },
+    "void_waifu": {
+      "id": "void_waifu",
+      "name": "???",
+      "title": "The Forgotten",
+      "role": "Unknown",
+      "school": "voidArts",
+      "element": "void",
+      "personality": "mysterious",
+      "hidden": true,
+      "transcendenceOnly": true,
+      "bonus": { "type": "voidPower", "value": 2.0 },
+      "unlockCondition": { "type": "transcendence", "value": true },
+      "maxBondReward": { "cat": "void_cat", "technique": "reality_boop" },
+      "giftAffinities": {
+        "loves": ["void_essence", "forgotten_memory", "null_crystal"],
+        "likes": ["mysterious_items", "ancient_artifacts"],
+        "neutral": ["existence"],
+        "dislikes": ["bright_lights", "loud_noises"]
+      },
+      "cultivation": {
+        "currentRealm": "trueImmortal",
+        "canCultivate": true,
+        "helpReward": { "jadeCatnip": 10000, "technique": "void_mastery" }
+      },
+      "sprite": "waifus/void.png",
+      "color": "#000000",
+      "voiceLines": {
+        "greeting": { "morning": "...you can see me?", "night": "...the void is quiet tonight..." },
+        "jealous": "...I was always alone... I'm used to it...",
+        "harmony": "...together... not alone... this feeling...",
+        "maxBond": "...you found me. No one has ever... found me before..."
+      }
+    },
+    "honk_maiden": {
+      "id": "honk_maiden",
+      "name": "The Honk Maiden",
+      "title": "Avatar of Chaos",
+      "role": "Goose Whisperer",
+      "school": "chaosArts",
+      "element": "chaos",
+      "personality": "chaotic",
+      "hidden": true,
+      "bonus": { "type": "gooseBonus", "value": 2.0 },
+      "unlockCondition": { "type": "gooseBoops", "value": 1000, "cobraChickenDefeated": true },
+      "maxBondReward": { "cat": "goose_cat_hybrid", "technique": "HONK_BOOP" },
+      "giftAffinities": {
+        "loves": ["goose_feather", "chaos_crystal", "bread"],
+        "likes": ["random_items", "shiny_things"],
+        "neutral": ["order"],
+        "dislikes": ["rules", "predictability"]
+      },
+      "cultivation": {
+        "currentRealm": "daoSeeking",
+        "canCultivate": true,
+        "helpReward": { "jadeCatnip": 7500, "technique": "chaos_blessing" }
+      },
+      "sprite": "waifus/honk_maiden.png",
+      "color": "#FFFFFF",
+      "voiceLines": {
+        "greeting": { "morning": "HONK! (Translation: Good morning!)", "evening": "Honk honk~ (Translation: Nice to see you~)" },
+        "jealous": "HONK! (Translation: I'm NOT jealous!)",
+        "harmony": "Honk~ (Translation: Peace... for now.)",
+        "maxBond": "Honk... (Translation: I... love you.)"
+      },
+      "specialDialogue": {
+        "speaksInHonks": true,
+        "translationNeeded": true
+      }
+    }
+  },
+  "bondRewards": {
+    "generic": {
+      "10": { "type": "dialogue_unlock", "description": "Unlocks new dialogue options" },
+      "25": { "type": "technique_hint", "description": "Waifu hints at a hidden technique" },
+      "50": { "type": "special_quest", "description": "Unlocks waifu-specific quest" },
+      "75": { "type": "cultivation_help", "description": "Can help waifu with cultivation" },
+      "100": { "type": "legendary_reward", "description": "Legendary cat and technique" }
+    }
+  },
+  "attentionBalance": {
+    "harmonyThreshold": 0.8,
+    "jealousyThreshold": 0.3,
+    "harmonyBonus": { "allBonds": 1.1 },
+    "jealousyPenalty": null
+  }
+}

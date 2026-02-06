@@ -1,0 +1,361 @@
+{
+  "rarities": {
+    "common": { "color": "#FFFFFF", "dropChance": 0.5 },
+    "rare": { "color": "#0066FF", "dropChance": 0.25 },
+    "epic": { "color": "#9900FF", "dropChance": 0.15 },
+    "legendary": { "color": "#FF9900", "dropChance": 0.08 },
+    "mythic": { "color": "#FF0000", "dropChance": 0.02 }
+  },
+  "relics": {
+    "lucky_coin": {
+      "id": "lucky_coin",
+      "name": "Lucky Coin",
+      "rarity": "common",
+      "effect": {
+        "type": "lootBonus",
+        "value": 0.1
+      },
+      "description": "+10% loot drop rate",
+      "flavor": "Flip it for luck. Always lands on cats.",
+      "sprite": "relics/lucky_coin.png"
+    },
+    "catnip_pouch": {
+      "id": "catnip_pouch",
+      "name": "Emergency Catnip Pouch",
+      "rarity": "common",
+      "effect": {
+        "type": "qiRegen",
+        "value": 0.2
+      },
+      "description": "+20% Qi regeneration rate",
+      "flavor": "For emergencies only. Every situation is an emergency.",
+      "sprite": "relics/catnip_pouch.png"
+    },
+    "scratching_post": {
+      "id": "scratching_post",
+      "name": "Blessed Scratching Post",
+      "rarity": "common",
+      "effect": {
+        "type": "attackBonus",
+        "value": 0.1
+      },
+      "description": "+10% attack damage",
+      "flavor": "Sharpen your claws. Sharpen your spirit.",
+      "sprite": "relics/scratching_post.png"
+    },
+    "warm_sunbeam": {
+      "id": "warm_sunbeam",
+      "name": "Captured Sunbeam",
+      "rarity": "common",
+      "effect": {
+        "type": "hpRegen",
+        "value": 2
+      },
+      "description": "+2 HP regeneration per second",
+      "flavor": "The warmth of the sun, trapped in a jar.",
+      "sprite": "relics/warm_sunbeam.png"
+    },
+    "fish_skeleton": {
+      "id": "fish_skeleton",
+      "name": "Lucky Fish Skeleton",
+      "rarity": "common",
+      "effect": {
+        "type": "critChance",
+        "value": 0.03
+      },
+      "description": "+3% critical hit chance",
+      "flavor": "The memory of a delicious meal.",
+      "sprite": "relics/fish_skeleton.png"
+    },
+    "box_dimension": {
+      "id": "box_dimension",
+      "name": "Pocket Dimension Box",
+      "rarity": "rare",
+      "effect": {
+        "type": "doubleLootChance",
+        "value": 0.25
+      },
+      "description": "25% chance enemies drop double loot",
+      "flavor": "It's bigger on the inside. Much bigger.",
+      "sprite": "relics/box_dimension.png"
+    },
+    "nine_lives_charm": {
+      "id": "nine_lives_charm",
+      "name": "Nine Lives Charm",
+      "rarity": "rare",
+      "effect": {
+        "type": "reviveChance",
+        "value": 0.15
+      },
+      "description": "15% chance to auto-revive when a cat falls",
+      "flavor": "Lives 1-8 sold separately.",
+      "sprite": "relics/nine_lives_charm.png"
+    },
+    "yarn_tangle": {
+      "id": "yarn_tangle",
+      "name": "Infinite Yarn Tangle",
+      "rarity": "rare",
+      "effect": {
+        "type": "slowEnemies",
+        "value": 0.2
+      },
+      "description": "Enemies move 20% slower",
+      "flavor": "Impossibly tangled. Impossibly useful.",
+      "sprite": "relics/yarn_tangle.png"
+    },
+    "bell_collar": {
+      "id": "bell_collar",
+      "name": "Silent Bell Collar",
+      "rarity": "rare",
+      "effect": {
+        "type": "dodgeBonus",
+        "value": 0.1
+      },
+      "description": "+10% dodge chance",
+      "flavor": "The bell only rings when you want it to.",
+      "sprite": "relics/bell_collar.png"
+    },
+    "ancient_hairball": {
+      "id": "ancient_hairball",
+      "name": "Ancient Hairball of Power",
+      "rarity": "rare",
+      "effect": {
+        "type": "abilityDamage",
+        "value": 0.25
+      },
+      "description": "+25% ability damage",
+      "flavor": "From a cat who lived a thousand years ago.",
+      "sprite": "relics/ancient_hairball.png"
+    },
+    "goose_horn": {
+      "id": "goose_horn",
+      "name": "Horn of the Goose",
+      "rarity": "epic",
+      "effect": {
+        "type": "summonGoose",
+        "floors": 5
+      },
+      "description": "Summon a wild goose every 5 floors to attack enemies",
+      "flavor": "HONK!",
+      "sprite": "relics/goose_horn.png"
+    },
+    "waifu_blessing": {
+      "id": "waifu_blessing",
+      "name": "Concentrated Waifu Energy",
+      "rarity": "epic",
+      "effect": {
+        "type": "waifuSkillCooldown",
+        "value": 0.5
+      },
+      "description": "Waifu active skill cooldown reduced by 50%",
+      "flavor": "Distilled from a thousand headpats.",
+      "sprite": "relics/waifu_blessing.png"
+    },
+    "void_crystal": {
+      "id": "void_crystal",
+      "name": "Void Crystal Shard",
+      "rarity": "epic",
+      "effect": {
+        "type": "voidDamage",
+        "value": 0.5
+      },
+      "description": "+50% void element damage",
+      "flavor": "A fragment of nothing. Somehow, it's heavy.",
+      "sprite": "relics/void_crystal.png"
+    },
+    "chaos_marble": {
+      "id": "chaos_marble",
+      "name": "Chaos Marble",
+      "rarity": "epic",
+      "effect": {
+        "type": "randomBonus",
+        "min": -0.2,
+        "max": 0.5
+      },
+      "description": "Random stat bonus between -20% and +50%",
+      "flavor": "Embrace the chaos. Or don't. It doesn't care.",
+      "sprite": "relics/chaos_marble.png"
+    },
+    "golden_bell": {
+      "id": "golden_bell",
+      "name": "Golden Bell of Awakening",
+      "rarity": "epic",
+      "effect": {
+        "type": "teamAttackSpeed",
+        "value": 0.25
+      },
+      "description": "+25% team attack speed",
+      "flavor": "Its ring awakens the warrior within.",
+      "sprite": "relics/golden_bell.png"
+    },
+    "phoenix_feather_relic": {
+      "id": "phoenix_feather_relic",
+      "name": "Phoenix Feather",
+      "rarity": "epic",
+      "effect": {
+        "type": "reviveOnce",
+        "hpPercent": 0.5
+      },
+      "description": "Revive all cats once per run at 50% HP",
+      "flavor": "From the ashes, rise again.",
+      "sprite": "relics/phoenix_feather.png"
+    },
+    "eternal_catnip": {
+      "id": "eternal_catnip",
+      "name": "Eternal Catnip",
+      "rarity": "legendary",
+      "effect": {
+        "type": "multiple",
+        "effects": [
+          { "type": "allStats", "value": 0.2 },
+          { "type": "startFullQi", "value": true }
+        ]
+      },
+      "description": "All cats have +20% stats. Start each floor with full Qi.",
+      "flavor": "The good stuff. The really good stuff.",
+      "sprite": "relics/eternal_catnip.png"
+    },
+    "developers_mouse": {
+      "id": "developers_mouse",
+      "name": "The Developer's Mouse",
+      "rarity": "legendary",
+      "effect": {
+        "type": "debugMode",
+        "value": true
+      },
+      "description": "See enemy HP, next floor preview, hidden loot",
+      "flavor": "With great power comes great debug logs.",
+      "sprite": "relics/developers_mouse.png"
+    },
+    "ceiling_blessing": {
+      "id": "ceiling_blessing",
+      "name": "Ceiling Cat's Blessing",
+      "rarity": "legendary",
+      "effect": {
+        "type": "revealAll",
+        "mapVision": true
+      },
+      "description": "See entire floor map. Enemies revealed.",
+      "flavor": "Ceiling Cat sees all. Now you do too.",
+      "sprite": "relics/ceiling_blessing.png"
+    },
+    "longcat_essence": {
+      "id": "longcat_essence",
+      "name": "Essence of Longcat",
+      "rarity": "legendary",
+      "effect": {
+        "type": "attackRange",
+        "value": 2.0
+      },
+      "description": "Double attack range",
+      "flavor": "Looooooooooong reach.",
+      "sprite": "relics/longcat_essence.png"
+    },
+    "golden_goose_feather": {
+      "id": "golden_goose_feather",
+      "name": "Golden Goose Feather",
+      "rarity": "legendary",
+      "effect": {
+        "type": "goldBonus",
+        "value": 2.0
+      },
+      "description": "Double all currency drops",
+      "flavor": "Worth more than its weight in gold. Literally.",
+      "sprite": "relics/golden_goose_feather.png"
+    },
+    "snoot_prime": {
+      "id": "snoot_prime",
+      "name": "Fragment of Snoot Prime",
+      "rarity": "mythic",
+      "effect": {
+        "type": "boopDamage",
+        "value": 3.0
+      },
+      "description": "All Boop Commands deal 3x damage",
+      "flavor": "The first snoot. The original boop.",
+      "source": "Floor 100 boss only",
+      "sprite": "relics/snoot_prime.png"
+    },
+    "primordial_meow": {
+      "id": "primordial_meow",
+      "name": "Echo of the Primordial Meow",
+      "rarity": "mythic",
+      "effect": {
+        "type": "abilityReset",
+        "onKill": true
+      },
+      "description": "Killing an enemy resets all ability cooldowns",
+      "flavor": "The first sound. The last sound.",
+      "source": "Goose Dimension final boss",
+      "sprite": "relics/primordial_meow.png"
+    },
+    "cosmic_yarn": {
+      "id": "cosmic_yarn",
+      "name": "Cosmic Yarn Ball",
+      "rarity": "mythic",
+      "effect": {
+        "type": "infiniteCombo",
+        "value": true
+      },
+      "description": "Combo counter never resets",
+      "flavor": "Unravel the fabric of reality itself.",
+      "source": "Dream Realm floor 100",
+      "sprite": "relics/cosmic_yarn.png"
+    },
+    "eighth_master_seal": {
+      "id": "eighth_master_seal",
+      "name": "Seal of the Eighth Master",
+      "rarity": "mythic",
+      "effect": {
+        "type": "allPassives",
+        "value": 0.1
+      },
+      "description": "+10% to all passive effects",
+      "flavor": "A memory of someone who was forgotten.",
+      "source": "Unlock Eighth Master",
+      "sprite": "relics/eighth_master_seal.png"
+    },
+    "transcendence_shard": {
+      "id": "transcendence_shard",
+      "name": "Shard of Transcendence",
+      "rarity": "mythic",
+      "effect": {
+        "type": "transcendenceProgress",
+        "value": 0.01
+      },
+      "description": "+1% progress toward Transcendence",
+      "flavor": "A piece of the beyond.",
+      "source": "True Immortal realm tribulation",
+      "sprite": "relics/transcendence_shard.png"
+    }
+  },
+  "relicSynergies": {
+    "catTriumvirate": {
+      "name": "Cat Triumvirate",
+      "requires": ["ceiling_blessing", "longcat_essence", "ancient_hairball"],
+      "bonus": {
+        "type": "ultimateCatPower",
+        "allStats": 0.5,
+        "description": "+50% all stats"
+      }
+    },
+    "gooseMaster": {
+      "name": "Goose Master",
+      "requires": ["goose_horn", "golden_goose_feather"],
+      "bonus": {
+        "type": "gooseAlly",
+        "permanentGoose": true,
+        "description": "A goose permanently fights alongside you"
+      }
+    },
+    "chaosEmbrace": {
+      "name": "Chaos Embrace",
+      "requires": ["chaos_marble", "primordial_meow"],
+      "bonus": {
+        "type": "chaosMode",
+        "randomEffectsPerFloor": 3,
+        "description": "3 random effects activate each floor"
+      }
+    }
+  }
+}

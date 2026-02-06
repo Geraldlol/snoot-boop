@@ -1,0 +1,320 @@
+{
+  "masters": {
+    "gerald": {
+      "id": "gerald",
+      "name": "Gerald",
+      "title": "The Jade Palm",
+      "role": "Sect Leader",
+      "description": "Founder of the Celestial Snoot Sect. His balanced approach to cultivation has guided countless souls on the path of the snoot.",
+      "passive": {
+        "name": "Tranquil Boop",
+        "description": "Boops during meditation generate +25% BP",
+        "effect": {
+          "type": "conditional_multiplier",
+          "condition": "isMeditating",
+          "stat": "bpMultiplier",
+          "value": 1.25
+        }
+      },
+      "sprite": "masters/gerald.png",
+      "color": "#50C878",
+      "quotes": [
+        "Balance in all things. Especially snoots.",
+        "The Sect grows stronger with each boop.",
+        "I see potential in you, young cultivator.",
+        "The path to enlightenment is paved with gentle boops.",
+        "When the heart is calm, the snoot reveals itself."
+      ],
+      "unlockCondition": "starter"
+    },
+    "rusty": {
+      "id": "rusty",
+      "name": "Rusty",
+      "title": "The Crimson Fist",
+      "role": "War General",
+      "description": "Former bandit king, reformed cat lover. His fierce determination and unmatched aggression make him a force to be reckoned with.",
+      "passive": {
+        "name": "Thousand Boop Barrage",
+        "description": "Active ability: 10 seconds of rapid boops (5 min cooldown)",
+        "effect": {
+          "type": "active_ability",
+          "duration": 10000,
+          "cooldown": 300000,
+          "stat": "boopSpeedMultiplier",
+          "value": 5
+        }
+      },
+      "sprite": "masters/rusty.png",
+      "color": "#DC143C",
+      "quotes": [
+        "When in doubt, boop harder!",
+        "These paws were made for booping!",
+        "THOUSAND BOOP BARRAGE!",
+        "NO SNOOT LEFT UNBOOPED!",
+        "The crimson path demands intensity!"
+      ],
+      "unlockCondition": "starter"
+    },
+    "steve": {
+      "id": "steve",
+      "name": "Steve",
+      "title": "The Flowing River",
+      "role": "Strategist",
+      "description": "Calculated the optimal snoot-to-boop ratio. His patient approach to cultivation yields the greatest long-term gains.",
+      "passive": {
+        "name": "Eternal Flow",
+        "description": "Offline PP generation is doubled",
+        "effect": {
+          "type": "multiplier",
+          "stat": "afkMultiplier",
+          "value": 2.0
+        }
+      },
+      "sprite": "masters/steve.png",
+      "color": "#4169E1",
+      "quotes": [
+        "Patience yields the greatest gains.",
+        "The math is clear: more cats = more PP.",
+        "I've optimized our cultivation schedule.",
+        "Every boop has been accounted for.",
+        "The river does not rush, yet it carves mountains."
+      ],
+      "unlockCondition": "starter"
+    },
+    "andrew": {
+      "id": "andrew",
+      "name": "Andrew",
+      "title": "The Thunder Step",
+      "role": "Scout",
+      "description": "Fastest courier in the Jianghu. His lightning reflexes help him discover rare events and cats before anyone else.",
+      "passive": {
+        "name": "Lightning Reflexes",
+        "description": "+50% chance to discover events and rare cats first",
+        "effect": {
+          "type": "multiplier",
+          "stats": {
+            "eventDiscoveryBonus": 1.5,
+            "rareCatBonus": 1.5
+          }
+        }
+      },
+      "sprite": "masters/andrew.png",
+      "color": "#FFD700",
+      "quotes": [
+        "Already found three cats while you were reading this.",
+        "Speed is the essence of cultivation!",
+        "New event spotted! Follow me!",
+        "Can't catch what you can't see!",
+        "Thunder waits for no one!"
+      ],
+      "unlockCondition": "starter"
+    },
+    "nik": {
+      "id": "nik",
+      "name": "Nik",
+      "title": "The Shadow Moon",
+      "role": "Assassin",
+      "description": "Mysterious. The cats trust him. No one knows why. His silent presence brings devastating critical strikes.",
+      "passive": {
+        "name": "Phantom Boop",
+        "description": "+50% critical boop chance",
+        "effect": {
+          "type": "additive",
+          "stat": "critChanceBonus",
+          "value": 0.5
+        }
+      },
+      "sprite": "masters/nik.png",
+      "color": "#483D8B",
+      "quotes": [
+        "...",
+        "*appears from shadows* ...boop.",
+        "The night is full of snoots.",
+        "Silence speaks loudest.",
+        "..."
+      ],
+      "unlockCondition": "starter"
+    },
+    "yuelin": {
+      "id": "yuelin",
+      "name": "Yuelin",
+      "title": "The Lotus Sage",
+      "role": "Healer",
+      "description": "Speaks to cats in their ancient tongue. Her harmonious aura brings peace and happiness to all felines.",
+      "passive": {
+        "name": "Harmonious Aura",
+        "description": "All cats gain +50% happiness",
+        "effect": {
+          "type": "multiplier",
+          "stat": "catHappinessMultiplier",
+          "value": 1.5
+        }
+      },
+      "sprite": "masters/yuelin.png",
+      "color": "#FFB6C1",
+      "quotes": [
+        "The cats tell me you have a kind heart.",
+        "Harmony brings the greatest power.",
+        "Each cat carries ancient wisdom.",
+        "Listen to the purrs, they speak of destiny.",
+        "A gentle touch moves mountains."
+      ],
+      "unlockCondition": "starter"
+    },
+    "scott": {
+      "id": "scott",
+      "name": "Scott",
+      "title": "The Mountain",
+      "role": "Guardian",
+      "description": "Meditated for 1000 days. A cat sat on him the whole time. His unshakeable foundation prevents any progress from being lost.",
+      "passive": {
+        "name": "Unshakeable Foundation",
+        "description": "Multiplier bonuses never decay or reset",
+        "effect": {
+          "type": "special",
+          "stat": "preventDecay",
+          "value": true
+        }
+      },
+      "sprite": "masters/scott.png",
+      "color": "#8B4513",
+      "quotes": [
+        "I am the mountain. The cats are my snow.",
+        "Patience. Stability. Snoots.",
+        "...I haven't moved in three days. Worth it.",
+        "The foundation cannot be rushed.",
+        "Stillness is its own strength."
+      ],
+      "unlockCondition": "starter"
+    },
+    "mythic": {
+      "id": "mythic",
+      "name": "???",
+      "title": "The Forgotten One",
+      "role": "Unknown",
+      "description": "A master erased from history. Why? Their echoes of eternity grant partial access to all other masters' powers.",
+      "passive": {
+        "name": "Echoes of Eternity",
+        "description": "All other masters' passives are active at 25% power",
+        "effect": {
+          "type": "special",
+          "stat": "allPassivesPartial",
+          "value": true,
+          "partialStrength": 0.25
+        }
+      },
+      "sprite": "masters/eighth.png",
+      "color": "#FFFFFF",
+      "quotes": [
+        "...I remember now.",
+        "The Sect... it was always meant to be eight.",
+        "Boop... yes... I remember booping.",
+        "Time erases all... but not the snoots.",
+        "The eighth path was hidden, not destroyed."
+      ],
+      "unlockCondition": {
+        "type": "heavenlySeals",
+        "value": 100
+      },
+      "unlockLore": "Long before Gerald found the Snoot Scrolls, there was another. The Eighth Master walked the path alone, their techniques so powerful that the heavens themselves conspired to erase their memory. Only those who accumulate 100 Heavenly Seals can pierce the veil of forgotten time."
+    }
+  },
+  "masterSpritesByRealm": {
+    "gerald": {
+      "mortal": "masters/gerald_mortal.png",
+      "qiCondensation": "masters/gerald_qi.png",
+      "foundationEstablishment": "masters/gerald_foundation.png",
+      "coreFormation": "masters/gerald_core.png",
+      "nascentSoul": "masters/gerald_soul.png",
+      "spiritSevering": "masters/gerald_severing.png",
+      "daoSeeking": "masters/gerald_dao.png",
+      "immortalAscension": "masters/gerald_immortal.png",
+      "trueImmortal": "masters/gerald_true.png",
+      "heavenlySovereign": "masters/gerald_sovereign.png"
+    },
+    "rusty": {
+      "mortal": "masters/rusty_mortal.png",
+      "qiCondensation": "masters/rusty_qi.png",
+      "foundationEstablishment": "masters/rusty_foundation.png",
+      "coreFormation": "masters/rusty_core.png",
+      "nascentSoul": "masters/rusty_soul.png",
+      "spiritSevering": "masters/rusty_severing.png",
+      "daoSeeking": "masters/rusty_dao.png",
+      "immortalAscension": "masters/rusty_immortal.png",
+      "trueImmortal": "masters/rusty_true.png",
+      "heavenlySovereign": "masters/rusty_sovereign.png"
+    },
+    "steve": {
+      "mortal": "masters/steve_mortal.png",
+      "qiCondensation": "masters/steve_qi.png",
+      "foundationEstablishment": "masters/steve_foundation.png",
+      "coreFormation": "masters/steve_core.png",
+      "nascentSoul": "masters/steve_soul.png",
+      "spiritSevering": "masters/steve_severing.png",
+      "daoSeeking": "masters/steve_dao.png",
+      "immortalAscension": "masters/steve_immortal.png",
+      "trueImmortal": "masters/steve_true.png",
+      "heavenlySovereign": "masters/steve_sovereign.png"
+    },
+    "andrew": {
+      "mortal": "masters/andrew_mortal.png",
+      "qiCondensation": "masters/andrew_qi.png",
+      "foundationEstablishment": "masters/andrew_foundation.png",
+      "coreFormation": "masters/andrew_core.png",
+      "nascentSoul": "masters/andrew_soul.png",
+      "spiritSevering": "masters/andrew_severing.png",
+      "daoSeeking": "masters/andrew_dao.png",
+      "immortalAscension": "masters/andrew_immortal.png",
+      "trueImmortal": "masters/andrew_true.png",
+      "heavenlySovereign": "masters/andrew_sovereign.png"
+    },
+    "nik": {
+      "mortal": "masters/nik_mortal.png",
+      "qiCondensation": "masters/nik_qi.png",
+      "foundationEstablishment": "masters/nik_foundation.png",
+      "coreFormation": "masters/nik_core.png",
+      "nascentSoul": "masters/nik_soul.png",
+      "spiritSevering": "masters/nik_severing.png",
+      "daoSeeking": "masters/nik_dao.png",
+      "immortalAscension": "masters/nik_immortal.png",
+      "trueImmortal": "masters/nik_true.png",
+      "heavenlySovereign": "masters/nik_sovereign.png"
+    },
+    "yuelin": {
+      "mortal": "masters/yuelin_mortal.png",
+      "qiCondensation": "masters/yuelin_qi.png",
+      "foundationEstablishment": "masters/yuelin_foundation.png",
+      "coreFormation": "masters/yuelin_core.png",
+      "nascentSoul": "masters/yuelin_soul.png",
+      "spiritSevering": "masters/yuelin_severing.png",
+      "daoSeeking": "masters/yuelin_dao.png",
+      "immortalAscension": "masters/yuelin_immortal.png",
+      "trueImmortal": "masters/yuelin_true.png",
+      "heavenlySovereign": "masters/yuelin_sovereign.png"
+    },
+    "scott": {
+      "mortal": "masters/scott_mortal.png",
+      "qiCondensation": "masters/scott_qi.png",
+      "foundationEstablishment": "masters/scott_foundation.png",
+      "coreFormation": "masters/scott_core.png",
+      "nascentSoul": "masters/scott_soul.png",
+      "spiritSevering": "masters/scott_severing.png",
+      "daoSeeking": "masters/scott_dao.png",
+      "immortalAscension": "masters/scott_immortal.png",
+      "trueImmortal": "masters/scott_true.png",
+      "heavenlySovereign": "masters/scott_sovereign.png"
+    },
+    "mythic": {
+      "mortal": "masters/mythic_mortal.png",
+      "qiCondensation": "masters/mythic_qi.png",
+      "foundationEstablishment": "masters/mythic_foundation.png",
+      "coreFormation": "masters/mythic_core.png",
+      "nascentSoul": "masters/mythic_soul.png",
+      "spiritSevering": "masters/mythic_severing.png",
+      "daoSeeking": "masters/mythic_dao.png",
+      "immortalAscension": "masters/mythic_immortal.png",
+      "trueImmortal": "masters/mythic_true.png",
+      "heavenlySovereign": "masters/mythic_sovereign.png"
+    }
+  }
+}

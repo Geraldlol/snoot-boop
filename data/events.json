@@ -1,0 +1,366 @@
+{
+  "randomEvents": {
+    "wandering_cat": {
+      "id": "wandering_cat",
+      "name": "Wandering Cat",
+      "description": "A stray cat has wandered into your sanctuary!",
+      "type": "positive",
+      "chance": 0.05,
+      "cooldown": 3600,
+      "reward": {
+        "type": "cat",
+        "rarity": "random"
+      },
+      "dialogue": "A mysterious cat appears at your gate. It seems to want to join your sect."
+    },
+    "merchant_visit": {
+      "id": "merchant_visit",
+      "name": "Traveling Merchant",
+      "description": "A merchant has arrived with rare goods!",
+      "type": "shop",
+      "chance": 0.03,
+      "cooldown": 7200,
+      "reward": {
+        "type": "shop",
+        "discount": 0.2
+      },
+      "dialogue": "A traveling merchant sets up shop. Their wares are discounted for a limited time!"
+    },
+    "qi_surge": {
+      "id": "qi_surge",
+      "name": "Qi Surge",
+      "description": "The Qi in the area intensifies!",
+      "type": "buff",
+      "chance": 0.08,
+      "cooldown": 1800,
+      "reward": {
+        "type": "multiplier",
+        "stat": "ppGeneration",
+        "value": 2.0,
+        "duration": 300
+      },
+      "dialogue": "The heavens smile upon your sect! PP generation is doubled for 5 minutes!"
+    },
+    "cat_nap_blessing": {
+      "id": "cat_nap_blessing",
+      "name": "Cat Nap Blessing",
+      "description": "All your cats are sleeping peacefully.",
+      "type": "buff",
+      "chance": 0.1,
+      "cooldown": 3600,
+      "reward": {
+        "type": "multiplier",
+        "stat": "catHappiness",
+        "value": 1.5,
+        "duration": 600
+      },
+      "dialogue": "Your cats are all napping together. So cute! +50% happiness for 10 minutes."
+    },
+    "goose_sighting": {
+      "id": "goose_sighting",
+      "name": "Goose Sighting",
+      "description": "A goose has been spotted nearby!",
+      "type": "challenge",
+      "chance": 0.02,
+      "cooldown": 1800,
+      "reward": {
+        "type": "spawn_goose",
+        "guaranteed": true
+      },
+      "dialogue": "HONK! A goose appears! Quick, boop its snoot!"
+    },
+    "waifu_gift": {
+      "id": "waifu_gift",
+      "name": "Waifu Gift",
+      "description": "A waifu has prepared a gift for you!",
+      "type": "positive",
+      "chance": 0.04,
+      "cooldown": 7200,
+      "reward": {
+        "type": "item",
+        "quality": "rare"
+      },
+      "dialogue": "One of your waifus has prepared a special gift just for you!"
+    },
+    "cultivation_insight": {
+      "id": "cultivation_insight",
+      "name": "Cultivation Insight",
+      "description": "You have a sudden breakthrough!",
+      "type": "positive",
+      "chance": 0.03,
+      "cooldown": 14400,
+      "reward": {
+        "type": "xp",
+        "amount": "10%_of_next_level"
+      },
+      "dialogue": "Enlightenment strikes! You gain significant cultivation progress."
+    },
+    "thieves_attempt": {
+      "id": "thieves_attempt",
+      "name": "Thieves Attempt",
+      "description": "Thieves try to steal from your treasury!",
+      "type": "negative",
+      "chance": 0.02,
+      "cooldown": 7200,
+      "blockCondition": "immuneToTheft",
+      "penalty": {
+        "type": "currency_loss",
+        "currency": "bp",
+        "percent": 0.05
+      },
+      "dialogue": "Thieves have stolen 5% of your BP! (Unless you have theft protection)"
+    },
+    "cat_argument": {
+      "id": "cat_argument",
+      "name": "Cat Argument",
+      "description": "Two cats are having a disagreement.",
+      "type": "negative",
+      "chance": 0.05,
+      "cooldown": 3600,
+      "penalty": {
+        "type": "happiness_loss",
+        "amount": 10
+      },
+      "dialogue": "Two of your cats got into a fight! Their happiness decreased."
+    },
+    "golden_fish": {
+      "id": "golden_fish",
+      "name": "Golden Fish",
+      "description": "A legendary golden fish appears!",
+      "type": "rare_positive",
+      "chance": 0.005,
+      "cooldown": 86400,
+      "reward": {
+        "type": "currency",
+        "currency": "jadeCatnip",
+        "amount": 100
+      },
+      "dialogue": "A GOLDEN FISH! Your cats catch it and you gain 100 Jade Catnip!"
+    }
+  },
+  "dailyEvents": {
+    "daily_login": {
+      "id": "daily_login",
+      "name": "Daily Login",
+      "description": "Log in each day for rewards!",
+      "rewards": {
+        "day1": { "bp": 1000, "jadeCatnip": 10 },
+        "day2": { "bp": 2000, "jadeCatnip": 15 },
+        "day3": { "bp": 3000, "jadeCatnip": 20, "item": "common_chest" },
+        "day4": { "bp": 4000, "jadeCatnip": 25 },
+        "day5": { "bp": 5000, "jadeCatnip": 30, "item": "rare_chest" },
+        "day6": { "bp": 7500, "jadeCatnip": 40 },
+        "day7": { "bp": 10000, "jadeCatnip": 50, "item": "epic_chest", "cat": "random_rare" }
+      }
+    },
+    "daily_challenge": {
+      "id": "daily_challenge",
+      "name": "Daily Challenge",
+      "description": "Complete a challenge for bonus rewards!",
+      "challengeTypes": [
+        { "type": "boops", "target": 1000, "reward": { "bp": 5000 } },
+        { "type": "cats_pet", "target": 10, "reward": { "jadeCatnip": 20 } },
+        { "type": "dungeon_floors", "target": 5, "reward": { "spiritStones": 50 } },
+        { "type": "waifu_activities", "target": 3, "reward": { "waifuTokens": 10 } }
+      ]
+    },
+    "daily_meditation": {
+      "id": "daily_meditation",
+      "name": "Daily Meditation",
+      "description": "Meditate once per day for bonus cultivation!",
+      "duration": 60,
+      "reward": {
+        "type": "xp",
+        "amount": "5%_of_next_level"
+      }
+    }
+  },
+  "weeklyEvents": {
+    "sect_war": {
+      "id": "sect_war",
+      "name": "Weekly Sect War",
+      "description": "Compete against other players for rankings!",
+      "duration": 604800,
+      "scoring": {
+        "boops": 1,
+        "cats_recruited": 100,
+        "dungeon_floors": 50,
+        "goose_boops": 500
+      },
+      "rewards": {
+        "rank1": { "jadeCatnip": 1000, "title": "Supreme Booper" },
+        "rank2_3": { "jadeCatnip": 500 },
+        "rank4_10": { "jadeCatnip": 250 },
+        "participation": { "jadeCatnip": 50 }
+      }
+    },
+    "weekly_boss": {
+      "id": "weekly_boss",
+      "name": "Weekly World Boss",
+      "description": "A powerful boss appears once per week!",
+      "duration": 172800,
+      "boss": "rotating",
+      "bosses": ["cosmic_goose", "primordial_hairball", "the_eternal_bath"],
+      "rewards": {
+        "participation": { "spiritStones": 100 },
+        "damage_threshold": { "epic_equipment": true },
+        "mvp": { "legendary_equipment": true }
+      }
+    },
+    "waifu_festival": {
+      "id": "waifu_festival",
+      "name": "Weekly Waifu Festival",
+      "description": "Bond gains are increased with a random waifu!",
+      "duration": 86400,
+      "bonus": {
+        "type": "bondGain",
+        "value": 2.0,
+        "waifu": "random"
+      }
+    }
+  },
+  "seasonalEvents": {
+    "lunar_new_year": {
+      "id": "lunar_new_year",
+      "name": "Lunar New Year Festival",
+      "description": "Celebrate the new year with special bonuses!",
+      "startCondition": { "month": [1, 2], "dayRange": [20, 10] },
+      "duration": 1209600,
+      "bonuses": {
+        "allProduction": 2.0,
+        "luckySpins": true,
+        "redEnvelope": true
+      },
+      "exclusiveCat": "fortune_dragon_cat",
+      "exclusiveCosmetics": ["red_envelope_hat", "firework_aura"],
+      "specialShop": {
+        "items": ["lucky_charm", "red_lantern", "dragon_toy"],
+        "currency": "red_envelopes"
+      }
+    },
+    "mid_autumn": {
+      "id": "mid_autumn",
+      "name": "Mid-Autumn Moon Festival",
+      "description": "The moon shines bright on the Jianghu!",
+      "startCondition": { "month": 9, "dayRange": [10, 20] },
+      "duration": 604800,
+      "bonuses": {
+        "waifuBonds": 1.5,
+        "nightBonus": 2.0,
+        "mooncakeDrops": true
+      },
+      "exclusiveCat": "moon_rabbit_cat",
+      "exclusiveCosmetics": ["mooncake_hat", "lantern_trail"],
+      "specialShop": {
+        "items": ["mooncake", "jade_rabbit", "moon_charm"],
+        "currency": "mooncakes"
+      }
+    },
+    "ghost_festival": {
+      "id": "ghost_festival",
+      "name": "Ghost Festival",
+      "description": "The veil between worlds grows thin!",
+      "startCondition": { "month": 10, "dayRange": [25, 31] },
+      "duration": 604800,
+      "bonuses": {
+        "voidDamage": 2.0,
+        "ghostCatChance": true,
+        "spookyMode": true
+      },
+      "exclusiveCat": "ghost_cat",
+      "exclusiveCosmetics": ["ghost_sheet", "spooky_aura"],
+      "specialDungeon": "haunted_pagoda"
+    },
+    "winter_solstice": {
+      "id": "winter_solstice",
+      "name": "Winter Solstice",
+      "description": "The longest night brings special rewards!",
+      "startCondition": { "month": 12, "dayRange": [20, 25] },
+      "duration": 432000,
+      "bonuses": {
+        "afkEfficiency": 2.0,
+        "giftDrops": true,
+        "snowEffect": true
+      },
+      "exclusiveCat": "snow_kitten",
+      "exclusiveCosmetics": ["santa_hat", "snowflake_trail"],
+      "specialShop": {
+        "items": ["warm_blanket", "hot_cocoa", "gift_box"],
+        "currency": "snowflakes"
+      }
+    },
+    "spring_blossom": {
+      "id": "spring_blossom",
+      "name": "Spring Blossom Festival",
+      "description": "New life blooms across the sanctuary!",
+      "startCondition": { "month": [3, 4], "dayRange": [20, 10] },
+      "duration": 604800,
+      "bonuses": {
+        "catHappiness": 1.5,
+        "newCatChance": 1.5,
+        "flowerPetals": true
+      },
+      "exclusiveCat": "spring_blossom_cat",
+      "exclusiveCosmetics": ["flower_crown", "petal_trail"]
+    },
+    "birthday": {
+      "id": "birthday",
+      "name": "Your Special Day",
+      "description": "Happy Birthday from the Celestial Snoot Sect!",
+      "startCondition": { "type": "user_birthday" },
+      "duration": 86400,
+      "bonuses": {
+        "allProduction": 3.0,
+        "freeSpins": 10
+      },
+      "waifuMessages": true,
+      "exclusiveCosmetics": ["birthday_hat"]
+    }
+  },
+  "hiddenEvents": {
+    "eighth_master_vision": {
+      "id": "eighth_master_vision",
+      "name": "Vision of the Forgotten",
+      "description": "You see a glimpse of someone who was erased...",
+      "triggerCondition": { "loreFragments": 75, "nightTime": true },
+      "reward": {
+        "type": "lore",
+        "fragment": "eighth_master_memory"
+      },
+      "oneTime": true
+    },
+    "ceiling_cat_blessing": {
+      "id": "ceiling_cat_blessing",
+      "name": "Ceiling Cat's Gaze",
+      "description": "Ceiling Cat has noticed you!",
+      "triggerCondition": { "lookUpCount": 100 },
+      "reward": {
+        "type": "unlock",
+        "content": "ceiling_god_hint"
+      },
+      "oneTime": true
+    },
+    "goose_peace_treaty": {
+      "id": "goose_peace_treaty",
+      "name": "Goose Peace Treaty",
+      "description": "The geese want to negotiate...",
+      "triggerCondition": { "gooseBoops": 1000, "neverKilledGoose": true },
+      "reward": {
+        "type": "special",
+        "content": "goose_diplomat_title"
+      },
+      "oneTime": true
+    },
+    "waifu_harmony_miracle": {
+      "id": "waifu_harmony_miracle",
+      "name": "Perfect Harmony",
+      "description": "All waifus are perfectly happy!",
+      "triggerCondition": { "allWaifuHarmony": true, "bondMin": 75 },
+      "reward": {
+        "type": "unlock",
+        "content": "harem_ending_achievement"
+      },
+      "oneTime": true
+    }
+  }
+}

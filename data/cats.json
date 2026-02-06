@@ -1,0 +1,1102 @@
+{
+  "catRealms": {
+    "kittenMortal": { "order": 1, "name": "Mortal Kitten", "ppMult": 1, "stats": 1.0 },
+    "earthKitten": { "order": 2, "name": "Earth Kitten", "ppMult": 2, "stats": 1.5 },
+    "skyKitten": { "order": 3, "name": "Sky Kitten", "ppMult": 5, "stats": 2.0 },
+    "heavenKitten": { "order": 4, "name": "Heaven Kitten", "ppMult": 15, "stats": 3.0 },
+    "divineBeast": { "order": 5, "name": "Divine Beast", "ppMult": 50, "stats": 5.0 },
+    "celestialBeast": { "order": 6, "name": "Celestial Beast", "ppMult": 200, "stats": 10.0 },
+    "cosmicEntity": { "order": 7, "name": "Cosmic Entity", "ppMult": 1000, "stats": 25.0 }
+  },
+  "elements": {
+    "metal": {
+      "id": "metal",
+      "name": "Metal",
+      "color": "#C0C0C0",
+      "strengths": ["wood"],
+      "weaknesses": ["fire"],
+      "bonus": { "critDamage": 1.2 },
+      "resonance": { "metal": 1.1, "earth": 1.05 }
+    },
+    "wood": {
+      "id": "wood",
+      "name": "Wood",
+      "color": "#228B22",
+      "strengths": ["earth"],
+      "weaknesses": ["metal"],
+      "bonus": { "hpRegen": 1.2 },
+      "resonance": { "wood": 1.1, "water": 1.05 }
+    },
+    "water": {
+      "id": "water",
+      "name": "Water",
+      "color": "#4169E1",
+      "strengths": ["fire"],
+      "weaknesses": ["earth"],
+      "bonus": { "afkEfficiency": 1.2 },
+      "resonance": { "water": 1.1, "metal": 1.05 }
+    },
+    "fire": {
+      "id": "fire",
+      "name": "Fire",
+      "color": "#FF4500",
+      "strengths": ["metal"],
+      "weaknesses": ["water"],
+      "bonus": { "boopPower": 1.2 },
+      "resonance": { "fire": 1.1, "wood": 1.05 }
+    },
+    "earth": {
+      "id": "earth",
+      "name": "Earth",
+      "color": "#8B4513",
+      "strengths": ["water"],
+      "weaknesses": ["wood"],
+      "bonus": { "defense": 1.2 },
+      "resonance": { "earth": 1.1, "fire": 1.05 }
+    },
+    "void": {
+      "id": "void",
+      "name": "Void",
+      "color": "#000000",
+      "hidden": true,
+      "unlockRealm": "spiritSevering",
+      "strengths": ["all"],
+      "weaknesses": [],
+      "bonus": { "allStats": 1.15 },
+      "resonance": { "void": 1.2 }
+    },
+    "chaos": {
+      "id": "chaos",
+      "name": "Chaos",
+      "color": "#FF00FF",
+      "hidden": true,
+      "unlockCondition": { "defeatCobraChicken": true },
+      "strengths": [],
+      "weaknesses": [],
+      "bonus": { "randomMultiplier": { "min": 0.5, "max": 2.0 } },
+      "resonance": { "chaos": 1.5, "void": 1.1 }
+    }
+  },
+  "personalities": {
+    "disciplined": {
+      "name": "Disciplined",
+      "description": "Learns techniques faster",
+      "effect": { "techniqueXP": 1.25 },
+      "preferredWaifus": ["mochi", "jade"],
+      "dialogue": ["*trains diligently*", "Mrrp. (I will master this.)"]
+    },
+    "lazy": {
+      "name": "Lazy",
+      "description": "Better AFK gains, slower active",
+      "effect": { "afkBonus": 1.5, "activeBonus": 0.8 },
+      "preferredWaifus": ["luna"],
+      "dialogue": ["*yawns*", "Mrrp... (Five more minutes...)"]
+    },
+    "playful": {
+      "name": "Playful",
+      "description": "Higher happiness, more events",
+      "effect": { "happinessGain": 1.3, "eventChance": 1.2 },
+      "preferredWaifus": ["sakura", "nyanta"],
+      "dialogue": ["*zoomies*", "Mrrp! (Play with me!)"]
+    },
+    "mysterious": {
+      "name": "Mysterious",
+      "description": "Higher crit chance, finds secrets",
+      "effect": { "critChance": 0.05, "secretFind": 1.5 },
+      "preferredWaifus": ["yuki", "luna"],
+      "dialogue": ["*stares knowingly*", "..."]
+    },
+    "brave": {
+      "name": "Brave",
+      "description": "Bonus vs. Geese, dungeon power",
+      "effect": { "gooseDamage": 1.5, "dungeonPower": 1.2 },
+      "preferredWaifus": ["nyanta", "mei"],
+      "dialogue": ["*faces danger*", "MRRP! (I fear nothing!)"]
+    },
+    "gluttonous": {
+      "name": "Gluttonous",
+      "description": "Gains more from food, higher maintenance",
+      "effect": { "foodBonus": 2.0, "happinessDecay": 1.2 },
+      "preferredWaifus": ["mochi"],
+      "dialogue": ["*stares at food*", "Mrrp? (Is that... fish?)"]
+    }
+  },
+  "starBonuses": {
+    "1": { "stats": 1.0, "visualEffect": null },
+    "2": { "stats": 1.1, "visualEffect": "subtle_glow" },
+    "3": { "stats": 1.25, "visualEffect": "sparkle" },
+    "4": { "stats": 1.5, "visualEffect": "aura" },
+    "5": { "stats": 2.0, "visualEffect": "golden_aura" },
+    "6": { "stats": 3.0, "visualEffect": "celestial_aura", "awakening": true }
+  },
+  "cats": {
+    "shaolin_tabby": {
+      "id": "shaolin_tabby",
+      "name": "Shaolin Tabby",
+      "school": "shaolin",
+      "element": "earth",
+      "baseRealm": "kittenMortal",
+      "personality": "disciplined",
+      "description": "A disciplined cat who practices the ways of the temple. Known for their unwavering focus.",
+      "baseStats": {
+        "snootMeridians": 1.0,
+        "innerPurr": 1.0,
+        "floofArmor": 1.2,
+        "zoomieSteps": 0.8,
+        "loafMastery": 1.1
+      },
+      "learnableTechniques": ["pawSwipe", "ironPaw", "templeGuard"],
+      "sprite": "cats/shaolin_tabby.png",
+      "quotes": ["Mrrp. (Balance in all things.)", "*meditates intensely*"]
+    },
+    "wudang_persian": {
+      "id": "wudang_persian",
+      "name": "Wudang Persian",
+      "school": "wudang",
+      "element": "water",
+      "baseRealm": "kittenMortal",
+      "personality": "mysterious",
+      "description": "A flowing, graceful cat who embodies the water element. Their movements are fluid and unpredictable.",
+      "baseStats": {
+        "snootMeridians": 1.1,
+        "innerPurr": 1.2,
+        "floofArmor": 0.9,
+        "zoomieSteps": 1.0,
+        "loafMastery": 1.0
+      },
+      "learnableTechniques": ["flowingStrike", "waterWhisker", "mistStep"],
+      "sprite": "cats/wudang_persian.png",
+      "quotes": ["*moves like water*", "Mrrp... (The flow knows the way.)"]
+    },
+    "emei_siamese": {
+      "id": "emei_siamese",
+      "name": "Emei Siamese",
+      "school": "emei",
+      "element": "wood",
+      "baseRealm": "kittenMortal",
+      "personality": "playful",
+      "description": "A beautiful and elegant cat with a playful spirit. Masters of the healing arts.",
+      "baseStats": {
+        "snootMeridians": 0.9,
+        "innerPurr": 1.3,
+        "floofArmor": 0.8,
+        "zoomieSteps": 1.1,
+        "loafMastery": 1.2
+      },
+      "learnableTechniques": ["healingPurr", "jadeTouch", "gracefulLeap"],
+      "sprite": "cats/emei_siamese.png",
+      "quotes": ["*elegant stretch*", "Mrrp~ (Healing comes from within.)"]
+    },
+    "beggar_scrapper": {
+      "id": "beggar_scrapper",
+      "name": "Beggar Street Scrapper",
+      "school": "beggar",
+      "element": "fire",
+      "baseRealm": "kittenMortal",
+      "personality": "brave",
+      "description": "A scrappy alley cat who learned to fight for survival. Underestimated but dangerous.",
+      "baseStats": {
+        "snootMeridians": 1.2,
+        "innerPurr": 0.8,
+        "floofArmor": 1.0,
+        "zoomieSteps": 1.3,
+        "loafMastery": 0.9
+      },
+      "learnableTechniques": ["dirtyFighting", "alleyDodge", "scrappyBite"],
+      "sprite": "cats/beggar_scrapper.png",
+      "quotes": ["*hisses defiantly*", "Mrrp! (Streets made me strong!)"]
+    },
+    "scholar_wise": {
+      "id": "scholar_wise",
+      "name": "Scholar's Wise Siamese",
+      "school": "scholar",
+      "element": "metal",
+      "baseRealm": "earthKitten",
+      "personality": "disciplined",
+      "description": "A learned cat who spent years in the library. Their knowledge grants them tactical advantages.",
+      "baseStats": {
+        "snootMeridians": 1.3,
+        "innerPurr": 1.4,
+        "floofArmor": 0.7,
+        "zoomieSteps": 0.8,
+        "loafMastery": 1.5
+      },
+      "learnableTechniques": ["strategicPaw", "knowledgeBeam", "ancientWisdom"],
+      "sprite": "cats/scholar_wise.png",
+      "quotes": ["*adjusts imaginary glasses*", "Mrrp. (The scrolls speak truth.)"]
+    },
+    "tang_assassin": {
+      "id": "tang_assassin",
+      "name": "Tang Clan Assassin",
+      "school": "tang",
+      "element": "metal",
+      "baseRealm": "earthKitten",
+      "personality": "mysterious",
+      "description": "A deadly cat trained in the hidden weapons of the Tang Clan. Silent but lethal.",
+      "baseStats": {
+        "snootMeridians": 1.4,
+        "innerPurr": 0.9,
+        "floofArmor": 0.8,
+        "zoomieSteps": 1.5,
+        "loafMastery": 0.7
+      },
+      "learnableTechniques": ["hiddenNeedle", "poisonClaw", "shadowStrike"],
+      "sprite": "cats/tang_assassin.png",
+      "quotes": ["*vanishes into shadows*", "..."]
+    },
+    "kunlun_snowflake": {
+      "id": "kunlun_snowflake",
+      "name": "Kunlun Snowflake",
+      "school": "kunlun",
+      "element": "water",
+      "baseRealm": "earthKitten",
+      "personality": "lazy",
+      "description": "A fluffy white cat from the frozen peaks. Slow but incredibly resilient.",
+      "baseStats": {
+        "snootMeridians": 1.0,
+        "innerPurr": 1.6,
+        "floofArmor": 1.5,
+        "zoomieSteps": 0.6,
+        "loafMastery": 1.3
+      },
+      "learnableTechniques": ["frostBreath", "snowballRoll", "glacialPurr"],
+      "sprite": "cats/kunlun_snowflake.png",
+      "quotes": ["*shivers contentedly*", "Mrrp... (Cold is comfort.)"]
+    },
+    "royal_maine": {
+      "id": "royal_maine",
+      "name": "Royal Maine Coon",
+      "school": "royal",
+      "element": "earth",
+      "baseRealm": "skyKitten",
+      "personality": "brave",
+      "description": "A majestic cat of noble bearing. Their presence alone inspires allies.",
+      "baseStats": {
+        "snootMeridians": 1.5,
+        "innerPurr": 1.5,
+        "floofArmor": 1.3,
+        "zoomieSteps": 1.0,
+        "loafMastery": 1.4
+      },
+      "learnableTechniques": ["royalRoar", "noblePresence", "kinglySwipe"],
+      "sprite": "cats/royal_maine.png",
+      "quotes": ["*regal pose*", "Mrrp. (A king among cats.)"]
+    },
+    "demon_black": {
+      "id": "demon_black",
+      "name": "Demon Sect Black Cat",
+      "school": "demon",
+      "element": "fire",
+      "baseRealm": "skyKitten",
+      "personality": "brave",
+      "description": "A fierce cat from the forbidden demon sect. Dangerous but immensely powerful.",
+      "baseStats": {
+        "snootMeridians": 1.8,
+        "innerPurr": 0.7,
+        "floofArmor": 1.0,
+        "zoomieSteps": 1.6,
+        "loafMastery": 0.6
+      },
+      "learnableTechniques": ["demonClaw", "darkFlame", "chaosBurst"],
+      "sprite": "cats/demon_black.png",
+      "quotes": ["*eyes glow red*", "MRRP! (CHAOS!)"]
+    },
+    "heavenly_ragdoll": {
+      "id": "heavenly_ragdoll",
+      "name": "Heavenly Ragdoll",
+      "school": "heaven",
+      "element": "void",
+      "baseRealm": "heavenKitten",
+      "personality": "lazy",
+      "description": "A serene cat blessed by the heavens. Their floppiness belies great power.",
+      "baseStats": {
+        "snootMeridians": 2.0,
+        "innerPurr": 2.5,
+        "floofArmor": 0.8,
+        "zoomieSteps": 0.5,
+        "loafMastery": 2.0
+      },
+      "learnableTechniques": ["heavenlyFlop", "divineRelax", "celestialPurr"],
+      "sprite": "cats/heavenly_ragdoll.png",
+      "quotes": ["*flops majestically*", "Mrrp... (The heavens are soft.)"]
+    },
+    "sun_wukong_tabby": {
+      "id": "sun_wukong_tabby",
+      "name": "Sun Wukong Tabby",
+      "school": "monkey",
+      "element": "fire",
+      "baseRealm": "heavenKitten",
+      "personality": "playful",
+      "description": "A mischievous cat inspired by the Monkey King. Chaotic and incredibly agile.",
+      "baseStats": {
+        "snootMeridians": 1.8,
+        "innerPurr": 1.2,
+        "floofArmor": 1.0,
+        "zoomieSteps": 2.5,
+        "loafMastery": 0.8
+      },
+      "learnableTechniques": ["goldenStaff", "cloudSomersault", "72Transformations"],
+      "sprite": "cats/sun_wukong_tabby.png",
+      "quotes": ["*causes chaos*", "Mrrp! (I am the Great Sage!)"]
+    },
+    "void_walker": {
+      "id": "void_walker",
+      "name": "Void Walker",
+      "school": "void",
+      "element": "void",
+      "baseRealm": "divineBeast",
+      "personality": "mysterious",
+      "description": "A cat that has glimpsed the void between worlds. Reality bends around them.",
+      "baseStats": {
+        "snootMeridians": 3.0,
+        "innerPurr": 2.5,
+        "floofArmor": 1.5,
+        "zoomieSteps": 2.0,
+        "loafMastery": 2.0
+      },
+      "learnableTechniques": ["voidStep", "realityTear", "dimensionalPurr"],
+      "sprite": "cats/void_walker.png",
+      "quotes": ["*phases through reality*", "...the void speaks..."]
+    },
+    "phoenix_feather": {
+      "id": "phoenix_feather",
+      "name": "Phoenix Feather Cat",
+      "school": "phoenix",
+      "element": "fire",
+      "baseRealm": "divineBeast",
+      "personality": "brave",
+      "description": "A legendary cat born from phoenix flames. They cannot truly die.",
+      "baseStats": {
+        "snootMeridians": 2.8,
+        "innerPurr": 2.0,
+        "floofArmor": 1.8,
+        "zoomieSteps": 2.2,
+        "loafMastery": 1.5
+      },
+      "learnableTechniques": ["phoenixRebirth", "flameWings", "immortalBlaze"],
+      "sprite": "cats/phoenix_feather.png",
+      "quotes": ["*feathers glow*", "Mrrp! (From ashes, I rise!)"]
+    },
+    "jade_emperor_cat": {
+      "id": "jade_emperor_cat",
+      "name": "Jade Emperor Cat",
+      "school": "divine",
+      "element": "earth",
+      "baseRealm": "celestialBeast",
+      "personality": "disciplined",
+      "description": "The sovereign of all celestial cats. Their authority is absolute.",
+      "baseStats": {
+        "snootMeridians": 5.0,
+        "innerPurr": 5.0,
+        "floofArmor": 3.0,
+        "zoomieSteps": 2.0,
+        "loafMastery": 4.0
+      },
+      "learnableTechniques": ["jadeDecree", "celestialJudgment", "emperorAura"],
+      "sprite": "cats/jade_emperor.png",
+      "quotes": ["*majestic aura*", "Mrrp. (All cats bow before the Jade Throne.)"],
+      "legendary": true,
+      "unlockedBy": { "waifuMaxBond": "jade" }
+    },
+    "ceiling_god": {
+      "id": "ceiling_god",
+      "name": "Ceiling Cat, the All-Seeing",
+      "school": "divine",
+      "element": "void",
+      "baseRealm": "divineBeast",
+      "personality": "mysterious",
+      "description": "Watches from the heavens. Grants vision of all snoots. The original divine cat of the internet age.",
+      "baseStats": {
+        "snootMeridians": 5.0,
+        "innerPurr": 10.0,
+        "floofArmor": 5.0,
+        "zoomieSteps": 3.0,
+        "loafMastery": 8.0
+      },
+      "learnableTechniques": ["allSeeingGaze", "judgementFromAbove", "ceilingDrop"],
+      "signatureEquipment": "ceiling_eye",
+      "sprite": "cats/ceiling_god.png",
+      "quotes": ["*watches from above*", "...I see all snoots..."],
+      "legendary": true,
+      "unlockedBy": { "achievement": "eyes_of_heaven" }
+    },
+    "basement_cat": {
+      "id": "basement_cat",
+      "name": "Basement Cat, the Lurker",
+      "school": "shadow",
+      "element": "void",
+      "baseRealm": "divineBeast",
+      "personality": "mysterious",
+      "description": "The eternal rival of Ceiling Cat. Watches from below with envious eyes.",
+      "baseStats": {
+        "snootMeridians": 5.0,
+        "innerPurr": 8.0,
+        "floofArmor": 6.0,
+        "zoomieSteps": 4.0,
+        "loafMastery": 7.0
+      },
+      "learnableTechniques": ["lurkerStrike", "shadowEnvy", "basementTrap"],
+      "sprite": "cats/basement_cat.png",
+      "quotes": ["*lurks menacingly*", "...one day, I will be ceiling..."],
+      "legendary": true,
+      "unlockedBy": { "achievement": "depths_of_darkness" }
+    },
+    "keyboard_cat": {
+      "id": "keyboard_cat",
+      "name": "Keyboard Cat, Melody of Ages",
+      "school": "music",
+      "element": "metal",
+      "baseRealm": "celestialBeast",
+      "personality": "playful",
+      "description": "The legendary musician of the cat realm. Their melodies inspire all who hear them.",
+      "baseStats": {
+        "snootMeridians": 4.0,
+        "innerPurr": 8.0,
+        "floofArmor": 3.0,
+        "zoomieSteps": 2.5,
+        "loafMastery": 6.0
+      },
+      "learnableTechniques": ["epicMelody", "playThemOff", "musicalInspiration"],
+      "sprite": "cats/keyboard_cat.png",
+      "quotes": ["*plays keyboard*", "Mrrp~ (Let me play you the song of victory!)"],
+      "legendary": true,
+      "unlockedBy": { "achievement": "musical_master" }
+    },
+    "longcat": {
+      "id": "longcat",
+      "name": "Longcat, the Infinite",
+      "school": "cosmic",
+      "element": "void",
+      "baseRealm": "celestialBeast",
+      "personality": "lazy",
+      "description": "A cat of infinite length. No one knows where they begin or end.",
+      "baseStats": {
+        "snootMeridians": 3.0,
+        "innerPurr": 6.0,
+        "floofArmor": 10.0,
+        "zoomieSteps": 1.0,
+        "loafMastery": 15.0
+      },
+      "learnableTechniques": ["infiniteStretch", "longReach", "endlessPurr"],
+      "sprite": "cats/longcat.png",
+      "quotes": ["*stretches infinitely*", "Mrrp... (I am looooooong.)"],
+      "legendary": true,
+      "unlockedBy": { "achievement": "infinite_patience" }
+    },
+    "tacgnol": {
+      "id": "tacgnol",
+      "name": "Tacgnol, the Anti-Long",
+      "school": "cosmic",
+      "element": "chaos",
+      "baseRealm": "celestialBeast",
+      "personality": "brave",
+      "description": "The dark mirror of Longcat. Equal in length but opposite in nature.",
+      "baseStats": {
+        "snootMeridians": 6.0,
+        "innerPurr": 3.0,
+        "floofArmor": 10.0,
+        "zoomieSteps": 1.0,
+        "loafMastery": 12.0
+      },
+      "learnableTechniques": ["darkStretch", "antiReach", "chaosLength"],
+      "sprite": "cats/tacgnol.png",
+      "quotes": ["*stretches ominously*", "...gnooooool..."],
+      "legendary": true,
+      "unlockedBy": { "hasCat": "longcat", "chaosFragments": 50 }
+    },
+    "grumpy_sage": {
+      "id": "grumpy_sage",
+      "name": "Grumpy Sage",
+      "school": "meme",
+      "element": "earth",
+      "baseRealm": "heavenKitten",
+      "personality": "mysterious",
+      "description": "A perpetually displeased cat whose grumpiness has transcended to wisdom.",
+      "baseStats": {
+        "snootMeridians": 2.5,
+        "innerPurr": 3.0,
+        "floofArmor": 2.0,
+        "zoomieSteps": 0.8,
+        "loafMastery": 3.5
+      },
+      "learnableTechniques": ["grumpyGlare", "disappointmentAura", "reluctantHelp"],
+      "sprite": "cats/grumpy_sage.png",
+      "quotes": ["*frowns*", "Mrrp. (I had fun once. It was awful.)"],
+      "legendary": false,
+      "unlockedBy": { "achievement": "perpetual_frown" }
+    },
+    "nyan_star": {
+      "id": "nyan_star",
+      "name": "Nyan Star Cat",
+      "school": "cosmic",
+      "element": "chaos",
+      "baseRealm": "celestialBeast",
+      "personality": "playful",
+      "description": "A cat that trails rainbows across the cosmos. Their song echoes through space.",
+      "baseStats": {
+        "snootMeridians": 4.0,
+        "innerPurr": 7.0,
+        "floofArmor": 2.0,
+        "zoomieSteps": 10.0,
+        "loafMastery": 4.0
+      },
+      "learnableTechniques": ["rainbowTrail", "cosmicNyan", "popTartShield"],
+      "sprite": "cats/nyan_star.png",
+      "quotes": ["Nyan~", "*leaves rainbow trail*"],
+      "legendary": true,
+      "unlockedBy": { "easterEgg": "nyan_name" }
+    },
+    "eternal_loaf": {
+      "id": "eternal_loaf",
+      "name": "The Eternal Loaf",
+      "school": "ancient",
+      "element": "earth",
+      "baseRealm": "cosmicEntity",
+      "personality": "lazy",
+      "description": "The perfect loaf. Has not moved in ten thousand years. Achieves enlightenment through stillness.",
+      "baseStats": {
+        "snootMeridians": 8.0,
+        "innerPurr": 25.0,
+        "floofArmor": 15.0,
+        "zoomieSteps": 0.1,
+        "loafMastery": 100.0
+      },
+      "learnableTechniques": ["perfectStillness", "loafEnlightenment", "immovablePresence"],
+      "sprite": "cats/eternal_loaf.png",
+      "quotes": ["...", "*is perfectly still*"],
+      "legendary": true,
+      "unlockedBy": { "catFusion": "legendary_loaf" }
+    },
+    "goose_touched_cat": {
+      "id": "goose_touched_cat",
+      "name": "Goose-Touched Cat",
+      "school": "chaos",
+      "element": "chaos",
+      "baseRealm": "heavenKitten",
+      "personality": "brave",
+      "description": "A cat who survived a goose encounter. Forever changed. Part honk, part mrrp.",
+      "baseStats": {
+        "snootMeridians": 2.0,
+        "innerPurr": 1.5,
+        "floofArmor": 2.0,
+        "zoomieSteps": 2.0,
+        "loafMastery": 1.0
+      },
+      "learnableTechniques": ["chaosHonk", "unpredictablePounce", "gooseWhisper"],
+      "sprite": "cats/goose_touched.png",
+      "quotes": ["Mrrp... HONK?!", "*twitches unpredictably*"],
+      "legendary": false,
+      "unlockedBy": { "gooseBoops": 100 }
+    },
+    "goose_cat_hybrid": {
+      "id": "goose_cat_hybrid",
+      "name": "The Catgoose",
+      "school": "chaos",
+      "element": "chaos",
+      "baseRealm": "divineBeast",
+      "personality": "brave",
+      "description": "An abomination. A blessing. Nature's cruelest joke and greatest gift.",
+      "baseStats": {
+        "snootMeridians": 4.0,
+        "innerPurr": 3.0,
+        "floofArmor": 3.0,
+        "zoomieSteps": 5.0,
+        "loafMastery": 2.0
+      },
+      "learnableTechniques": ["HONKBOOP", "chaosCharge", "identityCrisis"],
+      "sprite": "cats/catgoose.png",
+      "quotes": ["MRONK!", "*confused but dangerous*"],
+      "legendary": true,
+      "unlockedBy": { "waifuMaxBond": "honk_maiden" }
+    },
+    "lucky_teacup_cat": {
+      "id": "lucky_teacup_cat",
+      "name": "Lucky Teacup Cat",
+      "school": "hospitality",
+      "element": "earth",
+      "baseRealm": "heavenKitten",
+      "personality": "playful",
+      "description": "A tiny cat that fits in a teacup. Brings good fortune to all who serve tea.",
+      "baseStats": {
+        "snootMeridians": 1.5,
+        "innerPurr": 4.0,
+        "floofArmor": 0.5,
+        "zoomieSteps": 1.5,
+        "loafMastery": 3.0
+      },
+      "learnableTechniques": ["luckyCharm", "teaCeremonyBoost", "tinyBoop"],
+      "sprite": "cats/lucky_teacup.png",
+      "quotes": ["*fits in teacup*", "Mrrp~ (Fortune favors the cozy!)"],
+      "legendary": false,
+      "unlockedBy": { "waifuMaxBond": "mochi" }
+    },
+    "moonlight_siamese": {
+      "id": "moonlight_siamese",
+      "name": "Moonlight Siamese",
+      "school": "night",
+      "element": "water",
+      "baseRealm": "heavenKitten",
+      "personality": "lazy",
+      "description": "A cat blessed by the moon. Strongest during the night hours.",
+      "baseStats": {
+        "snootMeridians": 2.0,
+        "innerPurr": 4.5,
+        "floofArmor": 1.5,
+        "zoomieSteps": 1.8,
+        "loafMastery": 3.5
+      },
+      "learnableTechniques": ["moonbeam", "lunarBlessing", "nightProwl"],
+      "sprite": "cats/moonlight_siamese.png",
+      "quotes": ["*glows in moonlight*", "Mrrp... (The moon watches over us...)"],
+      "legendary": false,
+      "unlockedBy": { "waifuMaxBond": "luna" }
+    },
+    "iron_tiger": {
+      "id": "iron_tiger",
+      "name": "Iron Tiger Cat",
+      "school": "combat",
+      "element": "metal",
+      "baseRealm": "divineBeast",
+      "personality": "brave",
+      "description": "A cat forged in combat. Their claws can cut through steel.",
+      "baseStats": {
+        "snootMeridians": 5.0,
+        "innerPurr": 2.0,
+        "floofArmor": 4.0,
+        "zoomieSteps": 3.5,
+        "loafMastery": 1.5
+      },
+      "learnableTechniques": ["ironClaw", "tigerPounce", "steelResolve"],
+      "sprite": "cats/iron_tiger.png",
+      "quotes": ["*flexes claws*", "MRRP! (Strength is everything!)"],
+      "legendary": false,
+      "unlockedBy": { "waifuMaxBond": "mei" }
+    },
+    "cherry_blossom_cat": {
+      "id": "cherry_blossom_cat",
+      "name": "Cherry Blossom Cat",
+      "school": "nature",
+      "element": "wood",
+      "baseRealm": "heavenKitten",
+      "personality": "playful",
+      "description": "A cat surrounded by eternal spring. Flower petals follow in their wake.",
+      "baseStats": {
+        "snootMeridians": 1.8,
+        "innerPurr": 4.0,
+        "floofArmor": 1.0,
+        "zoomieSteps": 2.0,
+        "loafMastery": 3.0
+      },
+      "learnableTechniques": ["petalStorm", "springBloom", "natureBond"],
+      "sprite": "cats/cherry_blossom.png",
+      "quotes": ["*petals swirl*", "Mrrp~ (Spring is eternal!)"],
+      "legendary": false,
+      "unlockedBy": { "waifuMaxBond": "sakura" }
+    },
+    "ice_crystal_cat": {
+      "id": "ice_crystal_cat",
+      "name": "Ice Crystal Cat",
+      "school": "frost",
+      "element": "water",
+      "baseRealm": "heavenKitten",
+      "personality": "mysterious",
+      "description": "A cat of pure ice. Their touch brings clarity and calm.",
+      "baseStats": {
+        "snootMeridians": 2.2,
+        "innerPurr": 3.5,
+        "floofArmor": 2.5,
+        "zoomieSteps": 1.2,
+        "loafMastery": 4.0
+      },
+      "learnableTechniques": ["iceTouch", "frozenMeditation", "crystalArmor"],
+      "sprite": "cats/ice_crystal.png",
+      "quotes": ["*radiates cold*", "Mrrp... (Stillness brings clarity.)"],
+      "legendary": false,
+      "unlockedBy": { "waifuMaxBond": "yuki" }
+    },
+    "phoenix_cat": {
+      "id": "phoenix_cat",
+      "name": "Phoenix Cat",
+      "school": "forge",
+      "element": "fire",
+      "baseRealm": "divineBeast",
+      "personality": "brave",
+      "description": "Reborn from the forge flames. Cannot truly be defeated.",
+      "baseStats": {
+        "snootMeridians": 4.0,
+        "innerPurr": 3.0,
+        "floofArmor": 2.5,
+        "zoomieSteps": 3.0,
+        "loafMastery": 2.5
+      },
+      "learnableTechniques": ["flameRebirth", "forgeHeat", "phoenixAscent"],
+      "sprite": "cats/phoenix_cat.png",
+      "quotes": ["*bursts into flames*", "MRRP! (I rise again!)"],
+      "legendary": false,
+      "unlockedBy": { "waifuMaxBond": "crimson" }
+    },
+    "ancient_guardian": {
+      "id": "ancient_guardian",
+      "name": "Ancient Guardian",
+      "school": "ancient",
+      "element": "earth",
+      "baseRealm": "celestialBeast",
+      "personality": "disciplined",
+      "description": "A cat who has guarded the sect for millennia. Knows all secrets.",
+      "baseStats": {
+        "snootMeridians": 6.0,
+        "innerPurr": 8.0,
+        "floofArmor": 8.0,
+        "zoomieSteps": 1.5,
+        "loafMastery": 7.0
+      },
+      "learnableTechniques": ["ancientWard", "timelessWisdom", "guardianStance"],
+      "sprite": "cats/ancient_guardian.png",
+      "quotes": ["*ancient eyes*", "Mrrp. (I have seen empires rise and fall.)"],
+      "legendary": true,
+      "unlockedBy": { "waifuMaxBond": "grandmother" }
+    },
+    "reformed_rival_cat": {
+      "id": "reformed_rival_cat",
+      "name": "Reformed Rival Cat",
+      "school": "rival",
+      "element": "fire",
+      "baseRealm": "heavenKitten",
+      "personality": "brave",
+      "description": "Once an enemy, now a friend. Their competitive spirit drives them forward.",
+      "baseStats": {
+        "snootMeridians": 3.0,
+        "innerPurr": 2.0,
+        "floofArmor": 2.0,
+        "zoomieSteps": 3.5,
+        "loafMastery": 1.5
+      },
+      "learnableTechniques": ["rivalryBoost", "competitiveSpirit", "redemptionStrike"],
+      "sprite": "cats/reformed_rival.png",
+      "quotes": ["*competitive glare*", "Mrrp! (I-It's not like I wanted to join!)"],
+      "legendary": false,
+      "unlockedBy": { "waifuMaxBond": "rival" }
+    },
+    "void_cat": {
+      "id": "void_cat",
+      "name": "Void Cat",
+      "school": "void",
+      "element": "void",
+      "baseRealm": "cosmicEntity",
+      "personality": "mysterious",
+      "description": "A cat from beyond reality. Their existence defies understanding.",
+      "baseStats": {
+        "snootMeridians": 10.0,
+        "innerPurr": 10.0,
+        "floofArmor": 5.0,
+        "zoomieSteps": 8.0,
+        "loafMastery": 8.0
+      },
+      "learnableTechniques": ["voidBoop", "realityUnravel", "existentialPurr"],
+      "sprite": "cats/void_cat.png",
+      "quotes": ["...", "*exists uncertainly*"],
+      "legendary": true,
+      "unlockedBy": { "waifuMaxBond": "void_waifu" }
+    },
+    "dream_walker_cat": {
+      "id": "dream_walker_cat",
+      "name": "Dream Walker Cat",
+      "school": "dream",
+      "element": "void",
+      "baseRealm": "divineBeast",
+      "personality": "lazy",
+      "description": "A cat that walks between dreams. Reality and fantasy blur around them.",
+      "baseStats": {
+        "snootMeridians": 3.5,
+        "innerPurr": 6.0,
+        "floofArmor": 2.0,
+        "zoomieSteps": 4.0,
+        "loafMastery": 5.0
+      },
+      "learnableTechniques": ["dreamStep", "illusionWeave", "sleepyBoop"],
+      "sprite": "cats/dream_walker.png",
+      "quotes": ["*fades in and out*", "Mrrp... (Was that a dream...?)"],
+      "legendary": false,
+      "unlockedBy": { "dungeon": "dream_realm", "floor": 50 }
+    },
+    "yin_yang_cat": {
+      "id": "yin_yang_cat",
+      "name": "Yin-Yang Cat",
+      "school": "balance",
+      "element": "void",
+      "baseRealm": "divineBeast",
+      "personality": "disciplined",
+      "description": "The perfect balance of opposing forces. Neither light nor dark, but both.",
+      "baseStats": {
+        "snootMeridians": 4.0,
+        "innerPurr": 4.0,
+        "floofArmor": 4.0,
+        "zoomieSteps": 4.0,
+        "loafMastery": 4.0
+      },
+      "learnableTechniques": ["balanceStrike", "harmonyPurr", "dualNature"],
+      "sprite": "cats/yin_yang.png",
+      "quotes": ["*perfectly balanced*", "Mrrp. (All things in balance.)"],
+      "legendary": true,
+      "unlockedBy": { "catFusion": "yin_yang_cat" }
+    },
+    "chaos_kitty": {
+      "id": "chaos_kitty",
+      "name": "Chaos Kitty",
+      "school": "chaos",
+      "element": "chaos",
+      "baseRealm": "divineBeast",
+      "personality": "playful",
+      "description": "Pure chaos in cat form. Anything can happen when they are around.",
+      "baseStats": {
+        "snootMeridians": 3.0,
+        "innerPurr": 3.0,
+        "floofArmor": 3.0,
+        "zoomieSteps": 6.0,
+        "loafMastery": 2.0
+      },
+      "learnableTechniques": ["chaosBurst", "randomPounce", "entropyPurr"],
+      "sprite": "cats/chaos_kitty.png",
+      "quotes": ["*random noises*", "?!?!MRRP?!?!"],
+      "legendary": true,
+      "unlockedBy": { "catFusion": "chaos_kitty" }
+    },
+    "kraken_kitty": {
+      "id": "kraken_kitty",
+      "name": "Kraken Kitty",
+      "school": "sea",
+      "element": "water",
+      "baseRealm": "divineBeast",
+      "personality": "brave",
+      "description": "A cat with tentacles instead of a tail. Terror of the seven seas.",
+      "baseStats": {
+        "snootMeridians": 4.5,
+        "innerPurr": 3.0,
+        "floofArmor": 3.5,
+        "zoomieSteps": 2.5,
+        "loafMastery": 2.0
+      },
+      "learnableTechniques": ["tentacleGrab", "inkCloud", "depthsCall"],
+      "sprite": "cats/kraken_kitty.png",
+      "quotes": ["*tentacles wave*", "Mrrp... (The depths call...)"],
+      "legendary": false,
+      "unlockedBy": { "waifuMaxBond": "nyanta" }
+    },
+    "bamboo_guardian": {
+      "id": "bamboo_guardian",
+      "name": "Bamboo Guardian",
+      "school": "nature",
+      "element": "wood",
+      "baseRealm": "heavenKitten",
+      "personality": "disciplined",
+      "description": "A cat who has trained in the bamboo forest for decades. One with nature.",
+      "baseStats": {
+        "snootMeridians": 2.5,
+        "innerPurr": 3.5,
+        "floofArmor": 2.0,
+        "zoomieSteps": 2.5,
+        "loafMastery": 3.0
+      },
+      "learnableTechniques": ["bambooStrike", "forestMeld", "naturePurr"],
+      "sprite": "cats/bamboo_guardian.png",
+      "quotes": ["*sways like bamboo*", "Mrrp. (Flexibility is strength.)"],
+      "legendary": false,
+      "unlockedBy": { "dungeon": "bamboo_forest", "surviveMinutes": 20 }
+    },
+    "memory_jade_cat": {
+      "id": "memory_jade_cat",
+      "name": "Memory Jade Cat",
+      "school": "memory",
+      "element": "earth",
+      "baseRealm": "heavenKitten",
+      "personality": "mysterious",
+      "description": "A cat formed from crystallized memories. Knows things they shouldn't.",
+      "baseStats": {
+        "snootMeridians": 2.8,
+        "innerPurr": 4.0,
+        "floofArmor": 2.0,
+        "zoomieSteps": 1.5,
+        "loafMastery": 4.0
+      },
+      "learnableTechniques": ["memoryRecall", "pastEcho", "jadeMeditation"],
+      "sprite": "cats/memory_jade.png",
+      "quotes": ["*eyes shimmer*", "Mrrp... (I remember everything...)"],
+      "legendary": false,
+      "unlockedBy": { "dungeon": "memory_fragments", "chapter": "gerald_ch1" }
+    },
+    "mystery_cat": {
+      "id": "mystery_cat",
+      "name": "??? Cat",
+      "school": "unknown",
+      "element": "void",
+      "baseRealm": "divineBeast",
+      "personality": "mysterious",
+      "description": "This cat only appears to those who wait. Patience is rewarded.",
+      "baseStats": {
+        "snootMeridians": 5.0,
+        "innerPurr": 5.0,
+        "floofArmor": 5.0,
+        "zoomieSteps": 5.0,
+        "loafMastery": 5.0
+      },
+      "learnableTechniques": ["mysteryBoop", "unknownPower", "secretPurr"],
+      "sprite": "cats/mystery_cat.png",
+      "quotes": ["???", "*appears mysteriously*"],
+      "legendary": true,
+      "unlockedBy": { "easterEgg": "afk_10_minutes" }
+    },
+    "fortune_dragon_cat": {
+      "id": "fortune_dragon_cat",
+      "name": "Fortune Dragon Cat",
+      "school": "festival",
+      "element": "fire",
+      "baseRealm": "divineBeast",
+      "personality": "playful",
+      "description": "A cat blessed during the Lunar New Year. Brings prosperity wherever they go.",
+      "baseStats": {
+        "snootMeridians": 4.0,
+        "innerPurr": 5.0,
+        "floofArmor": 3.0,
+        "zoomieSteps": 3.5,
+        "loafMastery": 4.0
+      },
+      "learnableTechniques": ["fortuneBreath", "goldenLuck", "festivalRoar"],
+      "sprite": "cats/fortune_dragon.png",
+      "quotes": ["*golden aura*", "Mrrp! (Fortune favors the bold!)"],
+      "legendary": false,
+      "unlockedBy": { "event": "lunar_new_year" }
+    },
+    "moon_rabbit_cat": {
+      "id": "moon_rabbit_cat",
+      "name": "Moon Rabbit Cat",
+      "school": "festival",
+      "element": "water",
+      "baseRealm": "heavenKitten",
+      "personality": "playful",
+      "description": "A cat blessed during the Mid-Autumn Festival. Carries the essence of the moon.",
+      "baseStats": {
+        "snootMeridians": 2.5,
+        "innerPurr": 4.5,
+        "floofArmor": 1.5,
+        "zoomieSteps": 3.0,
+        "loafMastery": 4.0
+      },
+      "learnableTechniques": ["moonHop", "lunarCake", "festivalGlow"],
+      "sprite": "cats/moon_rabbit.png",
+      "quotes": ["*hops gracefully*", "Mrrp~ (The moon cake is ready!)"],
+      "legendary": false,
+      "unlockedBy": { "event": "mid_autumn" }
+    }
+  },
+  "fusionRecipes": {
+    "yin_yang_cat": {
+      "name": "Yin-Yang Cat",
+      "ingredients": [
+        { "element": "fire", "minStars": 3 },
+        { "element": "water", "minStars": 3 }
+      ],
+      "result": {
+        "id": "yin_yang_cat",
+        "element": "void",
+        "realm": "divineBeast",
+        "unique": true
+      }
+    },
+    "chaos_kitty": {
+      "name": "Chaos Kitty",
+      "ingredients": [
+        { "id": "goose_touched_cat" },
+        { "personality": "brave", "minStars": 5 }
+      ],
+      "result": {
+        "id": "chaos_kitty",
+        "element": "chaos",
+        "realm": "divineBeast",
+        "unique": true
+      }
+    },
+    "legendary_loaf": {
+      "name": "The Eternal Loaf",
+      "ingredients": [
+        { "school": "any", "count": 5, "minStars": 4 }
+      ],
+      "result": {
+        "id": "eternal_loaf",
+        "legendary": true,
+        "unique": true
+      }
+    }
+  },
+  "teamFormations": {
+    "default": {
+      "name": "Standard Formation",
+      "positions": ["front", "front", "back", "back"],
+      "bonus": null
+    },
+    "aggressive": {
+      "name": "Aggressive Formation",
+      "positions": ["front", "front", "front", "back"],
+      "bonus": { "teamAttack": 1.2, "teamDefense": 0.9 }
+    },
+    "defensive": {
+      "name": "Defensive Formation",
+      "positions": ["front", "back", "back", "back"],
+      "bonus": { "teamAttack": 0.9, "teamDefense": 1.3 }
+    },
+    "balanced": {
+      "name": "Balanced Formation",
+      "positions": ["front", "mid", "mid", "back"],
+      "bonus": { "teamAttack": 1.1, "teamDefense": 1.1 }
+    }
+  },
+  "teamSynergies": {
+    "elementalHarmony": {
+      "name": "Elemental Harmony",
+      "condition": { "uniqueElements": 4 },
+      "bonus": { "allStats": 1.15 },
+      "description": "4 different elements = +15% all stats"
+    },
+    "schoolReunion": {
+      "name": "School Reunion",
+      "condition": { "sameSchool": 4 },
+      "bonus": { "schoolBonus": 2.0 },
+      "description": "4 cats from same school = 2x school bonus"
+    },
+    "personalityClash": {
+      "name": "Personality Clash",
+      "condition": { "specificPair": ["brave", "lazy"] },
+      "bonus": { "eventChance": 1.5, "comedyDialogue": true },
+      "description": "Brave + Lazy cat = funny interactions"
+    },
+    "legendaryPresence": {
+      "name": "Legendary Presence",
+      "condition": { "legendaryCount": 1 },
+      "bonus": { "teamMorale": 1.25 },
+      "description": "Having a legendary cat inspires the team"
+    },
+    "ceilingAndFloor": {
+      "name": "Ceiling and Floor",
+      "condition": { "specificCats": ["ceiling_god", "basement_cat"] },
+      "bonus": { "universalVision": true, "dungeonMapReveal": true },
+      "description": "Ceiling Cat + Basement Cat = see all"
+    },
+    "longAndAntiLong": {
+      "name": "Infinite Opposition",
+      "condition": { "specificCats": ["longcat", "tacgnol"] },
+      "bonus": { "infiniteStretch": true, "teamLength": 9999 },
+      "description": "Longcat + Tacgnol = infinite team length"
+    },
+    "chaosSquad": {
+      "name": "Chaos Squad",
+      "condition": { "elementCount": { "chaos": 2 } },
+      "bonus": { "randomEvents": 2.0, "unpredictability": true },
+      "description": "2+ Chaos cats = double random events"
+    },
+    "voidTrio": {
+      "name": "Void Trio",
+      "condition": { "elementCount": { "void": 3 } },
+      "bonus": { "dimensionalPower": 1.5, "phaseChance": 0.1 },
+      "description": "3 Void cats = phase through attacks"
+    }
+  }
+}

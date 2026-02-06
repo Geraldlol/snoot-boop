@@ -1,0 +1,155 @@
+{
+  "categories": {
+    "cats": "Cat Lore",
+    "masters": "Master Stories",
+    "waifus": "Waifu Secrets",
+    "sect": "Sect History",
+    "world": "Jianghu Tales",
+    "secrets": "Hidden Knowledge"
+  },
+  "loreEntries": {
+    "cats": {
+      "ceiling_god_origin": {
+        "id": "ceiling_god_origin",
+        "title": "The All-Seeing",
+        "fragments": 5,
+        "story": "In the beginning, there was only the Ceiling. And from the Ceiling, a cat emerged - not born, but always there. Ceiling Cat watched as the world formed below, and knew all that transpired. Some say Ceiling Cat is merely observing. Others say it is judging. All agree: it sees everything.\n\nThe first cultivators discovered that Ceiling Cat's gaze could pierce any illusion, reveal any truth. Those who earned its favor gained the Eyes of Heaven - the ability to see through deception.\n\nBut Ceiling Cat has a rival. From the depths below, Basement Cat watches with envious eyes, plotting the day it too will ascend...",
+        "unlockedBy": { "boops": 1000, "hasCat": "ceiling_god" }
+      },
+      "longcat_legend": {
+        "id": "longcat_legend",
+        "title": "The Infinite One",
+        "fragments": 7,
+        "story": "Longcat was not always long. Once, it was an ordinary cat of ordinary length. But one day, it stretched - and never stopped.\n\nScholars have measured Longcat's length countless times, and each measurement is different. Some say it reaches to the moon. Others claim it wraps around the world seven times. Longcat itself remains silent on the matter.\n\nThe opposite of Longcat is Tacgnol, born from the shadow of Longcat's infinite stretch. Where Longcat is light, Tacgnol is darkness. Where Longcat brings peace, Tacgnol brings chaos. Together, they maintain the balance of length in the universe.",
+        "unlockedBy": { "hasCat": "longcat" }
+      },
+      "untitled_goose_origin": {
+        "id": "untitled_goose_origin",
+        "title": "Origin of Chaos",
+        "fragments": 7,
+        "story": "Before the Celestial Snoot Sect, before the Seven Masters, before cultivation itself - there was the Goose.\n\nIt wandered the primordial Jianghu with no purpose but mischief, no goal but chaos. The Untitled Goose was not named because no name could contain it. Every title slipped away like water off its feathers.\n\nWhen the first cultivators rose, the Goose became their greatest challenge. Not because it was powerful - though it was. Not because it was cunning - though it was that too. The Goose was impossible because it simply did not care about the rules.\n\nPeace was never an option. But perhaps... balance could be.",
+        "unlockedBy": { "gooseBoops": 500 }
+      }
+    },
+    "masters": {
+      "gerald_origin": {
+        "id": "gerald_origin",
+        "title": "The Founding",
+        "fragments": 10,
+        "story": "Gerald was not always wise. Once, he was a simple wanderer, searching for meaning in a chaotic Jianghu.\n\nHe found the Snoot Scrolls in a forgotten temple, guarded by a single ancient cat. The cat spoke: 'Boop my snoot, and you shall understand.'\n\nGerald booped. And in that moment, he achieved enlightenment.\n\nThe path of the Snoot was revealed to him - the sacred art of the boop, the cultivation of inner purr, the way of the floof. He gathered six companions, each with their own path but united in purpose.\n\nTogether, they founded the Celestial Snoot Sect. And though Gerald became their leader, he never forgot that first lesson: true wisdom comes from a single boop.",
+        "unlockedBy": { "playMaster": "gerald", "hours": 10 }
+      },
+      "rusty_redemption": {
+        "id": "rusty_redemption",
+        "title": "The Redemption",
+        "fragments": 10,
+        "story": "They called him the Crimson Bandit. For years, Rusty terrorized the roads of the Jianghu, taking what he wanted through strength alone.\n\nBut strength without purpose is meaningless. Rusty learned this when he tried to rob the Celestial Snoot Sect.\n\nGerald defeated him, not through combat, but through a single question: 'What are you fighting for?'\n\nRusty had no answer.\n\nGerald offered him a place in the Sect. 'Your strength could protect instead of destroy. Your fury could be directed at those who truly deserve it.'\n\nRusty accepted. The Crimson Bandit died that day. The Crimson Fist was born.",
+        "unlockedBy": { "playMaster": "rusty", "hours": 10 }
+      },
+      "steve_andrew_rivalry": {
+        "id": "steve_andrew_rivalry",
+        "title": "Speed vs Strategy",
+        "fragments": 8,
+        "story": "'You can't out-calculate instinct!' Andrew shouted.\n\nSteve smiled. 'Watch me.'\n\nTheir rivalry began the day they both joined the Sect. Andrew, the fastest cultivator in the Jianghu, believed speed was everything. Steve, the brilliant strategist, knew that patience won wars.\n\nFor years, they competed. Who could gather more cats? Who could boop more snoots? Who could defeat more geese?\n\nBut somewhere along the way, competition became friendship. Andrew's speed made Steve's strategies possible. Steve's patience tempered Andrew's recklessness.\n\nThey still argue. They always will. But now they argue as brothers.",
+        "unlockedBy": { "playBoth": ["steve", "andrew"], "hours": 5 }
+      },
+      "nik_mystery": {
+        "id": "nik_mystery",
+        "title": "The Shadow's Secret",
+        "fragments": 12,
+        "story": "No one knows where Nik came from.\n\nHe simply appeared one day, sitting in the Sect's shadow garden, cats gathered around him as if he had always been there.\n\nGerald asked his name. '...' was the reply.\n\nGerald asked his purpose. '...' was the reply.\n\nGerald asked if he wanted to join. Nik nodded.\n\nThe cats trusted him instantly. That was enough for Gerald.\n\nYears later, Yuelin would be the first to hear Nik speak. What he said remains between them. But she cried when he finished, and hugged him without words.\n\nSome secrets are kept not out of deception, but out of pain.",
+        "unlockedBy": { "playBoth": ["nik", "yuelin"], "hours": 5 }
+      },
+      "scott_meditation": {
+        "id": "scott_meditation",
+        "title": "The Thousand Day Meditation",
+        "fragments": 15,
+        "story": "On the first day, Scott sat. A cat jumped on his lap.\n\nOn the hundredth day, Scott sat. The cat had not moved.\n\nOn the five hundredth day, Scott sat. More cats had gathered.\n\nOn the thousandth day, Scott opened his eyes. He had not moved. He had not eaten. He had not slept.\n\nBut he had understood.\n\n'What did you learn?' Gerald asked.\n\nScott smiled. 'Patience. Stability. And that cats are very warm.'\n\nThe cat on his lap had been there the entire time. It purred contentedly, having achieved its own enlightenment: the perfect lap.",
+        "unlockedBy": { "afkHours": 100 }
+      },
+      "eighth_master_truth": {
+        "id": "eighth_master_truth",
+        "title": "The Forgotten One",
+        "fragments": 20,
+        "story": "The Celestial Snoot Sect was not founded by seven masters. It was founded by eight.\n\nThe Eighth Master walked the path before all others. Their techniques were so powerful that the heavens themselves took notice - and decided they must be erased.\n\nMemory by memory, the Eighth Master was removed from existence. Their name was forgotten. Their face was forgotten. Even their students forgot they had ever existed.\n\nBut the cats remembered.\n\nCats always remember.\n\nSomewhere in the depths of cultivation, fragments of the Eighth Master linger. Those who accumulate enough Heavenly Seals can pierce the veil and recover what was lost.\n\nThe question remains: why did the heavens fear them so?",
+        "unlockedBy": { "heavenlySeals": 100 }
+      }
+    },
+    "waifus": {
+      "mochi_warrior": {
+        "id": "mochi_warrior",
+        "title": "The Warrior's Tea",
+        "fragments": 10,
+        "story": "Few know that Mochi-chan was once a fierce warrior.\n\nIn her youth, she was called the Crimson Teacup - a deadly assassin who served death with every cup. Her tea ceremonies were feared throughout the Jianghu.\n\nBut war grew tiresome. Death grew meaningless. One day, she simply... stopped.\n\nShe opened the Celestial Teahouse and vowed to serve only joy. The deadly arts became hospitality arts. The poison knowledge became cooking knowledge.\n\nSometimes, old enemies find the Teahouse. They remember what she was. But Mochi simply smiles and offers them tea.\n\n'The past is like yesterday's leaves,' she says. 'Best to brew fresh.'",
+        "unlockedBy": { "waifuBond": "mochi", "level": 100 }
+      },
+      "luna_nightmare": {
+        "id": "luna_nightmare",
+        "title": "Why She Watches the Night",
+        "fragments": 12,
+        "story": "Luna doesn't sleep because she fears the dreams.\n\nLong ago, she was a dream walker - one who could traverse the realm of sleep and bring peace to troubled minds. It was a gift. A blessing.\n\nThen she entered the wrong dream.\n\nWhat she saw there, she has never told anyone. But she emerged changed. She could no longer dream without facing... it.\n\nSo she stays awake. She watches the night so others can sleep peacefully. She became the guardian of dreams she can no longer have.\n\nThe Moon watches over her, offering what comfort it can. And Luna watches back, grateful for its silent companionship.",
+        "unlockedBy": { "waifuBond": "luna", "level": 100 }
+      },
+      "rival_redemption": {
+        "id": "rival_redemption",
+        "title": "The Rival's Heart",
+        "fragments": 15,
+        "story": "Scarlet Shadowclaw hated the Celestial Snoot Sect.\n\nHer sect, the Crimson Claw, had been destroyed in a war she believed the Snoot Sect started. She dedicated her life to revenge, rebuilding alone, growing strong enough to challenge them.\n\nBut when she finally faced them... they offered tea.\n\nNo battle. No anger. Just tea and understanding.\n\nGerald explained the truth: the Crimson Claw was destroyed by a misunderstanding, not malice. The Snoot Sect had tried to help, not harm.\n\nScarlet's hatred crumbled. In its place grew something she never expected: belonging.\n\n'I-It's not like I wanted to join!' she insists. But she stays. And that says everything.",
+        "unlockedBy": { "waifuBond": "rival", "level": 100 }
+      }
+    },
+    "sect": {
+      "founding_tale": {
+        "id": "founding_tale",
+        "title": "The First Boop",
+        "fragments": 5,
+        "story": "Before the Celestial Snoot Sect, cultivation was about power. Immortality. Dominance.\n\nThe Snoot Scrolls changed everything.\n\nThey revealed a different path: the way of the boop. Not conquest, but connection. Not domination, but joy.\n\nMany laughed at Gerald when he founded the Sect. 'Booping cats? That's not real cultivation!'\n\nBut the cats came. The waifus came. The friends came.\n\nAnd slowly, the laughing stopped.\n\nThe Celestial Snoot Sect proved that cultivation could be about happiness. That strength could come from joy. That the greatest power is the love between a cat and their human.\n\nBoop by boop, they changed the Jianghu.",
+        "unlockedBy": { "totalBoops": 10000 }
+      },
+      "snoot_scrolls": {
+        "id": "snoot_scrolls",
+        "title": "The Snoot Scrolls",
+        "fragments": 8,
+        "story": "The Snoot Scrolls are older than anyone knows. They were ancient when Gerald found them. They were ancient when the temple was built around them. Some say they are older than the Jianghu itself.\n\nThe scrolls contain the fundamental truths of snoot cultivation:\n\n1. Every snoot must be boopable.\n2. Cats are never wrong.\n3. The Sect comes first.\n\nSimple words. Profound meaning.\n\nScholars have debated the scrolls' origin for centuries. Were they written by enlightened cats? Divine beings? The first cultivator?\n\nThe answer, perhaps, does not matter. What matters is the boop.",
+        "unlockedBy": { "cultivationRealm": "coreFormation" }
+      }
+    },
+    "world": {
+      "jianghu_history": {
+        "id": "jianghu_history",
+        "title": "The Jianghu",
+        "fragments": 6,
+        "story": "The Jianghu is not just a place. It is a way of life.\n\nCultivators wander its paths, seeking power, enlightenment, and the occasional cat. Sects rise and fall like the tide. Heroes are born and legends die.\n\nBut through it all, the Jianghu endures. It is the river that carries all things - the lake that reflects all souls.\n\nThe Celestial Snoot Sect is one story among many in this vast tapestry. But every story matters. Every boop ripples through the waters of the Jianghu.\n\nWhat story will you write?",
+        "unlockedBy": { "playtime": 36000 }
+      },
+      "goose_dimension": {
+        "id": "goose_dimension",
+        "title": "The Goose Dimension",
+        "fragments": 10,
+        "story": "Beyond reality, there is a place where the normal rules do not apply. Where chaos reigns supreme. Where everything - and we mean EVERYTHING - is geese.\n\nThe Goose Dimension.\n\nNo one knows how it was created. Perhaps it always existed. Perhaps it was born from the first Honk. Perhaps it IS the first Honk, echoing eternally through dimensions.\n\nThose who enter the Goose Dimension face trials beyond imagining. Goose trees. Goose floors. Goose sky. Goose thoughts.\n\nAt its heart sits THE PRIMORDIAL HONK - the first goose, the last goose, the eternal goose.\n\nOnly the bravest dare enter. Only the strongest survive.\n\nHONK.",
+        "unlockedBy": { "dungeon": "goose_dimension", "floor": 1 }
+      }
+    },
+    "secrets": {
+      "void_whispers": {
+        "id": "void_whispers",
+        "title": "Whispers from the Void",
+        "fragments": 15,
+        "story": "Between the spaces, in the gaps of reality, the Void whispers.\n\nMost cannot hear it. Those who can often go mad. But some... some find truth.\n\nThe Void is not nothing. It is the potential for everything. Every cat that could exist, every boop that could be booped - they all exist within the Void, waiting.\n\nThe ??? Waifu came from the Void. Or perhaps she was always there, and only now became visible. Her memories are fragmented, her existence uncertain.\n\nBut she is real. She feels joy. She feels pain. She feels connection.\n\nAnd that is enough.",
+        "unlockedBy": { "waifuBond": "void_waifu", "level": 50 }
+      },
+      "transcendence_truth": {
+        "id": "transcendence_truth",
+        "title": "Beyond the Beyond",
+        "fragments": 25,
+        "story": "What lies beyond Transcendence?\n\nThe cultivators who have reached that point speak in riddles. 'It is everything.' 'It is nothing.' 'It is the boop that boops itself.'\n\nOne thing is certain: the journey does not end. It cannot end. For as long as there are snoots, there will be boops. As long as there are cats, there will be cultivation.\n\nThe Celestial Realm awaits those who Transcend. A new beginning. A new path. A new story.\n\nBut that story... is for another time.\n\nFor now, boop the snoot. Pet the cat. Love the waifus. Fight the geese.\n\nThe journey is the destination.",
+        "unlockedBy": { "transcendences": 1 }
+      }
+    }
+  },
+  "fragmentDrops": {
+    "baseChance": 0.01,
+    "bonusFromLoreBuilding": 0.05,
+    "bonusFromGrandmother": 0.1
+  }
+}

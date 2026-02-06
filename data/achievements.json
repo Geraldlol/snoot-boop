@@ -1,0 +1,492 @@
+{
+  "categories": {
+    "booping": { "name": "Boop Mastery", "icon": "boop_icon" },
+    "cats": { "name": "Cat Collector", "icon": "cat_icon" },
+    "waifus": { "name": "Bond Master", "icon": "heart_icon" },
+    "cultivation": { "name": "Cultivation Path", "icon": "qi_icon" },
+    "dungeons": { "name": "Dungeon Delver", "icon": "sword_icon" },
+    "goose": { "name": "Goose Hunter", "icon": "goose_icon" },
+    "social": { "name": "Sect Relations", "icon": "people_icon" },
+    "secrets": { "name": "Secret Finder", "icon": "mystery_icon" },
+    "meta": { "name": "Meta Achievements", "icon": "star_icon" }
+  },
+  "achievements": {
+    "first_boop": {
+      "id": "first_boop",
+      "name": "First Boop",
+      "description": "Boop your first snoot",
+      "category": "booping",
+      "condition": { "totalBoops": 1 },
+      "reward": { "bp": 100 },
+      "hidden": false
+    },
+    "hundred_boops": {
+      "id": "hundred_boops",
+      "name": "Century of Snoots",
+      "description": "Boop 100 snoots",
+      "category": "booping",
+      "condition": { "totalBoops": 100 },
+      "reward": { "bp": 500 },
+      "hidden": false
+    },
+    "thousand_boops": {
+      "id": "thousand_boops",
+      "name": "The Thousand Boop Barrage",
+      "description": "Boop 1,000 snoots",
+      "category": "booping",
+      "condition": { "totalBoops": 1000 },
+      "reward": { "bp": 2000, "title": "Boop Apprentice" },
+      "hidden": false
+    },
+    "ten_thousand_boops": {
+      "id": "ten_thousand_boops",
+      "name": "Ten Thousand Finger Strike",
+      "description": "Boop 10,000 snoots",
+      "category": "booping",
+      "condition": { "totalBoops": 10000 },
+      "reward": { "jadeCatnip": 50, "title": "Boop Master" },
+      "hidden": false
+    },
+    "million_boops": {
+      "id": "million_boops",
+      "name": "Million Snoot Symphony",
+      "description": "Boop 1,000,000 snoots",
+      "category": "booping",
+      "condition": { "totalBoops": 1000000 },
+      "reward": { "jadeCatnip": 500, "title": "Boop Legend" },
+      "hidden": false
+    },
+    "combo_50": {
+      "id": "combo_50",
+      "name": "Combo Cat",
+      "description": "Reach a 50 hit combo",
+      "category": "booping",
+      "condition": { "maxCombo": 50 },
+      "reward": { "bp": 1000 },
+      "hidden": false
+    },
+    "combo_100": {
+      "id": "combo_100",
+      "name": "Unstoppable",
+      "description": "Reach a 100 hit combo",
+      "category": "booping",
+      "condition": { "maxCombo": 100 },
+      "reward": { "jadeCatnip": 25, "title": "Combo Master" },
+      "hidden": false
+    },
+    "first_crit": {
+      "id": "first_crit",
+      "name": "Critical Hit!",
+      "description": "Land your first critical boop",
+      "category": "booping",
+      "condition": { "criticalBoops": 1 },
+      "reward": { "bp": 200 },
+      "hidden": false
+    },
+    "crit_master": {
+      "id": "crit_master",
+      "name": "Critical Mass",
+      "description": "Land 1,000 critical boops",
+      "category": "booping",
+      "condition": { "criticalBoops": 1000 },
+      "reward": { "jadeCatnip": 100 },
+      "hidden": false
+    },
+    "first_cat": {
+      "id": "first_cat",
+      "name": "First Friend",
+      "description": "Recruit your first cat",
+      "category": "cats",
+      "condition": { "catsRecruited": 1 },
+      "reward": { "bp": 500 },
+      "hidden": false
+    },
+    "ten_cats": {
+      "id": "ten_cats",
+      "name": "Growing Family",
+      "description": "Have 10 cats in your sanctuary",
+      "category": "cats",
+      "condition": { "catCount": 10 },
+      "reward": { "jadeCatnip": 20 },
+      "hidden": false
+    },
+    "fifty_cats": {
+      "id": "fifty_cats",
+      "name": "Cat Colony",
+      "description": "Have 50 cats in your sanctuary",
+      "category": "cats",
+      "condition": { "catCount": 50 },
+      "reward": { "jadeCatnip": 100, "title": "Cat Herder" },
+      "hidden": false
+    },
+    "hundred_cats": {
+      "id": "hundred_cats",
+      "name": "Hundred Paw Army",
+      "description": "Have 100 cats in your sanctuary",
+      "category": "cats",
+      "condition": { "catCount": 100 },
+      "reward": { "jadeCatnip": 500, "cat": "army_commander_cat" },
+      "hidden": false
+    },
+    "first_legendary": {
+      "id": "first_legendary",
+      "name": "Legendary Discovery",
+      "description": "Obtain your first legendary cat",
+      "category": "cats",
+      "condition": { "legendaryCats": 1 },
+      "reward": { "jadeCatnip": 200 },
+      "hidden": false
+    },
+    "ceiling_cat_found": {
+      "id": "ceiling_cat_found",
+      "name": "Eyes of Heaven",
+      "description": "Obtain Ceiling Cat, the All-Seeing",
+      "category": "cats",
+      "condition": { "hasCat": "ceiling_god" },
+      "reward": { "title": "Ceiling Watcher" },
+      "hidden": true
+    },
+    "longcat_found": {
+      "id": "longcat_found",
+      "name": "Infinite Patience",
+      "description": "Obtain Longcat, the Infinite",
+      "category": "cats",
+      "condition": { "hasCat": "longcat" },
+      "reward": { "title": "Stretched Beyond Limits" },
+      "hidden": true
+    },
+    "basement_cat_found": {
+      "id": "basement_cat_found",
+      "name": "Depths of Darkness",
+      "description": "Obtain Basement Cat, the Lurker",
+      "category": "cats",
+      "condition": { "hasCat": "basement_cat" },
+      "reward": { "title": "Basement Dweller" },
+      "hidden": true
+    },
+    "first_waifu": {
+      "id": "first_waifu",
+      "name": "First Meeting",
+      "description": "Unlock your first waifu",
+      "category": "waifus",
+      "condition": { "waifusUnlocked": 1 },
+      "reward": { "waifuTokens": 10 },
+      "hidden": false
+    },
+    "all_waifus": {
+      "id": "all_waifus",
+      "name": "Full Roster",
+      "description": "Unlock all waifus",
+      "category": "waifus",
+      "condition": { "waifusUnlocked": 12 },
+      "reward": { "jadeCatnip": 500, "title": "Waifu Collector" },
+      "hidden": false
+    },
+    "max_bond": {
+      "id": "max_bond",
+      "name": "True Love",
+      "description": "Reach max bond with any waifu",
+      "category": "waifus",
+      "condition": { "maxBondWaifus": 1 },
+      "reward": { "jadeCatnip": 100 },
+      "hidden": false
+    },
+    "all_max_bonds": {
+      "id": "all_max_bonds",
+      "name": "Heart of the Harem",
+      "description": "Reach max bond with all waifus",
+      "category": "waifus",
+      "condition": { "allWaifusMaxBond": true },
+      "reward": { "jadeCatnip": 1000, "title": "Supreme Lover", "cosmetic": "love_aura" },
+      "hidden": false
+    },
+    "waifu_harmony": {
+      "id": "waifu_harmony",
+      "name": "Perfect Harmony",
+      "description": "Maintain harmony status for 24 hours",
+      "category": "waifus",
+      "condition": { "harmonyDuration": 86400 },
+      "reward": { "waifuTokens": 100 },
+      "hidden": false
+    },
+    "qi_condensation": {
+      "id": "qi_condensation",
+      "name": "Sensing the Qi",
+      "description": "Reach Qi Condensation realm",
+      "category": "cultivation",
+      "condition": { "realm": "qiCondensation" },
+      "reward": { "bp": 5000 },
+      "hidden": false
+    },
+    "foundation_establishment": {
+      "id": "foundation_establishment",
+      "name": "Foundation Laid",
+      "description": "Reach Foundation Establishment realm",
+      "category": "cultivation",
+      "condition": { "realm": "foundationEstablishment" },
+      "reward": { "jadeCatnip": 50 },
+      "hidden": false
+    },
+    "core_formation": {
+      "id": "core_formation",
+      "name": "Golden Core Formed",
+      "description": "Reach Core Formation realm",
+      "category": "cultivation",
+      "condition": { "realm": "coreFormation" },
+      "reward": { "jadeCatnip": 200, "title": "Core Cultivator" },
+      "hidden": false
+    },
+    "nascent_soul": {
+      "id": "nascent_soul",
+      "name": "Soul Awakened",
+      "description": "Reach Nascent Soul realm",
+      "category": "cultivation",
+      "condition": { "realm": "nascentSoul" },
+      "reward": { "jadeCatnip": 500 },
+      "hidden": false
+    },
+    "true_immortal": {
+      "id": "true_immortal",
+      "name": "True Immortal",
+      "description": "Reach True Immortal realm",
+      "category": "cultivation",
+      "condition": { "realm": "trueImmortal" },
+      "reward": { "jadeCatnip": 2000, "title": "Immortal One" },
+      "hidden": false
+    },
+    "heavenly_sovereign": {
+      "id": "heavenly_sovereign",
+      "name": "Heavenly Sovereign",
+      "description": "Reach Heavenly Sovereign realm",
+      "category": "cultivation",
+      "condition": { "realm": "heavenlySovereign" },
+      "reward": { "jadeCatnip": 10000, "title": "Heavenly Sovereign" },
+      "hidden": false
+    },
+    "first_ascension": {
+      "id": "first_ascension",
+      "name": "First Ascension",
+      "description": "Complete your first Ascension",
+      "category": "cultivation",
+      "condition": { "ascensions": 1 },
+      "reward": { "heavenlySeals": 5 },
+      "hidden": false
+    },
+    "first_reincarnation": {
+      "id": "first_reincarnation",
+      "name": "Cycle of Rebirth",
+      "description": "Complete your first Reincarnation",
+      "category": "cultivation",
+      "condition": { "reincarnations": 1 },
+      "reward": { "karmaPoints": 50 },
+      "hidden": false
+    },
+    "first_transcendence": {
+      "id": "first_transcendence",
+      "name": "Beyond Mortality",
+      "description": "Achieve Transcendence",
+      "category": "cultivation",
+      "condition": { "transcendences": 1 },
+      "reward": { "transcendencePoints": 1, "title": "Transcendent Being" },
+      "hidden": false
+    },
+    "pagoda_floor_10": {
+      "id": "pagoda_floor_10",
+      "name": "Pagoda Novice",
+      "description": "Reach floor 10 of the Infinite Pagoda",
+      "category": "dungeons",
+      "condition": { "pagodaHighestFloor": 10 },
+      "reward": { "spiritStones": 100 },
+      "hidden": false
+    },
+    "pagoda_floor_50": {
+      "id": "pagoda_floor_50",
+      "name": "Pagoda Climber",
+      "description": "Reach floor 50 of the Infinite Pagoda",
+      "category": "dungeons",
+      "condition": { "pagodaHighestFloor": 50 },
+      "reward": { "jadeCatnip": 200, "title": "Pagoda Climber" },
+      "hidden": false
+    },
+    "pagoda_floor_100": {
+      "id": "pagoda_floor_100",
+      "name": "Pagoda Master",
+      "description": "Reach floor 100 of the Infinite Pagoda",
+      "category": "dungeons",
+      "condition": { "pagodaHighestFloor": 100 },
+      "reward": { "jadeCatnip": 1000, "title": "Pagoda Master", "relic": "snoot_prime" },
+      "hidden": false
+    },
+    "bamboo_survivor": {
+      "id": "bamboo_survivor",
+      "name": "Bamboo Survivor",
+      "description": "Survive 15 minutes in the Bamboo Forest",
+      "category": "dungeons",
+      "condition": { "bambooSurvivalTime": 900 },
+      "reward": { "cat": "bamboo_guardian" },
+      "hidden": false
+    },
+    "bamboo_master": {
+      "id": "bamboo_master",
+      "name": "Bamboo Master",
+      "description": "Survive 30 minutes in the Bamboo Forest",
+      "category": "dungeons",
+      "condition": { "bambooSurvivalTime": 1800 },
+      "reward": { "title": "Bamboo Master", "jadeCatnip": 500 },
+      "hidden": false
+    },
+    "tournament_winner": {
+      "id": "tournament_winner",
+      "name": "Tournament Champion",
+      "description": "Win the Celestial Tournament",
+      "category": "dungeons",
+      "condition": { "tournamentWins": 1 },
+      "reward": { "title": "Tournament Champion", "cosmetic": "champion_crown" },
+      "hidden": false
+    },
+    "first_honk": {
+      "id": "first_honk",
+      "name": "Honk.",
+      "description": "Boop your first Goose",
+      "category": "goose",
+      "condition": { "gooseBoops": 1 },
+      "reward": { "gooseFeathers": 10 },
+      "hidden": false
+    },
+    "peace_never": {
+      "id": "peace_never",
+      "name": "Peace Was Never An Option",
+      "description": "Boop 100 Geese",
+      "category": "goose",
+      "condition": { "gooseBoops": 100 },
+      "reward": { "gooseFeathers": 100, "title": "Goose Hunter" },
+      "hidden": false
+    },
+    "negotiator": {
+      "id": "negotiator",
+      "name": "The Negotiator",
+      "description": "Boop a RAGE mode Goose",
+      "category": "goose",
+      "condition": { "rageGooseBooped": true },
+      "reward": { "jadeCatnip": 50 },
+      "hidden": false
+    },
+    "cobra_slayer": {
+      "id": "cobra_slayer",
+      "name": "Cobra Chicken Slayer",
+      "description": "Defeat the Cobra Chicken",
+      "category": "goose",
+      "condition": { "cobraChickenDefeated": true },
+      "reward": { "title": "Cobra Slayer", "unlock": "goose_ally" },
+      "hidden": false
+    },
+    "goose_whisperer": {
+      "id": "goose_whisperer",
+      "name": "Goose Whisperer",
+      "description": "Recruit your first Goose Ally",
+      "category": "goose",
+      "condition": { "gooseAlly": true },
+      "reward": { "title": "Goose Whisperer" },
+      "hidden": false
+    },
+    "golden_goose_crit": {
+      "id": "golden_goose_crit",
+      "name": "HJONK",
+      "description": "Critical boop a Golden Goose",
+      "category": "goose",
+      "condition": { "goldenGooseCrit": true },
+      "reward": { "goldenFeathers": 10, "title": "Golden Touch" },
+      "hidden": true
+    },
+    "primordial_defeated": {
+      "id": "primordial_defeated",
+      "name": "The Eternal Honk Silenced",
+      "description": "Defeat THE PRIMORDIAL HONK",
+      "category": "goose",
+      "condition": { "primordialHonkDefeated": true },
+      "reward": { "title": "Goose Dimension Survivor", "cat": "goose_touched_cat" },
+      "hidden": true
+    },
+    "sect_war_winner": {
+      "id": "sect_war_winner",
+      "name": "Supreme Sect",
+      "description": "Win a weekly Sect War",
+      "category": "social",
+      "condition": { "sectWarWins": 1 },
+      "reward": { "sectReputation": 500, "title": "Supreme Booper" },
+      "hidden": false
+    },
+    "nice": {
+      "id": "nice",
+      "name": "Nice.",
+      "description": "Have exactly 69,420 BP",
+      "category": "secrets",
+      "condition": { "bpExact": 69420 },
+      "reward": { "title": "Nice" },
+      "hidden": true
+    },
+    "nyan_easter_egg": {
+      "id": "nyan_easter_egg",
+      "name": "Nyan~",
+      "description": "Name a cat 'Nyan'",
+      "category": "secrets",
+      "condition": { "catNamedNyan": true },
+      "reward": { "cat": "nyan_star" },
+      "hidden": true
+    },
+    "moon_secret": {
+      "id": "moon_secret",
+      "name": "Moon Gazer",
+      "description": "Click the moon 100 times",
+      "category": "secrets",
+      "condition": { "moonClicks": 100 },
+      "reward": { "cosmetic": "moonbeam_aura" },
+      "hidden": true
+    },
+    "afk_cat": {
+      "id": "afk_cat",
+      "name": "The Patient One",
+      "description": "Don't boop for 10 minutes",
+      "category": "secrets",
+      "condition": { "noBoopMinutes": 10 },
+      "reward": { "cat": "mystery_cat" },
+      "hidden": true
+    },
+    "eighth_master_unlocked": {
+      "id": "eighth_master_unlocked",
+      "name": "The Forgotten Remembered",
+      "description": "Unlock the Eighth Master",
+      "category": "secrets",
+      "condition": { "eighthMasterUnlocked": true },
+      "reward": { "title": "Memory Keeper" },
+      "hidden": true
+    },
+    "all_achievements": {
+      "id": "all_achievements",
+      "name": "Completionist",
+      "description": "Unlock all other achievements",
+      "category": "meta",
+      "condition": { "achievementCount": 54 },
+      "reward": { "title": "The Completionist", "cosmetic": "golden_halo" },
+      "hidden": false
+    },
+    "musical_master": {
+      "id": "musical_master",
+      "name": "Musical Master",
+      "description": "Hit 100 rhythm boops perfectly",
+      "category": "booping",
+      "condition": { "perfectRhythmBoops": 100 },
+      "reward": { "cat": "keyboard_cat" },
+      "hidden": true
+    },
+    "perpetual_frown": {
+      "id": "perpetual_frown",
+      "name": "Perpetual Frown",
+      "description": "Have 0 happiness on 10 cats simultaneously",
+      "category": "cats",
+      "condition": { "unhappyCats": 10 },
+      "reward": { "cat": "grumpy_sage" },
+      "hidden": true
+    }
+  }
+}

@@ -1,0 +1,501 @@
+{
+  "slots": {
+    "weapon": { "name": "Weapon", "primary": true },
+    "armor": { "name": "Armor", "primary": true },
+    "hat": { "name": "Hat", "primary": false },
+    "accessory": { "name": "Accessory", "primary": false },
+    "mount": { "name": "Mount", "primary": false, "unlockRealm": "coreFormation" },
+    "companion": { "name": "Companion", "primary": false, "unlockRealm": "nascentSoul" }
+  },
+  "rarities": {
+    "common": { "color": "#FFFFFF", "statMult": 1.0, "maxSockets": 0 },
+    "uncommon": { "color": "#00FF00", "statMult": 1.25, "maxSockets": 1 },
+    "rare": { "color": "#0066FF", "statMult": 1.5, "maxSockets": 2 },
+    "epic": { "color": "#9900FF", "statMult": 2.0, "maxSockets": 3 },
+    "legendary": { "color": "#FF9900", "statMult": 3.0, "maxSockets": 4 },
+    "mythic": { "color": "#FF0000", "statMult": 5.0, "maxSockets": 6 }
+  },
+  "cultivation": {
+    "maxLevel": 100,
+    "xpPerFloor": "floorNum * 10",
+    "breakpoints": {
+      "10": { "stats": 1.2, "visualUpgrade": true },
+      "25": { "stats": 1.5, "newPassive": true },
+      "50": { "stats": 2.0, "visualUpgrade": true, "evolveOption": true },
+      "75": { "stats": 3.0, "newPassive": true },
+      "100": { "stats": 5.0, "mythicTransform": true }
+    }
+  },
+  "spiritStones": {
+    "attack_stone": { "stats": { "attack": 10 }, "stackable": true, "rarity": "common" },
+    "defense_stone": { "stats": { "defense": 10 }, "stackable": true, "rarity": "common" },
+    "hp_stone": { "stats": { "hp": 50 }, "stackable": true, "rarity": "common" },
+    "crit_stone": { "stats": { "critChance": 0.02 }, "stackable": false, "rarity": "rare" },
+    "crit_damage_stone": { "stats": { "critDamage": 0.1 }, "stackable": false, "rarity": "rare" },
+    "speed_stone": { "stats": { "attackSpeed": 0.05 }, "stackable": true, "rarity": "uncommon" },
+    "void_stone": { "stats": { "voidDamage": 0.1 }, "rarity": "legendary" },
+    "chaos_stone": { "stats": { "randomBonus": true }, "rarity": "mythic" }
+  },
+  "equipment": {
+    "fish_blade": {
+      "id": "fish_blade",
+      "name": "Ancient Fish Blade",
+      "slot": "weapon",
+      "rarity": "rare",
+      "stats": { "attack": 25, "critChance": 0.05 },
+      "passive": {
+        "name": "Delicious Scent",
+        "effect": "aggroBonus",
+        "value": 0.1
+      },
+      "lore": "Forged from a legendary tuna that defied the heavens.",
+      "source": "Floor 15+ treasure rooms"
+    },
+    "laser_claw": {
+      "id": "laser_claw",
+      "name": "Laser-Guided Claws",
+      "slot": "weapon",
+      "rarity": "epic",
+      "stats": { "attack": 40, "accuracy": 20 },
+      "passive": {
+        "name": "Lock On",
+        "effect": "cantMiss",
+        "value": true
+      },
+      "setId": "tech_cat",
+      "lore": "The red dot was inside you all along.",
+      "source": "Floor 30+ elite enemies"
+    },
+    "cardboard_sword": {
+      "id": "cardboard_sword",
+      "name": "Legendary Cardboard Sword",
+      "slot": "weapon",
+      "rarity": "legendary",
+      "stats": { "attack": 100, "critChance": 0.25 },
+      "passive": {
+        "name": "Box Synergy",
+        "effect": "conditionalAttack",
+        "condition": "inBox",
+        "multiplier": 2.0
+      },
+      "setId": "box_knight",
+      "lore": "The box is mightier than the sword. But what if... both?",
+      "source": "Crafted from blueprint (Floor 50+ boss)"
+    },
+    "yarn_ball_weapon": {
+      "id": "yarn_ball_weapon",
+      "name": "Infinite Yarn Ball",
+      "slot": "weapon",
+      "rarity": "epic",
+      "stats": { "attack": 35, "attackSpeed": 0.15 },
+      "passive": {
+        "name": "Entangle",
+        "effect": "slowOnHit",
+        "value": 0.2
+      },
+      "lore": "It never runs out. Never.",
+      "source": "Floor 25+ treasure rooms"
+    },
+    "ancient_fang": {
+      "id": "ancient_fang",
+      "name": "Ancient Fang of the First Cat",
+      "slot": "weapon",
+      "rarity": "mythic",
+      "stats": { "attack": 200, "critChance": 0.3, "critDamage": 0.5 },
+      "passive": {
+        "name": "Primordial Bite",
+        "effect": "trueDamage",
+        "value": 0.1
+      },
+      "lore": "The tooth of the first cat to ever boop a snoot.",
+      "source": "Floor 100 boss",
+      "exclusive": true
+    },
+    "cardboard_helm": {
+      "id": "cardboard_helm",
+      "name": "Cardboard Helm",
+      "slot": "hat",
+      "rarity": "rare",
+      "stats": { "defense": 15, "hp": 50 },
+      "setId": "box_knight",
+      "lore": "Protection AND style."
+    },
+    "cardboard_chest": {
+      "id": "cardboard_chest",
+      "name": "Cardboard Chestplate",
+      "slot": "armor",
+      "rarity": "rare",
+      "stats": { "defense": 30, "hp": 100 },
+      "setId": "box_knight",
+      "passive": {
+        "name": "Comfy",
+        "effect": "hpRegen",
+        "value": 5
+      }
+    },
+    "cardboard_paws": {
+      "id": "cardboard_paws",
+      "name": "Cardboard Paw Guards",
+      "slot": "accessory",
+      "rarity": "rare",
+      "stats": { "defense": 10, "attack": 10 },
+      "setId": "box_knight"
+    },
+    "void_cloak": {
+      "id": "void_cloak",
+      "name": "Cloak of the Void",
+      "slot": "armor",
+      "rarity": "epic",
+      "stats": { "defense": 20, "dodge": 0.3 },
+      "setId": "void_stalker",
+      "passive": {
+        "name": "Phase",
+        "effect": "firstStrikeDamageBonus",
+        "value": 3.0
+      }
+    },
+    "shadow_hood": {
+      "id": "shadow_hood",
+      "name": "Shadow Hood",
+      "slot": "hat",
+      "rarity": "epic",
+      "stats": { "dodge": 0.15, "critChance": 0.1 },
+      "setId": "void_stalker"
+    },
+    "silent_paws": {
+      "id": "silent_paws",
+      "name": "Silent Paws",
+      "slot": "accessory",
+      "rarity": "epic",
+      "stats": { "attackSpeed": 0.2, "dodge": 0.1 },
+      "setId": "void_stalker"
+    },
+    "ghost_tail": {
+      "id": "ghost_tail",
+      "name": "Ghost Tail Wrap",
+      "slot": "accessory",
+      "rarity": "epic",
+      "stats": { "dodge": 0.2, "critDamage": 0.2 },
+      "setId": "void_stalker"
+    },
+    "tiny_wizard_hat": {
+      "id": "tiny_wizard_hat",
+      "name": "Tiny Wizard Hat",
+      "slot": "hat",
+      "rarity": "uncommon",
+      "stats": { "wisdom": 15, "critDamage": 0.1 },
+      "passive": {
+        "name": "Arcane Floof",
+        "effect": "abilityDamageBonus",
+        "value": 0.15
+      }
+    },
+    "battle_helmet": {
+      "id": "battle_helmet",
+      "name": "Battle Helmet of the Ancients",
+      "slot": "hat",
+      "rarity": "legendary",
+      "stats": { "defense": 50, "hp": 200, "attack": 30 },
+      "passive": {
+        "name": "Unbreakable",
+        "effect": "damageReduction",
+        "value": 0.2
+      },
+      "lore": "Worn by the legendary Cat General Meowcius."
+    },
+    "battery_collar": {
+      "id": "battery_collar",
+      "name": "Battery Collar",
+      "slot": "accessory",
+      "rarity": "epic",
+      "stats": { "attackSpeed": 0.25, "critChance": 0.1 },
+      "setId": "tech_cat"
+    },
+    "rocket_boots": {
+      "id": "rocket_boots",
+      "name": "Rocket Boots",
+      "slot": "accessory",
+      "rarity": "epic",
+      "stats": { "dodge": 0.25, "attackSpeed": 0.15 },
+      "setId": "tech_cat"
+    },
+    "antenna_hat": {
+      "id": "antenna_hat",
+      "name": "Antenna Hat",
+      "slot": "hat",
+      "rarity": "epic",
+      "stats": { "critChance": 0.15, "critDamage": 0.25 },
+      "setId": "tech_cat"
+    },
+    "anti_goose_blade": {
+      "id": "anti_goose_blade",
+      "name": "Anti-Goose Blade",
+      "slot": "weapon",
+      "rarity": "rare",
+      "stats": { "attack": 30 },
+      "passive": {
+        "name": "Goose Bane",
+        "effect": "gooseDamage",
+        "value": 2.0
+      },
+      "setId": "goose_slayer"
+    },
+    "honk_proof_armor": {
+      "id": "honk_proof_armor",
+      "name": "Honk-Proof Armor",
+      "slot": "armor",
+      "rarity": "rare",
+      "stats": { "defense": 40, "hp": 150 },
+      "passive": {
+        "name": "Honk Resistance",
+        "effect": "gooseResistance",
+        "value": 0.5
+      },
+      "setId": "goose_slayer"
+    },
+    "goose_tracker": {
+      "id": "goose_tracker",
+      "name": "Goose Tracker Visor",
+      "slot": "hat",
+      "rarity": "rare",
+      "stats": { "accuracy": 30 },
+      "passive": {
+        "name": "Track Goose",
+        "effect": "gooseDetection",
+        "value": true
+      },
+      "setId": "goose_slayer"
+    },
+    "heart_pendant": {
+      "id": "heart_pendant",
+      "name": "Heart Pendant",
+      "slot": "accessory",
+      "rarity": "epic",
+      "stats": { "hp": 100 },
+      "passive": {
+        "name": "Bond Power",
+        "effect": "bondGain",
+        "value": 1.1
+      },
+      "setId": "waifu_blessed"
+    },
+    "bond_ring": {
+      "id": "bond_ring",
+      "name": "Bond Ring",
+      "slot": "accessory",
+      "rarity": "epic",
+      "stats": { "attack": 20, "defense": 20 },
+      "passive": {
+        "name": "Harmony",
+        "effect": "waifuSkillBonus",
+        "value": 0.25
+      },
+      "setId": "waifu_blessed"
+    },
+    "devotion_cloak": {
+      "id": "devotion_cloak",
+      "name": "Cloak of Devotion",
+      "slot": "armor",
+      "rarity": "epic",
+      "stats": { "defense": 35, "hp": 150 },
+      "setId": "waifu_blessed"
+    },
+    "blessed_paws": {
+      "id": "blessed_paws",
+      "name": "Blessed Paw Wraps",
+      "slot": "accessory",
+      "rarity": "epic",
+      "stats": { "attack": 30 },
+      "passive": {
+        "name": "Divine Touch",
+        "effect": "waifuPresenceBonus",
+        "value": 1.2
+      },
+      "setId": "waifu_blessed"
+    },
+    "meditation_mat": {
+      "id": "meditation_mat",
+      "name": "Eternal Meditation Mat",
+      "slot": "accessory",
+      "rarity": "rare",
+      "stats": { "hp": 75 },
+      "passive": {
+        "name": "Deep Rest",
+        "effect": "afkEfficiency",
+        "value": 1.25
+      },
+      "setId": "afk_master"
+    },
+    "auto_boop_gloves": {
+      "id": "auto_boop_gloves",
+      "name": "Auto-Boop Gloves",
+      "slot": "accessory",
+      "rarity": "epic",
+      "stats": { "attackSpeed": 0.1 },
+      "passive": {
+        "name": "Auto-Boop",
+        "effect": "passiveBoops",
+        "value": 1
+      },
+      "setId": "afk_master"
+    },
+    "time_dilation_hat": {
+      "id": "time_dilation_hat",
+      "name": "Time Dilation Hat",
+      "slot": "hat",
+      "rarity": "legendary",
+      "stats": { "wisdom": 50 },
+      "passive": {
+        "name": "Time Warp",
+        "effect": "afkTimeBonus",
+        "value": 1.5
+      },
+      "setId": "afk_master"
+    },
+    "seal_of_heavens": {
+      "id": "seal_of_heavens",
+      "name": "Seal of the Heavens",
+      "slot": "accessory",
+      "rarity": "legendary",
+      "stats": { "attack": 50, "defense": 50, "hp": 200 },
+      "passive": {
+        "name": "Heavenly Blessing",
+        "effect": "heavenlySealGain",
+        "value": 1.1
+      },
+      "setId": "prestige_legacy",
+      "source": "Ascension reward"
+    },
+    "reincarnation_band": {
+      "id": "reincarnation_band",
+      "name": "Reincarnation Band",
+      "slot": "accessory",
+      "rarity": "legendary",
+      "stats": { "hp": 300 },
+      "passive": {
+        "name": "Past Lives",
+        "effect": "karmaGain",
+        "value": 1.15
+      },
+      "setId": "prestige_legacy",
+      "source": "Reincarnation reward"
+    },
+    "karma_cloak": {
+      "id": "karma_cloak",
+      "name": "Karma Cloak",
+      "slot": "armor",
+      "rarity": "legendary",
+      "stats": { "defense": 60, "dodge": 0.1 },
+      "passive": {
+        "name": "Karmic Balance",
+        "effect": "deathDefiance",
+        "value": 1
+      },
+      "setId": "prestige_legacy",
+      "source": "Reincarnation shop"
+    },
+    "ceiling_eye": {
+      "id": "ceiling_eye",
+      "name": "Ceiling Cat's All-Seeing Eye",
+      "slot": "hat",
+      "rarity": "mythic",
+      "exclusiveTo": "ceiling_god",
+      "stats": { "wisdom": 100, "critChance": 0.5 },
+      "passive": {
+        "name": "Omniscience",
+        "effect": "revealWeaknesses",
+        "value": true
+      },
+      "ultimate": {
+        "name": "JUDGEMENT FROM ABOVE",
+        "effect": "instantKillBelow",
+        "threshold": 0.3
+      },
+      "lore": "The eye that sees all snoots."
+    }
+  },
+  "sets": {
+    "box_knight": {
+      "name": "Box Knight Set",
+      "pieces": ["cardboard_helm", "cardboard_chest", "cardboard_paws", "cardboard_sword"],
+      "bonuses": {
+        "2": { "defense": 0.2, "description": "+20% defense" },
+        "3": { "effect": "immuneFirstHit", "description": "Immune to first hit each room" },
+        "4": { "effect": "megaBoxTransform", "description": "Transform into MEGA BOX - taunt all enemies for 5 seconds" }
+      }
+    },
+    "void_stalker": {
+      "name": "Void Stalker Set",
+      "pieces": ["shadow_hood", "void_cloak", "silent_paws", "ghost_tail"],
+      "bonuses": {
+        "2": { "dodge": 0.3, "description": "+30% dodge" },
+        "3": { "effect": "stealthStrike", "multiplier": 3.0, "description": "First attack from stealth deals 3x damage" },
+        "4": { "effect": "phaseShift", "uses": 1, "description": "Can phase through one lethal attack per floor" }
+      }
+    },
+    "tech_cat": {
+      "name": "Tech Cat Set",
+      "pieces": ["laser_claw", "battery_collar", "rocket_boots", "antenna_hat"],
+      "bonuses": {
+        "2": { "critDamage": 0.15, "description": "+15% crit damage" },
+        "3": { "effect": "overcharge", "description": "Crits have 25% chance to crit again" },
+        "4": { "effect": "orbitalStrike", "cooldown": 60, "description": "Every 60s, call down an orbital laser strike" }
+      }
+    },
+    "goose_slayer": {
+      "name": "Goose Slayer Set",
+      "pieces": ["anti_goose_blade", "honk_proof_armor", "goose_tracker"],
+      "bonuses": {
+        "2": { "gooseDamage": 1.5, "description": "+50% damage to geese" },
+        "3": { "gooseSpawnWarning": true, "gooseRewards": 1.5, "description": "Goose spawn warnings + 50% better rewards" }
+      }
+    },
+    "waifu_blessed": {
+      "name": "Waifu Blessed Set",
+      "pieces": ["heart_pendant", "bond_ring", "devotion_cloak", "blessed_paws"],
+      "bonuses": {
+        "2": { "bondGain": 1.25, "description": "+25% bond gain" },
+        "4": { "waifuSkillCooldown": 0.5, "harmonyCost": 0, "description": "50% waifu skill cooldown, no harmony cost" }
+      }
+    },
+    "afk_master": {
+      "name": "AFK Master Set",
+      "pieces": ["meditation_mat", "auto_boop_gloves", "time_dilation_hat"],
+      "bonuses": {
+        "2": { "afkEfficiency": 1.5, "description": "+50% AFK efficiency" },
+        "3": { "afkCap": 48, "dreamRealmAuto": true, "description": "48h AFK cap, auto-run Dream Realm" }
+      }
+    },
+    "prestige_legacy": {
+      "name": "Prestige Legacy Set",
+      "pieces": ["seal_of_heavens", "reincarnation_band", "karma_cloak"],
+      "bonuses": {
+        "2": { "heavenlySealGain": 1.25, "description": "+25% Heavenly Seal gain" },
+        "3": { "startingBonus": "random_legendary_cat", "description": "Start runs with a random legendary cat" }
+      },
+      "obtainedFrom": "prestige_only"
+    }
+  },
+  "weaponEvolutions": {
+    "laser_pointer": {
+      "requires": "battery_pack",
+      "maxLevel": 100,
+      "result": "orbital_laser_array"
+    },
+    "fish_blade": {
+      "requires": "chef_hat",
+      "maxLevel": 100,
+      "result": "sashimi_slasher"
+    },
+    "yarn_ball_weapon": {
+      "requires": "caffeine_pills",
+      "maxLevel": 100,
+      "result": "infinite_yarn_dimension"
+    },
+    "cardboard_sword": {
+      "requires": "duct_tape",
+      "maxLevel": 100,
+      "result": "mega_cardboard_mech"
+    }
+  }
+}

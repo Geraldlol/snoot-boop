@@ -1,0 +1,820 @@
+/* ===================================
+   8-BIT STYLES
+   Pixel Art Utilities & Retro Effects
+   "The ancient ways of the pixel masters"
+   =================================== */
+
+/* --- Import Pixel Font --- */
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+/* ===================================
+   PIXEL ART RENDERING
+   Crisp pixel-perfect images
+   =================================== */
+
+.pixel-art {
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  image-rendering: -moz-crisp-edges;
+  -ms-interpolation-mode: nearest-neighbor;
+}
+
+/* Smoothed variant for certain uses */
+.pixel-art-smooth {
+  image-rendering: auto;
+}
+
+/* ===================================
+   PIXEL BORDERS
+   Chunky 8-bit style borders
+   =================================== */
+
+.pixel-border {
+  border-style: solid;
+  border-width: 4px;
+  border-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12'%3E%3Crect fill='%2350C878' x='0' y='0' width='4' height='4'/%3E%3Crect fill='%233D9970' x='4' y='0' width='4' height='4'/%3E%3Crect fill='%2350C878' x='8' y='0' width='4' height='4'/%3E%3Crect fill='%233D9970' x='0' y='4' width='4' height='4'/%3E%3Crect fill='%2350C878' x='4' y='4' width='4' height='4'/%3E%3Crect fill='%233D9970' x='8' y='4' width='4' height='4'/%3E%3Crect fill='%2350C878' x='0' y='8' width='4' height='4'/%3E%3Crect fill='%233D9970' x='4' y='8' width='4' height='4'/%3E%3Crect fill='%2350C878' x='8' y='8' width='4' height='4'/%3E%3C/svg%3E") 4 repeat;
+}
+
+/* Simple pixel border without image */
+.pixel-border-simple {
+  border: 4px solid;
+  border-color:
+    var(--jade-light)
+    var(--jade-dark)
+    var(--jade-dark)
+    var(--jade-light);
+  box-shadow:
+    inset -2px -2px 0 var(--jade-dark),
+    inset 2px 2px 0 var(--jade-light);
+}
+
+/* Raised pixel border (3D effect) */
+.pixel-border-raised {
+  border: 4px solid;
+  border-color:
+    var(--jade-light)
+    var(--jade-dark)
+    var(--jade-dark)
+    var(--jade-light);
+  box-shadow:
+    4px 4px 0 var(--jade-dark),
+    -1px -1px 0 rgba(255, 255, 255, 0.2) inset,
+    1px 1px 0 rgba(0, 0, 0, 0.2) inset;
+}
+
+/* Inset pixel border (pressed effect) */
+.pixel-border-inset {
+  border: 4px solid;
+  border-color:
+    var(--jade-dark)
+    var(--jade-light)
+    var(--jade-light)
+    var(--jade-dark);
+  box-shadow:
+    inset 2px 2px 0 rgba(0, 0, 0, 0.3),
+    inset -2px -2px 0 rgba(255, 255, 255, 0.1);
+}
+
+/* Gold variant */
+.pixel-border-gold {
+  border: 4px solid;
+  border-color:
+    #FFE066
+    #B8860B
+    #B8860B
+    #FFE066;
+  box-shadow:
+    4px 4px 0 #8B6914,
+    inset -2px -2px 0 #B8860B,
+    inset 2px 2px 0 #FFE066;
+}
+
+/* Crimson variant */
+.pixel-border-crimson {
+  border: 4px solid;
+  border-color:
+    #FF6B6B
+    #8B0000
+    #8B0000
+    #FF6B6B;
+  box-shadow:
+    4px 4px 0 #5C0000,
+    inset -2px -2px 0 #8B0000,
+    inset 2px 2px 0 #FF6B6B;
+}
+
+/* ===================================
+   PIXEL SHADOWS
+   8-bit style drop shadows
+   =================================== */
+
+.pixel-shadow {
+  box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.5);
+}
+
+.pixel-shadow-sm {
+  box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.5);
+}
+
+.pixel-shadow-lg {
+  box-shadow: 6px 6px 0 rgba(0, 0, 0, 0.5);
+}
+
+.pixel-shadow-xl {
+  box-shadow: 8px 8px 0 rgba(0, 0, 0, 0.5);
+}
+
+/* Colored shadows */
+.pixel-shadow-jade {
+  box-shadow: 4px 4px 0 var(--jade-dark);
+}
+
+.pixel-shadow-gold {
+  box-shadow: 4px 4px 0 #B8860B;
+}
+
+.pixel-shadow-crimson {
+  box-shadow: 4px 4px 0 #8B0000;
+}
+
+/* ===================================
+   SPRITE SIZE CLASSES
+   Standard sprite dimensions
+   =================================== */
+
+.sprite-16 {
+  width: 16px;
+  height: 16px;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+
+.sprite-24 {
+  width: 24px;
+  height: 24px;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+
+.sprite-32 {
+  width: 32px;
+  height: 32px;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+
+.sprite-48 {
+  width: 48px;
+  height: 48px;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+
+.sprite-64 {
+  width: 64px;
+  height: 64px;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+
+.sprite-96 {
+  width: 96px;
+  height: 96px;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+
+.sprite-128 {
+  width: 128px;
+  height: 128px;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+
+.sprite-256 {
+  width: 256px;
+  height: 256px;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+
+/* Sprite container with frame */
+.sprite-frame {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  background: rgba(0, 0, 0, 0.3);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.sprite-frame.rarity-common {
+  border-color: #808080;
+  background: linear-gradient(135deg, rgba(128, 128, 128, 0.2), rgba(64, 64, 64, 0.2));
+}
+
+.sprite-frame.rarity-uncommon {
+  border-color: #32CD32;
+  background: linear-gradient(135deg, rgba(50, 205, 50, 0.2), rgba(25, 102, 25, 0.2));
+}
+
+.sprite-frame.rarity-rare {
+  border-color: #4169E1;
+  background: linear-gradient(135deg, rgba(65, 105, 225, 0.2), rgba(32, 52, 112, 0.2));
+}
+
+.sprite-frame.rarity-epic {
+  border-color: #9932CC;
+  background: linear-gradient(135deg, rgba(153, 50, 204, 0.2), rgba(76, 25, 102, 0.2));
+}
+
+.sprite-frame.rarity-legendary {
+  border-color: #FFD700;
+  background: linear-gradient(135deg, rgba(255, 215, 0, 0.2), rgba(184, 134, 11, 0.2));
+  animation: legendary-frame-glow 2s ease-in-out infinite;
+}
+
+.sprite-frame.rarity-mythic {
+  border-color: #FF4500;
+  background: linear-gradient(135deg, rgba(255, 69, 0, 0.3), rgba(139, 0, 0, 0.3));
+  animation: mythic-frame-glow 1.5s ease-in-out infinite;
+}
+
+@keyframes legendary-frame-glow {
+  0%, 100% {
+    box-shadow: 0 0 5px rgba(255, 215, 0, 0.3), inset 0 0 10px rgba(255, 215, 0, 0.1);
+  }
+  50% {
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.5), inset 0 0 20px rgba(255, 215, 0, 0.2);
+  }
+}
+
+@keyframes mythic-frame-glow {
+  0%, 100% {
+    box-shadow: 0 0 8px rgba(255, 69, 0, 0.4), inset 0 0 15px rgba(255, 69, 0, 0.2);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(255, 69, 0, 0.7), inset 0 0 30px rgba(255, 69, 0, 0.3);
+  }
+}
+
+/* ===================================
+   PIXEL FONT CLASSES
+   Press Start 2P styling
+   =================================== */
+
+.pixel-font {
+  font-family: 'Press Start 2P', monospace;
+  line-height: 1.5;
+}
+
+.pixel-font-xs {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 6px;
+  line-height: 1.6;
+}
+
+.pixel-font-sm {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 8px;
+  line-height: 1.5;
+}
+
+.pixel-font-md {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 10px;
+  line-height: 1.5;
+}
+
+.pixel-font-lg {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.pixel-font-xl {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 20px;
+  line-height: 1.3;
+}
+
+.pixel-font-2xl {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 28px;
+  line-height: 1.2;
+}
+
+/* ===================================
+   SCANLINES EFFECT
+   CRT monitor aesthetic
+   =================================== */
+
+.scanlines {
+  position: relative;
+  overflow: hidden;
+}
+
+.scanlines::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0.15) 0px,
+    rgba(0, 0, 0, 0.15) 1px,
+    transparent 1px,
+    transparent 2px
+  );
+  pointer-events: none;
+  z-index: 100;
+}
+
+/* Animated scanlines */
+.scanlines-animated::after {
+  animation: scanlines-scroll 10s linear infinite;
+}
+
+@keyframes scanlines-scroll {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(100px); }
+}
+
+/* Heavier scanlines */
+.scanlines-heavy::after {
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0.25) 0px,
+    rgba(0, 0, 0, 0.25) 2px,
+    transparent 2px,
+    transparent 4px
+  );
+}
+
+/* Color scanlines (CRT RGB effect) */
+.scanlines-rgb::after {
+  background:
+    repeating-linear-gradient(
+      0deg,
+      rgba(0, 0, 0, 0.15) 0px,
+      rgba(0, 0, 0, 0.15) 1px,
+      transparent 1px,
+      transparent 2px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      rgba(255, 0, 0, 0.03) 0px,
+      rgba(255, 0, 0, 0.03) 1px,
+      rgba(0, 255, 0, 0.03) 1px,
+      rgba(0, 255, 0, 0.03) 2px,
+      rgba(0, 0, 255, 0.03) 2px,
+      rgba(0, 0, 255, 0.03) 3px
+    );
+}
+
+/* Screen curvature effect */
+.crt-curve {
+  position: relative;
+  overflow: hidden;
+  border-radius: 20px;
+}
+
+.crt-curve::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(
+    ellipse at center,
+    transparent 0%,
+    transparent 70%,
+    rgba(0, 0, 0, 0.4) 100%
+  );
+  pointer-events: none;
+  z-index: 101;
+}
+
+/* ===================================
+   PIXEL BUTTONS
+   Chunky 8-bit style buttons
+   =================================== */
+
+.pixel-button {
+  display: inline-block;
+  padding: 12px 24px;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 10px;
+  color: #fff;
+  background: var(--jade);
+  border: none;
+  box-shadow:
+    0 6px 0 var(--jade-dark),
+    0 8px 0 rgba(0, 0, 0, 0.3),
+    inset 0 -3px 0 rgba(0, 0, 0, 0.2),
+    inset 0 3px 0 rgba(255, 255, 255, 0.2);
+  cursor: pointer;
+  transition: all 0.1s ease;
+  position: relative;
+  text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.5);
+  image-rendering: pixelated;
+}
+
+.pixel-button:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 8px 0 var(--jade-dark),
+    0 10px 0 rgba(0, 0, 0, 0.3),
+    inset 0 -3px 0 rgba(0, 0, 0, 0.2),
+    inset 0 3px 0 rgba(255, 255, 255, 0.2);
+  filter: brightness(1.1);
+}
+
+.pixel-button:active {
+  transform: translateY(4px);
+  box-shadow:
+    0 2px 0 var(--jade-dark),
+    0 3px 0 rgba(0, 0, 0, 0.3),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.pixel-button:disabled {
+  background: #666;
+  box-shadow:
+    0 6px 0 #444,
+    0 8px 0 rgba(0, 0, 0, 0.3);
+  cursor: not-allowed;
+  filter: grayscale(100%);
+}
+
+/* Size variants */
+.pixel-button-sm {
+  padding: 8px 16px;
+  font-size: 8px;
+  box-shadow:
+    0 4px 0 var(--jade-dark),
+    0 5px 0 rgba(0, 0, 0, 0.3),
+    inset 0 -2px 0 rgba(0, 0, 0, 0.2),
+    inset 0 2px 0 rgba(255, 255, 255, 0.2);
+}
+
+.pixel-button-lg {
+  padding: 16px 32px;
+  font-size: 14px;
+  box-shadow:
+    0 8px 0 var(--jade-dark),
+    0 10px 0 rgba(0, 0, 0, 0.3),
+    inset 0 -4px 0 rgba(0, 0, 0, 0.2),
+    inset 0 4px 0 rgba(255, 255, 255, 0.2);
+}
+
+/* Color variants */
+.pixel-button-gold {
+  background: var(--gold-accent);
+  box-shadow:
+    0 6px 0 #B8860B,
+    0 8px 0 rgba(0, 0, 0, 0.3),
+    inset 0 -3px 0 rgba(0, 0, 0, 0.2),
+    inset 0 3px 0 rgba(255, 255, 255, 0.3);
+  color: #333;
+  text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+.pixel-button-gold:hover {
+  box-shadow:
+    0 8px 0 #B8860B,
+    0 10px 0 rgba(0, 0, 0, 0.3),
+    inset 0 -3px 0 rgba(0, 0, 0, 0.2),
+    inset 0 3px 0 rgba(255, 255, 255, 0.3);
+}
+
+.pixel-button-crimson {
+  background: var(--rusty-crimson);
+  box-shadow:
+    0 6px 0 #8B0000,
+    0 8px 0 rgba(0, 0, 0, 0.3),
+    inset 0 -3px 0 rgba(0, 0, 0, 0.2),
+    inset 0 3px 0 rgba(255, 255, 255, 0.2);
+}
+
+.pixel-button-crimson:hover {
+  box-shadow:
+    0 8px 0 #8B0000,
+    0 10px 0 rgba(0, 0, 0, 0.3),
+    inset 0 -3px 0 rgba(0, 0, 0, 0.2),
+    inset 0 3px 0 rgba(255, 255, 255, 0.2);
+}
+
+.pixel-button-purple {
+  background: var(--nik-purple);
+  box-shadow:
+    0 6px 0 #2a1f5e,
+    0 8px 0 rgba(0, 0, 0, 0.3),
+    inset 0 -3px 0 rgba(0, 0, 0, 0.2),
+    inset 0 3px 0 rgba(255, 255, 255, 0.2);
+}
+
+/* ===================================
+   PIXEL PROGRESS BARS
+   8-bit style progress indicators
+   =================================== */
+
+.pixel-progress {
+  width: 100%;
+  height: 20px;
+  background: #222;
+  border: 4px solid;
+  border-color: #666 #444 #444 #666;
+  box-shadow:
+    inset 2px 2px 0 #111,
+    inset -2px -2px 0 #555;
+  position: relative;
+  overflow: hidden;
+}
+
+.pixel-progress-bar {
+  height: 100%;
+  background: var(--jade);
+  box-shadow:
+    inset 0 4px 0 rgba(255, 255, 255, 0.3),
+    inset 0 -4px 0 rgba(0, 0, 0, 0.3);
+  transition: width 0.3s ease;
+  position: relative;
+}
+
+.pixel-progress-bar::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: repeating-linear-gradient(
+    90deg,
+    transparent 0px,
+    transparent 6px,
+    rgba(0, 0, 0, 0.1) 6px,
+    rgba(0, 0, 0, 0.1) 8px
+  );
+}
+
+/* Color variants */
+.pixel-progress-bar.hp { background: #e74c3c; }
+.pixel-progress-bar.mp { background: #3498db; }
+.pixel-progress-bar.xp { background: var(--gold-accent); }
+.pixel-progress-bar.qi { background: var(--qi-blue); }
+
+/* ===================================
+   PIXEL TEXT EFFECTS
+   Retro text styling
+   =================================== */
+
+.pixel-text-shadow {
+  text-shadow:
+    2px 2px 0 #000,
+    -1px -1px 0 #000,
+    1px -1px 0 #000,
+    -1px 1px 0 #000;
+}
+
+.pixel-text-outline {
+  text-shadow:
+    -1px -1px 0 #000,
+    1px -1px 0 #000,
+    -1px 1px 0 #000,
+    1px 1px 0 #000;
+}
+
+.pixel-text-glow {
+  text-shadow:
+    0 0 5px currentColor,
+    0 0 10px currentColor,
+    2px 2px 0 #000;
+}
+
+/* Flicker effect for damaged text */
+.pixel-text-flicker {
+  animation: pixel-flicker 0.1s steps(2) infinite;
+}
+
+@keyframes pixel-flicker {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+/* Rainbow text */
+.pixel-text-rainbow {
+  background: linear-gradient(
+    90deg,
+    #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #9400d3
+  );
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: rainbow-shift 3s linear infinite;
+}
+
+@keyframes rainbow-shift {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 200% 50%; }
+}
+
+/* ===================================
+   8-BIT ICONS
+   Pixel-style icon containers
+   =================================== */
+
+.pixel-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  background: #333;
+  border: 2px solid;
+  border-color: #666 #444 #444 #666;
+  image-rendering: pixelated;
+}
+
+.pixel-icon-sm {
+  width: 24px;
+  height: 24px;
+}
+
+.pixel-icon-lg {
+  width: 48px;
+  height: 48px;
+}
+
+/* ===================================
+   RETRO EFFECTS
+   Additional nostalgic touches
+   =================================== */
+
+/* VHS tracking effect */
+.vhs-tracking {
+  position: relative;
+  overflow: hidden;
+}
+
+.vhs-tracking::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.5);
+  animation: vhs-line 5s linear infinite;
+  z-index: 100;
+  pointer-events: none;
+}
+
+@keyframes vhs-line {
+  0% { top: 0; opacity: 0; }
+  5% { opacity: 1; }
+  95% { opacity: 1; }
+  100% { top: 100%; opacity: 0; }
+}
+
+/* Glitch effect */
+.glitch {
+  position: relative;
+}
+
+.glitch::before,
+.glitch::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.glitch::before {
+  color: #ff0000;
+  animation: glitch-1 2s infinite linear alternate-reverse;
+  clip-path: polygon(0 0, 100% 0, 100% 35%, 0 35%);
+}
+
+.glitch::after {
+  color: #00ffff;
+  animation: glitch-2 3s infinite linear alternate-reverse;
+  clip-path: polygon(0 65%, 100% 65%, 100% 100%, 0 100%);
+}
+
+@keyframes glitch-1 {
+  0%, 100% { transform: translate(0); }
+  20% { transform: translate(-2px, 2px); }
+  40% { transform: translate(2px, -2px); }
+  60% { transform: translate(-1px, -1px); }
+  80% { transform: translate(1px, 1px); }
+}
+
+@keyframes glitch-2 {
+  0%, 100% { transform: translate(0); }
+  20% { transform: translate(2px, -2px); }
+  40% { transform: translate(-2px, 2px); }
+  60% { transform: translate(1px, 1px); }
+  80% { transform: translate(-1px, -1px); }
+}
+
+/* Pixelated transition */
+.pixel-transition {
+  transition: all 0.1s steps(4);
+}
+
+/* Blink cursor */
+.pixel-cursor::after {
+  content: '_';
+  animation: cursor-blink 0.8s steps(2) infinite;
+}
+
+@keyframes cursor-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+/* ===================================
+   PIXEL CARDS
+   8-bit style card containers
+   =================================== */
+
+.pixel-card {
+  background: #2a2a3a;
+  border: 4px solid;
+  border-color: #4a4a5a #1a1a2a #1a1a2a #4a4a5a;
+  box-shadow:
+    4px 4px 0 rgba(0, 0, 0, 0.5),
+    inset 2px 2px 0 rgba(255, 255, 255, 0.1),
+    inset -2px -2px 0 rgba(0, 0, 0, 0.2);
+  padding: 12px;
+}
+
+.pixel-card-header {
+  background: linear-gradient(180deg, #3a3a4a, #2a2a3a);
+  border-bottom: 2px solid #1a1a2a;
+  margin: -12px -12px 12px -12px;
+  padding: 8px 12px;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 10px;
+  color: var(--jade);
+}
+
+/* ===================================
+   LOADING ANIMATIONS (8-bit style)
+   =================================== */
+
+.pixel-loading {
+  display: inline-block;
+  width: 32px;
+  height: 32px;
+  position: relative;
+}
+
+.pixel-loading::before,
+.pixel-loading::after {
+  content: '';
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: var(--jade);
+  animation: pixel-loading 1s steps(8) infinite;
+}
+
+.pixel-loading::before {
+  animation-delay: -0.5s;
+}
+
+@keyframes pixel-loading {
+  0% { transform: translate(0, 0); }
+  12.5% { transform: translate(12px, 0); }
+  25% { transform: translate(24px, 0); }
+  37.5% { transform: translate(24px, 12px); }
+  50% { transform: translate(24px, 24px); }
+  62.5% { transform: translate(12px, 24px); }
+  75% { transform: translate(0, 24px); }
+  87.5% { transform: translate(0, 12px); }
+  100% { transform: translate(0, 0); }
+}
+
+/* Hourglass loading */
+.pixel-hourglass {
+  display: inline-block;
+  font-family: 'Press Start 2P', monospace;
+  animation: pixel-hourglass 2s steps(4) infinite;
+}
+
+@keyframes pixel-hourglass {
+  0% { content: '|'; }
+  25% { content: '/'; }
+  50% { content: '-'; }
+  75% { content: '\\'; }
+}

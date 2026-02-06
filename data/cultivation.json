@@ -1,0 +1,373 @@
+{
+  "realms": {
+    "mortal": {
+      "id": "mortal",
+      "name": "Mortal Realm",
+      "order": 1,
+      "ranks": 9,
+      "description": "The beginning of the path. You are but a wanderer in the Jianghu.",
+      "color": "#A0A0A0",
+      "xpBase": 100,
+      "xpScale": 1.15,
+      "realmScale": 3.0,
+      "tribulation": null,
+      "unlocks": ["basic_boop", "cat_sanctuary"],
+      "passives": {
+        "1": { "name": "Awakened Spirit", "effect": { "boopPower": 1.1 } },
+        "5": { "name": "Mortal Foundation", "effect": { "ppGeneration": 1.15 } },
+        "9": { "name": "Mortal Peak", "effect": { "critChance": 0.02 } }
+      },
+      "spriteVariant": "mortal",
+      "qiCap": 10
+    },
+    "qiCondensation": {
+      "id": "qiCondensation",
+      "name": "Qi Condensation",
+      "order": 2,
+      "ranks": 9,
+      "description": "You have begun to sense the Qi of the world. The snoots call to you.",
+      "color": "#87CEEB",
+      "xpBase": 1000,
+      "xpScale": 1.15,
+      "realmScale": 3.0,
+      "tribulation": {
+        "name": "Tribulation of Awakening",
+        "type": "boss",
+        "enemy": "inner_demon_kitten",
+        "failPenalty": { "xpLoss": 0.5 },
+        "rewards": { "jadeCatnip": 100 }
+      },
+      "unlocks": ["technique_stances", "cat_training", "iron_finger_stance"],
+      "passives": {
+        "1": { "name": "Qi Sense", "effect": { "eventDiscovery": 1.1 } },
+        "5": { "name": "Meridian Opening", "effect": { "boopPower": 1.25 } },
+        "9": { "name": "Condensation Complete", "effect": { "afkEfficiency": 1.2 } }
+      },
+      "spriteVariant": "qi_condensation",
+      "qiCap": 25
+    },
+    "foundationEstablishment": {
+      "id": "foundationEstablishment",
+      "name": "Foundation Establishment",
+      "order": 3,
+      "ranks": 9,
+      "description": "Your foundation is set. The cats recognize you as a true cultivator.",
+      "color": "#8B4513",
+      "xpBase": 10000,
+      "xpScale": 1.15,
+      "realmScale": 3.0,
+      "tribulation": {
+        "name": "Tribulation of Foundation",
+        "type": "survival",
+        "waves": 5,
+        "failPenalty": { "xpLoss": 0.5, "catHappiness": -10 },
+        "rewards": { "jadeCatnip": 500, "cat": "earth_realm_random" }
+      },
+      "unlocks": ["cat_teams", "first_waifu", "meditation_garden", "drunken_paw_stance"],
+      "passives": {
+        "1": { "name": "Stable Foundation", "effect": { "multiplierDecay": 0.5 } },
+        "5": { "name": "Inner Strength", "effect": { "tribulationPower": 1.2 } },
+        "9": { "name": "Foundation Peak", "effect": { "catCapacity": 10 } }
+      },
+      "spriteVariant": "foundation",
+      "qiCap": 50
+    },
+    "coreFormation": {
+      "id": "coreFormation",
+      "name": "Core Formation",
+      "order": 4,
+      "ranks": 9,
+      "description": "A golden core forms within you. Your boops shake the heavens.",
+      "color": "#FFD700",
+      "xpBase": 100000,
+      "xpScale": 1.15,
+      "realmScale": 3.0,
+      "tribulation": {
+        "name": "Tribulation of the Golden Core",
+        "type": "boss",
+        "enemy": "shadow_goose",
+        "failPenalty": { "xpLoss": 0.5, "coreDamage": true },
+        "rewards": { "jadeCatnip": 2000, "technique": "golden_boop" }
+      },
+      "unlocks": ["infinite_pagoda", "equipment_system", "waifu_teaching", "shadow_step_stance"],
+      "passives": {
+        "1": { "name": "Golden Core", "effect": { "allStats": 1.1 } },
+        "5": { "name": "Core Resonance", "effect": { "catSynergy": 1.25 } },
+        "9": { "name": "Perfect Core", "effect": { "critDamage": 1.5 } }
+      },
+      "spriteVariant": "core_formation",
+      "qiCap": 100
+    },
+    "nascentSoul": {
+      "id": "nascentSoul",
+      "name": "Nascent Soul",
+      "order": 5,
+      "ranks": 9,
+      "description": "A nascent soul emerges. You are no longer bound by mortal limits.",
+      "color": "#9370DB",
+      "xpBase": 1000000,
+      "xpScale": 1.15,
+      "realmScale": 3.0,
+      "tribulation": {
+        "name": "Soul Tribulation",
+        "type": "puzzle",
+        "challenge": "soul_fragments",
+        "failPenalty": { "xpLoss": 0.5, "soulDamage": true },
+        "rewards": { "jadeCatnip": 10000, "cat": "sky_realm_random" }
+      },
+      "unlocks": ["dream_realm", "cat_fusion", "territory_expansion", "flowing_river_stance"],
+      "passives": {
+        "1": { "name": "Soul Awakening", "effect": { "offlineGains": 1.5 } },
+        "5": { "name": "Soul Projection", "effect": { "dungeonSpeed": 1.25 } },
+        "9": { "name": "Complete Soul", "effect": { "deathDefiance": 1 } }
+      },
+      "spriteVariant": "nascent_soul",
+      "qiCap": 200
+    },
+    "spiritSevering": {
+      "id": "spiritSevering",
+      "name": "Spirit Severing",
+      "order": 6,
+      "ranks": 9,
+      "description": "You sever ties with the mundane. Only the Dao of Snoot remains.",
+      "color": "#DC143C",
+      "xpBase": 10000000,
+      "xpScale": 1.15,
+      "realmScale": 3.0,
+      "tribulation": {
+        "name": "Severing Tribulation",
+        "type": "choice",
+        "challenge": "heart_demons",
+        "failPenalty": { "xpLoss": 0.5, "permanentScar": true },
+        "rewards": { "jadeCatnip": 50000, "forbiddenTechnique": 1 }
+      },
+      "unlocks": ["ascension_preview", "legendary_cats", "waifu_cultivation", "forbidden_technique_stance", "void_element"],
+      "passives": {
+        "1": { "name": "Severed Attachments", "effect": { "immuneToTheft": true } },
+        "5": { "name": "Spirit Blade", "effect": { "boopPower": 2.0 } },
+        "9": { "name": "Complete Severance", "effect": { "allPassives": 1.1 } }
+      },
+      "spriteVariant": "spirit_severing",
+      "qiCap": 500
+    },
+    "daoSeeking": {
+      "id": "daoSeeking",
+      "name": "Dao Seeking",
+      "order": 7,
+      "ranks": 9,
+      "description": "You seek the ultimate truth. What is the Dao of the Snoot?",
+      "color": "#4169E1",
+      "xpBase": 100000000,
+      "xpScale": 1.15,
+      "realmScale": 3.0,
+      "tribulation": {
+        "name": "Dao Heart Tribulation",
+        "type": "gauntlet",
+        "stages": 9,
+        "failPenalty": { "xpLoss": 0.75, "daoWounds": true },
+        "rewards": { "jadeCatnip": 250000, "cat": "heaven_realm_random" }
+      },
+      "unlocks": ["reincarnation_preview", "divine_cats", "goose_dimension"],
+      "passives": {
+        "1": { "name": "Dao Glimpse", "effect": { "rareEventChance": 2.0 } },
+        "5": { "name": "Dao Comprehension", "effect": { "xpGain": 1.5 } },
+        "9": { "name": "Dao Heart", "effect": { "tribulationSuccess": 1.25 } }
+      },
+      "spriteVariant": "dao_seeking",
+      "qiCap": 1000
+    },
+    "immortalAscension": {
+      "id": "immortalAscension",
+      "name": "Immortal Ascension",
+      "order": 8,
+      "ranks": 9,
+      "description": "You stand at the threshold of immortality. The heavens take notice.",
+      "color": "#FFD700",
+      "xpBase": 1000000000,
+      "xpScale": 1.15,
+      "realmScale": 3.0,
+      "tribulation": {
+        "name": "Heavenly Tribulation",
+        "type": "epic_boss",
+        "enemy": "cosmic_goose",
+        "failPenalty": { "death": true },
+        "rewards": { "heavenlySeals": 10, "cat": "divine_realm_guaranteed" }
+      },
+      "unlocks": ["ascension_system", "eighth_master_hints", "celestial_realm"],
+      "passives": {
+        "1": { "name": "Immortal Body", "effect": { "hpRegen": 2.0 } },
+        "5": { "name": "Immortal Qi", "effect": { "qiCapacity": 2.0 } },
+        "9": { "name": "Almost Immortal", "effect": { "permanentBonus": 1.5 } }
+      },
+      "spriteVariant": "immortal_ascension",
+      "qiCap": 2500
+    },
+    "trueImmortal": {
+      "id": "trueImmortal",
+      "name": "True Immortal",
+      "order": 9,
+      "ranks": 9,
+      "description": "You have transcended mortality. The cats bow before your eternal snoot.",
+      "color": "#FFFFFF",
+      "xpBase": 10000000000,
+      "xpScale": 1.15,
+      "realmScale": 3.0,
+      "tribulation": {
+        "name": "Transcendence Tribulation",
+        "type": "ultimate",
+        "challenge": "face_the_void",
+        "failPenalty": { "reincarnationForced": true },
+        "rewards": { "transcendencePoints": 1, "legendaryTitle": true }
+      },
+      "unlocks": ["transcendence_preview", "true_form", "cosmic_cats"],
+      "passives": {
+        "1": { "name": "Eternal Life", "effect": { "offlineTimeLimit": null } },
+        "5": { "name": "True Understanding", "effect": { "allMultipliers": 2.0 } },
+        "9": { "name": "True Immortal Peak", "effect": { "readyForTranscendence": true } }
+      },
+      "spriteVariant": "true_immortal",
+      "qiCap": 5000
+    },
+    "heavenlySovereign": {
+      "id": "heavenlySovereign",
+      "name": "Heavenly Sovereign",
+      "order": 10,
+      "ranks": null,
+      "description": "You have become one with the heavens. Your snoot IS the Dao.",
+      "color": "#FFD700",
+      "xpBase": 100000000000,
+      "xpScale": 1.2,
+      "realmScale": null,
+      "tribulation": null,
+      "unlocks": ["everything"],
+      "passives": {
+        "scaling": {
+          "every": 10,
+          "effect": { "allStats": 1.1 }
+        }
+      },
+      "spriteVariant": "heavenly_sovereign",
+      "qiCap": null
+    }
+  },
+  "tribulationTypes": {
+    "boss": {
+      "description": "Defeat a powerful enemy to pass",
+      "mechanics": ["single_target", "special_attacks", "phases"]
+    },
+    "survival": {
+      "description": "Survive waves of enemies",
+      "mechanics": ["wave_spawns", "increasing_difficulty", "time_limit"]
+    },
+    "puzzle": {
+      "description": "Solve a challenge using wit",
+      "mechanics": ["memory_game", "pattern_recognition", "time_pressure"]
+    },
+    "choice": {
+      "description": "Make a meaningful choice that affects your path",
+      "mechanics": ["moral_dilemma", "permanent_consequence", "multiple_outcomes"]
+    },
+    "gauntlet": {
+      "description": "Pass through multiple stages without rest",
+      "mechanics": ["sequential_challenges", "no_healing", "cumulative_difficulty"]
+    },
+    "epic_boss": {
+      "description": "Face the ultimate challenge",
+      "mechanics": ["multiple_phases", "party_required", "instakill_mechanics"]
+    },
+    "ultimate": {
+      "description": "Confront the void itself",
+      "mechanics": ["abstract_challenge", "existential_questions", "true_test"]
+    }
+  },
+  "prestigeLayers": {
+    "ascension": {
+      "name": "Ascension",
+      "threshold": 1000000000,
+      "currency": "heavenlySeals",
+      "resets": ["cultivationRealm", "catsBelow_immortal", "currencies", "buildings", "equipment"],
+      "keeps": ["heavenlySeals", "permanentUpgrades", "waifuBondProgress_halved", "achievements", "cosmetics", "gooseAlly", "unlockedMasters", "forbiddenTechniques", "loreFragments"],
+      "gains": {
+        "multiplierPerAscension": 0.5,
+        "heavenlySeals": "calculated",
+        "unlocks": "heavenly_decree"
+      },
+      "newMechanic": {
+        "name": "Heavenly Decree",
+        "description": "Choose a permanent modifier for this ascension run",
+        "options": [
+          { "id": "speed", "name": "Decree of Swiftness", "effect": { "boopSpeed": 1.5 } },
+          { "id": "wealth", "name": "Decree of Prosperity", "effect": { "currencyGain": 1.5 } },
+          { "id": "fortune", "name": "Decree of Fortune", "effect": { "rareCatChance": 2.0 } },
+          { "id": "bonds", "name": "Decree of Bonds", "effect": { "waifuBondGain": 2.0 } },
+          { "id": "combat", "name": "Decree of War", "effect": { "dungeonPower": 1.5 } }
+        ]
+      }
+    },
+    "reincarnation": {
+      "name": "Reincarnation",
+      "threshold": { "ascensions": 10, "heavenlySeals": 500 },
+      "currency": "karmaPoints",
+      "resets": ["ascensionCount", "heavenlySeals_partial"],
+      "keeps": ["karmaPoints", "reincarnationKarma", "coreUnlocks", "waifuMaxBonds", "achievementsPlus", "cosmeticsPlus", "loreComplete"],
+      "gains": {
+        "multiplierPerReincarnation": 2.0,
+        "karmaPoints": "calculated",
+        "unlocks": ["past_life_memories", "karma_shop"]
+      },
+      "newMechanic": {
+        "name": "Past Life Memories",
+        "description": "Start with a random powerful buff based on previous runs",
+        "examples": [
+          { "id": "memory_warrior", "trigger": "previous_high_combat", "effect": { "combatPower": 3.0 } },
+          { "id": "memory_merchant", "trigger": "previous_high_wealth", "effect": { "startingBP": 1000000 } },
+          { "id": "memory_lover", "trigger": "previous_max_bond", "effect": { "waifuStartBond": 50 } },
+          { "id": "memory_hunter", "trigger": "previous_many_cats", "effect": { "catDropRate": 2.0 } }
+        ]
+      }
+    },
+    "transcendence": {
+      "name": "Transcendence",
+      "threshold": { "reincarnations": 5, "karmaPoints": 1000, "trueImmortalReached": true },
+      "currency": "transcendencePoints",
+      "description": "The ultimate prestige. Near-total reset, but unlocks the true endgame.",
+      "resets": ["almost_everything"],
+      "keeps": ["transcendencePoints", "metaAchievements", "ultimateCosmetics", "celestialProgress"],
+      "gains": {
+        "transcendencePoints": 1,
+        "unlocks": ["celestial_realm", "true_endgame", "story_conclusion"]
+      },
+      "celestialRealm": {
+        "description": "An entirely new progression track. Snoot Booper 2 within Snoot Booper.",
+        "features": ["New cultivation system", "Celestial cats", "The true story conclusion", "Infinite scaling content", "Leaderboard eternal"]
+      }
+    }
+  },
+  "heavenlySealBonuses": {
+    "1": { "productionMult": 1.10, "desc": "+10% all production permanently" },
+    "5": { "startingCats": { "count": 3, "minRealm": "earth" }, "desc": "Start with 3 Earth-realm cats" },
+    "10": { "unlocks": "forbidden_techniques", "desc": "Unlock Forbidden Techniques tree" },
+    "25": { "startingWaifu": { "bondPercent": 0.5 }, "desc": "Start with a random Waifu at 50% bond" },
+    "50": { "gooseMoodBonus": 1, "desc": "Geese spawn with +1 mood level" },
+    "100": { "unlocks": "eighth_master", "desc": "Unlock The Eighth Master" },
+    "200": { "unlocks": "reincarnation_preview", "desc": "Glimpse the path beyond Ascension" },
+    "500": { "allStats": 2.0, "desc": "Double all stats permanently" }
+  },
+  "karmaShop": {
+    "starting": [
+      { "id": "start_cats", "cost": 10, "effect": { "startingCats": 5 }, "repeatable": true },
+      { "id": "start_bp", "cost": 5, "effect": { "startingBP": 1000000 }, "repeatable": true },
+      { "id": "start_realm", "cost": 50, "effect": { "startingRealm": "qiCondensation" } }
+    ],
+    "permanent": [
+      { "id": "perm_production", "cost": 25, "effect": { "permanentProduction": 1.25 }, "repeatable": true },
+      { "id": "perm_crit", "cost": 30, "effect": { "permanentCrit": 0.05 }, "repeatable": true },
+      { "id": "perm_afk", "cost": 40, "effect": { "permanentAFK": 1.5 } }
+    ],
+    "unlocks": [
+      { "id": "unlock_secret_waifu", "cost": 100, "effect": { "unlock": "grandmother" } },
+      { "id": "unlock_void_element", "cost": 150, "effect": { "unlock": "void_element" } },
+      { "id": "unlock_transcendence", "cost": 500, "effect": { "unlock": "transcendence_preview" } }
+    ]
+  }
+}
