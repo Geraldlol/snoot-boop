@@ -37,6 +37,7 @@
 
   /* Fonts */
   --font-pixel: 'Press Start 2P', monospace;
+  --font-main: 'VT323', monospace;
 }
 
 /* --- Reset & Base --- */
@@ -47,7 +48,8 @@
 }
 
 body {
-  font-family: var(--font-pixel);
+  font-family: var(--font-main);
+  font-size: 16px;
   background: linear-gradient(135deg, var(--bg-dark) 0%, var(--bg-light) 100%);
   color: var(--text-light);
   min-height: 100vh;
