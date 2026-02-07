@@ -4975,8 +4975,9 @@ button:active:not(:disabled) {
 
 /* --- Small Button Variant --- */
 .jade-button.small {
-  padding: 8px 15px;
-  font-size: 8px;
+  padding: 4px 8px;
+  font-size: 7px;
+  min-height: auto;
 }
 
 /* ===================================
