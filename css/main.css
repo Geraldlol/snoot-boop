@@ -179,13 +179,13 @@ body {
 }
 
 .master-card h3 {
-  font-size: 10px;
+  font-size: 18px;
   margin-bottom: 5px;
   color: var(--text-light);
 }
 
 .master-card .title {
-  font-size: 7px;
+  font-size: 14px;
   color: var(--master-color, #aaa);
   text-transform: uppercase;
 }
@@ -234,18 +234,18 @@ body {
 }
 
 .preview-title {
-  font-size: 10px;
+  font-size: 18px;
   color: var(--jade-dark);
   margin-bottom: 4px;
 }
 
 .preview-role {
-  font-size: 8px;
+  font-size: 16px;
   color: #666;
 }
 
 .preview-description {
-  font-size: 9px;
+  font-size: 18px;
   line-height: 1.8;
   margin-bottom: 20px;
   font-style: italic;
@@ -259,7 +259,7 @@ body {
 }
 
 .passive-label {
-  font-size: 8px;
+  font-size: 16px;
   color: #666;
   display: block;
   margin-bottom: 5px;
@@ -273,7 +273,7 @@ body {
 }
 
 .passive-desc {
-  font-size: 9px;
+  font-size: 18px;
   line-height: 1.6;
 }
 
@@ -328,7 +328,7 @@ body {
 }
 
 .resource-label {
-  font-size: 8px;
+  font-size: 16px;
   color: var(--gold-accent);
   margin-bottom: 4px;
 }
@@ -346,7 +346,7 @@ body {
   border-radius: 50%;
   width: 28px;
   height: 28px;
-  font-size: 10px;
+  font-size: 18px;
   color: var(--jade-light);
   cursor: pointer;
   transition: all 0.2s ease;
@@ -367,7 +367,7 @@ body {
   background: var(--jade-dark);
   padding: 8px 15px;
   border-radius: 4px;
-  font-size: 10px;
+  font-size: 18px;
 }
 
 /* --- Boop Area --- */
@@ -488,7 +488,7 @@ body {
 }
 
 .master-quote {
-  font-size: 10px;
+  font-size: 18px;
   font-style: italic;
   color: var(--gold-accent);
   text-shadow: 1px 1px 2px #000;
@@ -540,7 +540,7 @@ body {
   background: var(--red-accent);
   padding: 6px 12px;
   border-radius: 4px;
-  font-size: 10px;
+  font-size: 18px;
   animation: pulse 0.5s ease-in-out infinite;
 }
 
@@ -554,7 +554,7 @@ body {
 }
 
 .resource-rate {
-  font-size: 8px;
+  font-size: 16px;
   color: var(--jade);
   display: block;
   margin-top: 2px;
@@ -586,7 +586,7 @@ body {
 }
 
 .panel-title {
-  font-size: 10px;
+  font-size: 18px;
   text-transform: uppercase;
   color: var(--gold-accent);
 }
@@ -619,12 +619,12 @@ body {
 }
 
 .waifu-info h3 {
-  font-size: 10px;
+  font-size: 18px;
   margin-bottom: 5px;
 }
 
 .waifu-title {
-  font-size: 7px;
+  font-size: 14px;
   color: var(--yuelin-pink);
   margin-bottom: 10px;
 }
@@ -644,7 +644,7 @@ body {
 }
 
 .bond-label {
-  font-size: 7px;
+  font-size: 14px;
   color: #aaa;
 }
 
@@ -652,7 +652,7 @@ body {
   background: rgba(255, 255, 255, 0.05);
   border-radius: 8px;
   padding: 12px;
-  font-size: 8px;
+  font-size: 16px;
   line-height: 1.6;
   font-style: italic;
   text-align: center;
@@ -665,7 +665,7 @@ body {
   padding: 8px;
   border-radius: 4px;
   text-align: center;
-  font-size: 9px;
+  font-size: 18px;
 }
 
 /* ===================================
@@ -683,13 +683,13 @@ body {
 }
 
 .active-cat-name {
-  font-size: 10px;
+  font-size: 18px;
   color: var(--gold-accent);
   margin-top: 10px;
 }
 
 .boop-power-display {
-  font-size: 9px;
+  font-size: 18px;
   color: var(--jade);
   margin-top: 10px;
 }
@@ -711,7 +711,7 @@ body {
   border-radius: 4px;
   padding: 8px 5px;
   font-family: var(--font-pixel);
-  font-size: 7px;
+  font-size: 14px;
   color: #888;
   cursor: pointer;
   transition: all 0.2s;
@@ -772,14 +772,14 @@ body {
 
 .recruit-text {
   font-family: var(--font-pixel);
-  font-size: 10px;
+  font-size: 18px;
   color: white;
   text-shadow: 1px 1px 0 #000;
 }
 
 .recruit-cost {
   font-family: var(--font-pixel);
-  font-size: 8px;
+  font-size: 16px;
   color: var(--gold-accent);
 }
 
@@ -792,7 +792,7 @@ body {
 }
 
 .empty-message {
-  font-size: 8px;
+  font-size: 16px;
   color: #666;
   text-align: center;
   padding: 20px;
@@ -830,7 +830,7 @@ body {
 }
 
 .cat-name {
-  font-size: 8px;
+  font-size: 16px;
   margin-bottom: 3px;
   white-space: nowrap;
   overflow: hidden;
@@ -838,13 +838,13 @@ body {
 }
 
 .cat-realm {
-  font-size: 6px;
+  font-size: 12px;
   color: var(--realm-color, #888);
   text-transform: uppercase;
 }
 
 .cat-pp {
-  font-size: 7px;
+  font-size: 14px;
   color: var(--jade);
 }
 
@@ -857,7 +857,7 @@ body {
 }
 
 .category-header {
-  font-size: 9px;
+  font-size: 18px;
   color: var(--gold-accent);
   margin-bottom: 10px;
   padding-bottom: 5px;
@@ -906,25 +906,25 @@ body {
 }
 
 .upgrade-name {
-  font-size: 8px;
+  font-size: 16px;
   display: flex;
   align-items: center;
   gap: 5px;
 }
 
 .upgrade-level {
-  font-size: 7px;
+  font-size: 14px;
   color: var(--jade);
 }
 
 .upgrade-effect {
-  font-size: 7px;
+  font-size: 14px;
   color: #aaa;
   margin-bottom: 5px;
 }
 
 .upgrade-cost {
-  font-size: 7px;
+  font-size: 14px;
   color: var(--gold-accent);
 }
 
@@ -976,7 +976,7 @@ body {
 }
 
 .gain-label {
-  font-size: 8px;
+  font-size: 16px;
   color: #666;
   display: block;
   margin-bottom: 5px;
@@ -989,7 +989,7 @@ body {
 
 .afk-events {
   margin: 20px 0;
-  font-size: 9px;
+  font-size: 18px;
   text-align: left;
 }
 
@@ -1079,7 +1079,7 @@ body {
 }
 
 .goose-mood {
-  font-size: 10px;
+  font-size: 18px;
   margin-top: 15px;
   color: var(--gold-accent);
 }
@@ -1095,7 +1095,7 @@ body {
   background: var(--jade-dark);
   padding: 10px 20px;
   border-radius: 4px;
-  font-size: 10px;
+  font-size: 18px;
   opacity: 0;
   transition: opacity 0.3s;
   pointer-events: none;
@@ -1179,7 +1179,7 @@ body {
 
   .mobile-nav-btn .nav-label {
     font-family: 'Press Start 2P', monospace;
-    font-size: 6px;
+    font-size: 12px;
   }
 
   /* Mobile Tab Modal */
@@ -1300,7 +1300,7 @@ body {
     color: #ccc;
     padding: 12px 20px;
     font-family: 'Press Start 2P', monospace;
-    font-size: 8px;
+    font-size: 16px;
     cursor: pointer;
     border-radius: 6px;
     text-align: left;
@@ -1326,11 +1326,11 @@ body {
   }
 
   .resource-label {
-    font-size: 6px;
+    font-size: 12px;
   }
 
   .resource-value {
-    font-size: 10px;
+    font-size: 18px;
   }
 
   /* Adjust floating panels */
@@ -1348,7 +1348,7 @@ body {
   }
 
   .game-subtitle {
-    font-size: 8px;
+    font-size: 16px;
   }
 
   .masters-grid {
@@ -1368,7 +1368,7 @@ body {
   }
 
   .master-card h3 {
-    font-size: 7px;
+    font-size: 14px;
   }
 
   .master-card .title {
@@ -1401,11 +1401,11 @@ body {
   }
 
   .active-cat-name {
-    font-size: 8px;
+    font-size: 16px;
   }
 
   .boop-power-display {
-    font-size: 8px;
+    font-size: 16px;
   }
 
   .goose-container {
@@ -1440,7 +1440,7 @@ body {
   }
 
   .mobile-tab-header h3 {
-    font-size: 10px;
+    font-size: 18px;
   }
 
   .game-layout {
@@ -1475,7 +1475,7 @@ body {
     top: 10px;
     right: 10px;
     z-index: 100;
-    font-size: 6px;
+    font-size: 12px;
   }
 }
 
@@ -1499,7 +1499,7 @@ body {
   .boop-button {
     width: 120px;
     height: 120px;
-    font-size: 10px;
+    font-size: 18px;
   }
 
   .resource-bar {
@@ -1541,7 +1541,7 @@ body {
   .boop-button {
     width: 100px;
     height: 100px;
-    font-size: 9px;
+    font-size: 18px;
   }
 
   .active-cat {
@@ -1605,7 +1605,7 @@ body {
 }
 
 .event-text p {
-  font-size: 9px;
+  font-size: 18px;
   margin-bottom: 5px;
 }
 
@@ -1624,7 +1624,7 @@ body {
   padding: 8px;
   border-radius: 4px;
   margin: 10px 0;
-  font-size: 10px;
+  font-size: 18px;
 }
 
 .event-timer-bar {
@@ -1712,7 +1712,7 @@ body {
 }
 
 .achievement-unlocked {
-  font-size: 8px;
+  font-size: 16px;
   color: var(--gold-accent);
   text-transform: uppercase;
   letter-spacing: 1px;
@@ -1724,7 +1724,7 @@ body {
 }
 
 .achievement-desc {
-  font-size: 8px;
+  font-size: 16px;
   color: #aaa;
 }
 
@@ -1752,7 +1752,7 @@ body {
 }
 
 .stat-label {
-  font-size: 7px;
+  font-size: 14px;
   color: #888;
   text-transform: uppercase;
   margin-bottom: 5px;
@@ -1835,13 +1835,13 @@ body {
 
 .ally-name {
   font-family: var(--font-pixel);
-  font-size: 10px;
+  font-size: 18px;
   color: var(--gold-accent);
 }
 
 .ally-desc {
   font-family: var(--font-pixel);
-  font-size: 7px;
+  font-size: 14px;
   color: #aaa;
 }
 
@@ -1864,7 +1864,7 @@ body {
   border: 2px solid var(--jade);
   border-radius: 6px;
   padding: 8px 12px;
-  font-size: 9px;
+  font-size: 18px;
   display: flex;
   align-items: center;
   gap: 8px;
@@ -1940,24 +1940,24 @@ body {
 }
 
 .destination-name {
-  font-size: 10px;
+  font-size: 18px;
   color: var(--jade-light);
 }
 
 .destination-difficulty {
   margin-left: auto;
-  font-size: 8px;
+  font-size: 16px;
   color: #888;
 }
 
 .destination-description {
-  font-size: 8px;
+  font-size: 16px;
   color: #aaa;
   margin-bottom: 8px;
 }
 
 .destination-rewards {
-  font-size: 7px;
+  font-size: 14px;
   color: var(--gold-accent);
 }
 
@@ -1981,12 +1981,12 @@ body {
 }
 
 .expedition-item-name {
-  font-size: 9px;
+  font-size: 18px;
   color: var(--jade-light);
 }
 
 .expedition-item-time {
-  font-size: 8px;
+  font-size: 16px;
   color: var(--gold-accent);
 }
 
@@ -2004,7 +2004,7 @@ body {
 }
 
 .expedition-cats {
-  font-size: 7px;
+  font-size: 14px;
   color: #888;
   margin-top: 5px;
 }
@@ -2049,7 +2049,7 @@ body {
 }
 
 .expedition-destination {
-  font-size: 10px;
+  font-size: 18px;
   color: #aaa;
   margin-bottom: 15px;
 }
@@ -2067,7 +2067,7 @@ body {
 
 .expedition-rewards .reward-item.drops {
   color: var(--jade-light);
-  font-size: 10px;
+  font-size: 18px;
 }
 
 .expedition-events {
@@ -2077,7 +2077,7 @@ body {
 }
 
 .expedition-events .event-message {
-  font-size: 8px;
+  font-size: 16px;
   color: #aaa;
   font-style: italic;
 }
@@ -2120,7 +2120,7 @@ body {
 }
 
 .jade-dot-score .score-label {
-  font-size: 8px;
+  font-size: 16px;
   color: #888;
 }
 
@@ -2227,7 +2227,7 @@ body {
 }
 
 .jade-dot-instructions {
-  font-size: 10px;
+  font-size: 18px;
   color: #888;
 }
 
@@ -2284,7 +2284,7 @@ body {
 }
 
 .results-score .score-label {
-  font-size: 10px;
+  font-size: 18px;
   color: #888;
 }
 
@@ -2299,7 +2299,7 @@ body {
   display: flex;
   justify-content: space-between;
   margin-bottom: 8px;
-  font-size: 10px;
+  font-size: 18px;
 }
 
 .stat-row .stat-label {
@@ -2378,7 +2378,7 @@ body {
 }
 
 .prestige-info .tier-name {
-  font-size: 9px;
+  font-size: 18px;
   color: #aaa;
 }
 
@@ -2401,7 +2401,7 @@ body {
 }
 
 .prestige-progress-text {
-  font-size: 8px;
+  font-size: 16px;
   color: #888;
   display: flex;
   justify-content: space-between;
@@ -2421,7 +2421,7 @@ body {
 }
 
 .prestige-multiplier .multiplier-label {
-  font-size: 8px;
+  font-size: 16px;
   color: #888;
 }
 
@@ -2429,7 +2429,7 @@ body {
   width: 100%;
   padding: 12px;
   font-family: var(--font-pixel);
-  font-size: 10px;
+  font-size: 18px;
   background: linear-gradient(135deg, #9B7FD9 0%, #7B5FC9 100%);
   color: white;
   border: none;
@@ -2453,7 +2453,7 @@ body {
 }
 
 .prestige-perks h5 {
-  font-size: 9px;
+  font-size: 18px;
   color: #C9B1FF;
   margin-bottom: 10px;
 }
@@ -2466,7 +2466,7 @@ body {
   background: rgba(0, 0, 0, 0.2);
   border-radius: 4px;
   margin-bottom: 5px;
-  font-size: 8px;
+  font-size: 16px;
 }
 
 .perk-item.locked {
@@ -2483,7 +2483,7 @@ body {
 
 .perk-desc {
   color: #888;
-  font-size: 7px;
+  font-size: 14px;
 }
 
 /* ===================================
@@ -2622,7 +2622,7 @@ button:active:not(:disabled) {
   color: white;
   padding: 8px 12px;
   border-radius: 4px;
-  font-size: 8px;
+  font-size: 16px;
   white-space: nowrap;
   opacity: 0;
   pointer-events: none;
@@ -2642,7 +2642,7 @@ button:active:not(:disabled) {
   border-radius: 8px;
   padding: 12px 20px;
   font-family: var(--font-pixel);
-  font-size: 10px;
+  font-size: 18px;
   cursor: pointer;
   transition: all 0.2s ease;
   margin-top: 10px;
@@ -2690,7 +2690,7 @@ button:active:not(:disabled) {
 }
 
 .goose-ally-unlock p {
-  font-size: 10px;
+  font-size: 18px;
   color: #aaa;
   margin-bottom: 20px;
 }
@@ -2741,7 +2741,7 @@ button:active:not(:disabled) {
 }
 
 .cat-select-item .cat-power {
-  font-size: 7px;
+  font-size: 14px;
   color: var(--jade-light);
 }
 
@@ -2775,7 +2775,7 @@ button:active:not(:disabled) {
 }
 
 .pagoda-subtitle {
-  font-size: 7px;
+  font-size: 14px;
   color: #888;
   margin-bottom: 15px;
 }
@@ -2794,7 +2794,7 @@ button:active:not(:disabled) {
 }
 
 .pagoda-stat .stat-label {
-  font-size: 7px;
+  font-size: 14px;
   color: #888;
 }
 
@@ -2806,7 +2806,7 @@ button:active:not(:disabled) {
 .pagoda-start-btn {
   width: 100%;
   padding: 15px;
-  font-size: 10px;
+  font-size: 18px;
 }
 
 .pagoda-combat {
@@ -2825,7 +2825,7 @@ button:active:not(:disabled) {
 }
 
 .enemy-name {
-  font-size: 10px;
+  font-size: 18px;
   color: var(--red-accent);
 }
 
@@ -2853,7 +2853,7 @@ button:active:not(:disabled) {
 }
 
 #player-hp-text {
-  font-size: 8px;
+  font-size: 16px;
   color: var(--jade-light);
 }
 
@@ -2863,7 +2863,7 @@ button:active:not(:disabled) {
   background: rgba(0, 0, 0, 0.2);
   border-radius: 4px;
   padding: 8px;
-  font-size: 7px;
+  font-size: 14px;
   margin-bottom: 10px;
 }
 
@@ -2877,7 +2877,7 @@ button:active:not(:disabled) {
 .cmd-btn {
   padding: 8px 12px;
   font-family: var(--font-pixel);
-  font-size: 7px;
+  font-size: 14px;
   background: linear-gradient(180deg, var(--jade), var(--jade-dark));
   border: 2px solid var(--jade-dark);
   color: var(--text-dark);
@@ -2930,18 +2930,18 @@ button:active:not(:disabled) {
 }
 
 .slot-name {
-  font-size: 7px;
+  font-size: 14px;
   color: #888;
 }
 
 .equipped-item {
-  font-size: 7px;
+  font-size: 14px;
   color: var(--jade-light);
   margin-top: 5px;
 }
 
 .inventory-header {
-  font-size: 9px;
+  font-size: 18px;
   color: var(--jade-light);
   margin-bottom: 10px;
 }
@@ -3056,7 +3056,7 @@ button:active:not(:disabled) {
   padding: 8px 12px;
   background: rgba(80, 200, 120, 0.2);
   cursor: pointer;
-  font-size: 10px;
+  font-size: 18px;
 }
 
 .daily-header:hover {
@@ -3069,13 +3069,13 @@ button:active:not(:disabled) {
 }
 
 .daily-content h4 {
-  font-size: 9px;
+  font-size: 18px;
   margin-bottom: 8px;
   color: var(--jade-light);
 }
 
 .daily-streak {
-  font-size: 7px;
+  font-size: 14px;
   color: var(--gold-accent);
   margin-bottom: 10px;
 }
@@ -3097,12 +3097,12 @@ button:active:not(:disabled) {
 }
 
 .daily-item-name {
-  font-size: 8px;
+  font-size: 16px;
   margin-bottom: 4px;
 }
 
 .daily-item-progress {
-  font-size: 7px;
+  font-size: 14px;
   color: #888;
 }
 
@@ -3150,7 +3150,7 @@ button:active:not(:disabled) {
 }
 
 .blessing-subtitle {
-  font-size: 8px;
+  font-size: 16px;
   color: #888;
   margin-bottom: 15px;
 }
@@ -3182,19 +3182,19 @@ button:active:not(:disabled) {
 .blessing-option.legendary { border-left: 4px solid #F59E0B; }
 
 .blessing-waifu {
-  font-size: 8px;
+  font-size: 16px;
   color: #888;
   margin-bottom: 4px;
 }
 
 .blessing-name {
-  font-size: 10px;
+  font-size: 18px;
   color: var(--jade-light);
   margin-bottom: 4px;
 }
 
 .blessing-desc {
-  font-size: 8px;
+  font-size: 16px;
 }
 
 /* --- Level Up Modal --- */
@@ -3234,12 +3234,12 @@ button:active:not(:disabled) {
 }
 
 .levelup-name {
-  font-size: 9px;
+  font-size: 18px;
   color: var(--jade-light);
 }
 
 .levelup-desc {
-  font-size: 7px;
+  font-size: 14px;
   color: #888;
 }
 
@@ -3275,7 +3275,7 @@ button:active:not(:disabled) {
 }
 
 .effect-info {
-  font-size: 7px;
+  font-size: 14px;
 }
 
 .effect-name {
@@ -3315,7 +3315,7 @@ button:active:not(:disabled) {
   flex: 1;
   min-width: 60px;
   padding: 6px 4px;
-  font-size: 7px;
+  font-size: 14px;
 }
 
 /* --- Reset Button --- */
@@ -3323,7 +3323,7 @@ button:active:not(:disabled) {
   width: 100%;
   padding: 12px;
   font-family: var(--font-pixel);
-  font-size: 8px;
+  font-size: 16px;
   background: linear-gradient(180deg, #ff4444, #cc0000);
   border: 2px solid #990000;
   color: white;
@@ -3668,7 +3668,7 @@ button:active:not(:disabled) {
   flex: 1;
   min-width: 60px;
   padding: 8px 6px;
-  font-size: 7px;
+  font-size: 14px;
   background: linear-gradient(180deg, rgba(255,255,255,0.1), rgba(0,0,0,0.2));
   border: 2px solid rgba(255, 255, 255, 0.2);
   border-radius: 4px 4px 0 0;
@@ -4158,7 +4158,7 @@ button:active:not(:disabled) {
   padding: 8px 12px;
   color: white;
   font-family: var(--font-pixel);
-  font-size: 8px;
+  font-size: 16px;
   cursor: pointer;
   transition: all var(--anim-fast) ease;
 }
@@ -4255,7 +4255,7 @@ button:active:not(:disabled) {
   background: linear-gradient(135deg, var(--jade-dark), var(--jade));
   padding: 10px 20px;
   border-radius: 4px;
-  font-size: 10px;
+  font-size: 18px;
   opacity: 0;
   transform: translateY(20px);
   transition: all 0.3s ease;
@@ -4450,7 +4450,7 @@ button:active:not(:disabled) {
 }
 
 .catino-subtitle {
-  font-size: 7px;
+  font-size: 14px;
   color: #888;
   margin-bottom: 15px;
 }
@@ -4467,7 +4467,7 @@ button:active:not(:disabled) {
 }
 
 .balance-label {
-  font-size: 8px;
+  font-size: 16px;
   color: #888;
 }
 
@@ -4486,7 +4486,7 @@ button:active:not(:disabled) {
 }
 
 .catino-game h5 {
-  font-size: 10px;
+  font-size: 18px;
   color: var(--gold-accent);
   margin-bottom: 10px;
   text-align: center;
@@ -4533,7 +4533,7 @@ button:active:not(:disabled) {
 .slot-controls select {
   padding: 5px;
   font-family: var(--font-pixel);
-  font-size: 7px;
+  font-size: 14px;
   background: #333;
   color: white;
   border: 2px solid var(--jade);
@@ -4541,7 +4541,7 @@ button:active:not(:disabled) {
 }
 
 .slot-result, .race-result, .mystery-result {
-  font-size: 9px;
+  font-size: 18px;
   text-align: center;
   color: #888;
   min-height: 20px;
@@ -4593,7 +4593,7 @@ button:active:not(:disabled) {
 }
 
 .race-lane .name {
-  font-size: 7px;
+  font-size: 14px;
   color: #888;
 }
 
@@ -4608,7 +4608,7 @@ button:active:not(:disabled) {
 .race-controls input {
   padding: 5px;
   font-family: var(--font-pixel);
-  font-size: 7px;
+  font-size: 14px;
   background: #333;
   color: white;
   border: 2px solid var(--jade);
@@ -4617,7 +4617,7 @@ button:active:not(:disabled) {
 
 /* Mystery Box */
 .mystery-desc {
-  font-size: 8px;
+  font-size: 16px;
   color: #888;
   text-align: center;
   margin-bottom: 10px;
@@ -4632,7 +4632,7 @@ button:active:not(:disabled) {
 .mystery-btn {
   padding: 10px;
   font-family: var(--font-pixel);
-  font-size: 7px;
+  font-size: 14px;
   background: linear-gradient(180deg, #444, #222);
   border: 2px solid #666;
   border-radius: 4px;
@@ -4674,7 +4674,7 @@ button:active:not(:disabled) {
 }
 
 .partners-subtitle {
-  font-size: 7px;
+  font-size: 14px;
   color: #888;
   margin-bottom: 15px;
 }
@@ -4723,13 +4723,13 @@ button:active:not(:disabled) {
 }
 
 .partner-info p {
-  font-size: 8px;
+  font-size: 16px;
   color: #888;
   margin-bottom: 3px;
 }
 
 .owned-partners h5 {
-  font-size: 9px;
+  font-size: 18px;
   color: var(--jade-light);
   margin-bottom: 10px;
 }
@@ -4769,7 +4769,7 @@ button:active:not(:disabled) {
 }
 
 .partner-details .partner-name {
-  font-size: 8px;
+  font-size: 16px;
   display: block;
   white-space: nowrap;
   overflow: hidden;
@@ -4777,7 +4777,7 @@ button:active:not(:disabled) {
 }
 
 .partner-details .partner-traits {
-  font-size: 6px;
+  font-size: 12px;
   color: #888;
   display: block;
 }
@@ -4787,7 +4787,7 @@ button:active:not(:disabled) {
   padding: 10px;
   background: rgba(0, 0, 0, 0.2);
   border-radius: 4px;
-  font-size: 8px;
+  font-size: 16px;
   color: #888;
 }
 
@@ -4800,7 +4800,7 @@ button:active:not(:disabled) {
   background: rgba(0, 0, 0, 0.5);
   border: 2px solid var(--jade-dark);
   border-radius: 6px;
-  font-size: 8px;
+  font-size: 16px;
 }
 
 .irl-icon {
@@ -4830,7 +4830,7 @@ button:active:not(:disabled) {
   padding: 8px 12px;
   background: rgba(255, 105, 180, 0.2);
   cursor: pointer;
-  font-size: 10px;
+  font-size: 18px;
 }
 
 .drama-meter .drama-header:hover {
@@ -4843,7 +4843,7 @@ button:active:not(:disabled) {
 }
 
 .drama-content h4 {
-  font-size: 9px;
+  font-size: 18px;
   color: #ff69b4;
   margin-bottom: 8px;
 }
@@ -4863,7 +4863,7 @@ button:active:not(:disabled) {
 }
 
 #drama-status {
-  font-size: 7px;
+  font-size: 14px;
   color: #888;
   margin-bottom: 8px;
 }
@@ -4874,7 +4874,7 @@ button:active:not(:disabled) {
 }
 
 .drama-event {
-  font-size: 7px;
+  font-size: 14px;
   color: #ff69b4;
   padding: 3px 0;
   border-bottom: 1px solid rgba(255, 105, 180, 0.2);
@@ -4910,12 +4910,12 @@ button:active:not(:disabled) {
 }
 
 #hardcore-name {
-  font-size: 9px;
+  font-size: 18px;
   color: #ff4444;
 }
 
 #hardcore-timer {
-  font-size: 10px;
+  font-size: 18px;
   color: var(--gold-accent);
 }
 
@@ -4970,7 +4970,7 @@ button:active:not(:disabled) {
 /* --- Small Button Variant --- */
 .jade-button.small {
   padding: 4px 8px;
-  font-size: 7px;
+  font-size: 14px;
   min-height: auto;
 }
 
@@ -5027,7 +5027,7 @@ button:active:not(:disabled) {
 
 .settings-section h3 {
   font-family: 'Press Start 2P', monospace;
-  font-size: 10px;
+  font-size: 18px;
   color: var(--jade);
   margin-bottom: 12px;
 }
@@ -5042,7 +5042,7 @@ button:active:not(:disabled) {
 
 .setting-row label {
   font-family: 'Press Start 2P', monospace;
-  font-size: 8px;
+  font-size: 16px;
   color: #ccc;
 }
 
@@ -5052,7 +5052,7 @@ button:active:not(:disabled) {
   color: #ff6464;
   padding: 6px 12px;
   font-family: 'Press Start 2P', monospace;
-  font-size: 8px;
+  font-size: 16px;
   cursor: pointer;
   border-radius: 4px;
   transition: all 0.2s ease;
@@ -5105,7 +5105,7 @@ button:active:not(:disabled) {
 
 #volume-value {
   font-family: 'Press Start 2P', monospace;
-  font-size: 7px;
+  font-size: 14px;
   color: #888;
   min-width: 35px;
   text-align: right;
@@ -5118,7 +5118,7 @@ button:active:not(:disabled) {
   border-radius: 4px;
   color: #ccc;
   font-family: monospace;
-  font-size: 10px;
+  font-size: 18px;
   padding: 8px;
   resize: none;
   margin-top: 10px;
@@ -5159,13 +5159,13 @@ button:active:not(:disabled) {
 
 .help-section h3 {
   font-family: 'Press Start 2P', monospace;
-  font-size: 10px;
+  font-size: 18px;
   color: var(--jade);
   margin-bottom: 10px;
 }
 
 .help-section p {
-  font-size: 10px;
+  font-size: 18px;
   color: #ccc;
   line-height: 1.6;
   margin-bottom: 8px;
@@ -5183,7 +5183,7 @@ button:active:not(:disabled) {
 }
 
 .help-list li {
-  font-size: 9px;
+  font-size: 18px;
   color: #ccc;
   padding: 5px 0 5px 15px;
   position: relative;
@@ -5218,7 +5218,7 @@ button:active:not(:disabled) {
   color: #1a1a2e;
   padding: 8px 16px;
   font-family: 'Press Start 2P', monospace;
-  font-size: 10px;
+  font-size: 18px;
   z-index: 9999;
   transition: top 0.3s;
 }
@@ -5257,7 +5257,7 @@ button:active:not(:disabled) {
 
 .pp-breakdown h4 {
   font-family: 'Press Start 2P', monospace;
-  font-size: 8px;
+  font-size: 16px;
   color: var(--jade);
   margin-bottom: 10px;
   text-align: center;
@@ -5268,7 +5268,7 @@ button:active:not(:disabled) {
   justify-content: space-between;
   align-items: center;
   padding: 4px 0;
-  font-size: 7px;
+  font-size: 14px;
   color: #ccc;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
@@ -5296,7 +5296,7 @@ button:active:not(:disabled) {
 .pp-breakdown-row.total .label,
 .pp-breakdown-row.total .value {
   color: var(--jade);
-  font-size: 8px;
+  font-size: 16px;
 }
 
 /* Arrow pointer */
@@ -5354,12 +5354,12 @@ button:active:not(:disabled) {
 
 .ally-name {
   font-family: 'Press Start 2P', monospace;
-  font-size: 10px;
+  font-size: 18px;
   color: #FFD700;
 }
 
 .ally-effect {
-  font-size: 8px;
+  font-size: 16px;
   color: #ccc;
 }
 
@@ -5403,7 +5403,7 @@ button:active:not(:disabled) {
 
 .ally-btn .ally-label {
   font-family: 'Press Start 2P', monospace;
-  font-size: 6px;
+  font-size: 12px;
   color: #888;
 }
 
@@ -5412,7 +5412,7 @@ button:active:not(:disabled) {
 }
 
 .ally-quote {
-  font-size: 8px;
+  font-size: 16px;
   color: #888;
   font-style: italic;
   text-align: center;
@@ -5431,7 +5431,7 @@ button:active:not(:disabled) {
 }
 
 .codex-subtitle {
-  font-size: 10px;
+  font-size: 18px;
   color: #888;
   text-align: center;
   margin-bottom: 15px;
@@ -5451,7 +5451,7 @@ button:active:not(:disabled) {
   color: #888;
   padding: 8px 12px;
   font-family: 'Press Start 2P', monospace;
-  font-size: 7px;
+  font-size: 14px;
   cursor: pointer;
   border-radius: 4px;
   transition: all 0.2s ease;
@@ -5515,7 +5515,7 @@ button:active:not(:disabled) {
 
 .codex-entry-title {
   font-family: 'Press Start 2P', monospace;
-  font-size: 9px;
+  font-size: 18px;
   color: var(--jade);
 }
 
@@ -5524,12 +5524,12 @@ button:active:not(:disabled) {
 }
 
 .codex-entry-subtitle {
-  font-size: 7px;
+  font-size: 14px;
   color: #888;
 }
 
 .codex-entry-preview {
-  font-size: 8px;
+  font-size: 16px;
   color: #aaa;
   font-style: italic;
   line-height: 1.5;
@@ -5541,7 +5541,7 @@ button:active:not(:disabled) {
 
 .codex-entry-progress {
   margin-top: 8px;
-  font-size: 7px;
+  font-size: 14px;
   color: #666;
 }
 
@@ -5572,7 +5572,7 @@ button:active:not(:disabled) {
 }
 
 .codex-full-entry .story {
-  font-size: 10px;
+  font-size: 18px;
   color: #ccc;
   line-height: 1.8;
   white-space: pre-wrap;
@@ -5621,7 +5621,7 @@ button:active:not(:disabled) {
   }
 
   .master-card .title {
-    font-size: 10px;
+    font-size: 18px;
   }
 
   .master-portrait {
@@ -5671,11 +5671,11 @@ button:active:not(:disabled) {
   }
 
   .cat-realm {
-    font-size: 10px;
+    font-size: 18px;
   }
 
   .cat-stats span {
-    font-size: 10px;
+    font-size: 18px;
   }
 
   /* Resource displays */
@@ -5684,7 +5684,7 @@ button:active:not(:disabled) {
   }
 
   .resource-rate {
-    font-size: 10px;
+    font-size: 18px;
   }
 
   .resource-label {
@@ -5699,7 +5699,7 @@ button:active:not(:disabled) {
 
   /* Stats panel */
   .stat-label {
-    font-size: 10px;
+    font-size: 18px;
   }
 
   .stat-value {
@@ -5723,12 +5723,12 @@ button:active:not(:disabled) {
   }
 
   .waifu-title {
-    font-size: 10px;
+    font-size: 18px;
   }
 
   .waifu-school,
   .waifu-element {
-    font-size: 9px;
+    font-size: 18px;
   }
 
   /* Upgrades */
@@ -5742,7 +5742,7 @@ button:active:not(:disabled) {
 
   .upgrade-effect,
   .upgrade-cost {
-    font-size: 10px;
+    font-size: 18px;
   }
 
   /* Side panel items */
@@ -5827,11 +5827,11 @@ button:active:not(:disabled) {
   }
 
   .building-desc {
-    font-size: 10px;
+    font-size: 18px;
   }
 
   .building-level {
-    font-size: 10px;
+    font-size: 18px;
   }
 
   /* Dungeon UI */
@@ -5844,7 +5844,7 @@ button:active:not(:disabled) {
   }
 
   .enemy-hp {
-    font-size: 10px;
+    font-size: 18px;
   }
 
   /* Achievement toast */
@@ -5872,11 +5872,11 @@ button:active:not(:disabled) {
   }
 
   .codex-entry-preview {
-    font-size: 10px;
+    font-size: 18px;
   }
 
   .codex-entry-progress {
-    font-size: 9px;
+    font-size: 18px;
   }
 
   .codex-full-entry h3 {

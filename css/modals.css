@@ -53,7 +53,7 @@
 }
 
 .gain-label {
-  font-size: 8px;
+  font-size: 16px;
   color: #666;
   display: block;
   margin-bottom: 5px;
@@ -66,7 +66,7 @@
 
 .afk-events {
   margin: 20px 0;
-  font-size: 9px;
+  font-size: 18px;
   text-align: left;
 }
 
@@ -150,7 +150,7 @@
 }
 
 .goose-mood {
-  font-size: 10px;
+  font-size: 18px;
   margin-top: 15px;
   color: var(--gold-accent);
 }
@@ -214,7 +214,7 @@
 
 .ally-desc {
   font-family: var(--font-pixel);
-  font-size: 7px;
+  font-size: 14px;
   color: #aaa;
 }
 
@@ -236,7 +236,7 @@
 
 .settings-section h3 {
   font-family: var(--font-pixel);
-  font-size: 10px;
+  font-size: 18px;
   color: var(--jade);
   margin-bottom: 12px;
 }
@@ -251,13 +251,13 @@
 
 .setting-row label {
   font-family: var(--font-pixel);
-  font-size: 8px;
+  font-size: 16px;
   color: #ccc;
 }
 
 #volume-value {
   font-family: var(--font-pixel);
-  font-size: 7px;
+  font-size: 14px;
   color: #888;
   min-width: 35px;
   text-align: right;
@@ -270,7 +270,7 @@
   border-radius: 4px;
   color: #ccc;
   font-family: monospace;
-  font-size: 10px;
+  font-size: 18px;
   padding: 8px;
   resize: none;
   margin-top: 10px;
@@ -308,13 +308,13 @@
 
 .help-section h3 {
   font-family: var(--font-pixel);
-  font-size: 10px;
+  font-size: 18px;
   color: var(--jade);
   margin-bottom: 10px;
 }
 
 .help-section p {
-  font-size: 10px;
+  font-size: 18px;
   color: #ccc;
   line-height: 1.6;
   margin-bottom: 8px;
@@ -332,7 +332,7 @@
 }
 
 .help-list li {
-  font-size: 9px;
+  font-size: 18px;
   color: #ccc;
   padding: 5px 0 5px 15px;
   position: relative;
@@ -357,7 +357,7 @@
 }
 
 .codex-subtitle {
-  font-size: 10px;
+  font-size: 18px;
   color: #888;
   text-align: center;
   margin-bottom: 15px;
@@ -377,7 +377,7 @@
   color: #888;
   padding: 8px 12px;
   font-family: var(--font-pixel);
-  font-size: 7px;
+  font-size: 14px;
   cursor: pointer;
   border-radius: 4px;
   transition: all 0.2s ease;
@@ -441,7 +441,7 @@
 
 .codex-entry-title {
   font-family: var(--font-pixel);
-  font-size: 9px;
+  font-size: 18px;
   color: var(--jade);
 }
 
@@ -450,12 +450,12 @@
 }
 
 .codex-entry-subtitle {
-  font-size: 7px;
+  font-size: 14px;
   color: #888;
 }
 
 .codex-entry-preview {
-  font-size: 8px;
+  font-size: 16px;
   color: #aaa;
   font-style: italic;
   line-height: 1.5;
@@ -467,7 +467,7 @@
 
 .codex-entry-progress {
   margin-top: 8px;
-  font-size: 7px;
+  font-size: 14px;
   color: #666;
 }
 
@@ -498,7 +498,7 @@
 }
 
 .codex-full-entry .story {
-  font-size: 10px;
+  font-size: 18px;
   color: #ccc;
   line-height: 1.8;
   white-space: pre-wrap;
@@ -520,7 +520,7 @@
 }
 
 .blessing-subtitle {
-  font-size: 8px;
+  font-size: 16px;
   color: #888;
   margin-bottom: 15px;
 }
@@ -552,19 +552,19 @@
 .blessing-option.legendary { border-left: 4px solid #F59E0B; }
 
 .blessing-waifu {
-  font-size: 8px;
+  font-size: 16px;
   color: #888;
   margin-bottom: 4px;
 }
 
 .blessing-name {
-  font-size: 10px;
+  font-size: 18px;
   color: var(--jade-light);
   margin-bottom: 4px;
 }
 
 .blessing-desc {
-  font-size: 8px;
+  font-size: 16px;
 }
 
 /* --- Level Up Modal --- */
@@ -604,12 +604,12 @@
 }
 
 .levelup-name {
-  font-size: 9px;
+  font-size: 18px;
   color: var(--jade-light);
 }
 
 .levelup-desc {
-  font-size: 7px;
+  font-size: 14px;
   color: #888;
 }
 
@@ -666,7 +666,7 @@
 }
 
 .event-text p {
-  font-size: 9px;
+  font-size: 18px;
   margin-bottom: 5px;
 }
 
@@ -685,7 +685,7 @@
   padding: 8px;
   border-radius: 4px;
   margin: 10px 0;
-  font-size: 10px;
+  font-size: 18px;
 }
 
 .event-timer-bar {
@@ -788,7 +788,7 @@
 }
 
 .secret-dialogue {
-  font-size: 10px;
+  font-size: 18px;
   color: #C0C0C0;
   font-style: italic;
 }
@@ -801,7 +801,7 @@
   padding: 4px 12px;
   background: rgba(0, 0, 0, 0.3);
   border-radius: 20px;
-  font-size: 9px;
+  font-size: 18px;
 }
 
 .time-emoji {
@@ -816,7 +816,7 @@
   padding: 2px 8px;
   background: rgba(255, 255, 255, 0.1);
   border-radius: 10px;
-  font-size: 8px;
+  font-size: 16px;
 }
 
 /* --- Weekly Challenge Banner --- */
@@ -841,7 +841,7 @@
 }
 
 .weekly-challenge-timer {
-  font-size: 9px;
+  font-size: 18px;
   color: #C0C0C0;
 }
 
@@ -864,7 +864,7 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  font-size: 9px;
+  font-size: 18px;
   color: white;
   text-shadow: 1px 1px 0 #000;
 }
@@ -878,7 +878,7 @@
   padding: 10px;
   text-align: center;
   z-index: 100;
-  font-size: 10px;
+  font-size: 18px;
   animation: festival-glow 2s ease-in-out infinite;
 }
 
@@ -944,7 +944,7 @@
 }
 
 .achievement-unlocked {
-  font-size: 8px;
+  font-size: 16px;
   color: var(--gold-accent);
   text-transform: uppercase;
   letter-spacing: 1px;
@@ -956,7 +956,7 @@
 }
 
 .achievement-desc {
-  font-size: 8px;
+  font-size: 16px;
   color: #aaa;
 }
 
@@ -1000,7 +1000,7 @@
 }
 
 .expedition-destination {
-  font-size: 10px;
+  font-size: 18px;
   color: #aaa;
   margin-bottom: 15px;
 }
@@ -1018,7 +1018,7 @@
 
 .expedition-rewards .reward-item.drops {
   color: var(--jade-light);
-  font-size: 10px;
+  font-size: 18px;
 }
 
 .expedition-events {
@@ -1028,7 +1028,7 @@
 }
 
 .expedition-events .event-message {
-  font-size: 8px;
+  font-size: 16px;
   color: #aaa;
   font-style: italic;
 }
@@ -1181,7 +1181,7 @@
 }
 
 .social-subtitle {
-  font-size: 9px;
+  font-size: 18px;
   color: #888;
   margin-bottom: 15px;
   text-align: center;
@@ -1202,7 +1202,7 @@
   color: #888;
   padding: 8px 15px;
   font-family: var(--font-pixel);
-  font-size: 8px;
+  font-size: 16px;
   cursor: pointer;
   border-radius: 4px;
   transition: all 0.2s ease;
@@ -1287,7 +1287,7 @@
 }
 
 .sect-card-title {
-  font-size: 8px;
+  font-size: 16px;
   color: #888;
 }
 
@@ -1307,7 +1307,7 @@
 }
 
 .sect-stat-label {
-  font-size: 7px;
+  font-size: 14px;
   color: #666;
   display: block;
   margin-bottom: 3px;
@@ -1342,7 +1342,7 @@
 }
 
 .power-score-label {
-  font-size: 8px;
+  font-size: 16px;
   color: #888;
 }
 
@@ -1361,7 +1361,7 @@
 }
 
 .card-actions .jade-button {
-  font-size: 7px;
+  font-size: 14px;
   padding: 8px 15px;
 }
 
@@ -1380,7 +1380,7 @@
   border-radius: 4px;
   color: #ccc;
   font-family: var(--font-pixel);
-  font-size: 8px;
+  font-size: 16px;
   padding: 8px 12px;
   cursor: pointer;
 }
@@ -1429,7 +1429,7 @@
 
 .entry-name {
   flex: 1;
-  font-size: 10px;
+  font-size: 18px;
   color: var(--jade-light);
 }
 
@@ -1453,7 +1453,7 @@
   border-radius: 4px;
   color: #aaa;
   font-family: monospace;
-  font-size: 8px;
+  font-size: 16px;
   padding: 8px;
   resize: none;
   margin-top: 10px;
@@ -1473,7 +1473,7 @@
 }
 
 .save-sharing-section h4 {
-  font-size: 10px;
+  font-size: 18px;
   color: var(--jade);
   margin-bottom: 10px;
 }
@@ -1492,7 +1492,7 @@
   border-radius: 4px;
   color: #aaa;
   font-family: monospace;
-  font-size: 8px;
+  font-size: 16px;
   padding: 8px;
   resize: none;
 }
@@ -1518,7 +1518,7 @@
 }
 
 .import-preview-content p {
-  font-size: 8px;
+  font-size: 16px;
   color: #aaa;
   margin-bottom: 5px;
 }
@@ -1544,7 +1544,7 @@
 
 .error-message {
   color: #ff6b6b;
-  font-size: 9px;
+  font-size: 18px;
   padding: 10px;
   background: rgba(255, 0, 0, 0.1);
   border-radius: 4px;
@@ -1561,7 +1561,7 @@
   padding: 12px 25px;
   border-radius: 8px;
   font-family: var(--font-pixel);
-  font-size: 10px;
+  font-size: 18px;
   z-index: 3000;
   opacity: 0;
   transition: all 0.3s ease;
@@ -1580,7 +1580,7 @@
   color: var(--jade);
   padding: 8px 12px;
   font-family: var(--font-pixel);
-  font-size: 7px;
+  font-size: 14px;
   cursor: pointer;
   border-radius: 4px;
   transition: all 0.2s ease;
@@ -1632,6 +1632,6 @@
 }
 
 .badge-name {
-  font-size: 6px;
+  font-size: 12px;
   color: #888;
 }

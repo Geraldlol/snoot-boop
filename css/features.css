@@ -42,12 +42,12 @@
 }
 
 .waifu-info h3 {
-  font-size: 10px;
+  font-size: 18px;
   margin-bottom: 5px;
 }
 
 .waifu-title {
-  font-size: 7px;
+  font-size: 14px;
   color: var(--yuelin-pink);
   margin-bottom: 10px;
 }
@@ -83,7 +83,7 @@
 }
 
 .bond-label {
-  font-size: 7px;
+  font-size: 14px;
   color: #aaa;
 }
 
@@ -92,7 +92,7 @@
   border: 2px solid rgba(255, 182, 193, 0.3);
   border-radius: 12px;
   padding: 15px;
-  font-size: 8px;
+  font-size: 16px;
   line-height: 1.6;
   font-style: italic;
   text-align: center;
@@ -119,7 +119,7 @@
   padding: 8px;
   border-radius: 4px;
   text-align: center;
-  font-size: 9px;
+  font-size: 18px;
 }
 
 /* Make waifu panel clickable */
@@ -153,7 +153,7 @@
   flex: 1;
   padding: 10px;
   font-family: var(--font-pixel);
-  font-size: 8px;
+  font-size: 16px;
   background: rgba(0, 0, 0, 0.3);
   border: 2px solid rgba(255, 255, 255, 0.2);
   border-radius: 4px;
@@ -242,13 +242,13 @@
 
 .waifu-card-name {
   font-family: var(--font-pixel);
-  font-size: 8px;
+  font-size: 16px;
   color: var(--text-light);
   margin-bottom: 4px;
 }
 
 .waifu-card-title {
-  font-size: 6px;
+  font-size: 12px;
   color: var(--waifu-color, #aaa);
   margin-bottom: 8px;
 }
@@ -258,7 +258,7 @@
 }
 
 .waifu-card-unlock {
-  font-size: 6px;
+  font-size: 12px;
   color: #888;
   margin-top: 8px;
 }
@@ -266,7 +266,7 @@
 /* Gift Shop Grid */
 .gift-shop-intro,
 .gift-inventory-intro {
-  font-size: 9px;
+  font-size: 18px;
   color: #aaa;
   text-align: center;
   margin-bottom: 15px;
@@ -312,18 +312,18 @@
 
 .gift-name {
   font-family: var(--font-pixel);
-  font-size: 7px;
+  font-size: 14px;
   color: var(--text-light);
   margin-bottom: 3px;
 }
 
 .gift-cost {
-  font-size: 7px;
+  font-size: 14px;
   color: var(--gold-accent);
 }
 
 .gift-count {
-  font-size: 8px;
+  font-size: 16px;
   color: var(--jade);
   font-weight: bold;
 }
@@ -370,7 +370,7 @@
 }
 
 .waifu-detail-title {
-  font-size: 9px;
+  font-size: 18px;
   color: var(--yuelin-pink);
   margin-bottom: 10px;
 }
@@ -384,7 +384,7 @@
   border-left: 3px solid var(--yuelin-pink);
   padding: 10px 15px;
   font-style: italic;
-  font-size: 9px;
+  font-size: 18px;
   margin-bottom: 10px;
 }
 
@@ -392,7 +392,7 @@
   background: var(--jade-dark);
   padding: 8px 12px;
   border-radius: 4px;
-  font-size: 9px;
+  font-size: 18px;
   margin-bottom: 10px;
   text-align: center;
 }
@@ -421,7 +421,7 @@
 
 .activity-waifu-select label {
   font-family: var(--font-pixel);
-  font-size: 9px;
+  font-size: 18px;
   color: #aaa;
 }
 
@@ -432,7 +432,7 @@
   border-radius: 4px;
   padding: 8px 12px;
   font-family: var(--font-pixel);
-  font-size: 8px;
+  font-size: 16px;
   color: var(--text-light);
   cursor: pointer;
 }
@@ -484,7 +484,7 @@
   top: 5px;
   right: 5px;
   color: var(--gold-accent);
-  font-size: 10px;
+  font-size: 18px;
 }
 
 .activity-card.locked {
@@ -499,13 +499,13 @@
 
 .activity-card-name {
   font-family: var(--font-pixel);
-  font-size: 8px;
+  font-size: 16px;
   color: var(--text-light);
   margin-bottom: 4px;
 }
 
 .activity-card-desc {
-  font-size: 7px;
+  font-size: 14px;
   color: #888;
   margin-bottom: 8px;
   line-height: 1.4;
@@ -514,7 +514,7 @@
 .activity-card-stats {
   display: flex;
   justify-content: space-between;
-  font-size: 7px;
+  font-size: 14px;
   color: #aaa;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
   padding-top: 8px;
@@ -535,7 +535,7 @@
 }
 
 .activity-card-requirement {
-  font-size: 6px;
+  font-size: 12px;
   color: #ff6b6b;
   margin-top: 6px;
 }
@@ -583,7 +583,7 @@
 }
 
 .activity-info p {
-  font-size: 9px;
+  font-size: 18px;
   color: #aaa;
 }
 
@@ -649,7 +649,7 @@
   border-left: 3px solid var(--yuelin-pink);
   padding: 10px 15px;
   font-style: italic;
-  font-size: 9px;
+  font-size: 18px;
   margin-bottom: 15px;
   text-align: left;
   color: #ccc;
@@ -679,7 +679,7 @@
 
 .activity-history-header {
   font-family: var(--font-pixel);
-  font-size: 10px;
+  font-size: 18px;
   color: var(--yuelin-pink);
   margin-bottom: 10px;
 }
@@ -697,7 +697,7 @@
   background: rgba(0, 0, 0, 0.2);
   border-radius: 4px;
   margin-bottom: 5px;
-  font-size: 8px;
+  font-size: 16px;
 }
 
 .activity-history-item .history-emoji {
@@ -720,7 +720,7 @@
 
 .activity-history-item .history-time {
   color: #666;
-  font-size: 7px;
+  font-size: 14px;
 }
 
 /* Night Activity Indicator */
@@ -729,7 +729,7 @@
   position: absolute;
   bottom: 5px;
   right: 5px;
-  font-size: 10px;
+  font-size: 18px;
 }
 
 /* ===================================
@@ -743,7 +743,7 @@
 }
 
 .empty-message {
-  font-size: 8px;
+  font-size: 16px;
   color: #666;
   text-align: center;
   padding: 20px;
@@ -805,7 +805,7 @@
   background: linear-gradient(135deg, var(--jade), var(--jade-dark));
   color: white;
   font-family: var(--font-pixel);
-  font-size: 7px;
+  font-size: 14px;
   padding: 2px 5px;
   border-radius: 8px;
   border: 2px solid var(--bg-dark);
@@ -827,7 +827,7 @@
 }
 
 .cat-stack .cat-name {
-  font-size: 6px;
+  font-size: 12px;
   margin-bottom: 2px;
   white-space: nowrap;
   overflow: hidden;
@@ -844,7 +844,7 @@
 }
 
 .cat-stack .cat-pp {
-  font-size: 6px;
+  font-size: 12px;
   color: var(--jade);
   font-weight: bold;
 }
@@ -972,7 +972,7 @@
 }
 
 .cat-select-item .cat-power {
-  font-size: 7px;
+  font-size: 14px;
   color: var(--jade-light);
 }
 
@@ -985,7 +985,7 @@
 }
 
 .category-header {
-  font-size: 9px;
+  font-size: 18px;
   color: var(--gold-accent);
   margin-bottom: 10px;
   padding-bottom: 5px;
@@ -1023,20 +1023,20 @@
 
 .upgrade-card.locked .upgrade-requirement {
   color: #ff6b6b;
-  font-size: 7px;
+  font-size: 14px;
   margin: 4px 0;
   font-style: italic;
 }
 
 .upgrade-requirement {
   color: #888;
-  font-size: 7px;
+  font-size: 14px;
   margin: 4px 0;
 }
 
 .upgrade-current-effect {
   color: var(--jade);
-  font-size: 7px;
+  font-size: 14px;
   margin: 4px 0;
   font-weight: bold;
 }
@@ -1105,25 +1105,25 @@
 }
 
 .upgrade-name {
-  font-size: 8px;
+  font-size: 16px;
   display: flex;
   align-items: center;
   gap: 5px;
 }
 
 .upgrade-level {
-  font-size: 7px;
+  font-size: 14px;
   color: var(--jade);
 }
 
 .upgrade-effect {
-  font-size: 7px;
+  font-size: 14px;
   color: #aaa;
   margin-bottom: 5px;
 }
 
 .upgrade-cost {
-  font-size: 7px;
+  font-size: 14px;
   color: var(--gold-accent);
 }
 
@@ -1177,18 +1177,18 @@
 }
 
 .slot-name {
-  font-size: 7px;
+  font-size: 14px;
   color: #888;
 }
 
 .equipped-item {
-  font-size: 7px;
+  font-size: 14px;
   color: var(--jade-light);
   margin-top: 5px;
 }
 
 .inventory-header {
-  font-size: 9px;
+  font-size: 18px;
   color: var(--jade-light);
   margin-bottom: 10px;
 }
@@ -1256,13 +1256,13 @@
   border: 1px solid var(--jade);
   border-radius: 4px;
   padding: 3px 8px;
-  font-size: 6px;
+  font-size: 12px;
   color: var(--jade-light);
 }
 
 /* Equipped Item Display */
 .equipped-item {
-  font-size: 7px;
+  font-size: 14px;
   color: var(--jade-light);
   margin-top: 5px;
 }
@@ -1305,7 +1305,7 @@
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 4px;
   color: #fff;
-  font-size: 8px;
+  font-size: 16px;
   font-family: var(--font-pixel);
 }
 
@@ -1321,7 +1321,7 @@
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 4px;
   color: #fff;
-  font-size: 7px;
+  font-size: 14px;
   font-family: var(--font-pixel);
   cursor: pointer;
 }
@@ -1337,7 +1337,7 @@
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 3px;
   color: #888;
-  font-size: 10px;
+  font-size: 18px;
   cursor: pointer;
   transition: all 0.2s ease;
 }
@@ -1454,7 +1454,7 @@
 }
 
 .inv-item-name {
-  font-size: 9px;
+  font-size: 18px;
   font-weight: bold;
   flex: 1;
   white-space: nowrap;
@@ -1463,7 +1463,7 @@
 }
 
 .inv-item-level {
-  font-size: 10px;
+  font-size: 18px;
   font-weight: bold;
   color: var(--gold-accent);
   text-shadow: 0 0 5px rgba(255, 215, 0, 0.5);
@@ -1471,7 +1471,7 @@
 
 /* Item Stats */
 .inv-item-stats {
-  font-size: 7px;
+  font-size: 14px;
   color: #aaa;
   padding: 5px 0;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
@@ -1495,7 +1495,7 @@
 }
 
 .enchant-badge {
-  font-size: 6px;
+  font-size: 12px;
   padding: 2px 5px;
   border-radius: 3px;
   background: rgba(138, 92, 246, 0.3);
@@ -1530,7 +1530,7 @@
   border-radius: 4px;
   padding: 5px 8px;
   font-family: var(--font-pixel);
-  font-size: 7px;
+  font-size: 14px;
   color: #000;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -1556,7 +1556,7 @@
 }
 
 .grid-view .inv-item-stats {
-  font-size: 6px;
+  font-size: 12px;
 }
 
 .grid-view .inv-item-actions {
@@ -1633,7 +1633,7 @@
 .salvage-preview h6 {
   color: var(--gold-accent);
   margin-bottom: 10px;
-  font-size: 9px;
+  font-size: 18px;
 }
 
 .salvage-materials {
@@ -1650,7 +1650,7 @@
   background: rgba(255, 255, 255, 0.1);
   padding: 5px 10px;
   border-radius: 4px;
-  font-size: 8px;
+  font-size: 16px;
 }
 
 .salvage-actions {
@@ -1665,7 +1665,7 @@
   border: none;
   border-radius: 4px;
   font-family: var(--font-pixel);
-  font-size: 8px;
+  font-size: 16px;
   cursor: pointer;
 }
 
@@ -1743,24 +1743,24 @@
 }
 
 .destination-name {
-  font-size: 10px;
+  font-size: 18px;
   color: var(--jade-light);
 }
 
 .destination-difficulty {
   margin-left: auto;
-  font-size: 8px;
+  font-size: 16px;
   color: #888;
 }
 
 .destination-description {
-  font-size: 8px;
+  font-size: 16px;
   color: #aaa;
   margin-bottom: 8px;
 }
 
 .destination-rewards {
-  font-size: 7px;
+  font-size: 14px;
   color: var(--gold-accent);
 }
 
@@ -1784,12 +1784,12 @@
 }
 
 .expedition-item-name {
-  font-size: 9px;
+  font-size: 18px;
   color: var(--jade-light);
 }
 
 .expedition-item-time {
-  font-size: 8px;
+  font-size: 16px;
   color: var(--gold-accent);
 }
 
@@ -1807,7 +1807,7 @@
 }
 
 .expedition-cats {
-  font-size: 7px;
+  font-size: 14px;
   color: #888;
   margin-top: 5px;
 }
@@ -1841,7 +1841,7 @@
 }
 
 .prestige-info .tier-name {
-  font-size: 9px;
+  font-size: 18px;
   color: #aaa;
 }
 
@@ -1864,7 +1864,7 @@
 }
 
 .prestige-progress-text {
-  font-size: 8px;
+  font-size: 16px;
   color: #888;
   display: flex;
   justify-content: space-between;
@@ -1884,7 +1884,7 @@
 }
 
 .prestige-multiplier .multiplier-label {
-  font-size: 8px;
+  font-size: 16px;
   color: #888;
 }
 
@@ -1892,7 +1892,7 @@
   width: 100%;
   padding: 12px;
   font-family: var(--font-pixel);
-  font-size: 10px;
+  font-size: 18px;
   background: linear-gradient(135deg, #9B7FD9 0%, #7B5FC9 100%);
   color: white;
   border: none;
@@ -1916,7 +1916,7 @@
 }
 
 .prestige-perks h5 {
-  font-size: 9px;
+  font-size: 18px;
   color: #C9B1FF;
   margin-bottom: 10px;
 }
@@ -1929,7 +1929,7 @@
   background: rgba(0, 0, 0, 0.2);
   border-radius: 4px;
   margin-bottom: 5px;
-  font-size: 8px;
+  font-size: 16px;
 }
 
 .perk-item.locked {
@@ -1946,7 +1946,7 @@
 
 .perk-desc {
   color: #888;
-  font-size: 7px;
+  font-size: 14px;
 }
 
 /* ===================================
@@ -1960,7 +1960,7 @@
 }
 
 .pagoda-subtitle {
-  font-size: 7px;
+  font-size: 14px;
   color: #888;
   margin-bottom: 15px;
 }
@@ -1979,7 +1979,7 @@
 }
 
 .pagoda-stat .stat-label {
-  font-size: 7px;
+  font-size: 14px;
   color: #888;
 }
 
@@ -1991,7 +1991,7 @@
 .pagoda-start-btn {
   width: 100%;
   padding: 15px;
-  font-size: 10px;
+  font-size: 18px;
 }
 
 .pagoda-start-btn.hidden {
@@ -2001,7 +2001,7 @@
 .auto-clear-btn {
   width: 100%;
   padding: 12px;
-  font-size: 9px;
+  font-size: 18px;
   margin-top: 8px;
   background: linear-gradient(135deg, #ffd700, #ff8c00);
   border-color: #ff6600;
@@ -2021,7 +2021,7 @@
 }
 
 .auto-clear-info {
-  font-size: 7px;
+  font-size: 14px;
   color: rgba(0, 0, 0, 0.7);
   font-weight: normal;
 }
@@ -2066,7 +2066,7 @@
 }
 
 .enemy-name {
-  font-size: 10px;
+  font-size: 18px;
   color: var(--red-accent);
 }
 
@@ -2097,7 +2097,7 @@
 }
 
 #player-hp-text {
-  font-size: 8px;
+  font-size: 16px;
   color: var(--jade-light);
 }
 
@@ -2107,7 +2107,7 @@
   background: rgba(0, 0, 0, 0.2);
   border-radius: 4px;
   padding: 8px;
-  font-size: 7px;
+  font-size: 14px;
   margin-bottom: 10px;
 }
 
@@ -2161,7 +2161,7 @@
   padding: 8px 12px;
   background: rgba(80, 200, 120, 0.2);
   cursor: pointer;
-  font-size: 10px;
+  font-size: 18px;
 }
 
 .daily-header:hover {
@@ -2174,13 +2174,13 @@
 }
 
 .daily-content h4 {
-  font-size: 9px;
+  font-size: 18px;
   margin-bottom: 8px;
   color: var(--jade-light);
 }
 
 .daily-streak {
-  font-size: 7px;
+  font-size: 14px;
   color: var(--gold-accent);
   margin-bottom: 10px;
 }
@@ -2222,12 +2222,12 @@
 }
 
 .daily-item-name {
-  font-size: 8px;
+  font-size: 16px;
   margin-bottom: 4px;
 }
 
 .daily-item-progress {
-  font-size: 7px;
+  font-size: 14px;
   color: #888;
 }
 
@@ -2274,12 +2274,12 @@
 
 .ally-name {
   font-family: var(--font-pixel);
-  font-size: 10px;
+  font-size: 18px;
   color: #FFD700;
 }
 
 .ally-effect {
-  font-size: 8px;
+  font-size: 16px;
   color: #ccc;
 }
 
@@ -2318,7 +2318,7 @@
 
 .ally-btn .ally-label {
   font-family: var(--font-pixel);
-  font-size: 6px;
+  font-size: 12px;
   color: #888;
 }
 
@@ -2327,7 +2327,7 @@
 }
 
 .ally-quote {
-  font-size: 8px;
+  font-size: 16px;
   color: #888;
   font-style: italic;
   text-align: center;
@@ -2354,7 +2354,7 @@
   padding: 8px 12px;
   background: rgba(255, 105, 180, 0.2);
   cursor: pointer;
-  font-size: 10px;
+  font-size: 18px;
 }
 
 .drama-meter .drama-header:hover {
@@ -2367,7 +2367,7 @@
 }
 
 .drama-content h4 {
-  font-size: 9px;
+  font-size: 18px;
   color: #ff69b4;
   margin-bottom: 8px;
 }
@@ -2387,7 +2387,7 @@
 }
 
 #drama-status {
-  font-size: 7px;
+  font-size: 14px;
   color: #888;
   margin-bottom: 8px;
 }
@@ -2398,7 +2398,7 @@
 }
 
 .drama-event {
-  font-size: 7px;
+  font-size: 14px;
   color: #ff69b4;
   padding: 3px 0;
   border-bottom: 1px solid rgba(255, 105, 180, 0.2);
@@ -2434,7 +2434,7 @@
 
 .pp-breakdown h4 {
   font-family: var(--font-pixel);
-  font-size: 8px;
+  font-size: 16px;
   color: var(--jade);
   margin-bottom: 10px;
   text-align: center;
@@ -2445,7 +2445,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 4px 0;
-  font-size: 7px;
+  font-size: 14px;
   color: #ccc;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
@@ -2473,7 +2473,7 @@
 .pp-breakdown-row.total .label,
 .pp-breakdown-row.total .value {
   color: var(--jade);
-  font-size: 8px;
+  font-size: 16px;
 }
 
 .pp-breakdown::before {
@@ -2513,7 +2513,7 @@
 
 .technique-list .empty-message {
   color: var(--text-secondary);
-  font-size: 7px;
+  font-size: 14px;
   text-align: center;
   padding: 15px;
   opacity: 0.7;
@@ -2562,13 +2562,13 @@
 }
 
 .technique-name {
-  font-size: 8px;
+  font-size: 16px;
   font-weight: bold;
   color: var(--text-primary);
 }
 
 .technique-tier {
-  font-size: 6px;
+  font-size: 12px;
   padding: 2px 6px;
   border-radius: 3px;
   margin-left: auto;
@@ -2582,7 +2582,7 @@
 .technique-tier.mythic { background: #ff6b9d; color: #fff; }
 
 .technique-description {
-  font-size: 7px;
+  font-size: 14px;
   color: var(--text-secondary);
   margin-bottom: 8px;
   line-height: 1.4;
@@ -2595,7 +2595,7 @@
 }
 
 .technique-effect {
-  font-size: 6px;
+  font-size: 12px;
   padding: 2px 6px;
   background: rgba(80, 200, 120, 0.2);
   border: 1px solid var(--jade);
@@ -2633,13 +2633,13 @@
 }
 
 .legendary-internal-name {
-  font-size: 9px;
+  font-size: 18px;
   font-weight: bold;
   color: var(--gold-accent);
 }
 
 .legendary-internal-category {
-  font-size: 6px;
+  font-size: 12px;
   color: var(--text-secondary);
   text-transform: uppercase;
 }
@@ -2649,18 +2649,18 @@
 }
 
 .stage-label {
-  font-size: 6px;
+  font-size: 12px;
   color: var(--text-secondary);
 }
 
 .stage-value {
-  font-size: 10px;
+  font-size: 18px;
   font-weight: bold;
   color: var(--jade);
 }
 
 .legendary-internal-description {
-  font-size: 7px;
+  font-size: 14px;
   color: var(--text-secondary);
   margin-bottom: 10px;
   font-style: italic;
@@ -2671,7 +2671,7 @@
 }
 
 .internal-effect {
-  font-size: 7px;
+  font-size: 14px;
   color: var(--jade);
   padding: 3px 0;
 }
@@ -2697,14 +2697,14 @@
 }
 
 .ability-name {
-  font-size: 7px;
+  font-size: 14px;
   font-weight: bold;
   color: var(--gold-accent);
   margin-bottom: 4px;
 }
 
 .ability-desc {
-  font-size: 6px;
+  font-size: 12px;
   color: var(--text-secondary);
 }
 
@@ -2717,14 +2717,14 @@
 }
 
 .requirement-label {
-  font-size: 6px;
+  font-size: 12px;
   color: var(--red-accent);
   text-transform: uppercase;
   margin-bottom: 4px;
 }
 
 .requirement-text {
-  font-size: 7px;
+  font-size: 14px;
   color: var(--text-secondary);
 }
 
@@ -2737,7 +2737,7 @@
   border-radius: 4px;
   color: #000;
   font-family: var(--font-pixel);
-  font-size: 7px;
+  font-size: 14px;
   cursor: pointer;
   transition: all 0.2s ease;
 }
@@ -2792,13 +2792,13 @@
 }
 
 .consumable-name {
-  font-size: 7px;
+  font-size: 14px;
   color: var(--text-primary);
   margin-bottom: 2px;
 }
 
 .consumable-count {
-  font-size: 8px;
+  font-size: 16px;
   font-weight: bold;
   color: var(--jade);
 }
@@ -2811,7 +2811,7 @@
   border-radius: 3px;
   color: #000;
   font-family: var(--font-pixel);
-  font-size: 6px;
+  font-size: 12px;
   cursor: pointer;
 }
 
@@ -2844,19 +2844,19 @@
 }
 
 .skill-name {
-  font-size: 8px;
+  font-size: 16px;
   font-weight: bold;
   color: #9370db;
 }
 
 .skill-description {
-  font-size: 7px;
+  font-size: 14px;
   color: var(--text-secondary);
   margin-bottom: 6px;
 }
 
 .skill-discovery {
-  font-size: 6px;
+  font-size: 12px;
   color: var(--text-secondary);
   font-style: italic;
   opacity: 0.7;
@@ -2882,13 +2882,13 @@
 }
 
 .passive-name {
-  font-size: 7px;
+  font-size: 14px;
   font-weight: bold;
   color: var(--jade);
 }
 
 .passive-effect {
-  font-size: 6px;
+  font-size: 12px;
   color: var(--text-secondary);
 }
 
@@ -2909,7 +2909,7 @@
 }
 
 .forge-subtitle {
-  font-size: 9px;
+  font-size: 18px;
   color: var(--gold-accent);
   margin-bottom: 10px;
   text-transform: uppercase;
@@ -2922,7 +2922,7 @@
   border: 2px solid var(--jade-dark);
   border-radius: 4px;
   color: #fff;
-  font-size: 9px;
+  font-size: 18px;
   margin-bottom: 10px;
 }
 
@@ -2947,7 +2947,7 @@
 }
 
 .forge-item-name {
-  font-size: 10px;
+  font-size: 18px;
   font-weight: bold;
   color: var(--gold-accent);
 }
@@ -2959,13 +2959,13 @@
 }
 
 .forge-item-stats {
-  font-size: 8px;
+  font-size: 16px;
   color: #aaa;
   margin-bottom: 8px;
 }
 
 .forge-item-enchants {
-  font-size: 8px;
+  font-size: 16px;
 }
 
 .forge-item-enchant {
@@ -2979,7 +2979,7 @@
 }
 
 .forge-cost {
-  font-size: 8px;
+  font-size: 16px;
   color: #888;
   margin-bottom: 10px;
   padding: 8px;
@@ -3007,7 +3007,7 @@
 
 .forge-checkbox {
   display: block;
-  font-size: 8px;
+  font-size: 16px;
   color: #aaa;
   margin: 5px 0;
   cursor: pointer;
@@ -3020,7 +3020,7 @@
 .forge-btn {
   width: 100%;
   padding: 10px;
-  font-size: 10px;
+  font-size: 18px;
 }
 
 .forge-btn:disabled {
@@ -3032,7 +3032,7 @@
   margin-top: 10px;
   padding: 10px;
   border-radius: 4px;
-  font-size: 9px;
+  font-size: 18px;
   text-align: center;
 }
 
@@ -3070,13 +3070,13 @@
 }
 
 .material-name {
-  font-size: 6px;
+  font-size: 12px;
   color: #888;
   text-align: center;
 }
 
 .material-count {
-  font-size: 9px;
+  font-size: 18px;
   font-weight: bold;
   color: var(--gold-accent);
 }
@@ -3086,7 +3086,7 @@
   margin-top: 10px;
   padding: 8px 12px;
   border-radius: 4px;
-  font-size: 9px;
+  font-size: 18px;
   text-align: center;
   animation: forge-result-fade 0.3s ease-out;
 }
@@ -3122,12 +3122,12 @@
 }
 
 .forge-item-level {
-  font-size: 10px;
+  font-size: 18px;
   color: var(--gold-accent);
 }
 
 .forge-item-stats {
-  font-size: 8px;
+  font-size: 16px;
   color: #aaa;
   margin-bottom: 10px;
 }
@@ -3137,7 +3137,7 @@
 }
 
 .forge-item-enchants {
-  font-size: 8px;
+  font-size: 16px;
   margin-bottom: 10px;
 }
 
@@ -3160,7 +3160,7 @@
   background: var(--red-accent);
   border: none;
   color: white;
-  font-size: 8px;
+  font-size: 16px;
   padding: 2px 5px;
   border-radius: 2px;
   cursor: pointer;
@@ -3174,7 +3174,7 @@
 /* Cost display styles */
 .cost-header {
   color: var(--gold-accent);
-  font-size: 9px;
+  font-size: 18px;
   margin-bottom: 5px;
 }
 
@@ -3182,7 +3182,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: 5px;
-  font-size: 8px;
+  font-size: 16px;
 }
 
 .cost-list span {
@@ -3208,13 +3208,13 @@
 }
 
 .success-rate {
-  font-size: 8px;
+  font-size: 16px;
   color: #888;
   margin-top: 5px;
 }
 
 .maxed-out {
-  font-size: 10px;
+  font-size: 18px;
   color: var(--gold-accent);
   text-align: center;
   font-weight: bold;
@@ -3265,7 +3265,7 @@
 }
 
 .shop-keeper-title {
-  font-size: 7px;
+  font-size: 14px;
   color: #b8860b;
   margin: 0;
   font-style: italic;
@@ -3279,7 +3279,7 @@
 }
 
 .lore-text {
-  font-size: 8px;
+  font-size: 16px;
   color: #ccc;
   line-height: 1.5;
   margin: 0;
@@ -3301,7 +3301,7 @@
   background: rgba(0, 0, 0, 0.3);
   border-radius: 6px;
   margin-bottom: 10px;
-  font-size: 10px;
+  font-size: 18px;
 }
 
 .shop-bp {
@@ -3336,7 +3336,7 @@
   border: 2px solid rgba(184, 134, 11, 0.3);
   border-radius: 6px;
   color: #888;
-  font-size: 7px;
+  font-size: 14px;
   font-family: var(--font-pixel);
   cursor: pointer;
   transition: all 0.2s ease;
@@ -3363,7 +3363,7 @@
 }
 
 .shop-dialogue p {
-  font-size: 8px;
+  font-size: 16px;
   color: #b8860b;
   margin: 0;
   font-style: italic;
@@ -3412,13 +3412,13 @@
 }
 
 .shop-item-name {
-  font-size: 9px;
+  font-size: 18px;
   font-weight: bold;
   flex: 1;
 }
 
 .shop-item-desc {
-  font-size: 7px;
+  font-size: 14px;
   color: #888;
   margin-bottom: 8px;
   line-height: 1.4;
@@ -3431,13 +3431,13 @@
 }
 
 .shop-item-price {
-  font-size: 9px;
+  font-size: 18px;
   color: var(--gold-accent);
   font-weight: bold;
 }
 
 .shop-item-stock {
-  font-size: 7px;
+  font-size: 14px;
   color: #666;
 }
 
@@ -3447,7 +3447,7 @@
   border-radius: 4px;
   padding: 5px 12px;
   color: #000;
-  font-size: 7px;
+  font-size: 14px;
   font-family: var(--font-pixel);
   cursor: pointer;
   transition: all 0.2s ease;
@@ -3482,7 +3482,7 @@
 }
 
 .shop-footer-text {
-  font-size: 7px;
+  font-size: 14px;
   color: #666;
   text-align: center;
   font-style: italic;
@@ -3510,14 +3510,14 @@
 }
 
 .shop-item-description {
-  font-size: 7px;
+  font-size: 14px;
   color: #888;
   margin-bottom: 8px;
   line-height: 1.4;
 }
 
 .shop-item-stats {
-  font-size: 7px;
+  font-size: 14px;
   color: var(--jade);
   margin-bottom: 6px;
   display: flex;
@@ -3532,7 +3532,7 @@
 }
 
 .shop-item-effect {
-  font-size: 7px;
+  font-size: 14px;
   color: var(--qi-blue);
   margin-bottom: 6px;
   background: rgba(0, 191, 255, 0.1);
@@ -3541,7 +3541,7 @@
 }
 
 .shop-item-reward {
-  font-size: 7px;
+  font-size: 14px;
   color: var(--gold-accent);
   margin-bottom: 6px;
   background: rgba(255, 215, 0, 0.1);
@@ -3555,7 +3555,7 @@
   border-radius: 4px;
   padding: 5px 12px;
   color: #000;
-  font-size: 7px;
+  font-size: 14px;
   font-family: var(--font-pixel);
   cursor: pointer;
   transition: all 0.2s ease;
@@ -3586,7 +3586,7 @@
   text-align: center;
   padding: 30px;
   color: #666;
-  font-size: 10px;
+  font-size: 18px;
   font-style: italic;
 }
 
@@ -3630,7 +3630,7 @@
 
 .cultivation-title {
   font-family: var(--font-pixel);
-  font-size: 9px;
+  font-size: 18px;
   color: var(--realm-color, #A0A0A0);
   text-transform: uppercase;
   letter-spacing: 1px;
@@ -3643,7 +3643,7 @@
 
 .realm-name {
   font-family: var(--font-pixel);
-  font-size: 10px;
+  font-size: 18px;
   color: var(--realm-color, #A0A0A0);
   margin: 0 0 4px 0;
   text-shadow: 0 0 10px var(--realm-color, rgba(160, 160, 160, 0.5));
@@ -3662,7 +3662,7 @@
 
 .realm-rank {
   font-family: var(--font-pixel);
-  font-size: 8px;
+  font-size: 16px;
   color: rgba(255, 255, 255, 0.7);
   margin: 0;
 }
@@ -3704,7 +3704,7 @@
   left: 50%;
   transform: translate(-50%, -50%);
   font-family: var(--font-pixel);
-  font-size: 6px;
+  font-size: 12px;
   color: white;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
   white-space: nowrap;
@@ -3716,7 +3716,7 @@
 }
 
 .cultivation-description p {
-  font-size: 7px;
+  font-size: 14px;
   color: rgba(255, 255, 255, 0.6);
   text-align: center;
   margin: 0;
@@ -3744,17 +3744,17 @@
 }
 
 .cultivation-passive .passive-icon {
-  font-size: 10px;
+  font-size: 18px;
 }
 
 .cultivation-passive .passive-name {
   font-family: var(--font-pixel);
-  font-size: 6px;
+  font-size: 12px;
   color: var(--realm-color, #A0A0A0);
 }
 
 .cultivation-passive .passive-effect {
-  font-size: 6px;
+  font-size: 12px;
   color: rgba(255, 255, 255, 0.5);
   margin-left: auto;
 }
@@ -3902,7 +3902,7 @@
 
 .stance-title {
   font-family: var(--font-pixel);
-  font-size: 8px;
+  font-size: 16px;
   color: var(--jade);
   text-transform: uppercase;
   letter-spacing: 1px;
@@ -3915,7 +3915,7 @@
 
 .stance-name {
   font-family: var(--font-pixel);
-  font-size: 10px;
+  font-size: 18px;
   color: var(--jade-light);
   display: block;
   margin-bottom: 4px;
@@ -3923,7 +3923,7 @@
 
 .stance-mastery {
   font-family: var(--font-pixel);
-  font-size: 7px;
+  font-size: 14px;
   color: rgba(255, 255, 255, 0.6);
 }
 
@@ -3980,7 +3980,7 @@
   margin-top: 6px;
   text-align: center;
   font-family: var(--font-pixel);
-  font-size: 7px;
+  font-size: 14px;
   color: var(--gold-accent);
 }
 
@@ -4023,7 +4023,7 @@
 
 .harmony-title {
   font-family: var(--font-pixel);
-  font-size: 8px;
+  font-size: 16px;
   color: var(--yuelin-pink);
   text-transform: uppercase;
   letter-spacing: 1px;
@@ -4038,7 +4038,7 @@
 
 .harmony-text {
   font-family: var(--font-pixel);
-  font-size: 9px;
+  font-size: 18px;
   color: var(--text-light);
 }
 
@@ -4063,7 +4063,7 @@
 .jealousy-alert {
   margin-top: 6px;
   font-family: var(--font-pixel);
-  font-size: 7px;
+  font-size: 14px;
   color: var(--red-accent);
   text-align: center;
 }
@@ -4089,14 +4089,14 @@
 }
 
 .teams-info {
-  font-size: 8px;
+  font-size: 16px;
   color: rgba(255, 255, 255, 0.6);
   margin-bottom: 15px;
   text-align: center;
 }
 
 .team-section-header {
-  font-size: 9px;
+  font-size: 18px;
   color: var(--jade-light);
   margin-bottom: 8px;
   padding-bottom: 4px;
@@ -4151,7 +4151,7 @@
 }
 
 .slot-position {
-  font-size: 6px;
+  font-size: 12px;
   color: rgba(255, 255, 255, 0.5);
   text-transform: uppercase;
   margin-bottom: 4px;
@@ -4175,7 +4175,7 @@
 }
 
 .slot-label {
-  font-size: 7px;
+  font-size: 14px;
   color: rgba(255, 255, 255, 0.6);
 }
 
@@ -4216,14 +4216,14 @@
 }
 
 .formation-icon {
-  font-size: 8px;
+  font-size: 16px;
   line-height: 1.2;
   margin-bottom: 4px;
   color: var(--jade-light);
 }
 
 .formation-name {
-  font-size: 6px;
+  font-size: 12px;
   color: rgba(255, 255, 255, 0.7);
 }
 
@@ -4239,7 +4239,7 @@
 }
 
 .synergy-list .empty-message {
-  font-size: 8px;
+  font-size: 16px;
   color: rgba(255, 255, 255, 0.4);
   text-align: center;
   font-style: italic;
@@ -4264,12 +4264,12 @@
 }
 
 .synergy-name {
-  font-size: 8px;
+  font-size: 16px;
   color: var(--jade-light);
 }
 
 .synergy-bonus {
-  font-size: 7px;
+  font-size: 14px;
   color: var(--gold-accent);
 }
 
@@ -4297,7 +4297,7 @@
 }
 
 .resonance-label {
-  font-size: 8px;
+  font-size: 16px;
   color: rgba(255, 255, 255, 0.6);
 }
 
@@ -4369,16 +4369,16 @@
 }
 
 .cat-selector-info .cat-name {
-  font-size: 10px;
+  font-size: 18px;
   color: var(--text-light);
 }
 
 .cat-selector-info .cat-realm {
-  font-size: 7px;
+  font-size: 14px;
   color: rgba(255, 255, 255, 0.5);
 }
 
 .cat-selector-item .cat-element {
-  font-size: 8px;
+  font-size: 16px;
   text-transform: capitalize;
 }
