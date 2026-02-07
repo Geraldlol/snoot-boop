@@ -205,7 +205,7 @@
           </div>
         </aside>
 
-        <!-- Center: Boop Area (at top of center column) -->
+        <!-- Center: Boop Area + Tabs Below -->
         <main class="game-main" role="main">
           <div class="boop-area">
             <div id="active-cat-display" class="active-cat-display">
@@ -218,97 +218,9 @@
             <p id="boop-power-display" class="boop-power-display" aria-live="polite">+1 BP per boop</p>
           </div>
           <div id="floating-text-container" class="floating-text-container" aria-hidden="true"></div>
-        </main>
 
-        <!-- Cultivation Realm Display (Expanded 10-Realm System) -->
-        <div id="cultivation-display" class="cultivation-display">
-          <div class="cultivation-header">
-            <span class="cultivation-icon">☯️</span>
-            <span class="cultivation-title">Cultivation</span>
-            <div id="time-season-indicator" class="time-season-indicator">
-              <span id="time-of-day-icon" class="time-icon">☀️</span>
-              <span id="season-icon" class="season-icon">🌸</span>
-            </div>
-          </div>
-          <div class="cultivation-realm-info">
-            <h3 id="cultivation-realm-name" class="realm-name">Mortal Realm</h3>
-            <p id="cultivation-rank" class="realm-rank">Rank 1/9</p>
-            <p id="cultivation-order" class="realm-order">Realm 1 of 10</p>
-          </div>
-          <div class="cultivation-xp-bar">
-            <div id="cultivation-xp-fill" class="xp-fill" style="width: 0%"></div>
-            <span id="cultivation-xp-text" class="xp-text">0 / 100 XP</span>
-          </div>
-          <div class="cultivation-description">
-            <p id="cultivation-desc">The beginning of the path.</p>
-          </div>
-
-          <!-- Tribulation Warning -->
-          <div id="tribulation-warning" class="tribulation-warning hidden">
-            <span class="tribulation-icon">⚡</span>
-            <span id="tribulation-name">Tribulation Available</span>
-          </div>
-
-          <div id="cultivation-passives" class="cultivation-passives">
-            <!-- Unlocked passives will be listed here -->
-          </div>
-
-          <div class="cultivation-actions">
-            <button id="breakthrough-btn" class="jade-button small breakthrough-btn hidden" onclick="attemptBreakthrough()">
-              ⚡ Attempt Breakthrough
-            </button>
-            <button id="tribulation-btn" class="jade-button small tribulation-btn hidden" onclick="startTribulation()">
-              🔥 Face Tribulation
-            </button>
-          </div>
-        </div>
-
-        <!-- Technique Stance Panel -->
-        <div id="stance-display" class="stance-display">
-          <div class="stance-header">
-            <span class="stance-icon">🥋</span>
-            <span class="stance-title">Technique Stance</span>
-          </div>
-          <div class="current-stance">
-            <span id="current-stance-name" class="stance-name">Jade Palm</span>
-            <span id="current-stance-level" class="stance-mastery">Mastery: 0/10</span>
-          </div>
-          <div class="stance-mastery-bar">
-            <div id="stance-mastery-fill" class="mastery-fill" style="width: 0%"></div>
-          </div>
-          <div class="stance-selector">
-            <button class="stance-btn active" data-stance="jadePalm" title="Jade Palm - Balanced">🖐️</button>
-            <button class="stance-btn locked" data-stance="ironFinger" title="Iron Finger - Power (Qi Condensation)">👆</button>
-            <button class="stance-btn locked" data-stance="drunkenPaw" title="Drunken Paw - Random (Foundation)">🍺</button>
-            <button class="stance-btn locked" data-stance="shadowStep" title="Shadow Step - Speed (Core Formation)">👤</button>
-            <button class="stance-btn locked" data-stance="flowingRiver" title="Flowing River - AFK (Nascent Soul)">🌊</button>
-            <button class="stance-btn locked" data-stance="forbiddenTechnique" title="Forbidden - Ultimate (Spirit Severing)">💀</button>
-          </div>
-          <div id="stance-special" class="stance-special hidden">
-            <span id="stance-special-name">Special: None</span>
-          </div>
-        </div>
-
-        <!-- Waifu Harmony Indicator -->
-        <div id="harmony-indicator" class="harmony-indicator">
-          <div class="harmony-header">
-            <span class="harmony-icon">💕</span>
-            <span class="harmony-title">Waifu Harmony</span>
-          </div>
-          <div class="harmony-status">
-            <span id="harmony-status-text" class="harmony-text">Balanced</span>
-            <span id="harmony-emoji" class="harmony-emoji">☯️</span>
-          </div>
-          <div class="harmony-bar">
-            <div id="harmony-fill" class="harmony-fill" style="width: 50%"></div>
-          </div>
-          <div id="jealousy-alert" class="jealousy-alert hidden">
-            <span id="jealous-waifu-name">Someone</span> seems jealous...
-          </div>
-        </div>
-
-        <!-- Right Panel: Tabs -->
-        <aside class="side-panel right-panel">
+          <!-- Tabs Section (moved here, under boop) -->
+          <div class="center-tabs-container">
           <!-- Tab Navigation -->
           <div class="tab-bar">
             <button class="tab-btn active" data-tab="cats">🐱 Cats</button>
@@ -1649,6 +1561,91 @@
                   🗑️ Reset All Progress
                 </button>
               </div>
+            </div>
+          </div>
+          </div><!-- end center-tabs-container -->
+        </main><!-- end game-main -->
+
+        <!-- Right Panel: Info Displays -->
+        <aside class="side-panel info-panel">
+          <!-- Cultivation Realm Display -->
+          <div id="cultivation-display" class="cultivation-display">
+            <div class="cultivation-header">
+              <span class="cultivation-icon">☯️</span>
+              <span class="cultivation-title">Cultivation</span>
+              <div id="time-season-indicator" class="time-season-indicator">
+                <span id="time-of-day-icon" class="time-icon">☀️</span>
+                <span id="season-icon" class="season-icon">🌸</span>
+              </div>
+            </div>
+            <div class="cultivation-realm-info">
+              <h3 id="cultivation-realm-name" class="realm-name">Mortal Realm</h3>
+              <p id="cultivation-rank" class="realm-rank">Rank 1/9</p>
+              <p id="cultivation-order" class="realm-order">Realm 1 of 10</p>
+            </div>
+            <div class="cultivation-xp-bar">
+              <div id="cultivation-xp-fill" class="xp-fill" style="width: 0%"></div>
+              <span id="cultivation-xp-text" class="xp-text">0 / 100 XP</span>
+            </div>
+            <div class="cultivation-description">
+              <p id="cultivation-desc">The beginning of the path.</p>
+            </div>
+            <div id="tribulation-warning" class="tribulation-warning hidden">
+              <span class="tribulation-icon">⚡</span>
+              <span id="tribulation-name">Tribulation Available</span>
+            </div>
+            <div id="cultivation-passives" class="cultivation-passives"></div>
+            <div class="cultivation-actions">
+              <button id="breakthrough-btn" class="jade-button small breakthrough-btn hidden" onclick="attemptBreakthrough()">
+                ⚡ Attempt Breakthrough
+              </button>
+              <button id="tribulation-btn" class="jade-button small tribulation-btn hidden" onclick="startTribulation()">
+                🔥 Face Tribulation
+              </button>
+            </div>
+          </div>
+
+          <!-- Technique Stance Panel -->
+          <div id="stance-display" class="stance-display">
+            <div class="stance-header">
+              <span class="stance-icon">🥋</span>
+              <span class="stance-title">Technique Stance</span>
+            </div>
+            <div class="current-stance">
+              <span id="current-stance-name" class="stance-name">Jade Palm</span>
+              <span id="current-stance-level" class="stance-mastery">Mastery: 0/10</span>
+            </div>
+            <div class="stance-mastery-bar">
+              <div id="stance-mastery-fill" class="mastery-fill" style="width: 0%"></div>
+            </div>
+            <div class="stance-selector">
+              <button class="stance-btn active" data-stance="jadePalm" title="Jade Palm - Balanced">🖐️</button>
+              <button class="stance-btn locked" data-stance="ironFinger" title="Iron Finger - Power (Qi Condensation)">👆</button>
+              <button class="stance-btn locked" data-stance="drunkenPaw" title="Drunken Paw - Random (Foundation)">🍺</button>
+              <button class="stance-btn locked" data-stance="shadowStep" title="Shadow Step - Speed (Core Formation)">👤</button>
+              <button class="stance-btn locked" data-stance="flowingRiver" title="Flowing River - AFK (Nascent Soul)">🌊</button>
+              <button class="stance-btn locked" data-stance="forbiddenTechnique" title="Forbidden - Ultimate (Spirit Severing)">💀</button>
+            </div>
+            <div id="stance-special" class="stance-special hidden">
+              <span id="stance-special-name">Special: None</span>
+            </div>
+          </div>
+
+          <!-- Waifu Harmony Indicator -->
+          <div id="harmony-indicator" class="harmony-indicator">
+            <div class="harmony-header">
+              <span class="harmony-icon">💕</span>
+              <span class="harmony-title">Waifu Harmony</span>
+            </div>
+            <div class="harmony-status">
+              <span id="harmony-status-text" class="harmony-text">Balanced</span>
+              <span id="harmony-emoji" class="harmony-emoji">☯️</span>
+            </div>
+            <div class="harmony-bar">
+              <div id="harmony-fill" class="harmony-fill" style="width: 50%"></div>
+            </div>
+            <div id="jealousy-alert" class="jealousy-alert hidden">
+              <span id="jealous-waifu-name">Someone</span> seems jealous...
             </div>
           </div>
         </aside>

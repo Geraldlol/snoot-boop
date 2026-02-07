@@ -498,9 +498,34 @@ body {
 
 .game-layout {
   display: grid;
-  grid-template-columns: 200px 1fr 280px;
-  gap: 20px;
+  grid-template-columns: 200px 1fr 200px;
+  gap: 15px;
   min-height: calc(100vh - 200px);
+}
+
+/* Center column: boop area + tabs */
+.game-main {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.center-tabs-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 8px;
+  padding: 10px;
+  overflow: hidden;
+}
+
+/* Right column: info panels */
+.info-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  overflow-y: auto;
 }
 
 .header-right {
