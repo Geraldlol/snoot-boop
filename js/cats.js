@@ -2117,6 +2117,318 @@ if (window.dataLoader) {
 }
 
 // =============================================================================
+// TEAM UI SYSTEM
+// =============================================================================
+
+/**
+ * Team state - tracks current team composition
+ */
+const teamState = {
+  slots: [null, null, null, null], // 4 main slots
+  reserve: null,
+  formation: 'default',
+  selectedSlot: null // For cat selection
+};
+
+/**
+ * Initialize team UI event listeners
+ */
+function initTeamUI() {
+  // Team slot click handlers
+  document.querySelectorAll('.team-slot').forEach(slot => {
+    slot.addEventListener('click', () => {
+      const slotIndex = slot.dataset.slot;
+      openCatSelector(slotIndex);
+    });
+  });
+
+  // Formation button handlers
+  document.querySelectorAll('.formation-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      selectFormation(btn.dataset.formation);
+    });
+  });
+
+  // Update display on init
+  updateTeamDisplay();
+}
+
+/**
+ * Open cat selector modal for a specific slot
+ */
+function openCatSelector(slotIndex) {
+  teamState.selectedSlot = slotIndex;
+
+  // Get available cats (not already in team)
+  const usedCatIds = [...teamState.slots, teamState.reserve].filter(id => id !== null);
+  const availableCats = (window.gameState?.cats || []).filter(cat => !usedCatIds.includes(cat.id));
+
+  // Create modal content
+  const modal = document.getElementById('cat-selector-modal') || createCatSelectorModal();
+  const catList = modal.querySelector('.cat-selector-list');
+
+  if (availableCats.length === 0) {
+    catList.innerHTML = '<p class="empty-message">No available cats! Recruit more cats first.</p>';
+  } else {
+    catList.innerHTML = availableCats.map(cat => `
+      <div class="cat-selector-item" data-cat-id="${cat.id}" onclick="selectCatForTeam('${cat.id}')">
+        <span class="cat-emoji">${cat.emoji || '🐱'}</span>
+        <div class="cat-selector-info">
+          <span class="cat-name">${cat.name}</span>
+          <span class="cat-realm">${CAT_REALMS[cat.realm]?.name || 'Mortal Kitten'}</span>
+        </div>
+        <span class="cat-element" style="color: ${CAT_ELEMENTS[cat.element]?.color || '#fff'}">${cat.element || 'none'}</span>
+      </div>
+    `).join('');
+  }
+
+  // Add clear slot option if slot has a cat
+  const currentCat = slotIndex === 'reserve' ? teamState.reserve : teamState.slots[parseInt(slotIndex)];
+  if (currentCat) {
+    catList.innerHTML = `
+      <div class="cat-selector-item clear-slot" onclick="clearTeamSlot()">
+        <span class="cat-emoji">❌</span>
+        <div class="cat-selector-info">
+          <span class="cat-name">Remove Cat</span>
+          <span class="cat-realm">Clear this slot</span>
+        </div>
+      </div>
+    ` + catList.innerHTML;
+  }
+
+  modal.classList.remove('hidden');
+}
+
+/**
+ * Create the cat selector modal if it doesn't exist
+ */
+function createCatSelectorModal() {
+  const modal = document.createElement('div');
+  modal.id = 'cat-selector-modal';
+  modal.className = 'modal hidden';
+  modal.innerHTML = `
+    <div class="modal-content scroll-panel cat-selector-modal">
+      <h3>Select a Cat</h3>
+      <div class="cat-selector-list"></div>
+      <button class="jade-button small" onclick="closeCatSelector()">Cancel</button>
+    </div>
+  `;
+  document.body.appendChild(modal);
+
+  // Close on backdrop click
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) closeCatSelector();
+  });
+
+  return modal;
+}
+
+/**
+ * Select a cat for the current team slot
+ */
+function selectCatForTeam(catId) {
+  const slotIndex = teamState.selectedSlot;
+
+  if (slotIndex === 'reserve') {
+    teamState.reserve = catId;
+  } else {
+    teamState.slots[parseInt(slotIndex)] = catId;
+  }
+
+  closeCatSelector();
+  updateTeamDisplay();
+  updateTeamSynergies();
+}
+
+/**
+ * Clear the current team slot
+ */
+function clearTeamSlot() {
+  const slotIndex = teamState.selectedSlot;
+
+  if (slotIndex === 'reserve') {
+    teamState.reserve = null;
+  } else {
+    teamState.slots[parseInt(slotIndex)] = null;
+  }
+
+  closeCatSelector();
+  updateTeamDisplay();
+  updateTeamSynergies();
+}
+
+/**
+ * Close the cat selector modal
+ */
+function closeCatSelector() {
+  const modal = document.getElementById('cat-selector-modal');
+  if (modal) modal.classList.add('hidden');
+  teamState.selectedSlot = null;
+}
+
+/**
+ * Select a formation
+ */
+function selectFormation(formationId) {
+  teamState.formation = formationId;
+
+  // Update button states
+  document.querySelectorAll('.formation-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.formation === formationId);
+  });
+
+  // Update slot positions based on formation
+  const formation = TEAM_FORMATIONS[formationId];
+  if (formation) {
+    document.querySelectorAll('.team-slot:not(.reserve)').forEach((slot, i) => {
+      const position = formation.positions[i] || 'front';
+      slot.dataset.position = position;
+      slot.querySelector('.slot-position').textContent = position.charAt(0).toUpperCase() + position.slice(1);
+    });
+  }
+
+  updateTeamSynergies();
+}
+
+/**
+ * Update the team display UI
+ */
+function updateTeamDisplay() {
+  const cats = window.gameState?.cats || [];
+
+  // Update main slots
+  teamState.slots.forEach((catId, index) => {
+    const slot = document.querySelector(`.team-slot[data-slot="${index}"]`);
+    if (!slot) return;
+
+    const slotCat = slot.querySelector('.slot-cat');
+    if (catId) {
+      const cat = cats.find(c => c.id === catId);
+      if (cat) {
+        slotCat.textContent = cat.emoji || '🐱';
+        slotCat.classList.remove('empty');
+        slot.classList.add('filled');
+      }
+    } else {
+      slotCat.textContent = '+';
+      slotCat.classList.add('empty');
+      slot.classList.remove('filled');
+    }
+  });
+
+  // Update reserve slot
+  const reserveSlot = document.querySelector('.team-slot.reserve');
+  if (reserveSlot) {
+    const slotCat = reserveSlot.querySelector('.slot-cat');
+    if (teamState.reserve) {
+      const cat = cats.find(c => c.id === teamState.reserve);
+      if (cat) {
+        slotCat.textContent = cat.emoji || '🐱';
+        slotCat.classList.remove('empty');
+        reserveSlot.classList.add('filled');
+      }
+    } else {
+      slotCat.textContent = '+';
+      slotCat.classList.add('empty');
+      reserveSlot.classList.remove('filled');
+    }
+  }
+}
+
+/**
+ * Update team synergies display
+ */
+function updateTeamSynergies() {
+  const synergyList = document.getElementById('synergy-list');
+  const resonanceDisplay = document.getElementById('resonance-display');
+  if (!synergyList) return;
+
+  const teamCatIds = teamState.slots.filter(id => id !== null);
+  const cats = window.gameState?.cats || [];
+  const teamCats = teamCatIds.map(id => cats.find(c => c.id === id)).filter(c => c);
+
+  if (teamCats.length === 0) {
+    synergyList.innerHTML = '<p class="empty-message">Add cats to see synergies!</p>';
+    if (resonanceDisplay) {
+      resonanceDisplay.querySelector('.resonance-bonus').textContent = '1.0x';
+    }
+    return;
+  }
+
+  // Check for active synergies
+  const activeSynergies = [];
+  for (const [synergyId, synergy] of Object.entries(TEAM_SYNERGIES)) {
+    if (checkSynergyCondition(teamCats, synergy.condition)) {
+      activeSynergies.push(synergy);
+    }
+  }
+
+  if (activeSynergies.length === 0) {
+    synergyList.innerHTML = '<p class="empty-message">No synergies active yet.</p>';
+  } else {
+    synergyList.innerHTML = activeSynergies.map(syn => `
+      <div class="synergy-item">
+        <span class="synergy-icon">✨</span>
+        <div class="synergy-info">
+          <span class="synergy-name">${syn.name}</span>
+          <span class="synergy-bonus">${syn.description}</span>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  // Calculate elemental resonance
+  if (resonanceDisplay && window.catSystem) {
+    const resonance = window.catSystem.calculateTeamResonance(teamCatIds);
+    resonanceDisplay.querySelector('.resonance-bonus').textContent = resonance.toFixed(2) + 'x';
+  }
+}
+
+/**
+ * Check if a synergy condition is met
+ */
+function checkSynergyCondition(teamCats, condition) {
+  if (!condition) return false;
+
+  if (condition.uniqueElements) {
+    const elements = new Set(teamCats.map(c => c.element).filter(e => e));
+    return elements.size >= condition.uniqueElements;
+  }
+  if (condition.sameSchool) {
+    const schools = teamCats.map(c => c.school).filter(s => s);
+    return schools.length >= condition.sameSchool && schools.every(s => s === schools[0]);
+  }
+  if (condition.legendaryCount) {
+    return teamCats.filter(c => c.legendary).length >= condition.legendaryCount;
+  }
+  if (condition.specificCats) {
+    return condition.specificCats.every(id => teamCats.some(c => c.id === id));
+  }
+  if (condition.specificPair) {
+    const personalities = teamCats.map(c => c.personality);
+    return condition.specificPair.every(p => personalities.includes(p));
+  }
+  return false;
+}
+
+// Initialize team UI when DOM is ready
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initTeamUI);
+} else {
+  setTimeout(initTeamUI, 100);
+}
+
+// Export team functions
+window.teamState = teamState;
+window.openCatSelector = openCatSelector;
+window.selectCatForTeam = selectCatForTeam;
+window.clearTeamSlot = clearTeamSlot;
+window.closeCatSelector = closeCatSelector;
+window.selectFormation = selectFormation;
+window.updateTeamDisplay = updateTeamDisplay;
+window.updateTeamSynergies = updateTeamSynergies;
+
+// =============================================================================
 // EXPORTS
 // =============================================================================
 
