@@ -361,15 +361,21 @@ const elements = {
   // Tabs
   tabBtns: document.querySelectorAll('.tab-btn'),
   catsTab: document.getElementById('cats-tab'),
+  teamsTab: document.getElementById('teams-tab'),
   upgradesTab: document.getElementById('upgrades-tab'),
   pagodaTab: document.getElementById('pagoda-tab'),
+  dungeonsTab: document.getElementById('dungeons-tab'),
   equipmentTab: document.getElementById('equipment-tab'),
   expeditionsTab: document.getElementById('expeditions-tab'),
   facilitiesTab: document.getElementById('facilities-tab'),
+  buildingsTab: document.getElementById('buildings-tab'),
+  prestigeTab: document.getElementById('prestige-tab'),
   statsTab: document.getElementById('stats-tab'),
   catinoTab: document.getElementById('catino-tab'),
   partnersTab: document.getElementById('partners-tab'),
   techniquesTab: document.getElementById('techniques-tab'),
+  relicsTab: document.getElementById('relics-tab'),
+  codexTab: document.getElementById('codex-tab'),
   forgeTab: document.getElementById('forge-tab'),
   shopTab: document.getElementById('shop-tab'),
 
@@ -1082,11 +1088,17 @@ function switchTab(tabId) {
   if (elements.catsTab) {
     elements.catsTab.classList.toggle('active', tabId === 'cats');
   }
+  if (elements.teamsTab) {
+    elements.teamsTab.classList.toggle('active', tabId === 'teams');
+  }
   if (elements.upgradesTab) {
     elements.upgradesTab.classList.toggle('active', tabId === 'upgrades');
   }
   if (elements.pagodaTab) {
     elements.pagodaTab.classList.toggle('active', tabId === 'pagoda');
+  }
+  if (elements.dungeonsTab) {
+    elements.dungeonsTab.classList.toggle('active', tabId === 'dungeons');
   }
   if (elements.equipmentTab) {
     elements.equipmentTab.classList.toggle('active', tabId === 'equipment');
@@ -1096,6 +1108,12 @@ function switchTab(tabId) {
   }
   if (elements.facilitiesTab) {
     elements.facilitiesTab.classList.toggle('active', tabId === 'facilities');
+  }
+  if (elements.buildingsTab) {
+    elements.buildingsTab.classList.toggle('active', tabId === 'buildings');
+  }
+  if (elements.prestigeTab) {
+    elements.prestigeTab.classList.toggle('active', tabId === 'prestige');
   }
   if (elements.statsTab) {
     elements.statsTab.classList.toggle('active', tabId === 'stats');
@@ -1108,6 +1126,12 @@ function switchTab(tabId) {
   }
   if (elements.techniquesTab) {
     elements.techniquesTab.classList.toggle('active', tabId === 'techniques');
+  }
+  if (elements.relicsTab) {
+    elements.relicsTab.classList.toggle('active', tabId === 'relics');
+  }
+  if (elements.codexTab) {
+    elements.codexTab.classList.toggle('active', tabId === 'codex');
   }
   if (elements.forgeTab) {
     elements.forgeTab.classList.toggle('active', tabId === 'forge');
@@ -1126,6 +1150,8 @@ function switchTab(tabId) {
     renderPrestige();
   } else if (tabId === 'pagoda') {
     renderPagoda();
+  } else if (tabId === 'dungeons') {
+    // Dungeons tab content is static HTML, no render needed
   } else if (tabId === 'equipment') {
     renderEquipment();
   } else if (tabId === 'cats') {

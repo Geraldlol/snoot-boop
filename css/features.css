@@ -3597,7 +3597,7 @@
 .cultivation-display {
   position: fixed;
   bottom: 230px;
-  left: 10px;
+  right: 10px;
   width: 175px;
   background: linear-gradient(135deg, rgba(0, 0, 0, 0.85), rgba(30, 30, 50, 0.9));
   border: 3px solid var(--realm-color, #A0A0A0);
@@ -3860,6 +3860,230 @@
 /* Hide on mobile - will use different layout */
 @media (max-width: 768px) {
   .cultivation-display {
+    position: static;
+    width: 100%;
+    margin: 10px 0;
+    border-radius: 8px;
+  }
+}
+
+/* ===================================
+   STANCE DISPLAY
+   =================================== */
+
+.stance-display {
+  position: fixed;
+  bottom: 420px;
+  right: 10px;
+  width: 175px;
+  background: linear-gradient(135deg, rgba(0, 0, 0, 0.85), rgba(30, 30, 50, 0.9));
+  border: 3px solid var(--jade);
+  border-radius: 12px;
+  padding: 10px;
+  z-index: 100;
+  box-shadow:
+    0 0 20px rgba(0, 0, 0, 0.5),
+    inset 0 0 15px rgba(255, 255, 255, 0.05);
+  transition: all 0.3s ease;
+}
+
+.stance-display:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 5px 25px rgba(0, 0, 0, 0.6),
+    0 0 30px rgba(80, 200, 120, 0.3),
+    inset 0 0 15px rgba(255, 255, 255, 0.08);
+}
+
+.stance-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.stance-icon {
+  font-size: 16px;
+}
+
+.stance-title {
+  font-family: var(--font-pixel);
+  font-size: 8px;
+  color: var(--jade);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.current-stance {
+  text-align: center;
+  margin-bottom: 8px;
+}
+
+.stance-name {
+  font-family: var(--font-pixel);
+  font-size: 10px;
+  color: var(--jade-light);
+  display: block;
+  margin-bottom: 4px;
+}
+
+.stance-mastery {
+  font-family: var(--font-pixel);
+  font-size: 7px;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.stance-mastery-bar {
+  height: 8px;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.mastery-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--jade-dark), var(--jade-light));
+  transition: width 0.3s ease;
+}
+
+.stance-selector {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  justify-content: center;
+}
+
+.stance-btn {
+  width: 28px;
+  height: 28px;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.4);
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.stance-btn:hover:not(.locked) {
+  border-color: var(--jade);
+  transform: scale(1.1);
+}
+
+.stance-btn.active {
+  border-color: var(--jade);
+  background: rgba(80, 200, 120, 0.3);
+  box-shadow: 0 0 10px rgba(80, 200, 120, 0.5);
+}
+
+.stance-btn.locked {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.stance-special {
+  margin-top: 6px;
+  text-align: center;
+  font-family: var(--font-pixel);
+  font-size: 7px;
+  color: var(--gold-accent);
+}
+
+/* ===================================
+   HARMONY INDICATOR
+   =================================== */
+
+.harmony-indicator {
+  position: fixed;
+  bottom: 610px;
+  right: 10px;
+  width: 175px;
+  background: linear-gradient(135deg, rgba(0, 0, 0, 0.85), rgba(30, 30, 50, 0.9));
+  border: 3px solid var(--yuelin-pink);
+  border-radius: 12px;
+  padding: 10px;
+  z-index: 100;
+  box-shadow:
+    0 0 20px rgba(0, 0, 0, 0.5),
+    inset 0 0 15px rgba(255, 255, 255, 0.05);
+  transition: all 0.3s ease;
+}
+
+.harmony-indicator:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 5px 25px rgba(0, 0, 0, 0.6),
+    0 0 30px rgba(255, 182, 193, 0.3),
+    inset 0 0 15px rgba(255, 255, 255, 0.08);
+}
+
+.harmony-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.harmony-icon {
+  font-size: 14px;
+}
+
+.harmony-title {
+  font-family: var(--font-pixel);
+  font-size: 8px;
+  color: var(--yuelin-pink);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.harmony-status {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.harmony-text {
+  font-family: var(--font-pixel);
+  font-size: 9px;
+  color: var(--text-light);
+}
+
+.harmony-emoji {
+  font-size: 16px;
+}
+
+.harmony-bar {
+  height: 8px;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 4px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.harmony-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--yuelin-pink), #FFB6C1);
+  transition: width 0.3s ease;
+}
+
+.jealousy-alert {
+  margin-top: 6px;
+  font-family: var(--font-pixel);
+  font-size: 7px;
+  color: var(--red-accent);
+  text-align: center;
+}
+
+/* Hide on mobile */
+@media (max-width: 768px) {
+  .stance-display,
+  .harmony-indicator {
     position: static;
     width: 100%;
     margin: 10px 0;

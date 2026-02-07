@@ -5,6 +5,295 @@
    =================================== */
 
 /* ===================================
+   DUNGEON TAB CONTENT (Selection Panel)
+   =================================== */
+
+.dungeons-panel {
+  padding: 10px;
+}
+
+.dungeon-selector {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.dungeon-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  background: linear-gradient(135deg, rgba(0, 0, 0, 0.4), rgba(30, 30, 50, 0.5));
+  border: 2px solid rgba(80, 200, 120, 0.3);
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.dungeon-card:hover {
+  border-color: var(--jade);
+  background: linear-gradient(135deg, rgba(0, 0, 0, 0.5), rgba(30, 50, 50, 0.6));
+  transform: translateX(3px);
+}
+
+.dungeon-card.locked {
+  opacity: 0.6;
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.dungeon-card.locked:hover {
+  transform: none;
+}
+
+.dungeon-icon {
+  font-size: 28px;
+  min-width: 36px;
+  text-align: center;
+}
+
+.dungeon-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.dungeon-name {
+  font-family: var(--font-pixel);
+  font-size: 10px;
+  color: var(--jade-light);
+  margin: 0 0 4px 0;
+}
+
+.dungeon-desc {
+  font-family: var(--font-pixel);
+  font-size: 7px;
+  color: rgba(255, 255, 255, 0.6);
+  margin: 0 0 4px 0;
+}
+
+.dungeon-progress {
+  font-family: var(--font-pixel);
+  font-size: 8px;
+  color: var(--gold-accent);
+}
+
+.unlock-req {
+  color: var(--red-accent);
+}
+
+.dungeon-stats-summary {
+  display: flex;
+  justify-content: space-around;
+  padding: 10px;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+.dungeon-stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.dungeon-stat-item .stat-icon {
+  font-size: 16px;
+}
+
+.dungeon-stat-item .stat-value {
+  font-family: var(--font-pixel);
+  font-size: 12px;
+  color: var(--gold-accent);
+}
+
+.dungeon-stat-item .stat-label {
+  font-family: var(--font-pixel);
+  font-size: 7px;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* Active Dungeon Run Display */
+.dungeon-active-run {
+  background: rgba(0, 0, 0, 0.4);
+  border: 2px solid var(--jade);
+  border-radius: 8px;
+  padding: 12px;
+  margin-top: 10px;
+}
+
+.dungeon-run-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+#active-dungeon-name {
+  font-family: var(--font-pixel);
+  font-size: 10px;
+  color: var(--jade-light);
+}
+
+#active-dungeon-floor {
+  font-family: var(--font-pixel);
+  font-size: 10px;
+  color: var(--gold-accent);
+}
+
+/* Pagoda Combat */
+.pagoda-combat {
+  padding: 10px;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 6px;
+  margin-bottom: 10px;
+}
+
+.combat-enemy {
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.enemy-emoji {
+  font-size: 32px;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.enemy-name {
+  font-family: var(--font-pixel);
+  font-size: 9px;
+  color: var(--red-accent);
+}
+
+.enemy-hp-bar,
+.player-hp-bar {
+  height: 12px;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 6px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.hp-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #ff4444, #ff6666);
+  transition: width 0.3s ease;
+}
+
+.hp-fill.player {
+  background: linear-gradient(90deg, var(--jade-dark), var(--jade-light));
+}
+
+.combat-player {
+  text-align: center;
+  margin-top: 10px;
+}
+
+#player-hp-text {
+  font-family: var(--font-pixel);
+  font-size: 8px;
+  color: var(--jade-light);
+}
+
+.combat-log {
+  max-height: 60px;
+  overflow-y: auto;
+  font-family: var(--font-pixel);
+  font-size: 7px;
+  color: rgba(255, 255, 255, 0.7);
+  padding: 5px;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 4px;
+  margin: 8px 0;
+}
+
+/* Qi Meter */
+.qi-meter {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.qi-label {
+  font-family: var(--font-pixel);
+  font-size: 8px;
+  color: var(--qi-blue);
+}
+
+.qi-bar {
+  flex: 1;
+  height: 10px;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 5px;
+  overflow: hidden;
+  border: 1px solid rgba(0, 191, 255, 0.3);
+}
+
+.qi-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #0088cc, var(--qi-blue));
+  transition: width 0.3s ease;
+}
+
+.qi-amount {
+  font-family: var(--font-pixel);
+  font-size: 8px;
+  color: var(--qi-blue);
+  min-width: 35px;
+}
+
+/* Boop Commands */
+.boop-commands {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  justify-content: center;
+}
+
+.cmd-btn {
+  font-family: var(--font-pixel);
+  font-size: 7px;
+  padding: 6px 8px;
+  background: rgba(80, 200, 120, 0.2);
+  border: 2px solid var(--jade);
+  border-radius: 4px;
+  color: var(--text-light);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.cmd-btn:hover:not(:disabled) {
+  background: rgba(80, 200, 120, 0.4);
+  transform: scale(1.05);
+}
+
+.cmd-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Run Actions */
+.run-actions {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.auto-clear-btn {
+  position: relative;
+}
+
+.auto-clear-info {
+  display: block;
+  font-size: 7px;
+  opacity: 0.7;
+}
+
+/* ===================================
    DUNGEON CONTAINER & LAYOUT
    Main dungeon screen structure
    =================================== */

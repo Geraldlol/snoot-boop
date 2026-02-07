@@ -335,6 +335,32 @@ body {
   font-size: 14px;
 }
 
+.resource-expander {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(80, 200, 120, 0.2);
+  border: 2px solid var(--jade);
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  font-size: 10px;
+  color: var(--jade-light);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.resource-expander:hover {
+  background: rgba(80, 200, 120, 0.4);
+  transform: scale(1.1);
+  box-shadow: 0 0 10px rgba(80, 200, 120, 0.5);
+}
+
+.resource-expander span {
+  font-family: var(--font-pixel);
+  font-weight: bold;
+}
+
 .master-badge {
   background: var(--jade-dark);
   padding: 8px 15px;
@@ -355,12 +381,13 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 30px;
+  gap: 15px;
+  padding: 15px 10px;
 }
 
 .cat-display {
-  width: 150px;
-  height: 150px;
+  width: 100px;
+  height: 100px;
   background: rgba(255,255,255,0.05);
   border: 3px solid var(--jade);
   border-radius: 8px;
@@ -370,7 +397,7 @@ body {
 }
 
 .cat-placeholder {
-  font-size: 80px;
+  font-size: 50px;
   animation: cat-idle 2s ease-in-out infinite;
 }
 
@@ -381,19 +408,19 @@ body {
 
 /* --- THE SACRED BOOP BUTTON --- */
 .boop-button {
-  width: 180px;
-  height: 180px;
+  width: 130px;
+  height: 130px;
   border-radius: 50%;
   background: radial-gradient(circle at 30% 30%,
     var(--red-accent),
     #b8304f
   );
-  border: 6px solid #8B0000;
+  border: 5px solid #8B0000;
   box-shadow:
-    0 8px 0 #5c0a0a,
-    0 0 30px rgba(233, 69, 96, 0.5);
+    0 6px 0 #5c0a0a,
+    0 0 25px rgba(233, 69, 96, 0.5);
   font-family: var(--font-pixel);
-  font-size: 14px;
+  font-size: 11px;
   color: white;
   text-shadow: 2px 2px 0 #000;
   cursor: pointer;
@@ -1504,12 +1531,14 @@ body {
   top: 20px;
   left: 50%;
   transform: translateX(-50%) translateY(-150%);
-  z-index: 1500;
+  z-index: 5000;
   transition: transform 0.4s ease;
+  pointer-events: none;
 }
 
 .event-banner.visible {
   transform: translateX(-50%) translateY(0);
+  pointer-events: auto;
 }
 
 .event-content {
@@ -3376,25 +3405,25 @@ button:active:not(:disabled) {
 /* --- Enhanced Boop Button (THE STAR!) --- */
 .boop-button {
   position: relative;
-  width: 200px;
-  height: 200px;
+  width: 130px;
+  height: 130px;
   border-radius: 50%;
   background:
     radial-gradient(circle at 30% 30%, #ff6b7a, var(--red-accent) 50%, #b8304f 100%);
-  border: 8px solid #8B0000;
+  border: 5px solid #8B0000;
   box-shadow:
-    0 10px 0 #5c0a0a,
-    0 0 0 4px #ff9999,
-    0 0 40px rgba(233, 69, 96, 0.6),
-    inset 0 -10px 30px rgba(0, 0, 0, 0.3),
-    inset 0 10px 30px rgba(255, 255, 255, 0.2);
+    0 6px 0 #5c0a0a,
+    0 0 0 3px #ff9999,
+    0 0 25px rgba(233, 69, 96, 0.6),
+    inset 0 -6px 20px rgba(0, 0, 0, 0.3),
+    inset 0 6px 20px rgba(255, 255, 255, 0.2);
   font-family: var(--font-pixel);
-  font-size: 16px;
+  font-size: 11px;
   color: white;
   text-shadow:
     2px 2px 0 #8B0000,
     -1px -1px 0 #ff9999,
-    0 0 20px rgba(255, 255, 255, 0.5);
+    0 0 15px rgba(255, 255, 255, 0.5);
   cursor: pointer;
   transition: all 0.08s ease;
   line-height: 1.3;
