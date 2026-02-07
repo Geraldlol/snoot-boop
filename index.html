@@ -290,8 +290,9 @@
           </div>
         </div>
 
-        <!-- Center: Boop Area -->
-        <main class="game-main" role="main">
+        <!-- Right Panel: Boop Area + Tabs -->
+        <aside class="side-panel right-panel">
+          <!-- Boop Area - Above Tabs -->
           <div class="boop-area">
             <div id="active-cat-display" class="active-cat-display">
               <div id="active-cat" class="active-cat" role="img" aria-label="Current cat">🐱</div>
@@ -301,12 +302,10 @@
               BOOP<br>THE<br>SNOOT
             </button>
             <p id="boop-power-display" class="boop-power-display" aria-live="polite">+1 BP per boop</p>
+            <div id="floating-text-container" class="floating-text-container" aria-hidden="true"></div>
           </div>
-          <div id="floating-text-container" class="floating-text-container" aria-hidden="true"></div>
-        </main>
 
-        <!-- Right Panel: Tabs for Cats/Upgrades -->
-        <aside class="side-panel right-panel">
+          <!-- Tab Navigation -->
           <div class="tab-bar">
             <button class="tab-btn active" data-tab="cats">🐱 Cats</button>
             <button class="tab-btn" data-tab="teams">👥 Teams</button>
