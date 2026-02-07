@@ -4078,3 +4078,225 @@
     border-radius: 8px;
   }
 }
+
+/* ===================================
+   CAT TEAMS PANEL
+   Team builder, formations, synergies
+   =================================== */
+
+.teams-panel {
+  padding: 10px;
+}
+
+.teams-info {
+  font-size: 8px;
+  color: rgba(255, 255, 255, 0.6);
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.team-section-header {
+  font-size: 9px;
+  color: var(--jade-light);
+  margin-bottom: 8px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid rgba(80, 200, 120, 0.3);
+}
+
+/* Team Builder */
+.team-builder {
+  margin-bottom: 15px;
+}
+
+.team-slots {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.team-slot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 8px;
+  background: rgba(0, 0, 0, 0.3);
+  border: 2px dashed rgba(80, 200, 120, 0.3);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.team-slot:hover {
+  border-color: var(--jade);
+  background: rgba(80, 200, 120, 0.1);
+}
+
+.team-slot.reserve {
+  grid-column: 1 / -1;
+  flex-direction: row;
+  justify-content: center;
+  gap: 10px;
+  border-style: dotted;
+  border-color: rgba(255, 215, 0, 0.3);
+}
+
+.team-slot.reserve:hover {
+  border-color: var(--gold-accent);
+}
+
+.team-slot.filled {
+  border-style: solid;
+  border-color: var(--jade);
+}
+
+.slot-position {
+  font-size: 6px;
+  color: rgba(255, 255, 255, 0.5);
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.slot-cat {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.4);
+  border-radius: 4px;
+  font-size: 20px;
+  margin-bottom: 4px;
+}
+
+.slot-cat.empty {
+  color: rgba(255, 255, 255, 0.3);
+  font-size: 16px;
+}
+
+.slot-label {
+  font-size: 7px;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* Formation Selector */
+.formation-selector {
+  margin-bottom: 15px;
+}
+
+.formation-options {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.formation-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 8px;
+  background: rgba(0, 0, 0, 0.3);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 60px;
+}
+
+.formation-btn:hover {
+  border-color: var(--jade);
+  background: rgba(80, 200, 120, 0.1);
+}
+
+.formation-btn.active {
+  border-color: var(--jade);
+  background: rgba(80, 200, 120, 0.2);
+  box-shadow: 0 0 10px rgba(80, 200, 120, 0.3);
+}
+
+.formation-icon {
+  font-size: 8px;
+  line-height: 1.2;
+  margin-bottom: 4px;
+  color: var(--jade-light);
+}
+
+.formation-name {
+  font-size: 6px;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* Team Synergies */
+.team-synergies {
+  margin-bottom: 15px;
+}
+
+.synergy-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.synergy-list .empty-message {
+  font-size: 8px;
+  color: rgba(255, 255, 255, 0.4);
+  text-align: center;
+  font-style: italic;
+}
+
+.synergy-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  background: rgba(80, 200, 120, 0.1);
+  border: 1px solid rgba(80, 200, 120, 0.3);
+  border-radius: 4px;
+}
+
+.synergy-icon {
+  font-size: 14px;
+}
+
+.synergy-info {
+  flex: 1;
+}
+
+.synergy-name {
+  font-size: 8px;
+  color: var(--jade-light);
+}
+
+.synergy-bonus {
+  font-size: 7px;
+  color: var(--gold-accent);
+}
+
+/* Elemental Resonance */
+.elemental-resonance {
+  margin-bottom: 10px;
+}
+
+.resonance-display {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 10px;
+  background: linear-gradient(135deg, rgba(80, 200, 120, 0.1), rgba(255, 215, 0, 0.1));
+  border: 2px solid rgba(255, 215, 0, 0.3);
+  border-radius: 6px;
+}
+
+.resonance-bonus {
+  font-size: 16px;
+  font-weight: bold;
+  color: var(--gold-accent);
+  text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+}
+
+.resonance-label {
+  font-size: 8px;
+  color: rgba(255, 255, 255, 0.6);
+}
