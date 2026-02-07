@@ -2161,7 +2161,8 @@ function openCatSelector(slotIndex) {
 
   // Get available cats (not already in team)
   const usedCatIds = [...teamState.slots, teamState.reserve].filter(id => id !== null);
-  const availableCats = (window.gameState?.cats || []).filter(cat => !usedCatIds.includes(cat.id));
+  const allCats = window.catSystem?.getAllCats() || [];
+  const availableCats = allCats.filter(cat => !usedCatIds.includes(cat.id) && !usedCatIds.includes(cat.instanceId));
 
   // Create modal content
   const modal = document.getElementById('cat-selector-modal') || createCatSelectorModal();
@@ -2170,8 +2171,10 @@ function openCatSelector(slotIndex) {
   if (availableCats.length === 0) {
     catList.innerHTML = '<p class="empty-message">No available cats! Recruit more cats first.</p>';
   } else {
-    catList.innerHTML = availableCats.map(cat => `
-      <div class="cat-selector-item" data-cat-id="${cat.id}" onclick="selectCatForTeam('${cat.id}')">
+    catList.innerHTML = availableCats.map(cat => {
+      const catId = cat.instanceId || cat.id;
+      return `
+      <div class="cat-selector-item" data-cat-id="${catId}" onclick="selectCatForTeam('${catId}')">
         <span class="cat-emoji">${cat.emoji || '🐱'}</span>
         <div class="cat-selector-info">
           <span class="cat-name">${cat.name}</span>
@@ -2179,7 +2182,7 @@ function openCatSelector(slotIndex) {
         </div>
         <span class="cat-element" style="color: ${CAT_ELEMENTS[cat.element]?.color || '#fff'}">${cat.element || 'none'}</span>
       </div>
-    `).join('');
+    `}).join('');
   }
 
   // Add clear slot option if slot has a cat
@@ -2294,7 +2297,7 @@ function selectFormation(formationId) {
  * Update the team display UI
  */
 function updateTeamDisplay() {
-  const cats = window.gameState?.cats || [];
+  const cats = window.catSystem?.getAllCats() || [];
 
   // Update main slots
   teamState.slots.forEach((catId, index) => {
@@ -2303,11 +2306,15 @@ function updateTeamDisplay() {
 
     const slotCat = slot.querySelector('.slot-cat');
     if (catId) {
-      const cat = cats.find(c => c.id === catId);
+      const cat = cats.find(c => c.id === catId || c.instanceId === catId || c.instanceId == catId);
       if (cat) {
         slotCat.textContent = cat.emoji || '🐱';
         slotCat.classList.remove('empty');
         slot.classList.add('filled');
+      } else {
+        slotCat.textContent = '+';
+        slotCat.classList.add('empty');
+        slot.classList.remove('filled');
       }
     } else {
       slotCat.textContent = '+';
@@ -2321,11 +2328,15 @@ function updateTeamDisplay() {
   if (reserveSlot) {
     const slotCat = reserveSlot.querySelector('.slot-cat');
     if (teamState.reserve) {
-      const cat = cats.find(c => c.id === teamState.reserve);
+      const cat = cats.find(c => c.id === teamState.reserve || c.instanceId === teamState.reserve || c.instanceId == teamState.reserve);
       if (cat) {
         slotCat.textContent = cat.emoji || '🐱';
         slotCat.classList.remove('empty');
         reserveSlot.classList.add('filled');
+      } else {
+        slotCat.textContent = '+';
+        slotCat.classList.add('empty');
+        reserveSlot.classList.remove('filled');
       }
     } else {
       slotCat.textContent = '+';
@@ -2344,8 +2355,8 @@ function updateTeamSynergies() {
   if (!synergyList) return;
 
   const teamCatIds = teamState.slots.filter(id => id !== null);
-  const cats = window.gameState?.cats || [];
-  const teamCats = teamCatIds.map(id => cats.find(c => c.id === id)).filter(c => c);
+  const cats = window.catSystem?.getAllCats() || [];
+  const teamCats = teamCatIds.map(id => cats.find(c => c.id === id || c.instanceId === id || c.instanceId == id)).filter(c => c);
 
   if (teamCats.length === 0) {
     synergyList.innerHTML = '<p class="empty-message">Add cats to see synergies!</p>';
