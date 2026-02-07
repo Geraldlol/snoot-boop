@@ -1648,6 +1648,29 @@
               <span id="jealous-waifu-name">Someone</span> seems jealous...
             </div>
           </div>
+
+          <!-- IRL Time Bonus Display -->
+          <div id="irl-bonus" class="irl-bonus">
+            <span id="irl-time-icon" class="irl-icon">☀️</span>
+            <span id="irl-time-name" class="irl-name">Morning</span>
+            <span id="irl-time-bonus" class="irl-bonus-text">+10% BP</span>
+          </div>
+
+          <!-- Drama Meter -->
+          <div id="drama-meter" class="drama-meter">
+            <div class="drama-header" onclick="toggleDramaPanel()">
+              <span>🎭</span>
+              <span id="drama-level">0</span>
+            </div>
+            <div id="drama-content" class="drama-content hidden">
+              <h4>Drama Level</h4>
+              <div class="drama-bar">
+                <div id="drama-fill" class="drama-fill" style="width: 0%"></div>
+              </div>
+              <p id="drama-status">All is peaceful...</p>
+              <div id="drama-events" class="drama-events"></div>
+            </div>
+          </div>
         </aside>
       </div>
 
@@ -2137,13 +2160,6 @@
 
     <!-- Status Widgets Container (bottom-left) -->
     <div class="status-widgets">
-      <!-- IRL Time Bonus Display -->
-      <div id="irl-bonus" class="irl-bonus">
-        <span id="irl-time-icon" class="irl-icon">☀️</span>
-        <span id="irl-time-name" class="irl-name">Morning</span>
-        <span id="irl-time-bonus" class="irl-bonus-text">+10% BP</span>
-      </div>
-
       <!-- Daily Commissions Panel -->
       <div id="daily-panel" class="daily-panel">
         <div class="daily-header" onclick="toggleDailyPanel()">
@@ -2157,22 +2173,6 @@
           </div>
           <div id="daily-list" class="daily-list"></div>
           <button id="claim-all-daily" class="jade-button small">Claim All</button>
-        </div>
-      </div>
-
-      <!-- Drama Meter -->
-      <div id="drama-meter" class="drama-meter">
-        <div class="drama-header" onclick="toggleDramaPanel()">
-          <span>🎭</span>
-          <span id="drama-level">0</span>
-        </div>
-        <div id="drama-content" class="drama-content hidden">
-          <h4>Drama Level</h4>
-          <div class="drama-bar">
-            <div id="drama-fill" class="drama-fill" style="width: 0%"></div>
-          </div>
-          <p id="drama-status">All is peaceful...</p>
-          <div id="drama-events" class="drama-events"></div>
         </div>
       </div>
     </div>

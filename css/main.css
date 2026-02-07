@@ -4791,17 +4791,13 @@ button:active:not(:disabled) {
 
 /* --- IRL Bonus Display --- */
 .irl-bonus {
-  position: fixed;
-  top: 20px;
-  left: 20px;
   display: flex;
   align-items: center;
   gap: 8px;
   padding: 8px 12px;
-  background: rgba(0, 0, 0, 0.7);
+  background: rgba(0, 0, 0, 0.5);
   border: 2px solid var(--jade-dark);
   border-radius: 6px;
-  z-index: 100;
   font-size: 8px;
 }
 
@@ -4819,11 +4815,7 @@ button:active:not(:disabled) {
 
 /* --- Drama Meter --- */
 .drama-meter {
-  position: fixed;
-  top: 60px;
-  left: 20px;
-  z-index: 100;
-  background: rgba(0, 0, 0, 0.7);
+  background: rgba(0, 0, 0, 0.5);
   border: 2px solid #ff69b4;
   border-radius: 6px;
   overflow: hidden;
