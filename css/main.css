@@ -5538,3 +5538,338 @@ button:active:not(:disabled) {
   border-radius: 8px;
   padding: 10px;
 }
+
+/* ===================================
+   DESKTOP SCALING (Large Screens)
+   Make everything more readable
+   =================================== */
+
+@media (min-width: 1200px) {
+  /* Increase base font sizes for readability */
+  body {
+    font-size: 14px;
+  }
+
+  #game-container {
+    max-width: 1600px;
+    padding: 30px;
+  }
+
+  /* Game layout - wider columns */
+  .game-layout {
+    grid-template-columns: 280px 1fr 360px;
+    gap: 30px;
+  }
+
+  /* Master cards */
+  .masters-grid {
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 20px;
+  }
+
+  .master-card h3 {
+    font-size: 14px;
+  }
+
+  .master-card .title {
+    font-size: 10px;
+  }
+
+  .master-portrait {
+    width: 80px;
+    height: 80px;
+    font-size: 40px;
+  }
+
+  /* THE SACRED BOOP BUTTON - BIGGER! */
+  .boop-button {
+    width: 240px;
+    height: 240px;
+    font-size: 18px;
+    border-width: 8px;
+  }
+
+  /* Floating text */
+  .floating-text {
+    font-size: 18px;
+  }
+
+  .floating-text.critical {
+    font-size: 28px;
+  }
+
+  /* Panel headers and content */
+  .panel-header h3,
+  .panel-header span {
+    font-size: 14px;
+  }
+
+  .panel-header .icon {
+    font-size: 20px;
+  }
+
+  /* Cat cards */
+  .cat-card {
+    padding: 15px;
+  }
+
+  .cat-sprite {
+    font-size: 48px;
+  }
+
+  .cat-name {
+    font-size: 12px;
+  }
+
+  .cat-realm {
+    font-size: 10px;
+  }
+
+  .cat-stats span {
+    font-size: 10px;
+  }
+
+  /* Resource displays */
+  .resource-display .amount {
+    font-size: 16px;
+  }
+
+  .resource-rate {
+    font-size: 10px;
+  }
+
+  .resource-label {
+    font-size: 11px;
+  }
+
+  /* Combo display */
+  .combo-display {
+    font-size: 14px;
+    padding: 10px 16px;
+  }
+
+  /* Stats panel */
+  .stat-label {
+    font-size: 10px;
+  }
+
+  .stat-value {
+    font-size: 18px;
+  }
+
+  /* Buttons */
+  .jade-button,
+  .wuxia-button {
+    font-size: 12px;
+    padding: 14px 28px;
+  }
+
+  /* Waifu cards */
+  .waifu-portrait {
+    font-size: 56px;
+  }
+
+  .waifu-name {
+    font-size: 14px;
+  }
+
+  .waifu-title {
+    font-size: 10px;
+  }
+
+  .waifu-school,
+  .waifu-element {
+    font-size: 9px;
+  }
+
+  /* Upgrades */
+  .upgrade-item {
+    padding: 16px;
+  }
+
+  .upgrade-name {
+    font-size: 12px;
+  }
+
+  .upgrade-effect,
+  .upgrade-cost {
+    font-size: 10px;
+  }
+
+  /* Side panel items */
+  .side-panel {
+    padding: 20px;
+  }
+
+  /* Title and headers */
+  .game-title {
+    font-size: 36px;
+  }
+
+  .game-subtitle {
+    font-size: 16px;
+  }
+
+  .choose-text {
+    font-size: 18px;
+  }
+
+  /* Master preview */
+  .preview-portrait {
+    font-size: 100px;
+  }
+
+  .preview-name {
+    font-size: 20px;
+  }
+
+  .preview-title {
+    font-size: 12px;
+  }
+
+  .preview-passive-name {
+    font-size: 14px;
+  }
+
+  .preview-passive-desc {
+    font-size: 12px;
+  }
+
+  /* Footer quote */
+  .master-quote {
+    font-size: 14px;
+  }
+
+  /* Modals */
+  .modal-header h2 {
+    font-size: 18px;
+  }
+
+  .modal-body {
+    font-size: 12px;
+  }
+
+  /* Notifications */
+  .notification {
+    padding: 16px 20px;
+    font-size: 12px;
+  }
+
+  /* Tab navigation */
+  .tab-nav button,
+  .main-tab-nav button,
+  .sub-tab-nav button {
+    font-size: 11px;
+    padding: 12px 20px;
+  }
+
+  /* Cultivation display */
+  .cultivation-realm {
+    font-size: 14px;
+  }
+
+  .cultivation-rank {
+    font-size: 12px;
+  }
+
+  /* Building cards */
+  .building-name {
+    font-size: 12px;
+  }
+
+  .building-desc {
+    font-size: 10px;
+  }
+
+  .building-level {
+    font-size: 10px;
+  }
+
+  /* Dungeon UI */
+  .dungeon-floor-number {
+    font-size: 16px;
+  }
+
+  .enemy-name {
+    font-size: 12px;
+  }
+
+  .enemy-hp {
+    font-size: 10px;
+  }
+
+  /* Achievement toast */
+  .achievement-name {
+    font-size: 16px;
+  }
+
+  .achievement-desc,
+  .achievement-unlocked {
+    font-size: 11px;
+  }
+
+  /* Goose alert */
+  .goose-alert h3 {
+    font-size: 18px;
+  }
+
+  .goose-mood {
+    font-size: 14px;
+  }
+
+  /* Codex entries */
+  .codex-entry-title {
+    font-size: 12px;
+  }
+
+  .codex-entry-preview {
+    font-size: 10px;
+  }
+
+  .codex-entry-progress {
+    font-size: 9px;
+  }
+
+  .codex-full-entry h3 {
+    font-size: 16px;
+  }
+
+  .codex-full-entry .story {
+    font-size: 12px;
+  }
+}
+
+/* Extra large screens */
+@media (min-width: 1600px) {
+  #game-container {
+    max-width: 1800px;
+  }
+
+  .game-layout {
+    grid-template-columns: 320px 1fr 400px;
+    gap: 40px;
+  }
+
+  .boop-button {
+    width: 280px;
+    height: 280px;
+    font-size: 20px;
+  }
+
+  .floating-text {
+    font-size: 22px;
+  }
+
+  .floating-text.critical {
+    font-size: 32px;
+  }
+
+  .game-title {
+    font-size: 42px;
+  }
+
+  .cat-sprite,
+  .waifu-portrait {
+    font-size: 64px;
+  }
+}
