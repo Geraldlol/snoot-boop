@@ -35,6 +35,9 @@
   font-size: 7px;
   min-height: auto;
   white-space: nowrap;
+  flex-shrink: 0;
+  width: auto;
+  align-self: center;
 }
 
 .dungeon-card:hover {
