@@ -924,7 +924,9 @@ function setupEventListeners() {
   }
 
   // Boop button
-  elements.boopButton.addEventListener('click', handleBoop);
+  if (elements.boopButton) {
+    elements.boopButton.addEventListener('click', handleBoop);
+  }
 
   // Keyboard boop
   document.addEventListener('keydown', (e) => {
@@ -969,10 +971,12 @@ function setupEventListeners() {
   setupInventoryControls();
 
   // Recruit cat
-  elements.recruitBtn.addEventListener('click', recruitCat);
+  if (elements.recruitBtn) {
+    elements.recruitBtn.addEventListener('click', recruitCat);
+  }
 
   // AFK modal close
-  elements.afkCloseBtn.addEventListener('click', () => {
+  if (elements.afkCloseBtn) elements.afkCloseBtn.addEventListener('click', () => {
     elements.afkModal.classList.add('hidden');
   });
 
@@ -2142,7 +2146,7 @@ function startGooseRace() {
   }
 
   // Get the goose by index
-  const geese = RACE_GEESE;
+  const geese = window.RACE_GEESE || [];
   const selectedGoose = geese[pickIndex];
 
   // Create bets object
