@@ -90,14 +90,17 @@
 
     <!-- Main Game Screen -->
     <div id="game-screen" class="screen">
-      <!-- Header with resources -->
+      <!-- Header with resources - 9 Currency Economy -->
       <header class="game-header" role="banner">
         <div class="resource-bar" role="status" aria-live="polite">
-          <div class="resource">
+          <!-- Primary Currencies -->
+          <div class="resource" title="Boop Points - Earned from booping">
+            <span class="resource-icon">👆</span>
             <span class="resource-label" id="bp-label">BP</span>
             <span id="bp-display" class="resource-value" aria-labelledby="bp-label">0</span>
           </div>
-          <div class="resource pp-resource" id="pp-resource-container">
+          <div class="resource pp-resource" id="pp-resource-container" title="Purr Power - Passive generation from cats">
+            <span class="resource-icon">😺</span>
             <span class="resource-label" id="pp-label">PP</span>
             <span id="pp-display" class="resource-value" aria-labelledby="pp-label">0</span>
             <span id="pp-rate" class="resource-rate"></span>
@@ -106,9 +109,55 @@
               <div id="pp-breakdown-content"></div>
             </div>
           </div>
-          <div class="resource">
+          <div class="resource" title="Qi Energy - Used for techniques and breakthroughs">
+            <span class="resource-icon">✨</span>
+            <span class="resource-label" id="qi-label">Qi</span>
+            <span id="qi-display" class="resource-value qi-value" aria-labelledby="qi-label">0</span>
+          </div>
+          <div class="resource" title="Jade Catnip - Premium currency for rare items">
+            <span class="resource-icon">💎</span>
+            <span class="resource-label" id="jc-label">JC</span>
+            <span id="jc-display" class="resource-value jade-value" aria-labelledby="jc-label">0</span>
+          </div>
+          <!-- Secondary Currencies (collapsible) -->
+          <div class="resource-expander" id="resource-expander" onclick="toggleCurrencyPanel()">
+            <span>+5</span>
+          </div>
+          <div class="resource" title="Cats in your sanctuary">
+            <span class="resource-icon">🐱</span>
             <span class="resource-label" id="cats-label">Cats</span>
             <span id="cat-count-display" class="resource-value" aria-labelledby="cats-label">0</span>
+          </div>
+        </div>
+
+        <!-- Extended Currency Panel (hidden by default) -->
+        <div id="currency-panel" class="currency-panel hidden">
+          <div class="currency-grid">
+            <div class="currency-item" title="Spirit Stones - Equipment enhancement">
+              <span class="currency-icon">💠</span>
+              <span class="currency-name">Spirit Stones</span>
+              <span id="spirit-stones-display" class="currency-value">0</span>
+            </div>
+            <div class="currency-item" title="Heavenly Seals - Prestige currency">
+              <span class="currency-icon">🔮</span>
+              <span class="currency-name">Heavenly Seals</span>
+              <span id="heavenly-seals-display" class="currency-value">0</span>
+            </div>
+            <div class="currency-item" title="Sect Reputation - Social features">
+              <span class="currency-icon">🏆</span>
+              <span class="currency-name">Sect Rep</span>
+              <span id="sect-rep-display" class="currency-value">0</span>
+            </div>
+            <div class="currency-item" title="Waifu Tokens - Bond activities">
+              <span class="currency-icon">💕</span>
+              <span class="currency-name">Waifu Tokens</span>
+              <span id="waifu-tokens-display" class="currency-value">0</span>
+            </div>
+            <div class="currency-item" title="Goose Feathers - Goose shop">
+              <span class="currency-icon">🪶</span>
+              <span class="currency-name">Goose Feathers</span>
+              <span id="goose-feathers-display" class="currency-value">0</span>
+            </div>
           </div>
         </div>
         <div class="header-right">
@@ -154,15 +203,20 @@
           </div>
         </aside>
 
-        <!-- Cultivation Realm Display -->
+        <!-- Cultivation Realm Display (Expanded 10-Realm System) -->
         <div id="cultivation-display" class="cultivation-display">
           <div class="cultivation-header">
             <span class="cultivation-icon">☯️</span>
             <span class="cultivation-title">Cultivation</span>
+            <div id="time-season-indicator" class="time-season-indicator">
+              <span id="time-of-day-icon" class="time-icon">☀️</span>
+              <span id="season-icon" class="season-icon">🌸</span>
+            </div>
           </div>
           <div class="cultivation-realm-info">
             <h3 id="cultivation-realm-name" class="realm-name">Mortal Realm</h3>
-            <p id="cultivation-rank" class="realm-rank">Rank 1</p>
+            <p id="cultivation-rank" class="realm-rank">Rank 1/9</p>
+            <p id="cultivation-order" class="realm-order">Realm 1 of 10</p>
           </div>
           <div class="cultivation-xp-bar">
             <div id="cultivation-xp-fill" class="xp-fill" style="width: 0%"></div>
@@ -171,12 +225,69 @@
           <div class="cultivation-description">
             <p id="cultivation-desc">The beginning of the path.</p>
           </div>
+
+          <!-- Tribulation Warning -->
+          <div id="tribulation-warning" class="tribulation-warning hidden">
+            <span class="tribulation-icon">⚡</span>
+            <span id="tribulation-name">Tribulation Available</span>
+          </div>
+
           <div id="cultivation-passives" class="cultivation-passives">
             <!-- Unlocked passives will be listed here -->
           </div>
-          <button id="breakthrough-btn" class="jade-button small breakthrough-btn hidden" onclick="attemptBreakthrough()">
-            ⚡ Attempt Breakthrough
-          </button>
+
+          <div class="cultivation-actions">
+            <button id="breakthrough-btn" class="jade-button small breakthrough-btn hidden" onclick="attemptBreakthrough()">
+              ⚡ Attempt Breakthrough
+            </button>
+            <button id="tribulation-btn" class="jade-button small tribulation-btn hidden" onclick="startTribulation()">
+              🔥 Face Tribulation
+            </button>
+          </div>
+        </div>
+
+        <!-- Technique Stance Panel -->
+        <div id="stance-display" class="stance-display">
+          <div class="stance-header">
+            <span class="stance-icon">🥋</span>
+            <span class="stance-title">Technique Stance</span>
+          </div>
+          <div class="current-stance">
+            <span id="current-stance-name" class="stance-name">Jade Palm</span>
+            <span id="current-stance-level" class="stance-mastery">Mastery: 0/10</span>
+          </div>
+          <div class="stance-mastery-bar">
+            <div id="stance-mastery-fill" class="mastery-fill" style="width: 0%"></div>
+          </div>
+          <div class="stance-selector">
+            <button class="stance-btn active" data-stance="jadePalm" title="Jade Palm - Balanced">🖐️</button>
+            <button class="stance-btn locked" data-stance="ironFinger" title="Iron Finger - Power (Qi Condensation)">👆</button>
+            <button class="stance-btn locked" data-stance="drunkenPaw" title="Drunken Paw - Random (Foundation)">🍺</button>
+            <button class="stance-btn locked" data-stance="shadowStep" title="Shadow Step - Speed (Core Formation)">👤</button>
+            <button class="stance-btn locked" data-stance="flowingRiver" title="Flowing River - AFK (Nascent Soul)">🌊</button>
+            <button class="stance-btn locked" data-stance="forbiddenTechnique" title="Forbidden - Ultimate (Spirit Severing)">💀</button>
+          </div>
+          <div id="stance-special" class="stance-special hidden">
+            <span id="stance-special-name">Special: None</span>
+          </div>
+        </div>
+
+        <!-- Waifu Harmony Indicator -->
+        <div id="harmony-indicator" class="harmony-indicator">
+          <div class="harmony-header">
+            <span class="harmony-icon">💕</span>
+            <span class="harmony-title">Waifu Harmony</span>
+          </div>
+          <div class="harmony-status">
+            <span id="harmony-status-text" class="harmony-text">Balanced</span>
+            <span id="harmony-emoji" class="harmony-emoji">☯️</span>
+          </div>
+          <div class="harmony-bar">
+            <div id="harmony-fill" class="harmony-fill" style="width: 50%"></div>
+          </div>
+          <div id="jealousy-alert" class="jealousy-alert hidden">
+            <span id="jealous-waifu-name">Someone</span> seems jealous...
+          </div>
         </div>
 
         <!-- Center: Boop Area -->
@@ -198,15 +309,19 @@
         <aside class="side-panel right-panel">
           <div class="tab-bar">
             <button class="tab-btn active" data-tab="cats">🐱 Cats</button>
+            <button class="tab-btn" data-tab="teams">👥 Teams</button>
             <button class="tab-btn" data-tab="upgrades">⚔️ Arts</button>
-            <button class="tab-btn" data-tab="pagoda">🏯 Pagoda</button>
+            <button class="tab-btn" data-tab="dungeons">🏯 Dungeons</button>
             <button class="tab-btn" data-tab="equipment">⚙️ Equip</button>
             <button class="tab-btn" data-tab="forge">🔨 Forge</button>
             <button class="tab-btn" data-tab="expeditions">🗺️ Quest</button>
             <button class="tab-btn" data-tab="catino">🎰 Casino</button>
             <button class="tab-btn" data-tab="partners">💕 Partners</button>
-            <button class="tab-btn" data-tab="facilities">☯️ Sect</button>
+            <button class="tab-btn" data-tab="buildings">🏗️ Build</button>
+            <button class="tab-btn" data-tab="prestige">🌟 Ascend</button>
             <button class="tab-btn" data-tab="techniques">📜 Skills</button>
+            <button class="tab-btn" data-tab="relics">🏺 Relics</button>
+            <button class="tab-btn" data-tab="codex">📖 Codex</button>
             <button class="tab-btn" data-tab="shop">🦅 Shop</button>
             <button class="tab-btn" data-tab="stats">📊 Stats</button>
           </div>
@@ -223,8 +338,151 @@
                 <span id="cat-capacity-current">0</span>/<span id="cat-capacity-max">10</span>
               </div>
             </div>
+            <!-- Cat Filters -->
+            <div class="cat-filters">
+              <select id="cat-filter-element" class="cat-filter-select">
+                <option value="all">All Elements</option>
+                <option value="metal">🪙 Metal</option>
+                <option value="wood">🌿 Wood</option>
+                <option value="water">💧 Water</option>
+                <option value="fire">🔥 Fire</option>
+                <option value="earth">🪨 Earth</option>
+                <option value="void">🌑 Void</option>
+                <option value="chaos">🌀 Chaos</option>
+              </select>
+              <select id="cat-filter-realm" class="cat-filter-select">
+                <option value="all">All Realms</option>
+                <option value="kittenMortal">Mortal Kitten</option>
+                <option value="earthKitten">Earth Kitten</option>
+                <option value="skyKitten">Sky Kitten</option>
+                <option value="heavenKitten">Heaven Kitten</option>
+                <option value="divineBeast">Divine Beast</option>
+              </select>
+              <select id="cat-sort" class="cat-filter-select">
+                <option value="recent">Sort: Recent</option>
+                <option value="realm">Sort: Realm</option>
+                <option value="stars">Sort: Stars</option>
+                <option value="happiness">Sort: Happiness</option>
+              </select>
+            </div>
             <div id="cat-collection" class="cat-collection">
               <p class="empty-message">No cats yet. Recruit your first disciple!</p>
+            </div>
+          </div>
+
+          <!-- Cat Teams Tab -->
+          <div id="teams-tab" class="tab-content">
+            <div class="teams-panel">
+              <h4 class="category-header">👥 Cat Teams & Formations</h4>
+              <p class="teams-info">Form a team of 4 cats + 1 reserve for dungeons!</p>
+
+              <!-- Current Team Display -->
+              <div class="team-builder">
+                <h5 class="team-section-header">Active Team</h5>
+                <div class="team-slots">
+                  <div class="team-slot" data-slot="0" data-position="front">
+                    <span class="slot-position">Front</span>
+                    <div class="slot-cat empty">+</div>
+                    <span class="slot-label">Slot 1</span>
+                  </div>
+                  <div class="team-slot" data-slot="1" data-position="front">
+                    <span class="slot-position">Front</span>
+                    <div class="slot-cat empty">+</div>
+                    <span class="slot-label">Slot 2</span>
+                  </div>
+                  <div class="team-slot" data-slot="2" data-position="back">
+                    <span class="slot-position">Back</span>
+                    <div class="slot-cat empty">+</div>
+                    <span class="slot-label">Slot 3</span>
+                  </div>
+                  <div class="team-slot" data-slot="3" data-position="back">
+                    <span class="slot-position">Back</span>
+                    <div class="slot-cat empty">+</div>
+                    <span class="slot-label">Slot 4</span>
+                  </div>
+                  <div class="team-slot reserve" data-slot="reserve">
+                    <span class="slot-position">Reserve</span>
+                    <div class="slot-cat empty">+</div>
+                    <span class="slot-label">Backup</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Formation Selector -->
+              <div class="formation-selector">
+                <h5 class="team-section-header">Formation</h5>
+                <div class="formation-options">
+                  <button class="formation-btn active" data-formation="default" title="Standard Formation">
+                    <span class="formation-icon">⬜⬜<br>⬜⬜</span>
+                    <span class="formation-name">Standard</span>
+                  </button>
+                  <button class="formation-btn" data-formation="aggressive" title="Aggressive - +20% ATK, -10% DEF">
+                    <span class="formation-icon">⬜⬜⬜<br>⬜</span>
+                    <span class="formation-name">Aggressive</span>
+                  </button>
+                  <button class="formation-btn" data-formation="defensive" title="Defensive - -10% ATK, +30% DEF">
+                    <span class="formation-icon">⬜<br>⬜⬜⬜</span>
+                    <span class="formation-name">Defensive</span>
+                  </button>
+                  <button class="formation-btn" data-formation="balanced" title="Balanced - +10% both">
+                    <span class="formation-icon">⬜<br>⬜⬜<br>⬜</span>
+                    <span class="formation-name">Balanced</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Team Synergies -->
+              <div class="team-synergies">
+                <h5 class="team-section-header">Active Synergies</h5>
+                <div id="synergy-list" class="synergy-list">
+                  <p class="empty-message">Add cats to see synergies!</p>
+                </div>
+              </div>
+
+              <!-- Elemental Resonance -->
+              <div class="elemental-resonance">
+                <h5 class="team-section-header">Elemental Resonance</h5>
+                <div id="resonance-display" class="resonance-display">
+                  <span class="resonance-bonus">1.0x</span>
+                  <span class="resonance-label">Team Power</span>
+                </div>
+              </div>
+
+              <!-- Team Stats Summary -->
+              <div class="team-stats-summary">
+                <h5 class="team-section-header">Team Stats</h5>
+                <div class="team-stats-grid">
+                  <div class="team-stat">
+                    <span class="stat-icon">⚔️</span>
+                    <span id="team-attack" class="stat-value">0</span>
+                    <span class="stat-label">Attack</span>
+                  </div>
+                  <div class="team-stat">
+                    <span class="stat-icon">🛡️</span>
+                    <span id="team-defense" class="stat-value">0</span>
+                    <span class="stat-label">Defense</span>
+                  </div>
+                  <div class="team-stat">
+                    <span class="stat-icon">❤️</span>
+                    <span id="team-hp" class="stat-value">0</span>
+                    <span class="stat-label">HP</span>
+                  </div>
+                  <div class="team-stat">
+                    <span class="stat-icon">💨</span>
+                    <span id="team-speed" class="stat-value">0</span>
+                    <span class="stat-label">Speed</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Cat Fusion -->
+              <div class="cat-fusion-section">
+                <h5 class="team-section-header">🔮 Cat Fusion</h5>
+                <p class="fusion-info">Combine cats to create powerful new forms!</p>
+                <button id="open-fusion-btn" class="jade-button small" onclick="openFusionModal()">
+                  Open Fusion Lab
+                </button>
+              </div>
             </div>
           </div>
 
@@ -240,55 +498,174 @@
             </div>
           </div>
 
-          <!-- Pagoda Tab -->
-          <div id="pagoda-tab" class="tab-content">
-            <div class="pagoda-panel">
-              <div class="pagoda-header">
-                <h4 class="category-header">🏯 Infinite Pagoda</h4>
-                <p class="pagoda-subtitle">Test your might against endless foes!</p>
-              </div>
-              <div class="pagoda-stats">
-                <div class="pagoda-stat">
-                  <span class="stat-label">Highest Floor</span>
-                  <span id="pagoda-highest-floor" class="stat-value">0</span>
+          <!-- Dungeons Tab (Replaces Pagoda) -->
+          <div id="dungeons-tab" class="tab-content">
+            <div class="dungeons-panel">
+              <h4 class="category-header">🏯 Dungeons & Challenges</h4>
+
+              <!-- Dungeon Selection -->
+              <div class="dungeon-selector">
+                <!-- Infinite Pagoda -->
+                <div class="dungeon-card" data-dungeon="pagoda">
+                  <div class="dungeon-icon">🏯</div>
+                  <div class="dungeon-info">
+                    <h5 class="dungeon-name">Infinite Pagoda</h5>
+                    <p class="dungeon-desc">Climb endless floors for rewards</p>
+                    <div class="dungeon-progress">
+                      <span>Highest: <span id="pagoda-highest-floor">0</span></span>
+                    </div>
+                  </div>
+                  <button class="jade-button small" onclick="selectDungeon('pagoda')">Enter</button>
                 </div>
-                <div class="pagoda-stat">
-                  <span class="stat-label">Tokens</span>
+
+                <!-- Bamboo Forest (Wave Survival) -->
+                <div class="dungeon-card" data-dungeon="bamboo">
+                  <div class="dungeon-icon">🎋</div>
+                  <div class="dungeon-info">
+                    <h5 class="dungeon-name">Bamboo Forest</h5>
+                    <p class="dungeon-desc">Survive 30 minutes of waves</p>
+                    <div class="dungeon-progress">
+                      <span>Best: <span id="bamboo-best-time">0:00</span></span>
+                    </div>
+                  </div>
+                  <button class="jade-button small" onclick="selectDungeon('bamboo')">Enter</button>
+                </div>
+
+                <!-- Celestial Tournament -->
+                <div class="dungeon-card" data-dungeon="tournament">
+                  <div class="dungeon-icon">⚔️</div>
+                  <div class="dungeon-info">
+                    <h5 class="dungeon-name">Celestial Tournament</h5>
+                    <p class="dungeon-desc">Battle AI versions of the Seven Masters</p>
+                    <div class="dungeon-progress">
+                      <span>Wins: <span id="tournament-wins">0</span>/7</span>
+                    </div>
+                  </div>
+                  <button class="jade-button small" onclick="selectDungeon('tournament')">Enter</button>
+                </div>
+
+                <!-- Dream Realm -->
+                <div class="dungeon-card locked" data-dungeon="dream" data-unlock="nascentSoul">
+                  <div class="dungeon-icon">🌙</div>
+                  <div class="dungeon-info">
+                    <h5 class="dungeon-name">Dream Realm</h5>
+                    <p class="dungeon-desc">Procedural dungeon from YOUR data</p>
+                    <div class="dungeon-progress">
+                      <span class="unlock-req">Requires: Nascent Soul</span>
+                    </div>
+                  </div>
+                  <button class="jade-button small" disabled>Locked</button>
+                </div>
+
+                <!-- Goose Dimension -->
+                <div class="dungeon-card locked" data-dungeon="goose" data-unlock="cobraChicken">
+                  <div class="dungeon-icon">🦢</div>
+                  <div class="dungeon-info">
+                    <h5 class="dungeon-name">Goose Dimension</h5>
+                    <p class="dungeon-desc">HONK. Everything is geese. HONK.</p>
+                    <div class="dungeon-progress">
+                      <span class="unlock-req">Defeat Cobra Chicken</span>
+                    </div>
+                  </div>
+                  <button class="jade-button small" disabled>Locked</button>
+                </div>
+
+                <!-- Memory Fragments -->
+                <div class="dungeon-card" data-dungeon="memory">
+                  <div class="dungeon-icon">📜</div>
+                  <div class="dungeon-info">
+                    <h5 class="dungeon-name">Memory Fragments</h5>
+                    <p class="dungeon-desc">Story dungeons that unlock lore</p>
+                    <div class="dungeon-progress">
+                      <span>Chapters: <span id="memory-chapters">0</span>/<span id="memory-total">?</span></span>
+                    </div>
+                  </div>
+                  <button class="jade-button small" onclick="selectDungeon('memory')">Enter</button>
+                </div>
+              </div>
+
+              <!-- Dungeon Stats Summary -->
+              <div class="dungeon-stats-summary">
+                <div class="dungeon-stat-item">
+                  <span class="stat-icon">🎫</span>
                   <span id="pagoda-tokens" class="stat-value">0</span>
+                  <span class="stat-label">Tokens</span>
+                </div>
+                <div class="dungeon-stat-item">
+                  <span class="stat-icon">🏆</span>
+                  <span id="dungeon-runs" class="stat-value">0</span>
+                  <span class="stat-label">Runs</span>
+                </div>
+                <div class="dungeon-stat-item">
+                  <span class="stat-icon">💀</span>
+                  <span id="bosses-defeated" class="stat-value">0</span>
+                  <span class="stat-label">Bosses</span>
                 </div>
               </div>
-              <button id="start-pagoda-btn" class="jade-button pagoda-start-btn">
-                Enter the Pagoda
-              </button>
-              <button id="auto-clear-btn" class="jade-button auto-clear-btn hidden" onclick="autoClearPagoda()">
-                ⚡ Auto-Clear
-                <span id="auto-clear-info" class="auto-clear-info"></span>
-              </button>
-              <div id="pagoda-combat" class="pagoda-combat hidden">
-                <div class="combat-enemy">
-                  <span id="enemy-emoji" class="enemy-emoji">👹</span>
-                  <span id="enemy-name" class="enemy-name">Enemy</span>
-                  <div class="enemy-hp-bar">
-                    <div id="enemy-hp-fill" class="hp-fill"></div>
+
+              <!-- Active Dungeon Run Display -->
+              <div id="dungeon-active-run" class="dungeon-active-run hidden">
+                <div class="dungeon-run-header">
+                  <span id="active-dungeon-name">Infinite Pagoda</span>
+                  <span id="active-dungeon-floor">Floor 1</span>
+                </div>
+
+                <!-- Combat Area -->
+                <div id="pagoda-combat" class="pagoda-combat hidden">
+                  <div class="combat-enemy">
+                    <span id="enemy-emoji" class="enemy-emoji">👹</span>
+                    <span id="enemy-name" class="enemy-name">Enemy</span>
+                    <div class="enemy-hp-bar">
+                      <div id="enemy-hp-fill" class="hp-fill"></div>
+                    </div>
+                  </div>
+                  <div class="combat-player">
+                    <div class="player-hp-bar">
+                      <div id="player-hp-fill" class="hp-fill player"></div>
+                    </div>
+                    <span id="player-hp-text">100/100</span>
+                  </div>
+                  <div id="combat-log" class="combat-log"></div>
+
+                  <!-- Qi Meter for Boop Commands -->
+                  <div class="qi-meter">
+                    <span class="qi-label">Qi:</span>
+                    <div class="qi-bar">
+                      <div id="qi-fill" class="qi-fill" style="width: 0%"></div>
+                    </div>
+                    <span id="qi-amount" class="qi-amount">0/10</span>
+                  </div>
+
+                  <div class="boop-commands">
+                    <button class="cmd-btn" data-cmd="power_strike" data-cost="1">💪 Strike (1)</button>
+                    <button class="cmd-btn" data-cmd="healing_touch" data-cost="1">💚 Heal (1)</button>
+                    <button class="cmd-btn" data-cmd="shield_wall" data-cost="1">🛡️ Shield (1)</button>
+                    <button class="cmd-btn" data-cmd="mega_boop" data-cost="3">💥 MEGA (3)</button>
+                    <button class="cmd-btn" data-cmd="emergency_exit" data-cost="5">🚪 Flee (5)</button>
                   </div>
                 </div>
-                <div class="combat-player">
-                  <div class="player-hp-bar">
-                    <div id="player-hp-fill" class="hp-fill player"></div>
-                  </div>
-                  <span id="player-hp-text">100/100</span>
+
+                <!-- Run Actions -->
+                <div class="run-actions">
+                  <button id="auto-clear-btn" class="jade-button auto-clear-btn hidden" onclick="autoClearPagoda()">
+                    ⚡ Auto-Clear
+                    <span id="auto-clear-info" class="auto-clear-info"></span>
+                  </button>
+                  <button class="jade-button small danger" onclick="abandonRun()">Abandon Run</button>
                 </div>
-                <div id="combat-log" class="combat-log"></div>
-                <div class="boop-commands">
-                  <button class="cmd-btn" data-cmd="power_strike">💪 Strike</button>
-                  <button class="cmd-btn" data-cmd="healing_touch">💚 Heal</button>
-                  <button class="cmd-btn" data-cmd="shield_wall">🛡️ Shield</button>
-                  <button class="cmd-btn" data-cmd="mega_boop">💥 MEGA</button>
-                  <button class="cmd-btn" data-cmd="emergency_exit">🚪 Flee</button>
-                </div>
+              </div>
+
+              <!-- Start Dungeon Button -->
+              <div id="dungeon-start-area" class="dungeon-start-area">
+                <button id="start-pagoda-btn" class="jade-button pagoda-start-btn">
+                  🏯 Enter the Pagoda
+                </button>
               </div>
             </div>
           </div>
+
+          <!-- Pagoda Tab (Legacy/Hidden - for compatibility) -->
+          <div id="pagoda-tab" class="tab-content hidden-tab"></div>
 
           <!-- Equipment Tab -->
           <div id="equipment-tab" class="tab-content">
@@ -554,47 +931,294 @@
             </div>
           </div>
 
-          <!-- Facilities Tab -->
-          <div id="facilities-tab" class="tab-content">
-            <div class="upgrade-category">
-              <h4 class="category-header">🏯 Sect Facilities</h4>
-              <div id="facilities-list" class="upgrade-list"></div>
-            </div>
+          <!-- Facilities Tab (Legacy - redirect to Buildings) -->
+          <div id="facilities-tab" class="tab-content hidden-tab"></div>
 
-            <!-- Prestige Panel -->
-            <div class="prestige-panel">
-              <div class="prestige-header">
-                <span class="prestige-tier">☯️</span>
-                <div class="prestige-info">
-                  <h4>Cultivation Realm</h4>
-                  <span id="prestige-tier-name" class="tier-name">Mortal</span>
+          <!-- Buildings Tab (Expanded) -->
+          <div id="buildings-tab" class="tab-content">
+            <div class="buildings-panel">
+              <h4 class="category-header">🏗️ Sect Buildings</h4>
+
+              <!-- Territory Selector -->
+              <div class="territory-selector">
+                <h5 class="section-header">Current Territory</h5>
+                <div class="territory-display">
+                  <span id="current-territory-icon" class="territory-icon">🏠</span>
+                  <div class="territory-info">
+                    <span id="current-territory-name" class="territory-name">Humble Courtyard</span>
+                    <span id="territory-capacity" class="territory-cap">Cap: 10 cats | 3 slots</span>
+                  </div>
+                </div>
+                <div class="territory-options">
+                  <button class="territory-btn active" data-territory="humble_courtyard" title="Humble Courtyard">🏠</button>
+                  <button class="territory-btn locked" data-territory="mountain_sanctuary" title="Mountain Sanctuary (1M BP)">⛰️</button>
+                  <button class="territory-btn locked" data-territory="floating_palace" title="Floating Palace (50M BP)">🏰</button>
+                  <button class="territory-btn locked" data-territory="celestial_realm" title="Celestial Realm (1B BP)">✨</button>
                 </div>
               </div>
 
-              <div class="prestige-multiplier">
-                <span id="prestige-multiplier" class="multiplier-value">1.0x</span>
-                <span class="multiplier-label">All Gains</span>
+              <!-- Building Slots Display -->
+              <div class="building-slots-display">
+                <span class="slots-label">Building Slots:</span>
+                <span id="used-slots" class="slots-used">0</span>/<span id="total-slots" class="slots-total">3</span>
               </div>
 
-              <div class="prestige-progress">
+              <!-- Building Categories -->
+              <div class="building-categories">
+                <button class="building-cat-btn active" data-category="core">🏛️ Core</button>
+                <button class="building-cat-btn" data-category="production">⚙️ Production</button>
+                <button class="building-cat-btn" data-category="social">💕 Social</button>
+                <button class="building-cat-btn" data-category="utility">🔧 Utility</button>
+                <button class="building-cat-btn" data-category="special">⭐ Special</button>
+              </div>
+
+              <!-- Buildings Grid -->
+              <div id="buildings-grid" class="buildings-grid">
+                <!-- Core Buildings -->
+                <div class="building-card" data-building="cat_pagoda">
+                  <div class="building-icon">🏯</div>
+                  <div class="building-info">
+                    <h5 class="building-name">Cat Pagoda</h5>
+                    <p class="building-effect">+10 cat capacity/level</p>
+                    <span class="building-level">Level <span id="cat_pagoda-level">0</span>/10</span>
+                  </div>
+                  <div class="building-cost">
+                    <span id="cat_pagoda-cost">10,000 BP</span>
+                  </div>
+                  <button class="jade-button small" onclick="buildBuilding('cat_pagoda')">Build</button>
+                </div>
+
+                <div class="building-card" data-building="meditation_garden">
+                  <div class="building-icon">🌸</div>
+                  <div class="building-info">
+                    <h5 class="building-name">Meditation Garden</h5>
+                    <p class="building-effect">+25% idle PP</p>
+                    <span class="building-level">Level <span id="meditation_garden-level">0</span>/10</span>
+                  </div>
+                  <div class="building-cost">
+                    <span id="meditation_garden-cost">50,000 BP</span>
+                  </div>
+                  <button class="jade-button small" onclick="buildBuilding('meditation_garden')">Build</button>
+                </div>
+
+                <div class="building-card" data-building="training_dojo">
+                  <div class="building-icon">🥋</div>
+                  <div class="building-info">
+                    <h5 class="building-name">Training Dojo</h5>
+                    <p class="building-effect">Cat training & techniques</p>
+                    <span class="building-level">Level <span id="training_dojo-level">0</span>/10</span>
+                  </div>
+                  <div class="building-cost">
+                    <span id="training_dojo-cost">100,000 BP</span>
+                  </div>
+                  <button class="jade-button small" onclick="buildBuilding('training_dojo')">Build</button>
+                </div>
+
+                <div class="building-card" data-building="waifu_quarters">
+                  <div class="building-icon">💕</div>
+                  <div class="building-info">
+                    <h5 class="building-name">Waifu Quarters</h5>
+                    <p class="building-effect">Daily gifts, bond bonuses</p>
+                    <span class="building-level">Level <span id="waifu_quarters-level">0</span>/10</span>
+                  </div>
+                  <div class="building-cost">
+                    <span id="waifu_quarters-cost">200,000 BP</span>
+                  </div>
+                  <button class="jade-button small" onclick="buildBuilding('waifu_quarters')">Build</button>
+                </div>
+
+                <div class="building-card" data-building="goose_watchtower">
+                  <div class="building-icon">🦢</div>
+                  <div class="building-info">
+                    <h5 class="building-name">Goose Watchtower</h5>
+                    <p class="building-effect">+5% goose spawn, warnings</p>
+                    <span class="building-level">Level <span id="goose_watchtower-level">0</span>/10</span>
+                  </div>
+                  <div class="building-cost">
+                    <span id="goose_watchtower-cost">250,000 BP</span>
+                  </div>
+                  <button class="jade-button small" onclick="buildBuilding('goose_watchtower')">Build</button>
+                </div>
+
+                <div class="building-card" data-building="hot_springs">
+                  <div class="building-icon">♨️</div>
+                  <div class="building-info">
+                    <h5 class="building-name">Hot Springs</h5>
+                    <p class="building-effect">Recovery, bond events</p>
+                    <span class="building-level">Level <span id="hot_springs-level">0</span>/5</span>
+                  </div>
+                  <div class="building-cost">
+                    <span id="hot_springs-cost">750,000 BP</span>
+                  </div>
+                  <button class="jade-button small" onclick="buildBuilding('hot_springs')">Build</button>
+                </div>
+              </div>
+
+              <!-- Building Effects Summary -->
+              <div class="building-effects-summary">
+                <h5 class="section-header">Active Effects</h5>
+                <div id="building-effects-list" class="effects-list">
+                  <p class="empty-message">Build structures to gain effects!</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Prestige Tab (Three-Layer System) -->
+          <div id="prestige-tab" class="tab-content">
+            <div class="prestige-panel-full">
+              <h4 class="category-header">🌟 Prestige & Ascension</h4>
+
+              <!-- Layer 1: Ascension -->
+              <div class="prestige-layer" data-layer="ascension">
+                <div class="layer-header">
+                  <span class="layer-icon">🔮</span>
+                  <div class="layer-info">
+                    <h5 class="layer-name">Ascension</h5>
+                    <span class="layer-desc">Reset for Heavenly Seals</span>
+                  </div>
+                  <span id="ascension-count" class="layer-count">0</span>
+                </div>
+
+                <div class="layer-progress">
+                  <div class="progress-bar">
+                    <div id="ascension-progress-fill" class="progress-fill" style="width: 0%"></div>
+                  </div>
+                  <div class="progress-text">
+                    <span id="ascension-current">0 PP</span>
+                    <span id="ascension-requirement">1B PP</span>
+                  </div>
+                </div>
+
+                <div class="layer-rewards">
+                  <span class="rewards-label">You will gain:</span>
+                  <div class="rewards-preview">
+                    <span id="ascension-seals-preview" class="reward-item">🔮 0 Heavenly Seals</span>
+                    <span id="ascension-mult-preview" class="reward-item">✨ 1.5x Multiplier</span>
+                  </div>
+                </div>
+
+                <div class="layer-decree hidden" id="decree-selection">
+                  <span class="decree-label">Choose Heavenly Decree:</span>
+                  <div class="decree-options">
+                    <button class="decree-btn" data-decree="speed">⚡ Swiftness</button>
+                    <button class="decree-btn" data-decree="wealth">💰 Prosperity</button>
+                    <button class="decree-btn" data-decree="fortune">🍀 Fortune</button>
+                    <button class="decree-btn" data-decree="bonds">💕 Bonds</button>
+                    <button class="decree-btn" data-decree="combat">⚔️ War</button>
+                  </div>
+                </div>
+
+                <button id="ascension-btn" class="jade-button prestige-btn" disabled onclick="performAscension()">
+                  🔮 Ascend (1B PP Required)
+                </button>
+              </div>
+
+              <!-- Layer 2: Reincarnation -->
+              <div class="prestige-layer locked" data-layer="reincarnation">
+                <div class="layer-header">
+                  <span class="layer-icon">🌀</span>
+                  <div class="layer-info">
+                    <h5 class="layer-name">Reincarnation</h5>
+                    <span class="layer-desc">Reset Ascensions for Karma</span>
+                  </div>
+                  <span id="reincarnation-count" class="layer-count">0</span>
+                </div>
+
+                <div class="layer-unlock-req">
+                  <span>Requires: 10 Ascensions + 500 Heavenly Seals</span>
+                  <span id="reincarnation-progress">0/10 Ascensions, 0/500 Seals</span>
+                </div>
+
+                <div class="layer-progress hidden">
+                  <div class="progress-bar">
+                    <div id="reincarnation-progress-fill" class="progress-fill karma" style="width: 0%"></div>
+                  </div>
+                </div>
+
+                <div class="layer-rewards hidden">
+                  <span class="rewards-label">You will gain:</span>
+                  <div class="rewards-preview">
+                    <span id="reincarnation-karma-preview" class="reward-item">🌀 0 Karma Points</span>
+                    <span id="reincarnation-mult-preview" class="reward-item">✨ 2x Multiplier</span>
+                    <span class="reward-item">🧠 Past Life Memory</span>
+                  </div>
+                </div>
+
+                <button id="reincarnation-btn" class="jade-button prestige-btn" disabled onclick="performReincarnation()">
+                  🌀 Reincarnate (Locked)
+                </button>
+              </div>
+
+              <!-- Layer 3: Transcendence -->
+              <div class="prestige-layer locked ultimate" data-layer="transcendence">
+                <div class="layer-header">
+                  <span class="layer-icon">🌌</span>
+                  <div class="layer-info">
+                    <h5 class="layer-name">Transcendence</h5>
+                    <span class="layer-desc">The Ultimate Reset</span>
+                  </div>
+                  <span id="transcendence-count" class="layer-count">0</span>
+                </div>
+
+                <div class="layer-unlock-req">
+                  <span>Requires: 5 Reincarnations + 1000 Karma + True Immortal Realm</span>
+                </div>
+
+                <div class="layer-rewards hidden">
+                  <span class="rewards-label">Unlocks:</span>
+                  <div class="rewards-preview">
+                    <span class="reward-item">🌌 Celestial Realm</span>
+                    <span class="reward-item">📖 True Story Ending</span>
+                    <span class="reward-item">♾️ Infinite Scaling</span>
+                  </div>
+                </div>
+
+                <button id="transcendence-btn" class="jade-button prestige-btn ultimate" disabled onclick="performTranscendence()">
+                  🌌 Transcend (Locked)
+                </button>
+              </div>
+
+              <!-- Prestige Shop -->
+              <div class="prestige-shop">
+                <h5 class="section-header">Heavenly Seal Shop</h5>
+                <div class="seal-balance">
+                  <span>🔮 Heavenly Seals: <span id="seal-balance">0</span></span>
+                </div>
+                <div id="seal-shop-items" class="seal-shop-grid">
+                  <div class="seal-item" data-cost="5">
+                    <span class="item-name">Forbidden Techniques</span>
+                    <span class="item-cost">5 🔮</span>
+                  </div>
+                  <div class="seal-item" data-cost="10">
+                    <span class="item-name">Eighth Master Hints</span>
+                    <span class="item-cost">10 🔮</span>
+                  </div>
+                  <div class="seal-item" data-cost="25">
+                    <span class="item-name">Start with Waifu</span>
+                    <span class="item-cost">25 🔮</span>
+                  </div>
+                  <div class="seal-item" data-cost="100">
+                    <span class="item-name">Unlock Eighth Master</span>
+                    <span class="item-cost">100 🔮</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Legacy Prestige Panel for compatibility -->
+              <div id="prestige-legacy" class="prestige-legacy hidden">
+                <div class="prestige-multiplier">
+                  <span id="prestige-multiplier" class="multiplier-value">1.0x</span>
+                  <span class="multiplier-label">All Gains</span>
+                </div>
+                <span id="prestige-tier-name" class="tier-name">Mortal</span>
                 <div class="prestige-progress-bar">
                   <div id="prestige-progress-fill" class="prestige-progress-fill" style="width: 0%"></div>
                 </div>
-                <div class="prestige-progress-text">
-                  <span id="prestige-current">0 BP</span>
-                  <span id="prestige-requirement">100K BP</span>
-                </div>
-              </div>
-
-              <button id="rebirth-btn" class="rebirth-button" disabled>
-                🔄 Ascend to Next Realm
-              </button>
-
-              <div class="prestige-perks">
-                <h5>Unlocked Perks:</h5>
-                <div id="prestige-perks-list">
-                  <p style="font-size: 8px; color: #666;">Ascend to unlock perks!</p>
-                </div>
+                <span id="prestige-current">0 BP</span>
+                <span id="prestige-requirement">100K BP</span>
+                <button id="rebirth-btn" class="rebirth-button" disabled>🔄 Ascend</button>
+                <div id="prestige-perks-list"></div>
               </div>
             </div>
           </div>
@@ -639,6 +1263,247 @@
                 <h4 class="category-header">💊 Consumables</h4>
                 <div id="consumables-list" class="consumables-grid">
                   <p class="empty-message">Collect consumables from the Pagoda.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Relics Tab -->
+          <div id="relics-tab" class="tab-content">
+            <div class="relics-panel">
+              <h4 class="category-header">🏺 Dungeon Relics</h4>
+              <p class="relics-info">Collect relics during dungeon runs for permanent bonuses!</p>
+
+              <!-- Relic Stats -->
+              <div class="relic-stats">
+                <div class="relic-stat">
+                  <span class="stat-icon">🏺</span>
+                  <span id="relics-owned" class="stat-value">0</span>
+                  <span class="stat-label">Relics Owned</span>
+                </div>
+                <div class="relic-stat">
+                  <span class="stat-icon">⭐</span>
+                  <span id="relic-power" class="stat-value">0%</span>
+                  <span class="stat-label">Total Bonus</span>
+                </div>
+              </div>
+
+              <!-- Relic Categories -->
+              <div class="relic-categories">
+                <button class="relic-cat-btn active" data-rarity="all">All</button>
+                <button class="relic-cat-btn" data-rarity="common">Common</button>
+                <button class="relic-cat-btn" data-rarity="rare">Rare</button>
+                <button class="relic-cat-btn" data-rarity="epic">Epic</button>
+                <button class="relic-cat-btn" data-rarity="legendary">Legendary</button>
+                <button class="relic-cat-btn" data-rarity="mythic">Mythic</button>
+              </div>
+
+              <!-- Relics Grid -->
+              <div id="relics-grid" class="relics-grid">
+                <!-- Common Relics -->
+                <div class="relic-card common" data-relic="lucky_coin">
+                  <div class="relic-icon">🪙</div>
+                  <div class="relic-info">
+                    <h5 class="relic-name">Lucky Coin</h5>
+                    <p class="relic-effect">+10% loot drop rate</p>
+                  </div>
+                  <span class="relic-owned">x<span id="lucky_coin-count">0</span></span>
+                </div>
+
+                <div class="relic-card common" data-relic="catnip_pouch">
+                  <div class="relic-icon">🌿</div>
+                  <div class="relic-info">
+                    <h5 class="relic-name">Catnip Pouch</h5>
+                    <p class="relic-effect">+20% Qi regeneration</p>
+                  </div>
+                  <span class="relic-owned">x<span id="catnip_pouch-count">0</span></span>
+                </div>
+
+                <!-- Rare Relics -->
+                <div class="relic-card rare locked" data-relic="box_dimension">
+                  <div class="relic-icon">📦</div>
+                  <div class="relic-info">
+                    <h5 class="relic-name">Pocket Dimension Box</h5>
+                    <p class="relic-effect">25% double loot chance</p>
+                  </div>
+                  <span class="relic-owned">x<span id="box_dimension-count">0</span></span>
+                </div>
+
+                <div class="relic-card rare locked" data-relic="nine_lives_charm">
+                  <div class="relic-icon">🐱</div>
+                  <div class="relic-info">
+                    <h5 class="relic-name">Nine Lives Charm</h5>
+                    <p class="relic-effect">15% auto-revive chance</p>
+                  </div>
+                  <span class="relic-owned">x<span id="nine_lives_charm-count">0</span></span>
+                </div>
+
+                <!-- Epic Relics -->
+                <div class="relic-card epic locked" data-relic="goose_horn">
+                  <div class="relic-icon">📯</div>
+                  <div class="relic-info">
+                    <h5 class="relic-name">Horn of the Goose</h5>
+                    <p class="relic-effect">Summon goose every 5 floors</p>
+                  </div>
+                  <span class="relic-owned">x<span id="goose_horn-count">0</span></span>
+                </div>
+
+                <div class="relic-card epic locked" data-relic="waifu_blessing">
+                  <div class="relic-icon">💖</div>
+                  <div class="relic-info">
+                    <h5 class="relic-name">Waifu Blessing</h5>
+                    <p class="relic-effect">-50% waifu skill cooldown</p>
+                  </div>
+                  <span class="relic-owned">x<span id="waifu_blessing-count">0</span></span>
+                </div>
+
+                <!-- Legendary Relics -->
+                <div class="relic-card legendary locked" data-relic="eternal_catnip">
+                  <div class="relic-icon">✨</div>
+                  <div class="relic-info">
+                    <h5 class="relic-name">Eternal Catnip</h5>
+                    <p class="relic-effect">+20% all stats, start full Qi</p>
+                  </div>
+                  <span class="relic-owned">x<span id="eternal_catnip-count">0</span></span>
+                </div>
+
+                <div class="relic-card legendary locked" data-relic="developers_mouse">
+                  <div class="relic-icon">🖱️</div>
+                  <div class="relic-info">
+                    <h5 class="relic-name">Developer's Mouse</h5>
+                    <p class="relic-effect">See enemy HP & floor preview</p>
+                  </div>
+                  <span class="relic-owned">x<span id="developers_mouse-count">0</span></span>
+                </div>
+
+                <!-- Mythic Relics -->
+                <div class="relic-card mythic locked" data-relic="snoot_prime">
+                  <div class="relic-icon">👃</div>
+                  <div class="relic-info">
+                    <h5 class="relic-name">Fragment of Snoot Prime</h5>
+                    <p class="relic-effect">3x Boop Command damage</p>
+                  </div>
+                  <span class="relic-owned">x<span id="snoot_prime-count">0</span></span>
+                </div>
+              </div>
+
+              <!-- Relic Set Bonuses -->
+              <div class="relic-sets">
+                <h5 class="section-header">Active Set Bonuses</h5>
+                <div id="active-relic-sets" class="relic-sets-list">
+                  <p class="empty-message">Collect matching relics for set bonuses!</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Codex Tab (Expanded Lore System) -->
+          <div id="codex-tab" class="tab-content">
+            <div class="codex-panel">
+              <h4 class="category-header">📖 Celestial Codex</h4>
+              <p class="codex-subtitle">Secrets of the Snoot Sect</p>
+
+              <!-- Codex Stats -->
+              <div class="codex-stats">
+                <div class="codex-stat">
+                  <span class="stat-icon">📜</span>
+                  <span id="lore-fragments-count" class="stat-value">0</span>
+                  <span class="stat-label">Fragments</span>
+                </div>
+                <div class="codex-stat">
+                  <span class="stat-icon">📖</span>
+                  <span id="stories-unlocked" class="stat-value">0</span>
+                  <span class="stat-label">Stories</span>
+                </div>
+                <div class="codex-stat">
+                  <span class="stat-icon">🔍</span>
+                  <span id="secrets-found" class="stat-value">0</span>
+                  <span class="stat-label">Secrets</span>
+                </div>
+              </div>
+
+              <!-- Codex Categories -->
+              <div class="codex-categories">
+                <button class="codex-cat-btn active" data-codex-cat="masters">👤 Masters</button>
+                <button class="codex-cat-btn" data-codex-cat="waifus">💕 Waifus</button>
+                <button class="codex-cat-btn" data-codex-cat="cats">🐱 Cats</button>
+                <button class="codex-cat-btn" data-codex-cat="geese">🦢 Geese</button>
+                <button class="codex-cat-btn" data-codex-cat="history">📜 History</button>
+                <button class="codex-cat-btn" data-codex-cat="secrets">🔮 Secrets</button>
+              </div>
+
+              <!-- Codex Content -->
+              <div id="codex-entries" class="codex-entries">
+                <!-- Masters Section -->
+                <div class="codex-section" data-section="masters">
+                  <div class="codex-entry" data-entry="gerald">
+                    <div class="entry-header">
+                      <span class="entry-icon">🐉</span>
+                      <span class="entry-name">Gerald - The Jade Palm</span>
+                      <span class="entry-progress">0/5 fragments</span>
+                    </div>
+                    <div class="entry-content locked">
+                      <p class="locked-text">Collect fragments to unlock this story...</p>
+                    </div>
+                  </div>
+
+                  <div class="codex-entry" data-entry="rusty">
+                    <div class="entry-header">
+                      <span class="entry-icon">👊</span>
+                      <span class="entry-name">Rusty - The Crimson Fist</span>
+                      <span class="entry-progress">0/5 fragments</span>
+                    </div>
+                    <div class="entry-content locked">
+                      <p class="locked-text">Collect fragments to unlock this story...</p>
+                    </div>
+                  </div>
+
+                  <div class="codex-entry" data-entry="eighth_master" class="secret-entry hidden">
+                    <div class="entry-header">
+                      <span class="entry-icon">❓</span>
+                      <span class="entry-name">??? - The Forgotten One</span>
+                      <span class="entry-progress">0/15 fragments</span>
+                    </div>
+                    <div class="entry-content locked">
+                      <p class="locked-text">A great mystery awaits...</p>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Relationships Section -->
+                <div class="codex-section hidden" data-section="relationships">
+                  <div class="codex-entry" data-entry="gerald_rusty">
+                    <div class="entry-header">
+                      <span class="entry-icon">⚔️</span>
+                      <span class="entry-name">The First Meeting</span>
+                      <span class="entry-progress">0/10 fragments</span>
+                    </div>
+                    <div class="entry-content locked">
+                      <p class="locked-text">Play as Gerald and Rusty to unlock...</p>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Waifu Secrets Section -->
+                <div class="codex-section hidden" data-section="waifus">
+                  <div class="codex-entry" data-entry="mochi_secret">
+                    <div class="entry-header">
+                      <span class="entry-icon">🍡</span>
+                      <span class="entry-name">Mochi's Hidden Past</span>
+                      <span class="entry-progress">0/10 fragments</span>
+                    </div>
+                    <div class="entry-content locked">
+                      <p class="locked-text">Reach max bond to unlock...</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Recent Fragment Discoveries -->
+              <div class="recent-discoveries">
+                <h5 class="section-header">Recent Discoveries</h5>
+                <div id="recent-fragments" class="recent-list">
+                  <p class="empty-message">Play to discover lore fragments!</p>
                 </div>
               </div>
             </div>
@@ -999,6 +1864,7 @@
         <div class="waifu-modal-tabs">
           <button class="waifu-tab active" data-waifu-tab="collection">All Waifus</button>
           <button class="waifu-tab" data-waifu-tab="activities">Activities</button>
+          <button class="waifu-tab" data-waifu-tab="schools">Schools</button>
           <button class="waifu-tab" data-waifu-tab="gifts">Gift Shop</button>
           <button class="waifu-tab" data-waifu-tab="inventory">My Gifts</button>
         </div>

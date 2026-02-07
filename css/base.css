@@ -80,13 +80,14 @@ body {
   min-height: 100vh;
   overflow-x: hidden;
   line-height: 1.6;
+  font-size: 14px; /* Base font size for desktop */
 }
 
 /* --- Game Container --- */
 #game-container {
-  max-width: 1200px;
+  max-width: 1600px;
   margin: 0 auto;
-  padding: 20px;
+  padding: 30px;
   min-height: 100vh;
 }
 
