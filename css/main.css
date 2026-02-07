@@ -466,50 +466,14 @@ body {
 }
 
 /* ===================================
-   GAME LAYOUT (Two Column - Boop above tabs)
+   GAME LAYOUT (Three Column)
    =================================== */
 
 .game-layout {
   display: grid;
-  grid-template-columns: 200px 1fr;
+  grid-template-columns: 200px 1fr 280px;
   gap: 20px;
   min-height: calc(100vh - 200px);
-}
-
-/* Right panel with boop area above tabs */
-.right-panel {
-  display: flex;
-  flex-direction: column;
-}
-
-.right-panel .boop-area {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 20px;
-  background: rgba(0, 0, 0, 0.2);
-  border-radius: 8px;
-  margin-bottom: 15px;
-  position: relative;
-}
-
-.right-panel .boop-button {
-  width: 160px;
-  height: 160px;
-  font-size: 12px;
-}
-
-.right-panel .active-cat-display {
-  margin-bottom: 10px;
-}
-
-.right-panel .active-cat {
-  font-size: 48px;
-}
-
-.right-panel .boop-power-display {
-  margin-top: 10px;
-  font-size: 10px;
 }
 
 .header-right {
@@ -5591,25 +5555,10 @@ button:active:not(:disabled) {
     padding: 30px;
   }
 
-  /* Game layout - two columns (waifu + boop/tabs) */
+  /* Game layout - wider columns */
   .game-layout {
-    grid-template-columns: 280px 1fr;
+    grid-template-columns: 280px 1fr 360px;
     gap: 30px;
-  }
-
-  /* Right panel boop area on desktop */
-  .right-panel .boop-area {
-    padding: 30px;
-  }
-
-  .right-panel .boop-button {
-    width: 200px;
-    height: 200px;
-    font-size: 16px;
-  }
-
-  .right-panel .active-cat {
-    font-size: 64px;
   }
 
   /* Master cards */
@@ -5897,18 +5846,14 @@ button:active:not(:disabled) {
   }
 
   .game-layout {
-    grid-template-columns: 320px 1fr;
+    grid-template-columns: 320px 1fr 400px;
     gap: 40px;
   }
 
-  .right-panel .boop-button {
-    width: 240px;
-    height: 240px;
-    font-size: 18px;
-  }
-
-  .right-panel .active-cat {
-    font-size: 80px;
+  .boop-button {
+    width: 280px;
+    height: 280px;
+    font-size: 20px;
   }
 
   .floating-text {

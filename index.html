@@ -203,6 +203,21 @@
           </div>
         </aside>
 
+        <!-- Center: Boop Area (at top of center column) -->
+        <main class="game-main" role="main">
+          <div class="boop-area">
+            <div id="active-cat-display" class="active-cat-display">
+              <div id="active-cat" class="active-cat" role="img" aria-label="Current cat">🐱</div>
+              <p id="active-cat-name" class="active-cat-name">Recruit a cat!</p>
+            </div>
+            <button id="boop-button" class="boop-button" aria-label="Boop the cat's snoot to earn Boop Points">
+              BOOP<br>THE<br>SNOOT
+            </button>
+            <p id="boop-power-display" class="boop-power-display" aria-live="polite">+1 BP per boop</p>
+          </div>
+          <div id="floating-text-container" class="floating-text-container" aria-hidden="true"></div>
+        </main>
+
         <!-- Cultivation Realm Display (Expanded 10-Realm System) -->
         <div id="cultivation-display" class="cultivation-display">
           <div class="cultivation-header">
@@ -290,21 +305,8 @@
           </div>
         </div>
 
-        <!-- Right Panel: Boop Area + Tabs -->
+        <!-- Right Panel: Tabs -->
         <aside class="side-panel right-panel">
-          <!-- Boop Area - Above Tabs -->
-          <div class="boop-area">
-            <div id="active-cat-display" class="active-cat-display">
-              <div id="active-cat" class="active-cat" role="img" aria-label="Current cat">🐱</div>
-              <p id="active-cat-name" class="active-cat-name">Recruit a cat!</p>
-            </div>
-            <button id="boop-button" class="boop-button" aria-label="Boop the cat's snoot to earn Boop Points">
-              BOOP<br>THE<br>SNOOT
-            </button>
-            <p id="boop-power-display" class="boop-power-display" aria-live="polite">+1 BP per boop</p>
-            <div id="floating-text-container" class="floating-text-container" aria-hidden="true"></div>
-          </div>
-
           <!-- Tab Navigation -->
           <div class="tab-bar">
             <button class="tab-btn active" data-tab="cats">🐱 Cats</button>
