@@ -132,7 +132,7 @@ const ABILITY_TEMPLATES = {
   }
 };
 
-const ELEMENTS = ['Fire', 'Water', 'Nature', 'Void', 'Light', 'Storm', 'Ice', 'Shadow'];
+const PARTNER_ELEMENTS = ['Fire', 'Water', 'Nature', 'Void', 'Light', 'Storm', 'Ice', 'Shadow'];
 const PORTRAITS = ['👤', '👩', '👨', '🧝', '🧙', '🥷', '💃', '🕺', '🧚', '🧜', '🦸', '🦹'];
 
 /**
@@ -162,7 +162,7 @@ class PartnerGenerator {
     const name = this.generateName();
 
     // Generate element
-    const element = ELEMENTS[Math.floor(Math.random() * ELEMENTS.length)];
+    const element = PARTNER_ELEMENTS[Math.floor(Math.random() * PARTNER_ELEMENTS.length)];
 
     // Pick traits
     const traits = this.pickTraits(rarityData.traitCount);
