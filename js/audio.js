@@ -371,6 +371,22 @@ class AudioSystem {
     }
   }
 
+  setSFXEnabled(enabled) {
+    if (this.sfxGain) {
+      this.sfxGain.gain.value = enabled ? this.sfxVolume : 0;
+    }
+  }
+
+  setMusicEnabled(enabled) {
+    if (enabled) {
+      if (this.musicGain) this.musicGain.gain.value = this.musicVolume;
+      if (!this.currentMusic) this.playMusic('main');
+    } else {
+      if (this.musicGain) this.musicGain.gain.value = 0;
+      this.stopMusic();
+    }
+  }
+
   /**
    * Toggle mute
    */
@@ -380,6 +396,138 @@ class AudioSystem {
       this.masterGain.gain.value = this.isMuted ? 0 : this.masterVolume;
     }
     return this.isMuted;
+  }
+
+  // ===================================
+  // MUSIC SYSTEM
+  // ===================================
+
+  /**
+   * Play procedural background music
+   * Uses pentatonic scale for a Chinese/Wuxia feel
+   */
+  playMusic(theme = 'main') {
+    if (!this.initialized || this.isMuted) return;
+    this.resume();
+    this.stopMusic();
+
+    const themes = {
+      main: { tempo: 120, scale: 'pentatonic', mood: 'calm' },
+      dungeon: { tempo: 140, scale: 'minor_pentatonic', mood: 'tense' },
+      boss: { tempo: 160, scale: 'minor_pentatonic', mood: 'intense' },
+      menu: { tempo: 100, scale: 'pentatonic', mood: 'peaceful' }
+    };
+
+    const config = themes[theme] || themes.main;
+    this.currentMusic = { theme, config, playing: true, nextNoteTime: 0, noteIndex: 0 };
+    this._scheduleMusicLoop();
+  }
+
+  /**
+   * Stop background music with fade-out
+   */
+  stopMusic() {
+    if (this.currentMusic) {
+      this.currentMusic.playing = false;
+    }
+    if (this._musicTimer) {
+      clearTimeout(this._musicTimer);
+      this._musicTimer = null;
+    }
+    this.currentMusic = null;
+  }
+
+  /**
+   * Internal music scheduler - plays notes in sequence
+   */
+  _scheduleMusicLoop() {
+    if (!this.currentMusic || !this.currentMusic.playing || !this.initialized) return;
+
+    const music = this.currentMusic;
+    const ctx = this.audioContext;
+    const now = ctx.currentTime;
+
+    // Pentatonic scale frequencies (Chinese/Wuxia feel)
+    const scales = {
+      pentatonic: [261.63, 293.66, 329.63, 392.00, 440.00, 523.25, 587.33, 659.25],
+      minor_pentatonic: [261.63, 311.13, 349.23, 392.00, 466.16, 523.25, 622.25, 698.46]
+    };
+
+    const scale = scales[music.config.scale] || scales.pentatonic;
+    const beatDuration = 60 / music.config.tempo;
+
+    // Melodic patterns (index into scale)
+    const patterns = {
+      calm: [
+        [0, 2], [2, 4], [4, null], [3, 2],
+        [2, 0], [0, null], [4, 3], [2, null],
+        [0, 3], [3, 5], [5, null], [4, 2],
+        [3, 0], [0, null], [2, 4], [3, null]
+      ],
+      tense: [
+        [0, 1], [1, 3], [3, null], [4, 3],
+        [3, 1], [0, null], [1, 4], [3, null],
+        [4, 5], [5, 3], [3, null], [1, 0],
+        [0, null], [3, 4], [4, 1], [0, null]
+      ],
+      intense: [
+        [0, 3], [3, 5], [5, 4], [4, 3],
+        [3, 1], [1, 0], [0, 3], [5, null],
+        [4, 3], [3, 5], [5, 7], [7, 5],
+        [4, 3], [3, 1], [1, 0], [0, null]
+      ],
+      peaceful: [
+        [0, null], [2, null], [4, null], [2, null],
+        [0, null], [3, null], [2, null], [0, null],
+        [4, null], [5, null], [4, null], [2, null],
+        [3, null], [2, null], [0, null], [null, null]
+      ]
+    };
+
+    const pattern = patterns[music.config.mood] || patterns.calm;
+    const step = pattern[music.noteIndex % pattern.length];
+
+    // Play melody note
+    if (step[0] !== null) {
+      this._playMusicNote(scale[step[0]], beatDuration * 0.8, 0.12);
+    }
+
+    // Play harmony note (softer, lower octave)
+    if (step[1] !== null) {
+      this._playMusicNote(scale[step[1]] * 0.5, beatDuration * 0.6, 0.06);
+    }
+
+    music.noteIndex++;
+
+    // Schedule next beat
+    this._musicTimer = setTimeout(() => {
+      this._scheduleMusicLoop();
+    }, beatDuration * 1000);
+  }
+
+  /**
+   * Play a single music note using triangle wave (soft, chiptune-like)
+   */
+  _playMusicNote(freq, duration, volume) {
+    if (!this.audioContext || !this.musicGain) return;
+
+    const ctx = this.audioContext;
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+
+    osc.type = 'triangle';
+    osc.frequency.value = freq;
+
+    gain.gain.setValueAtTime(0, ctx.currentTime);
+    gain.gain.linearRampToValueAtTime(volume, ctx.currentTime + 0.02);
+    gain.gain.linearRampToValueAtTime(volume * 0.6, ctx.currentTime + duration * 0.5);
+    gain.gain.linearRampToValueAtTime(0, ctx.currentTime + duration);
+
+    osc.connect(gain);
+    gain.connect(this.musicGain);
+
+    osc.start(ctx.currentTime);
+    osc.stop(ctx.currentTime + duration + 0.01);
   }
 
   /**

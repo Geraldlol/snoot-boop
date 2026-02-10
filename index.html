@@ -11,6 +11,8 @@
   <link rel="stylesheet" href="css/base.css">
   <link rel="stylesheet" href="css/components.css">
   <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/wuxia-theme.css">
+  <link rel="stylesheet" href="css/8bit.css">
   <link rel="stylesheet" href="css/screens.css">
   <link rel="stylesheet" href="css/features.css">
   <link rel="stylesheet" href="css/modals.css">
@@ -96,12 +98,12 @@
       <header class="game-header" role="banner">
         <div class="resource-bar" role="status" aria-live="polite">
           <!-- Primary Currencies -->
-          <div class="resource" title="Boop Points - Earned from booping">
+          <div class="resource" data-tooltip="bp">
             <span class="resource-icon">👆</span>
             <span class="resource-label" id="bp-label">BP</span>
             <span id="bp-display" class="resource-value" aria-labelledby="bp-label">0</span>
           </div>
-          <div class="resource pp-resource" id="pp-resource-container" title="Purr Power - Passive generation from cats">
+          <div class="resource pp-resource" id="pp-resource-container" data-tooltip="pp">
             <span class="resource-icon">😺</span>
             <span class="resource-label" id="pp-label">PP</span>
             <span id="pp-display" class="resource-value" aria-labelledby="pp-label">0</span>
@@ -111,32 +113,32 @@
               <div id="pp-breakdown-content"></div>
             </div>
           </div>
-          <div class="resource" title="Qi Energy - Used for techniques and breakthroughs">
+          <div class="resource" data-tooltip="qi">
             <span class="resource-icon">✨</span>
             <span class="resource-label" id="qi-label">Qi</span>
             <span id="qi-display" class="resource-value qi-value" aria-labelledby="qi-label">0</span>
           </div>
-          <div class="resource" title="Jade Catnip - Premium currency for rare items">
+          <div class="resource" data-tooltip="jc">
             <span class="resource-icon">💎</span>
             <span class="resource-label" id="jc-label">JC</span>
             <span id="jc-display" class="resource-value jade-value" aria-labelledby="jc-label">0</span>
           </div>
-          <div class="resource" title="Spirit Stones - Equipment enhancement">
+          <div class="resource" data-tooltip="ss">
             <span class="resource-icon">💠</span>
             <span class="resource-label">SS</span>
             <span id="spirit-stones-display" class="resource-value">0</span>
           </div>
-          <div class="resource" title="Heavenly Seals - Prestige currency">
+          <div class="resource" data-tooltip="hs">
             <span class="resource-icon">🔮</span>
             <span class="resource-label">HS</span>
             <span id="heavenly-seals-display" class="resource-value">0</span>
           </div>
-          <div class="resource" title="Waifu Tokens - Bond activities">
+          <div class="resource" data-tooltip="wt">
             <span class="resource-icon">💕</span>
             <span class="resource-label">WT</span>
             <span id="waifu-tokens-display" class="resource-value">0</span>
           </div>
-          <div class="resource" title="Goose Feathers - Goose shop">
+          <div class="resource" data-tooltip="gf">
             <span class="resource-icon">🪶</span>
             <span class="resource-label">GF</span>
             <span id="goose-feathers-display" class="resource-value">0</span>
@@ -148,7 +150,7 @@
           </div>
         </div>
         <div class="header-right">
-          <div id="combo-display" class="combo-display hidden" role="status" aria-live="polite">
+          <div id="combo-display" class="combo-display hidden" data-tooltip="combo" role="status" aria-live="polite">
             <span id="combo-count">0</span>x COMBO
           </div>
           <button id="open-social-btn" class="open-social-btn" aria-label="Social features" title="Social">
@@ -409,7 +411,7 @@
               <!-- Dungeon Selection -->
               <div class="dungeon-selector">
                 <!-- Infinite Pagoda -->
-                <div class="dungeon-card" data-dungeon="pagoda">
+                <div class="dungeon-card" data-dungeon="pagoda" data-tooltip="pagoda">
                   <div class="dungeon-icon">🏯</div>
                   <div class="dungeon-info">
                     <h5 class="dungeon-name">Infinite Pagoda</h5>
@@ -422,7 +424,7 @@
                 </div>
 
                 <!-- Bamboo Forest (Wave Survival) -->
-                <div class="dungeon-card" data-dungeon="bamboo">
+                <div class="dungeon-card" data-dungeon="bamboo" data-tooltip="bamboo_forest">
                   <div class="dungeon-icon">🎋</div>
                   <div class="dungeon-info">
                     <h5 class="dungeon-name">Bamboo Forest</h5>
@@ -435,7 +437,7 @@
                 </div>
 
                 <!-- Celestial Tournament -->
-                <div class="dungeon-card" data-dungeon="tournament">
+                <div class="dungeon-card" data-dungeon="tournament" data-tooltip="tournament">
                   <div class="dungeon-icon">⚔️</div>
                   <div class="dungeon-info">
                     <h5 class="dungeon-name">Celestial Tournament</h5>
@@ -448,7 +450,7 @@
                 </div>
 
                 <!-- Dream Realm -->
-                <div class="dungeon-card locked" data-dungeon="dream" data-unlock="nascentSoul">
+                <div class="dungeon-card locked" data-dungeon="dream" data-unlock="nascentSoul" data-tooltip="dream_realm">
                   <div class="dungeon-icon">🌙</div>
                   <div class="dungeon-info">
                     <h5 class="dungeon-name">Dream Realm</h5>
@@ -461,7 +463,7 @@
                 </div>
 
                 <!-- Goose Dimension -->
-                <div class="dungeon-card locked" data-dungeon="goose" data-unlock="cobraChicken">
+                <div class="dungeon-card locked" data-dungeon="goose" data-unlock="cobraChicken" data-tooltip="goose_dimension">
                   <div class="dungeon-icon">🦢</div>
                   <div class="dungeon-info">
                     <h5 class="dungeon-name">Goose Dimension</h5>
@@ -474,7 +476,7 @@
                 </div>
 
                 <!-- Memory Fragments -->
-                <div class="dungeon-card" data-dungeon="memory">
+                <div class="dungeon-card" data-dungeon="memory" data-tooltip="memory_fragments">
                   <div class="dungeon-icon">📜</div>
                   <div class="dungeon-info">
                     <h5 class="dungeon-name">Memory Fragments</h5>
@@ -555,6 +557,120 @@
                     <span id="auto-clear-info" class="auto-clear-info"></span>
                   </button>
                   <button class="jade-button small danger" onclick="abandonRun()">Abandon Run</button>
+                </div>
+              </div>
+
+              <!-- Tournament UI -->
+              <div id="tournament-ui" class="dungeon-sub-ui hidden">
+                <div class="sub-ui-header">
+                  <h5>⚔️ Celestial Tournament</h5>
+                  <span id="tournament-round" class="sub-ui-stat">Round 1/7</span>
+                </div>
+                <div id="tournament-bracket" class="tournament-bracket">
+                  <p class="empty-message">Select your team to begin</p>
+                </div>
+                <div id="tournament-combat" class="tournament-combat hidden">
+                  <div class="combat-versus">
+                    <div class="fighter your-team">
+                      <span id="tournament-your-team" class="fighter-name">Your Team</span>
+                      <div class="hp-bar"><div id="tournament-your-hp" class="hp-fill" style="width:100%"></div></div>
+                    </div>
+                    <span class="vs-text">VS</span>
+                    <div class="fighter enemy-team">
+                      <span id="tournament-enemy-name" class="fighter-name">Opponent</span>
+                      <div class="hp-bar"><div id="tournament-enemy-hp" class="hp-fill enemy" style="width:100%"></div></div>
+                    </div>
+                  </div>
+                  <div id="tournament-log" class="combat-log" role="log" aria-live="polite"></div>
+                </div>
+                <div class="sub-ui-actions">
+                  <button class="jade-button small" onclick="if(tournamentSystem)tournamentSystem.startTournament()">Start Tournament</button>
+                  <button class="jade-button small danger" onclick="abandonRun()">Forfeit</button>
+                </div>
+              </div>
+
+              <!-- Dream Realm UI -->
+              <div id="dream-realm-ui" class="dungeon-sub-ui hidden">
+                <div class="sub-ui-header">
+                  <h5>🌙 Dream Realm</h5>
+                  <span id="dream-depth" class="sub-ui-stat">Depth: 0</span>
+                </div>
+                <div class="dream-status">
+                  <div class="dream-modifier" id="dream-active-modifier">
+                    <span class="modifier-icon">✨</span>
+                    <span id="dream-modifier-name">No Active Modifier</span>
+                  </div>
+                  <div class="dream-essence-bar">
+                    <span>Dream Essence:</span>
+                    <span id="dream-essence" class="resource-value">0</span>
+                  </div>
+                </div>
+                <div id="dream-combat" class="dream-combat hidden">
+                  <div class="combat-enemy">
+                    <span id="dream-enemy-emoji" class="enemy-emoji">👻</span>
+                    <span id="dream-enemy-name" class="enemy-name">Dream Entity</span>
+                    <div class="hp-bar"><div id="dream-enemy-hp" class="hp-fill enemy" style="width:100%"></div></div>
+                  </div>
+                  <div id="dream-log" class="combat-log" role="log" aria-live="polite"></div>
+                </div>
+                <div class="sub-ui-actions">
+                  <button class="jade-button small" onclick="if(dreamRealmSystem)dreamRealmSystem.enterDream()">Enter Dream</button>
+                  <button class="jade-button small" onclick="if(dreamRealmSystem)dreamRealmSystem.wake()">Wake Up</button>
+                </div>
+              </div>
+
+              <!-- Goose Dimension UI -->
+              <div id="goose-dimension-ui" class="dungeon-sub-ui hidden">
+                <div class="sub-ui-header">
+                  <h5>🦢 Goose Dimension</h5>
+                  <span id="goose-dim-wave" class="sub-ui-stat">Wave: 0</span>
+                </div>
+                <div class="goose-dim-status">
+                  <div class="sanity-meter">
+                    <span>Sanity:</span>
+                    <div class="sanity-bar" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" aria-label="Sanity level">
+                      <div id="goose-dim-sanity" class="sanity-fill" style="width:100%"></div>
+                    </div>
+                  </div>
+                  <div class="honk-counter">
+                    <span>🦢 Honks:</span>
+                    <span id="goose-dim-honks" class="resource-value">0</span>
+                  </div>
+                </div>
+                <div id="goose-dim-combat" class="goose-dim-combat hidden">
+                  <div id="goose-dim-enemies" class="goose-wave-enemies"></div>
+                  <div id="goose-dim-log" class="combat-log" role="log" aria-live="polite"></div>
+                </div>
+                <div id="goose-dim-joke" class="goose-joke hidden"></div>
+                <div class="sub-ui-actions">
+                  <button class="jade-button small" onclick="if(gooseDimensionSystem)gooseDimensionSystem.startRun()">Enter Dimension</button>
+                  <button class="jade-button small danger" onclick="abandonRun()">Escape (HONK)</button>
+                </div>
+              </div>
+
+              <!-- Memory Fragments UI -->
+              <div id="memory-fragments-ui" class="dungeon-sub-ui hidden">
+                <div class="sub-ui-header">
+                  <h5>📜 Memory Fragments</h5>
+                  <span id="memory-chapter-name" class="sub-ui-stat">Select a Chapter</span>
+                </div>
+                <div id="memory-chapter-list" class="memory-chapters">
+                  <p class="empty-message">Loading chapters...</p>
+                </div>
+                <div id="memory-story-panel" class="memory-story hidden">
+                  <div id="memory-story-text" class="story-text"></div>
+                  <div id="memory-combat" class="memory-combat hidden">
+                    <div class="combat-enemy">
+                      <span id="memory-enemy-emoji" class="enemy-emoji">👤</span>
+                      <span id="memory-enemy-name" class="enemy-name">Memory</span>
+                      <div class="hp-bar"><div id="memory-enemy-hp" class="hp-fill enemy" style="width:100%"></div></div>
+                    </div>
+                  </div>
+                  <div id="memory-log" class="combat-log" role="log" aria-live="polite"></div>
+                </div>
+                <div class="sub-ui-actions">
+                  <button class="jade-button small" id="memory-start-btn" onclick="startMemoryChapter()">Begin Chapter</button>
+                  <button class="jade-button small" onclick="if(elements.memoryFragmentsUi)elements.memoryFragmentsUi.querySelector('.memory-chapters').classList.remove('hidden')">Back to Chapters</button>
                 </div>
               </div>
 
@@ -712,7 +828,7 @@
 
           <!-- Expeditions Tab -->
           <div id="expeditions-tab" class="tab-content">
-            <div class="expedition-panel">
+            <div class="expedition-panel" data-tooltip="expedition">
               <h4 class="category-header">🗺️ Send Cats on Expeditions</h4>
               <p class="expedition-info" style="font-size: 8px; color: #888; margin-bottom: 10px;">
                 Select a destination and choose cats to send.
@@ -1018,7 +1134,7 @@
                   </div>
                 </div>
 
-                <button id="ascension-btn" class="jade-button prestige-btn" disabled onclick="performAscension()">
+                <button id="ascension-btn" class="jade-button prestige-btn" data-tooltip="ascension" disabled onclick="performAscension()">
                   🔮 Ascend (1B PP Required)
                 </button>
               </div>
@@ -1054,7 +1170,7 @@
                   </div>
                 </div>
 
-                <button id="reincarnation-btn" class="jade-button prestige-btn" disabled onclick="performReincarnation()">
+                <button id="reincarnation-btn" class="jade-button prestige-btn" data-tooltip="reincarnation" disabled onclick="performReincarnation()">
                   🌀 Reincarnate (Locked)
                 </button>
               </div>
@@ -1083,7 +1199,7 @@
                   </div>
                 </div>
 
-                <button id="transcendence-btn" class="jade-button prestige-btn ultimate" disabled onclick="performTranscendence()">
+                <button id="transcendence-btn" class="jade-button prestige-btn ultimate" data-tooltip="transcendence" disabled onclick="performTranscendence()">
                   🌌 Transcend (Locked)
                 </button>
               </div>
@@ -1572,7 +1688,7 @@
                 <span id="season-icon" class="season-icon">🌸</span>
               </div>
             </div>
-            <div class="cultivation-realm-info">
+            <div class="cultivation-realm-info" data-tooltip="cultivation">
               <h3 id="cultivation-realm-name" class="realm-name">Mortal Realm</h3>
               <p id="cultivation-rank" class="realm-rank">Rank 1/9</p>
               <p id="cultivation-order" class="realm-order">Realm 1 of 10</p>
@@ -1593,7 +1709,7 @@
               <button id="breakthrough-btn" class="jade-button small breakthrough-btn hidden" onclick="attemptBreakthrough()">
                 ⚡ Attempt Breakthrough
               </button>
-              <button id="tribulation-btn" class="jade-button small tribulation-btn hidden" onclick="startTribulation()">
+              <button id="tribulation-btn" class="jade-button small tribulation-btn hidden" data-tooltip="tribulation" onclick="startTribulation()">
                 🔥 Face Tribulation
               </button>
             </div>
@@ -1613,12 +1729,12 @@
               <div id="stance-mastery-fill" class="mastery-fill" style="width: 0%"></div>
             </div>
             <div class="stance-selector">
-              <button class="stance-btn active" data-stance="jadePalm" title="Jade Palm - Balanced" aria-label="Jade Palm stance - Balanced">🖐️</button>
-              <button class="stance-btn locked" data-stance="ironFinger" title="Iron Finger - Power (Qi Condensation)" aria-label="Iron Finger stance - Power">👆</button>
-              <button class="stance-btn locked" data-stance="drunkenPaw" title="Drunken Paw - Random (Foundation)" aria-label="Drunken Paw stance - Random">🍺</button>
-              <button class="stance-btn locked" data-stance="shadowStep" title="Shadow Step - Speed (Core Formation)" aria-label="Shadow Step stance - Speed">👤</button>
-              <button class="stance-btn locked" data-stance="flowingRiver" title="Flowing River - AFK (Nascent Soul)" aria-label="Flowing River stance - AFK">🌊</button>
-              <button class="stance-btn locked" data-stance="forbiddenTechnique" title="Forbidden - Ultimate (Spirit Severing)" aria-label="Forbidden Technique stance - Ultimate">💀</button>
+              <button class="stance-btn active" data-stance="jadePalm" data-tooltip="jade_palm" aria-label="Jade Palm stance - Balanced">🖐️</button>
+              <button class="stance-btn locked" data-stance="ironFinger" data-tooltip="iron_finger" aria-label="Iron Finger stance - Power">👆</button>
+              <button class="stance-btn locked" data-stance="drunkenPaw" data-tooltip="drunken_paw" aria-label="Drunken Paw stance - Random">🍺</button>
+              <button class="stance-btn locked" data-stance="shadowStep" data-tooltip="shadow_step" aria-label="Shadow Step stance - Speed">👤</button>
+              <button class="stance-btn locked" data-stance="flowingRiver" data-tooltip="flowing_river" aria-label="Flowing River stance - AFK">🌊</button>
+              <button class="stance-btn locked" data-stance="forbiddenTechnique" data-tooltip="forbidden" aria-label="Forbidden Technique stance - Ultimate">💀</button>
             </div>
             <div id="stance-special" class="stance-special hidden">
               <span id="stance-special-name">Special: None</span>
@@ -1656,7 +1772,7 @@
           </div>
 
           <!-- Drama Meter -->
-          <div id="drama-meter" class="drama-meter">
+          <div id="drama-meter" class="drama-meter" data-tooltip="drama">
             <button class="drama-header" onclick="toggleDramaPanel()" aria-label="Toggle drama panel" aria-expanded="false">
               <span>🎭</span>
               <span id="drama-level">0</span>
@@ -1721,7 +1837,7 @@
     </div>
 
     <!-- Golden Snoot Overlay -->
-    <div id="golden-snoot-container" class="golden-snoot-container hidden">
+    <div id="golden-snoot-container" class="golden-snoot-container hidden" data-tooltip="golden_snoot">
       <div id="golden-snoot" class="golden-snoot">
         <span class="golden-snoot-emoji">👃</span>
         <span class="golden-snoot-glow"></span>
@@ -1733,7 +1849,7 @@
     </div>
 
     <!-- Parasite Container -->
-    <div id="parasite-container" class="parasite-container" onclick="openParasiteModal()" role="button" tabindex="0" aria-label="Open parasite management" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openParasiteModal()}">
+    <div id="parasite-container" class="parasite-container" data-tooltip="parasites" onclick="openParasiteModal()" role="button" tabindex="0" aria-label="Open parasite management" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openParasiteModal()}">
       <div id="parasite-mini-display" class="parasite-mini-display"></div>
     </div>
 
@@ -2257,7 +2373,7 @@
     </div>
 
     <!-- Nemesis Warning -->
-    <div id="nemesis-warning" class="nemesis-warning hidden" onclick="openNemesisModal()" role="button" tabindex="0" aria-label="View nemesis roster">
+    <div id="nemesis-warning" class="nemesis-warning hidden" data-tooltip="nemesis" onclick="openNemesisModal()" role="button" tabindex="0" aria-label="View nemesis roster">
       <div class="nemesis-alert">
         <h3 id="nemesis-title">💀 NEMESIS APPROACHES 💀</h3>
         <p id="nemesis-taunt">"I've been waiting..."</p>
@@ -2332,8 +2448,14 @@
 
   <!-- Scripts -->
   <!-- Core Utilities (load first) -->
+  <script src="js/core/constants.js"></script>
+  <script src="js/core/bigNumber.js"></script>
+  <script src="js/core/eventBus.js"></script>
   <script src="js/core/dataLoader.js"></script>
-  <!-- UI/UX Systems (load first for availability) -->
+  <!-- UI/UX Systems (load early for availability) -->
+  <script src="js/ui/modals.js"></script>
+  <script src="js/ui/screens.js"></script>
+  <script src="js/ui/tooltips.js"></script>
   <script src="js/particles.js"></script>
   <script src="js/notifications.js"></script>
   <!-- Core Systems -->
@@ -2361,6 +2483,11 @@
   <script src="js/pagoda.js"></script>
   <script src="js/blessings.js"></script>
   <script src="js/wave-survival.js"></script>
+  <!-- Dungeon Sub-modes -->
+  <script src="js/dungeons/tournament.js"></script>
+  <script src="js/dungeons/dreamRealm.js"></script>
+  <script src="js/dungeons/gooseDimension.js"></script>
+  <script src="js/dungeons/memoryFragments.js"></script>
   <script src="js/golden-snoot.js"></script>
   <script src="js/daily.js"></script>
   <script src="js/parasites.js"></script>
@@ -2374,9 +2501,17 @@
   <script src="js/cultivation.js"></script>
   <!-- Time & Events System -->
   <script src="js/time.js"></script>
+  <!-- Idle & Lore Systems -->
+  <script src="js/systems/idle.js"></script>
+  <script src="js/data/lore.js"></script>
+  <script src="js/data/secrets.js"></script>
   <!-- Social Features -->
   <script src="js/social.js"></script>
+  <script src="js/social/sectwar.js"></script>
+  <script src="js/social/sharing.js"></script>
+  <!-- Save, Tutorial & Main Game Loop (load last) -->
   <script src="js/save.js"></script>
+  <script src="js/ui/tutorial.js"></script>
   <script src="js/game.js"></script>
 </body>
 </html>

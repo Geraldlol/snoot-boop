@@ -697,6 +697,18 @@ class SecretSystem {
     };
     this.lastBoopTime = data.lastBoopTime || Date.now();
   }
+
+  /**
+   * Reset for prestige (preserves discovered secrets)
+   */
+  reset() {
+    // Keep discovered secrets as permanent progress
+    // Reset session-specific state
+    this.moonClicks = 0;
+    this.lastBoopTime = Date.now();
+    this.sessionStartTime = Date.now();
+    this.lastWarningTime = 0;
+  }
 }
 
 // ===================================

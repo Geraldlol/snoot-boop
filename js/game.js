@@ -276,6 +276,10 @@ pagodaSystem = createSystem('PagodaSystem', PagodaSystem);
 techniqueSystem = createSystem('TechniqueSystem', TechniqueSystem);
 blessingSystem = createSystem('BlessingSystem', BlessingSystem);
 waveSurvivalSystem = createSystem('WaveSurvivalSystem', WaveSurvivalSystem);
+tournamentSystem = createSystem('CelestialTournamentSystem', CelestialTournamentSystem);
+dreamRealmSystem = createSystem('DreamRealmSystem', DreamRealmSystem);
+gooseDimensionSystem = createSystem('GooseDimensionSystem', GooseDimensionSystem);
+memoryFragmentSystem = createSystem('MemoryFragmentsSystem', MemoryFragmentsSystem);
 goldenSnootSystem = createSystem('GoldenSnootSystem', GoldenSnootSystem);
 dailySystem = createSystem('DailySystem', DailySystem);
 parasiteSystem = createSystem('ParasiteSystem', ParasiteSystem);
@@ -288,6 +292,8 @@ catinoSystem = createSystem('CatinoSystem', CatinoSystem);
 hardcoreSystem = createSystem('HardcoreSystem', HardcoreSystem);
 partnerGenerator = createSystem('PartnerGenerator', PartnerGenerator);
 timeSystem = createSystem('TimeSystem', TimeSystem);
+loreSystem = createSystem('LoreSystem', LoreSystem);
+secretSystem = createSystem('SecretSystem', SecretSystem);
 
 console.log('System creation complete');
 
@@ -317,6 +323,10 @@ window.pagodaSystem = pagodaSystem;
 window.techniqueSystem = techniqueSystem;
 window.blessingSystem = blessingSystem;
 window.waveSurvivalSystem = waveSurvivalSystem;
+window.tournamentSystem = tournamentSystem;
+window.dreamRealmSystem = dreamRealmSystem;
+window.gooseDimensionSystem = gooseDimensionSystem;
+window.memoryFragmentSystem = memoryFragmentSystem;
 window.goldenSnootSystem = goldenSnootSystem;
 window.dailySystem = dailySystem;
 window.parasiteSystem = parasiteSystem;
@@ -329,6 +339,8 @@ window.catinoSystem = catinoSystem;
 window.hardcoreSystem = hardcoreSystem;
 window.partnerGenerator = partnerGenerator;
 window.timeSystem = timeSystem;
+window.loreSystem = loreSystem;
+window.secretSystem = secretSystem;
 
 console.log('Snoot Booper: All systems created successfully');
 
@@ -437,7 +449,7 @@ const elements = {
   allyQuote: document.getElementById('ally-quote'),
   allyBtns: document.querySelectorAll('.ally-btn'),
 
-  // Codex
+  // Codex (modal)
   codexModal: document.getElementById('codex-modal'),
   codexCloseBtn: document.getElementById('codex-close-btn'),
   codexContent: document.getElementById('codex-content'),
@@ -445,6 +457,13 @@ const elements = {
   openCodexBtn: document.getElementById('open-codex-btn'),
   loreCount: document.getElementById('lore-count'),
   loreTotal: document.getElementById('lore-total'),
+  // Codex (tab)
+  codexEntries: document.getElementById('codex-entries'),
+  codexCatBtns: document.querySelectorAll('.codex-cat-btn'),
+  loreFragmentsCount: document.getElementById('lore-fragments-count'),
+  storiesUnlocked: document.getElementById('stories-unlocked'),
+  secretsFound: document.getElementById('secrets-found'),
+  recentFragments: document.getElementById('recent-fragments'),
 
   // Stats
   statTotalBoops: document.getElementById('stat-total-boops'),
@@ -788,6 +807,28 @@ function loadGame(saveData) {
     eventSystem.deserialize(saveData.events);
   }
 
+  // Restore Lore & Secret systems
+  if (saveData.lore && loreSystem) {
+    loreSystem.deserialize(saveData.lore);
+  }
+  if (saveData.secrets && secretSystem) {
+    secretSystem.deserialize(saveData.secrets);
+  }
+
+  // Restore Dungeon Sub-Systems
+  if (saveData.tournament && tournamentSystem) {
+    tournamentSystem.deserialize(saveData.tournament);
+  }
+  if (saveData.dreamRealm && dreamRealmSystem) {
+    dreamRealmSystem.deserialize(saveData.dreamRealm);
+  }
+  if (saveData.gooseDimension && gooseDimensionSystem) {
+    gooseDimensionSystem.deserialize(saveData.gooseDimension);
+  }
+  if (saveData.memoryFragments && memoryFragmentSystem) {
+    memoryFragmentSystem.deserialize(saveData.memoryFragments);
+  }
+
   // If no waifus loaded, init with starter
   if (waifuSystem.getUnlockedWaifus().length === 0) {
     waifuSystem.init();
@@ -848,6 +889,12 @@ function startGameWithSave(afkGains) {
 
   // Start all periodic game intervals (centralized to prevent duplication)
   startGameIntervals();
+
+  // Start background music
+  if (audioSystem) {
+    audioSystem.init();
+    audioSystem.playMusic('main');
+  }
 }
 
 /**
@@ -993,6 +1040,12 @@ function startGame() {
 
   // Start all periodic game intervals (centralized to prevent duplication)
   startGameIntervals();
+
+  // Start background music
+  if (audioSystem) {
+    audioSystem.init();
+    audioSystem.playMusic('main');
+  }
 }
 
 // Make startGame globally accessible
@@ -2047,6 +2100,7 @@ const CODEX_ENTRIES = {
 };
 
 let currentCodexCategory = 'masters';
+let currentCodexTabCategory = 'masters';
 
 function setupCodex() {
   // Open codex button
@@ -2068,7 +2122,7 @@ function setupCodex() {
     });
   }
 
-  // Codex tabs
+  // Codex modal tabs
   if (elements.codexTabs) {
     elements.codexTabs.forEach(tab => {
       tab.addEventListener('click', () => {
@@ -2077,6 +2131,22 @@ function setupCodex() {
       });
     });
   }
+
+  // Codex in-tab category buttons
+  if (elements.codexCatBtns) {
+    elements.codexCatBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const category = btn.dataset.codexCat;
+        elements.codexCatBtns.forEach(b => b.classList.toggle('active', b === btn));
+        currentCodexTabCategory = category;
+        renderCodexTab();
+      });
+    });
+  }
+
+  // Initial render of codex tab
+  renderCodexTab();
+  updateCodexStats();
 }
 
 function openCodex() {
@@ -2183,6 +2253,206 @@ function updateLoreCount() {
 
 // Make showCodexEntry available globally for onclick
 window.showCodexEntry = showCodexEntry;
+
+// ===================================
+// CODEX TAB RENDERING (In-Game Tab)
+// ===================================
+
+// Category mapping: codex tab categories -> data sources
+const CODEX_TAB_CATEGORIES = {
+  masters: { codexKey: 'masters', loreKey: 'masters', label: 'Masters' },
+  waifus: { codexKey: 'waifus', loreKey: 'waifus', label: 'Waifus' },
+  cats: { codexKey: 'cats', loreKey: 'cats', label: 'Cats' },
+  geese: { codexKey: 'geese', loreKey: null, label: 'Geese' },
+  history: { codexKey: null, loreKey: 'sect', label: 'History' },
+  secrets: { codexKey: null, loreKey: null, label: 'Secrets' }
+};
+
+function renderCodexTab() {
+  if (!elements.codexEntries) return;
+
+  const catConfig = CODEX_TAB_CATEGORIES[currentCodexTabCategory];
+  if (!catConfig) return;
+
+  let html = '';
+
+  // Render entries from CODEX_ENTRIES (main codex data)
+  if (catConfig.codexKey && CODEX_ENTRIES[catConfig.codexKey]) {
+    const entries = CODEX_ENTRIES[catConfig.codexKey];
+    entries.forEach(entry => {
+      const isUnlocked = checkCodexUnlock(entry);
+      html += renderCodexTabEntry(entry, isUnlocked, catConfig.codexKey);
+    });
+  }
+
+  // Render entries from LoreSystem (fragment-based lore)
+  if (catConfig.loreKey && window.LORE_ENTRIES && window.LORE_ENTRIES[catConfig.loreKey]) {
+    const loreEntries = window.LORE_ENTRIES[catConfig.loreKey];
+    for (const [id, entry] of Object.entries(loreEntries)) {
+      // Skip if already shown from CODEX_ENTRIES (avoid duplicates)
+      if (catConfig.codexKey && CODEX_ENTRIES[catConfig.codexKey] &&
+          CODEX_ENTRIES[catConfig.codexKey].some(e => e.id === id)) continue;
+
+      const fragments = getLoreFragments(id);
+      const totalNeeded = entry.fragments || 5;
+      const isComplete = fragments >= totalNeeded;
+
+      html += `
+        <div class="codex-section" data-section="${catConfig.loreKey}">
+          <div class="codex-entry ${isComplete ? '' : 'locked'}" ${isComplete ? `onclick="showLoreEntry('${catConfig.loreKey}', '${id}')"` : ''}>
+            <div class="entry-header">
+              <span class="entry-icon">${isComplete ? '📖' : '📜'}</span>
+              <span class="entry-name">${isComplete ? (entry.title || id) : '???'}</span>
+              <span class="entry-progress">${fragments}/${totalNeeded} fragments</span>
+            </div>
+            <div class="entry-content ${isComplete ? '' : 'locked'}">
+              <p class="${isComplete ? '' : 'locked-text'}">${isComplete ? entry.story.split('\n')[0].substring(0, 120) + '...' : 'Collect fragments to unlock this story...'}</p>
+            </div>
+          </div>
+        </div>`;
+    }
+  }
+
+  // Special handling for secrets category
+  if (currentCodexTabCategory === 'secrets') {
+    html += renderSecretsCategory();
+  }
+
+  elements.codexEntries.innerHTML = html || '<p class="empty-message">No entries discovered yet. Keep playing!</p>';
+}
+
+function renderCodexTabEntry(entry, isUnlocked, category) {
+  return `
+    <div class="codex-section">
+      <div class="codex-entry ${isUnlocked ? '' : 'locked'}" ${isUnlocked ? `onclick="showCodexTabEntry('${category}', '${entry.id}')"` : ''}>
+        <div class="entry-header">
+          <span class="entry-icon">${isUnlocked ? entry.emoji : '❓'}</span>
+          <span class="entry-name">${isUnlocked ? entry.title : '???'}</span>
+          <span class="entry-progress">${isUnlocked ? 'Unlocked' : (entry.unlockHint || 'Keep playing...')}</span>
+        </div>
+        <div class="entry-content ${isUnlocked ? '' : 'locked'}">
+          <p class="${isUnlocked ? '' : 'locked-text'}">${isUnlocked ? entry.story.split('\n')[0].substring(0, 120) + '...' : entry.unlockHint || 'Keep playing to unlock...'}</p>
+        </div>
+      </div>
+    </div>`;
+}
+
+function showCodexTabEntry(category, entryId) {
+  const entries = CODEX_ENTRIES[category] || [];
+  const entry = entries.find(e => e.id === entryId);
+  if (!entry || !elements.codexEntries) return;
+
+  const storyHtml = entry.story.split('\n').map(p => p.trim() ? `<p>${p}</p>` : '').join('');
+  elements.codexEntries.innerHTML = `
+    <div class="codex-full-entry">
+      <h3>${entry.emoji} ${entry.title}</h3>
+      <p class="codex-subtitle">${entry.subtitle}</p>
+      <div class="story">${storyHtml}</div>
+      <button class="jade-button small codex-back-btn" onclick="renderCodexTab()">Back to List</button>
+    </div>`;
+}
+
+function showLoreEntry(category, entryId) {
+  if (!window.LORE_ENTRIES || !window.LORE_ENTRIES[category]) return;
+  const entry = window.LORE_ENTRIES[category][entryId];
+  if (!entry || !elements.codexEntries) return;
+
+  const storyHtml = entry.story.split('\n').map(p => p.trim() ? `<p>${p}</p>` : '').join('');
+  elements.codexEntries.innerHTML = `
+    <div class="codex-full-entry">
+      <h3>📖 ${entry.title}</h3>
+      <div class="story">${storyHtml}</div>
+      ${entry.rewards ? `<div class="lore-rewards"><strong>Reward:</strong> ${describeLoreReward(entry.rewards)}</div>` : ''}
+      <button class="jade-button small codex-back-btn" onclick="renderCodexTab()">Back to List</button>
+    </div>`;
+}
+
+function describeLoreReward(rewards) {
+  const parts = [];
+  if (rewards.cosmetic) parts.push(`Cosmetic: ${rewards.cosmetic}`);
+  if (rewards.jadeCatnip) parts.push(`+${rewards.jadeCatnip} Jade Catnip`);
+  if (rewards.gooseFeathers) parts.push(`+${rewards.gooseFeathers} Goose Feathers`);
+  if (rewards.technique) parts.push(`Technique: ${rewards.technique}`);
+  if (rewards.cat) parts.push(`Unlocks cat: ${rewards.cat}`);
+  return parts.join(', ') || 'Mystery reward';
+}
+
+function getLoreFragments(entryId) {
+  if (window.loreSystem && typeof loreSystem.getCollectedFragments === 'function') {
+    return loreSystem.getCollectedFragments(entryId);
+  }
+  return 0;
+}
+
+function renderSecretsCategory() {
+  let html = '';
+  const secretsList = [
+    { id: 'moon_secret', name: 'The Moon Clicks', hint: 'The moon holds secrets for the patient...', check: () => gameState.secrets && gameState.secrets.moonSecret },
+    { id: 'nyan_secret', name: 'Rainbow Trail', hint: 'Name a cat something special...', check: () => gameState.achievements && gameState.achievements.has && gameState.achievements.has('nyan_easter_egg') },
+    { id: 'afk_cat', name: 'The Patient One', hint: 'Sometimes, doing nothing is the answer...', check: () => gameState.secrets && gameState.secrets.afkCatAppeared },
+    { id: 'konami', name: 'Retro Mode', hint: 'Up, up, down, down...', check: () => gameState.visualMode === 'retro' },
+    { id: 'nice', name: 'Nice.', hint: 'A legendary number...', check: () => gameState.achievements && gameState.achievements.has && gameState.achievements.has('nice') }
+  ];
+
+  secretsList.forEach(secret => {
+    const found = secret.check();
+    html += `
+      <div class="codex-section">
+        <div class="codex-entry ${found ? '' : 'locked'}">
+          <div class="entry-header">
+            <span class="entry-icon">${found ? '🔮' : '❓'}</span>
+            <span class="entry-name">${found ? secret.name : '???'}</span>
+            <span class="entry-progress">${found ? 'Discovered!' : 'Hidden'}</span>
+          </div>
+          <div class="entry-content ${found ? '' : 'locked'}">
+            <p class="${found ? '' : 'locked-text'}">${found ? secret.name + ' has been revealed!' : secret.hint}</p>
+          </div>
+        </div>
+      </div>`;
+  });
+
+  return html;
+}
+
+function updateCodexStats() {
+  // Count fragments from loreSystem
+  let totalFragments = 0;
+  let storiesComplete = 0;
+  let secretsCount = 0;
+
+  // Count from CODEX_ENTRIES
+  for (const category of Object.values(CODEX_ENTRIES)) {
+    for (const entry of category) {
+      if (checkCodexUnlock(entry)) storiesComplete++;
+    }
+  }
+
+  // Count from LoreSystem
+  if (window.LORE_ENTRIES) {
+    for (const entries of Object.values(LORE_ENTRIES)) {
+      for (const [id, entry] of Object.entries(entries)) {
+        const frags = getLoreFragments(id);
+        totalFragments += frags;
+        if (frags >= (entry.fragments || 5)) storiesComplete++;
+      }
+    }
+  }
+
+  // Count secrets
+  if (gameState.secrets) {
+    if (gameState.secrets.moonSecret) secretsCount++;
+    if (gameState.secrets.afkCatAppeared) secretsCount++;
+  }
+  if (gameState.visualMode === 'retro') secretsCount++;
+
+  safeSetText(elements.loreFragmentsCount, totalFragments);
+  safeSetText(elements.storiesUnlocked, storiesComplete);
+  safeSetText(elements.secretsFound, secretsCount);
+}
+
+window.showCodexTabEntry = showCodexTabEntry;
+window.showLoreEntry = showLoreEntry;
+window.renderCodexTab = renderCodexTab;
 
 // ===================================
 // CATINO (CASINO) UI
@@ -5440,7 +5710,10 @@ function selectDungeon(dungeonType) {
   // Update selection and start the dungeon
   highlightDungeon(dungeonType);
 
-  if (audioSystem) audioSystem.playSFX('click');
+  if (audioSystem) {
+    audioSystem.playSFX('click');
+    audioSystem.playMusic('dungeon');
+  }
 
   // Directly start the dungeon when clicking Enter
   console.log('[Dungeon] Starting dungeon...');
@@ -5508,6 +5781,13 @@ function updateActiveDungeonUI(dungeonType) {
   const combatDiv = document.getElementById('pagoda-combat');
   const floorDisplay = document.getElementById('active-dungeon-floor');
 
+  // Hide all sub-mode UIs first
+  const subUIs = ['tournament-ui', 'dream-realm-ui', 'goose-dimension-ui', 'memory-fragments-ui'];
+  subUIs.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.classList.add('hidden');
+  });
+
   switch (dungeonType) {
     case 'pagoda':
       if (combatDiv) combatDiv.classList.remove('hidden');
@@ -5523,10 +5803,35 @@ function updateActiveDungeonUI(dungeonType) {
         floorDisplay.textContent = `Time: ${mins}:${secs.toString().padStart(2, '0')}`;
       }
       break;
-    case 'tournament':
+    case 'tournament': {
       if (combatDiv) combatDiv.classList.add('hidden');
       if (floorDisplay) floorDisplay.textContent = 'Round 1';
+      const tUI = document.getElementById('tournament-ui');
+      if (tUI) tUI.classList.remove('hidden');
       break;
+    }
+    case 'dream': {
+      if (combatDiv) combatDiv.classList.add('hidden');
+      if (floorDisplay) floorDisplay.textContent = 'Dream';
+      const dUI = document.getElementById('dream-realm-ui');
+      if (dUI) dUI.classList.remove('hidden');
+      break;
+    }
+    case 'goose': {
+      if (combatDiv) combatDiv.classList.add('hidden');
+      if (floorDisplay) floorDisplay.textContent = 'HONK';
+      const gUI = document.getElementById('goose-dimension-ui');
+      if (gUI) gUI.classList.remove('hidden');
+      break;
+    }
+    case 'memory': {
+      if (combatDiv) combatDiv.classList.add('hidden');
+      if (floorDisplay) floorDisplay.textContent = 'Memory';
+      const mUI = document.getElementById('memory-fragments-ui');
+      if (mUI) mUI.classList.remove('hidden');
+      renderMemoryChapterList();
+      break;
+    }
     default:
       if (combatDiv) combatDiv.classList.add('hidden');
       if (floorDisplay) floorDisplay.textContent = '';
@@ -5651,6 +5956,75 @@ function startMemoryDungeon() {
     showNotification('📜 Entering Memory Fragments...', 'success');
   }
 }
+
+/**
+ * Render memory chapter list for the Memory Fragments dungeon
+ */
+function renderMemoryChapterList() {
+  const listEl = document.getElementById('memory-chapter-list');
+  if (!listEl) return;
+
+  if (!window.MEMORY_LORE_ENTRIES && !window.MEMORY_CHAPTERS) {
+    listEl.innerHTML = '<p class="empty-message">Memory Fragment data not loaded.</p>';
+    return;
+  }
+
+  const chapters = window.MEMORY_CHAPTERS || {};
+  const lore = window.MEMORY_LORE_ENTRIES || {};
+  let html = '';
+
+  // Render from MEMORY_CHAPTERS if available
+  if (Object.keys(chapters).length > 0) {
+    for (const [id, chapter] of Object.entries(chapters)) {
+      const completed = memoryFragmentSystem && memoryFragmentSystem.isChapterComplete && memoryFragmentSystem.isChapterComplete(id);
+      html += `
+        <div class="memory-chapter-card ${completed ? 'completed' : ''}" onclick="selectMemoryChapter('${id}')">
+          <span class="entry-icon">${completed ? '✅' : '📜'}</span>
+          <span class="entry-name">${chapter.title || id}</span>
+          <span class="entry-progress">${completed ? 'Complete' : 'Available'}</span>
+        </div>`;
+    }
+  } else {
+    // Fallback: render from MEMORY_LORE_ENTRIES
+    for (const [id, entry] of Object.entries(lore)) {
+      html += `
+        <div class="memory-chapter-card" onclick="selectMemoryChapter('${id}')">
+          <span class="entry-icon">📜</span>
+          <span class="entry-name">${entry.title || id}</span>
+          <span class="entry-progress">${entry.masterId || ''}</span>
+        </div>`;
+    }
+  }
+
+  listEl.innerHTML = html || '<p class="empty-message">No chapters available yet.</p>';
+}
+
+function selectMemoryChapter(chapterId) {
+  const nameEl = document.getElementById('memory-chapter-name');
+  if (nameEl) nameEl.textContent = chapterId;
+
+  if (memoryFragmentSystem && memoryFragmentSystem.selectChapter) {
+    memoryFragmentSystem.selectChapter(chapterId);
+  }
+}
+
+function startMemoryChapter() {
+  if (!memoryFragmentSystem) {
+    showNotification('Memory Fragment system not loaded!', 'error');
+    return;
+  }
+  if (memoryFragmentSystem.startChapter) {
+    memoryFragmentSystem.startChapter();
+    showNotification('📜 Chapter begins...', 'success');
+  } else if (memoryFragmentSystem.startRun) {
+    memoryFragmentSystem.startRun();
+    showNotification('📜 Entering Memory Fragments...', 'success');
+  }
+}
+
+window.selectMemoryChapter = selectMemoryChapter;
+window.startMemoryChapter = startMemoryChapter;
+window.renderMemoryChapterList = renderMemoryChapterList;
 
 /**
  * Abandon the current dungeon run
@@ -7616,6 +7990,9 @@ function gameLoop(timestamp) {
   // Check for waifu unlocks every 5 seconds
   if (timestamp % 5000 < deltaTime) {
     checkWaifuUnlocks();
+
+    // Check for secret events (AFK cat, nice number, Mochi warning, goose UI steal)
+    if (secretSystem) secretSystem.update();
 
     // Check for technique skill and passive discoveries
     if (techniqueSystem) {

@@ -294,6 +294,28 @@ class PrestigeSystem {
       window.gooseSystem.gooseBoops = 0;
       window.gooseSystem.goldenGooseBoops = 0;
     }
+
+    // Reset dungeon sub-systems
+    if (window.tournamentSystem && window.tournamentSystem.reset) {
+      window.tournamentSystem.reset(true); // keepStats = true
+    }
+    if (window.dreamRealmSystem && window.dreamRealmSystem.reset) {
+      window.dreamRealmSystem.reset(false);
+    }
+    if (window.gooseDimensionSystem && window.gooseDimensionSystem.reset) {
+      window.gooseDimensionSystem.reset();
+    }
+    if (window.memoryFragmentSystem && window.memoryFragmentSystem.reset) {
+      window.memoryFragmentSystem.reset(true); // keepLore = true
+    }
+
+    // Reset lore & secret systems (preserve unlocked stories)
+    if (window.loreSystem && window.loreSystem.reset) {
+      window.loreSystem.reset();
+    }
+    if (window.secretSystem && window.secretSystem.reset) {
+      window.secretSystem.reset();
+    }
   }
 
   /**

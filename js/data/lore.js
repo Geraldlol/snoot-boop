@@ -992,6 +992,16 @@ class LoreSystem {
       lastFragmentTime: null
     };
   }
+
+  /**
+   * Reset for prestige (preserves unlocked stories)
+   */
+  reset() {
+    // Keep unlocked stories as permanent progress
+    // Reset fragment collection progress
+    this.collectedFragments = {};
+    this.stats.lastFragmentTime = null;
+  }
 }
 
 // Export for use in other modules

@@ -1529,3 +1529,243 @@
     grid-column: 1;
   }
 }
+
+/* ===================================
+   DUNGEON SUB-MODE UIs
+   Tournament, Dream Realm, Goose Dimension, Memory Fragments
+   =================================== */
+
+.dungeon-sub-ui {
+  padding: 12px;
+  margin-top: 10px;
+  background: linear-gradient(135deg, rgba(26, 26, 46, 0.9), rgba(22, 33, 62, 0.9));
+  border: 2px solid var(--jade-dark);
+  border-radius: 4px;
+}
+
+.sub-ui-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(80, 200, 120, 0.3);
+}
+
+.sub-ui-header h5 {
+  color: var(--jade-light);
+  font-size: var(--font-md);
+  margin: 0;
+}
+
+.sub-ui-stat {
+  color: var(--gold-accent);
+  font-size: var(--font-sm);
+}
+
+.sub-ui-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+  justify-content: center;
+}
+
+/* --- Tournament --- */
+.tournament-bracket {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+
+.combat-versus {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px;
+}
+
+.fighter {
+  flex: 1;
+  text-align: center;
+}
+
+.fighter-name {
+  display: block;
+  font-size: var(--font-sm);
+  color: var(--text-light);
+  margin-bottom: 4px;
+}
+
+.vs-text {
+  font-size: var(--font-lg);
+  color: var(--red-accent);
+  font-weight: bold;
+  text-shadow: 0 0 10px var(--red-accent);
+}
+
+.hp-bar {
+  height: 8px;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.hp-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--jade), var(--jade-light));
+  transition: width 0.3s ease;
+  border-radius: 4px;
+}
+
+.hp-fill.enemy {
+  background: linear-gradient(90deg, var(--red-accent), #ff8888);
+}
+
+.combat-log {
+  max-height: 100px;
+  overflow-y: auto;
+  padding: 6px;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 4px;
+  font-size: var(--font-xs);
+  color: #aaa;
+  margin-top: 8px;
+}
+
+/* --- Dream Realm --- */
+.dream-status {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.dream-modifier {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 8px;
+  background: rgba(147, 112, 219, 0.2);
+  border: 1px solid rgba(147, 112, 219, 0.4);
+  border-radius: 4px;
+  font-size: var(--font-sm);
+  color: #c4a7e7;
+}
+
+.dream-essence-bar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--font-sm);
+  color: #c4a7e7;
+}
+
+/* --- Goose Dimension --- */
+.goose-dim-status {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.sanity-meter {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--font-sm);
+  color: #f0f0f0;
+}
+
+.sanity-bar {
+  flex: 1;
+  height: 10px;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.sanity-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #ff4500, #ffaa00, #50C878);
+  transition: width 0.3s ease;
+  border-radius: 5px;
+}
+
+.honk-counter {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: var(--font-sm);
+  color: var(--goose-white);
+}
+
+.goose-wave-enemies {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+  padding: 10px;
+}
+
+.goose-joke {
+  text-align: center;
+  padding: 8px;
+  color: var(--goose-golden);
+  font-style: italic;
+  font-size: var(--font-sm);
+}
+
+/* --- Memory Fragments --- */
+.memory-chapters {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.memory-chapter-card {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(80, 200, 120, 0.2);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+
+.memory-chapter-card:hover {
+  border-color: var(--jade);
+}
+
+.memory-chapter-card.completed {
+  border-color: var(--gold-accent);
+  background: rgba(255, 215, 0, 0.1);
+}
+
+.memory-chapter-card.locked {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.memory-story {
+  padding: 10px;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+  margin-top: 8px;
+}
+
+.story-text {
+  color: var(--bg-parchment);
+  font-size: var(--font-sm);
+  line-height: 1.6;
+  max-height: 200px;
+  overflow-y: auto;
+}

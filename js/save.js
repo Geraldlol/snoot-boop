@@ -142,6 +142,46 @@ const SaveSystem = {
         lastWeeklyReset: null,
         triggeredHiddenEvents: [],
         hiddenEventCooldowns: {}
+      },
+
+      // Lore System
+      lore: window.loreSystem ? window.loreSystem.serialize() : {
+        collectedFragments: {},
+        unlockedStories: [],
+        stats: { totalFragmentsFound: 0, storiesUnlocked: 0, lastFragmentTime: null }
+      },
+
+      // Secret System
+      secrets: window.secretSystem ? window.secretSystem.serialize() : {
+        moonClicks: 0,
+        discoveredSecrets: [],
+        stats: { secretsFound: 0, moonClicksTotal: 0, konamiAttempts: 0, nikStares: 0, gooseSteals: 0 }
+      },
+
+      // Dungeon Sub-Systems
+      tournament: window.tournamentSystem ? window.tournamentSystem.serialize() : {
+        weeklyData: null,
+        stats: {},
+        leaderboard: []
+      },
+      dreamRealm: window.dreamRealmSystem ? window.dreamRealmSystem.serialize() : {
+        dreamEssence: 0,
+        unlockedCosmetics: [],
+        hasWalkerCat: false,
+        deepestDream: 0,
+        stats: {}
+      },
+      gooseDimension: window.gooseDimensionSystem ? window.gooseDimensionSystem.serialize() : {
+        highestFloor: 0,
+        stats: {},
+        rewards: {}
+      },
+      memoryFragments: window.memoryFragmentSystem ? window.memoryFragmentSystem.serialize() : {
+        completedChapters: [],
+        unlockedLore: [],
+        collectedFragments: {},
+        totalFragmentsCollected: 0,
+        stats: {}
       }
     };
 
