@@ -209,7 +209,8 @@ let prestigeSystem, audioSystem, cultivationSystem, buildingSystem, economySyste
 let elementalSystem, equipmentSystem, craftingSystem, pagodaSystem, techniqueSystem;
 let blessingSystem, waveSurvivalSystem, goldenSnootSystem, dailySystem, parasiteSystem;
 let irlIntegrationSystem, dramaSystem, nemesisSystem, catinoSystem, hardcoreSystem, partnerGenerator;
-let timeSystem;
+let timeSystem, loreSystem, secretSystem;
+let tournamentSystem, dreamRealmSystem, gooseDimensionSystem, memoryFragmentSystem;
 
 // Track game intervals to prevent duplication on reload
 let gameIntervals = [];
@@ -292,8 +293,15 @@ catinoSystem = createSystem('CatinoSystem', CatinoSystem);
 hardcoreSystem = createSystem('HardcoreSystem', HardcoreSystem);
 partnerGenerator = createSystem('PartnerGenerator', PartnerGenerator);
 timeSystem = createSystem('TimeSystem', TimeSystem);
-loreSystem = createSystem('LoreSystem', LoreSystem);
-secretSystem = createSystem('SecretSystem', SecretSystem);
+// LoreSystem and SecretSystem require gameState as constructor arg
+if (typeof LoreSystem !== 'undefined') {
+  try { loreSystem = new LoreSystem(gameState); console.log('  ✓ LoreSystem'); }
+  catch (e) { console.error('  ✗ LoreSystem:', e.message); }
+} else { console.warn('  ⚠ LoreSystem class not found, skipping'); }
+if (typeof SecretSystem !== 'undefined') {
+  try { secretSystem = new SecretSystem(gameState); console.log('  ✓ SecretSystem'); }
+  catch (e) { console.error('  ✗ SecretSystem:', e.message); }
+} else { console.warn('  ⚠ SecretSystem class not found, skipping'); }
 
 console.log('System creation complete');
 
