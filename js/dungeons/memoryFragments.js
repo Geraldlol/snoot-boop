@@ -9,7 +9,7 @@
 // ============================================
 // LORE ENTRIES - Full stories for each character
 // ============================================
-const LORE_ENTRIES = {
+const MEMORY_LORE_ENTRIES = {
   // === GERALD - THE JADE PALM ===
   gerald_founding: {
     id: 'gerald_founding',
@@ -2352,7 +2352,7 @@ class MemoryFragmentsSystem {
   constructor() {
     // All chapters (master + waifu + secret)
     this.chapters = { ...MEMORY_CHAPTERS, ...WAIFU_MEMORY_CHAPTERS };
-    this.loreEntries = { ...LORE_ENTRIES, ...WAIFU_LORE_ENTRIES };
+    this.loreEntries = { ...MEMORY_LORE_ENTRIES, ...WAIFU_LORE_ENTRIES };
     this.enemies = MEMORY_ENEMIES;
     this.bosses = MEMORY_BOSSES;
 
@@ -2962,7 +2962,7 @@ class MemoryFragmentsSystem {
 // ============================================
 window.MEMORY_CHAPTERS = MEMORY_CHAPTERS;
 window.WAIFU_MEMORY_CHAPTERS = WAIFU_MEMORY_CHAPTERS;
-window.MEMORY_LORE_ENTRIES = LORE_ENTRIES;
+window.MEMORY_LORE_ENTRIES = MEMORY_LORE_ENTRIES;
 window.WAIFU_LORE_ENTRIES = WAIFU_LORE_ENTRIES;
 window.MEMORY_ENEMIES = MEMORY_ENEMIES;
 window.MEMORY_BOSSES = MEMORY_BOSSES;

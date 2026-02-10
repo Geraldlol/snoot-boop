@@ -237,8 +237,10 @@ function startGameIntervals() {
   gameIntervals.push(setInterval(renderUpgrades, 2000));
 }
 
-function createSystem(name, constructorFn) {
-  if (typeof constructorFn === 'undefined') {
+function createSystem(name, constructorArg) {
+  // Look up class from window by name (safe - no ReferenceError if missing)
+  const constructorFn = constructorArg || window[name];
+  if (!constructorFn || typeof constructorFn !== 'function') {
     console.warn('  ⚠ ' + name + ' class not found, skipping');
     return null;
   }
@@ -253,52 +255,52 @@ function createSystem(name, constructorFn) {
 }
 
 console.log('Creating core systems...');
-masterSystem = createSystem('MasterSystem', MasterSystem);
-catSystem = createSystem('CatSystem', CatSystem);
-waifuSystem = createSystem('WaifuSystem', WaifuSystem);
-upgradeSystem = createSystem('UpgradeSystem', UpgradeSystem);
-eventSystem = createSystem('EventSystem', EventSystem);
-achievementSystem = createSystem('AchievementSystem', AchievementSystem);
-gooseSystem = createSystem('GooseSystem', GooseSystem);
-giftSystem = createSystem('GiftSystem', GiftSystem);
-expeditionSystem = createSystem('ExpeditionSystem', ExpeditionSystem);
-jadeDotGame = createSystem('JadeDotGame', JadeDotGame);
-prestigeSystem = createSystem('PrestigeSystem', PrestigeSystem);
-audioSystem = createSystem('AudioSystem', AudioSystem);
-cultivationSystem = createSystem('CultivationSystem', CultivationSystem);
-buildingSystem = createSystem('BuildingSystem', BuildingSystem);
-economySystem = createSystem('EconomySystem', EconomySystem);
+masterSystem = createSystem('MasterSystem');
+catSystem = createSystem('CatSystem');
+waifuSystem = createSystem('WaifuSystem');
+upgradeSystem = createSystem('UpgradeSystem');
+eventSystem = createSystem('EventSystem');
+achievementSystem = createSystem('AchievementSystem');
+gooseSystem = createSystem('GooseSystem');
+giftSystem = createSystem('GiftSystem');
+expeditionSystem = createSystem('ExpeditionSystem');
+jadeDotGame = createSystem('JadeDotGame');
+prestigeSystem = createSystem('PrestigeSystem');
+audioSystem = createSystem('AudioSystem');
+cultivationSystem = createSystem('CultivationSystem');
+buildingSystem = createSystem('BuildingSystem');
+economySystem = createSystem('EconomySystem');
 
 console.log('Creating Phase 3 systems...');
-elementalSystem = createSystem('ElementalSystem', ElementalSystem);
-equipmentSystem = createSystem('EquipmentSystem', EquipmentSystem);
-craftingSystem = createSystem('CraftingSystem', CraftingSystem);
-pagodaSystem = createSystem('PagodaSystem', PagodaSystem);
-techniqueSystem = createSystem('TechniqueSystem', TechniqueSystem);
-blessingSystem = createSystem('BlessingSystem', BlessingSystem);
-waveSurvivalSystem = createSystem('WaveSurvivalSystem', WaveSurvivalSystem);
-tournamentSystem = createSystem('CelestialTournamentSystem', CelestialTournamentSystem);
-dreamRealmSystem = createSystem('DreamRealmSystem', DreamRealmSystem);
-gooseDimensionSystem = createSystem('GooseDimensionSystem', GooseDimensionSystem);
-memoryFragmentSystem = createSystem('MemoryFragmentsSystem', MemoryFragmentsSystem);
-goldenSnootSystem = createSystem('GoldenSnootSystem', GoldenSnootSystem);
-dailySystem = createSystem('DailySystem', DailySystem);
-parasiteSystem = createSystem('ParasiteSystem', ParasiteSystem);
+elementalSystem = createSystem('ElementalSystem');
+equipmentSystem = createSystem('EquipmentSystem');
+craftingSystem = createSystem('CraftingSystem');
+pagodaSystem = createSystem('PagodaSystem');
+techniqueSystem = createSystem('TechniqueSystem');
+blessingSystem = createSystem('BlessingSystem');
+waveSurvivalSystem = createSystem('WaveSurvivalSystem');
+tournamentSystem = createSystem('CelestialTournamentSystem');
+dreamRealmSystem = createSystem('DreamRealmSystem');
+gooseDimensionSystem = createSystem('GooseDimensionSystem');
+memoryFragmentSystem = createSystem('MemoryFragmentsSystem');
+goldenSnootSystem = createSystem('GoldenSnootSystem');
+dailySystem = createSystem('DailySystem');
+parasiteSystem = createSystem('ParasiteSystem');
 
 console.log('Creating POST-LAUNCH systems...');
-irlIntegrationSystem = createSystem('IRLIntegrationSystem', IRLIntegrationSystem);
-dramaSystem = createSystem('DramaSystem', DramaSystem);
-nemesisSystem = createSystem('NemesisSystem', NemesisSystem);
-catinoSystem = createSystem('CatinoSystem', CatinoSystem);
-hardcoreSystem = createSystem('HardcoreSystem', HardcoreSystem);
-partnerGenerator = createSystem('PartnerGenerator', PartnerGenerator);
-timeSystem = createSystem('TimeSystem', TimeSystem);
+irlIntegrationSystem = createSystem('IRLIntegrationSystem');
+dramaSystem = createSystem('DramaSystem');
+nemesisSystem = createSystem('NemesisSystem');
+catinoSystem = createSystem('CatinoSystem');
+hardcoreSystem = createSystem('HardcoreSystem');
+partnerGenerator = createSystem('PartnerGenerator');
+timeSystem = createSystem('TimeSystem');
 // LoreSystem and SecretSystem require gameState as constructor arg
-if (typeof LoreSystem !== 'undefined') {
+if (window.LoreSystem) {
   try { loreSystem = new LoreSystem(gameState); console.log('  ✓ LoreSystem'); }
   catch (e) { console.error('  ✗ LoreSystem:', e.message); }
 } else { console.warn('  ⚠ LoreSystem class not found, skipping'); }
-if (typeof SecretSystem !== 'undefined') {
+if (window.SecretSystem) {
   try { secretSystem = new SecretSystem(gameState); console.log('  ✓ SecretSystem'); }
   catch (e) { console.error('  ✗ SecretSystem:', e.message); }
 } else { console.warn('  ⚠ SecretSystem class not found, skipping'); }
