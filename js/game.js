@@ -83,7 +83,7 @@ if (typeof BuildingSystem === 'undefined') {
       this.buildingEffects = {};
       this.stats = {};
     }
-    getBuildingCost() { return Infinity; }
+    getBuildingCost() { return Number.MAX_SAFE_INTEGER; }
     canBuild() { return { canBuild: false, reason: 'System not loaded' }; }
     build() { return { success: false }; }
     recalculateEffects() { return {}; }
@@ -210,6 +210,31 @@ let elementalSystem, equipmentSystem, craftingSystem, pagodaSystem, techniqueSys
 let blessingSystem, waveSurvivalSystem, goldenSnootSystem, dailySystem, parasiteSystem;
 let irlIntegrationSystem, dramaSystem, nemesisSystem, catinoSystem, hardcoreSystem, partnerGenerator;
 let timeSystem;
+
+// Track game intervals to prevent duplication on reload
+let gameIntervals = [];
+
+/**
+ * Clear and reset all game intervals (prevents stacking on reload)
+ */
+function clearGameIntervals() {
+  gameIntervals.forEach(id => clearInterval(id));
+  gameIntervals = [];
+}
+
+/**
+ * Start all periodic game updates (only call once per session)
+ */
+function startGameIntervals() {
+  // Clear any existing intervals first
+  clearGameIntervals();
+
+  // Start new intervals and track them
+  gameIntervals.push(setInterval(checkAchievements, 5000));
+  gameIntervals.push(setInterval(renderDailyCommissions, 5000));
+  gameIntervals.push(setInterval(updateExpeditionsUI, 1000));
+  gameIntervals.push(setInterval(renderUpgrades, 2000));
+}
 
 function createSystem(name, constructorFn) {
   if (typeof constructorFn === 'undefined') {
@@ -363,11 +388,9 @@ const elements = {
   catsTab: document.getElementById('cats-tab'),
   teamsTab: document.getElementById('teams-tab'),
   upgradesTab: document.getElementById('upgrades-tab'),
-  pagodaTab: document.getElementById('pagoda-tab'),
   dungeonsTab: document.getElementById('dungeons-tab'),
   equipmentTab: document.getElementById('equipment-tab'),
   expeditionsTab: document.getElementById('expeditions-tab'),
-  facilitiesTab: document.getElementById('facilities-tab'),
   buildingsTab: document.getElementById('buildings-tab'),
   prestigeTab: document.getElementById('prestige-tab'),
   statsTab: document.getElementById('stats-tab'),
@@ -491,6 +514,96 @@ const elements = {
   breakthroughBtn: document.getElementById('breakthrough-btn')
 };
 
+/**
+ * Safely set text content on an element (null-safe)
+ */
+function safeSetText(element, text) {
+  if (element) element.textContent = text;
+}
+
+/**
+ * Modal focus management - trap focus within modal, return focus on close
+ */
+let _modalTriggerEl = null;
+
+function trapFocusInModal(modal) {
+  if (!modal) return;
+  _modalTriggerEl = document.activeElement;
+  const focusable = modal.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+  if (focusable.length > 0) {
+    focusable[0].focus();
+  }
+  modal._focusTrapHandler = function(e) {
+    if (e.key !== 'Tab') return;
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    if (e.shiftKey) {
+      if (document.activeElement === first) { e.preventDefault(); last.focus(); }
+    } else {
+      if (document.activeElement === last) { e.preventDefault(); first.focus(); }
+    }
+    if (e.key === 'Escape') { modal.classList.add('hidden'); returnFocusFromModal(); }
+  };
+  modal.addEventListener('keydown', modal._focusTrapHandler);
+}
+
+function returnFocusFromModal(modal) {
+  if (modal && modal._focusTrapHandler) {
+    modal.removeEventListener('keydown', modal._focusTrapHandler);
+    delete modal._focusTrapHandler;
+  }
+  if (_modalTriggerEl && _modalTriggerEl.focus) {
+    _modalTriggerEl.focus();
+    _modalTriggerEl = null;
+  }
+}
+
+/**
+ * Safely set innerHTML on an element (null-safe)
+ */
+function safeSetHTML(element, html) {
+  if (element) element.innerHTML = html;
+}
+
+/**
+ * Safely add class to element (null-safe)
+ */
+function safeAddClass(element, className) {
+  if (element && element.classList) element.classList.add(className);
+}
+
+/**
+ * Safely remove class from element (null-safe)
+ */
+function safeRemoveClass(element, className) {
+  if (element && element.classList) element.classList.remove(className);
+}
+
+/**
+ * Safely toggle class on element (null-safe)
+ */
+function safeToggleClass(element, className, force) {
+  if (element && element.classList) element.classList.toggle(className, force);
+}
+
+/**
+ * Validate critical elements exist (logs warnings for missing)
+ */
+function validateCriticalElements() {
+  const critical = [
+    'masterSelectScreen', 'gameScreen', 'mastersGrid', 'boopButton',
+    'bpDisplay', 'ppDisplay', 'catCollection'
+  ];
+  let allPresent = true;
+  for (const name of critical) {
+    if (!elements[name]) {
+      console.warn(`Critical element missing: ${name}`);
+      allPresent = false;
+    }
+  }
+  return allPresent;
+}
+
 // Currently previewed master
 let previewedMasterId = null;
 
@@ -501,6 +614,11 @@ let previewedMasterId = null;
 function init() {
   try {
     console.log('Snoot Booper: Initializing...');
+
+    // Validate critical DOM elements exist
+    if (!validateCriticalElements()) {
+      console.warn('Some critical elements missing - game may have issues');
+    }
 
     // Check for existing save
     const saveData = SaveSystem.load();
@@ -527,23 +645,30 @@ function init() {
 }
 
 function loadGame(saveData) {
-  // Restore master
-  masterSystem.selectMaster(saveData.master);
+  // Restore master (with fallback to 'gerald' if corrupted)
+  const masterResult = masterSystem.selectMaster(saveData.master);
+  if (!masterResult) {
+    console.warn(`Invalid master "${saveData.master}" in save, falling back to gerald`);
+    masterSystem.selectMaster('gerald');
+  }
+
+  // Guard clause for corrupted saves - ensure resources object exists
+  const resources = saveData.resources || {};
 
   // Restore resources (primary currencies)
-  gameState.boopPoints = saveData.resources.bp || 0;
-  gameState.purrPower = saveData.resources.pp || 0;
-  gameState.jadeCatnip = saveData.resources.jadeCatnip || 0;
-  gameState.gooseFeathers = saveData.resources.gooseFeathers || 0;
-  gameState.goldenFeathers = saveData.resources.goldenFeathers || 0;
-  gameState.destinyThreads = saveData.resources.destinyThreads || 0;
+  gameState.boopPoints = resources.bp || 0;
+  gameState.purrPower = resources.pp || 0;
+  gameState.jadeCatnip = resources.jadeCatnip || 0;
+  gameState.gooseFeathers = resources.gooseFeathers || 0;
+  gameState.goldenFeathers = resources.goldenFeathers || 0;
+  gameState.destinyThreads = resources.destinyThreads || 0;
 
   // Restore additional currencies (9-currency system)
-  gameState.qi = saveData.resources.qi || 0;
-  gameState.spiritStones = saveData.resources.spiritStones || 0;
-  gameState.heavenlySeals = saveData.resources.heavenlySeals || 0;
-  gameState.sectReputation = saveData.resources.sectReputation || 0;
-  gameState.waifuTokens = saveData.resources.waifuTokens || 0;
+  gameState.qi = resources.qi || 0;
+  gameState.spiritStones = resources.spiritStones || 0;
+  gameState.heavenlySeals = resources.heavenlySeals || 0;
+  gameState.sectReputation = resources.sectReputation || 0;
+  gameState.waifuTokens = resources.waifuTokens || 0;
 
   // Restore stats
   gameState.totalBoops = saveData.stats?.totalBoops || 0;
@@ -668,7 +793,11 @@ function loadGame(saveData) {
     waifuSystem.init();
   }
 
-  // Calculate AFK gains
+  // Recalculate modifiers BEFORE AFK gains (MP-1, MP-2 fix)
+  // This ensures multipliers are correct when calculating offline progress
+  recalculateModifiers();
+
+  // Calculate AFK gains (now with correct modifiers)
   const afkGains = SaveSystem.calculateAFKGains(
     saveData, masterSystem, catSystem, waifuSystem, upgradeSystem
   );
@@ -689,9 +818,9 @@ function startGameWithSave(afkGains) {
   renderUpgrades();
   updateResourceDisplay();
 
-  // Switch to game screen
-  elements.masterSelectScreen.classList.remove('active');
-  elements.gameScreen.classList.add('active');
+  // Switch to game screen (with null checks)
+  safeRemoveClass(elements.masterSelectScreen, 'active');
+  safeAddClass(elements.gameScreen, 'active');
 
   // Show AFK gains if significant
   if (afkGains && afkGains.timeAway > 60000) {
@@ -717,17 +846,8 @@ function startGameWithSave(afkGains) {
   renderPagoda();
   renderEquipment();
 
-  // Start achievement checking interval
-  setInterval(checkAchievements, 5000);
-
-  // Update daily commissions periodically
-  setInterval(renderDailyCommissions, 5000);
-
-  // Update expeditions UI periodically
-  setInterval(updateExpeditionsUI, 1000);
-
-  // Update upgrades UI periodically (so affordability updates with BP changes)
-  setInterval(renderUpgrades, 2000);
+  // Start all periodic game intervals (centralized to prevent duplication)
+  startGameIntervals();
 }
 
 /**
@@ -807,22 +927,25 @@ function showMasterPreview(masterId) {
 
   previewedMasterId = masterId;
 
-  // Set portrait image or emoji fallback
-  if (master.portrait) {
-    elements.previewPortrait.innerHTML = `<img src="${master.portrait}" alt="${master.name}" onerror="this.outerHTML='${master.emoji}'">`;
-  } else {
-    elements.previewPortrait.textContent = master.emoji;
+  // Set portrait image or emoji fallback (with null checks)
+  if (elements.previewPortrait) {
+    if (master.portrait) {
+      elements.previewPortrait.innerHTML = `<img src="${master.portrait}" alt="${master.name}" onerror="this.outerHTML='${master.emoji}'">`;
+    } else {
+      elements.previewPortrait.textContent = master.emoji;
+    }
+    elements.previewPortrait.style.borderColor = master.color;
   }
-  elements.previewPortrait.style.borderColor = master.color;
-  elements.previewName.textContent = master.name;
-  elements.previewName.style.color = master.color;
-  elements.previewTitle.textContent = master.title;
-  elements.previewRole.textContent = master.role;
-  elements.previewDescription.textContent = master.description;
-  elements.previewPassiveName.textContent = master.passive.name;
-  elements.previewPassiveDesc.textContent = master.passive.description;
 
-  elements.masterPreview.classList.remove('hidden');
+  safeSetText(elements.previewName, master.name);
+  if (elements.previewName) elements.previewName.style.color = master.color;
+  safeSetText(elements.previewTitle, master.title);
+  safeSetText(elements.previewRole, master.role);
+  safeSetText(elements.previewDescription, master.description);
+  safeSetText(elements.previewPassiveName, master.passive?.name || '');
+  safeSetText(elements.previewPassiveDesc, master.passive?.description || '');
+
+  safeRemoveClass(elements.masterPreview, 'hidden');
 
   document.querySelectorAll('.master-card').forEach(card => {
     card.classList.toggle('selected', card.dataset.master === masterId);
@@ -848,9 +971,9 @@ function startGame() {
   renderUpgrades();
   updateResourceDisplay();
 
-  // Switch screens
-  elements.masterSelectScreen.classList.remove('active');
-  elements.gameScreen.classList.add('active');
+  // Switch screens (with null checks)
+  safeRemoveClass(elements.masterSelectScreen, 'active');
+  safeAddClass(elements.gameScreen, 'active');
 
   // Start all systems
   requestAnimationFrame(gameLoop);
@@ -868,17 +991,8 @@ function startGame() {
   renderPagoda();
   renderEquipment();
 
-  // Start achievement checking interval
-  setInterval(checkAchievements, 5000);
-
-  // Update daily commissions periodically
-  setInterval(renderDailyCommissions, 5000);
-
-  // Update expeditions UI periodically
-  setInterval(updateExpeditionsUI, 1000);
-
-  // Update upgrades UI periodically (so affordability updates with BP changes)
-  setInterval(renderUpgrades, 2000);
+  // Start all periodic game intervals (centralized to prevent duplication)
+  startGameIntervals();
 }
 
 // Make startGame globally accessible
@@ -1011,10 +1125,15 @@ function setupEventListeners() {
     elements.rebirthBtn.addEventListener('click', handleRebirth);
   }
 
-  // Pagoda start button
+  // Dungeon start button - starts the currently selected dungeon
   const startPagodaBtn = document.getElementById('start-pagoda-btn');
   if (startPagodaBtn) {
-    startPagodaBtn.addEventListener('click', startPagodaRun);
+    startPagodaBtn.addEventListener('click', startSelectedDungeon);
+  }
+
+  // Initialize default dungeon selection (highlight only, don't start)
+  if (typeof highlightDungeon === 'function') {
+    highlightDungeon('pagoda');
   }
 
   // Pagoda command buttons
@@ -1094,9 +1213,6 @@ function switchTab(tabId) {
   if (elements.upgradesTab) {
     elements.upgradesTab.classList.toggle('active', tabId === 'upgrades');
   }
-  if (elements.pagodaTab) {
-    elements.pagodaTab.classList.toggle('active', tabId === 'pagoda');
-  }
   if (elements.dungeonsTab) {
     elements.dungeonsTab.classList.toggle('active', tabId === 'dungeons');
   }
@@ -1105,9 +1221,6 @@ function switchTab(tabId) {
   }
   if (elements.expeditionsTab) {
     elements.expeditionsTab.classList.toggle('active', tabId === 'expeditions');
-  }
-  if (elements.facilitiesTab) {
-    elements.facilitiesTab.classList.toggle('active', tabId === 'facilities');
   }
   if (elements.buildingsTab) {
     elements.buildingsTab.classList.toggle('active', tabId === 'buildings');
@@ -1151,7 +1264,13 @@ function switchTab(tabId) {
   } else if (tabId === 'pagoda') {
     renderPagoda();
   } else if (tabId === 'dungeons') {
-    // Dungeons tab content is static HTML, no render needed
+    // Render dungeon stats and initialize selection
+    renderPagoda();
+    renderDungeonStats();
+    // Ensure a dungeon is highlighted (don't auto-start)
+    if (typeof highlightDungeon === 'function' && !document.querySelector('.dungeon-card.selected')) {
+      highlightDungeon('pagoda');
+    }
   } else if (tabId === 'equipment') {
     renderEquipment();
   } else if (tabId === 'cats') {
@@ -1365,9 +1484,10 @@ function reattachMobileEventListeners(tabId, container) {
       break;
 
     case 'pagoda':
-      const startPagodaBtn = container.querySelector('#start-pagoda-btn');
-      if (startPagodaBtn) {
-        startPagodaBtn.addEventListener('click', startPagodaRun);
+    case 'dungeons':
+      const startDungeonBtn = container.querySelector('#start-pagoda-btn');
+      if (startDungeonBtn) {
+        startDungeonBtn.addEventListener('click', startSelectedDungeon);
       }
       container.querySelectorAll('.cmd-btn').forEach(btn => {
         btn.addEventListener('click', () => {
@@ -1375,6 +1495,10 @@ function reattachMobileEventListeners(tabId, container) {
           if (cmd) executePagodaCommand(cmd);
         });
       });
+      // Initialize dungeon selection for mobile (highlight only)
+      if (typeof highlightDungeon === 'function') {
+        highlightDungeon('pagoda');
+      }
       break;
 
     case 'expeditions':
@@ -2410,9 +2534,12 @@ function updateDramaUI() {
   const fillEl = document.getElementById('drama-fill');
   const statusEl = document.getElementById('drama-status');
   const eventsEl = document.getElementById('drama-events');
+  const effectsEl = document.getElementById('drama-effects');
+  const harvestBtn = document.getElementById('drama-harvest-btn');
+  const resolveBtn = document.getElementById('drama-resolve-btn');
 
   if (levelEl) levelEl.textContent = Math.floor(dramaSystem.dramaPoints);
-  if (fillEl) fillEl.style.width = (dramaSystem.dramaPoints / dramaSystem.maxDrama) * 100 + '%';
+  if (fillEl) fillEl.style.width = (dramaSystem.dramaPoints / (dramaSystem.maxDrama || 100)) * 100 + '%';
 
   if (statusEl) {
     if (dramaSystem.dramaPoints < 20) {
@@ -2426,15 +2553,60 @@ function updateDramaUI() {
     }
   }
 
+  // Enable/disable action buttons
+  if (harvestBtn) harvestBtn.disabled = dramaSystem.dramaPoints < 50;
+  if (resolveBtn) resolveBtn.disabled = dramaSystem.activeEvents.length === 0;
+
+  // Show active effects
+  if (effectsEl) {
+    const effects = dramaSystem.getCombinedEffects ? dramaSystem.getCombinedEffects() : {};
+    const effectParts = [];
+    if (effects.ppMultiplier && effects.ppMultiplier !== 1) effectParts.push(`PP: x${effects.ppMultiplier.toFixed(2)}`);
+    if (effects.bpMultiplier && effects.bpMultiplier !== 1) effectParts.push(`BP: x${effects.bpMultiplier.toFixed(2)}`);
+    if (effects.bondMultiplier && effects.bondMultiplier !== 1) effectParts.push(`Bond: x${effects.bondMultiplier.toFixed(2)}`);
+    effectsEl.innerHTML = effectParts.length > 0 ? `<div class="drama-effect-line">${effectParts.join(' | ')}</div>` : '';
+  }
+
   if (eventsEl && dramaSystem.dramaLog) {
     eventsEl.innerHTML = dramaSystem.dramaLog.slice(-3).map(event =>
-      `<div class="drama-event">${event.emoji} ${event.message}</div>`
+      `<div class="drama-event">${event.emoji || '🎭'} ${event.message}</div>`
     ).join('');
   }
 }
 
-// Make drama function global
+function harvestDrama() {
+  if (!dramaSystem || !dramaSystem.harvestDrama) return;
+  const result = dramaSystem.harvestDrama();
+  if (result) {
+    showNotification(`🎭 Harvested drama for ${formatNumber(result.bpGained || 0)} BP!`, 'success');
+    if (typeof showFloatingText === 'function') showFloatingText('Drama Harvested!', true);
+    updateDramaUI();
+    updateResourceDisplay();
+  } else {
+    showNotification('Drama level too low to harvest (need 50+)', 'error');
+  }
+}
+
+function resolveDrama() {
+  if (!dramaSystem || !dramaSystem.resolveDrama) return;
+  const cost = Math.floor(gameState.boopPoints * 0.05);
+  if (gameState.boopPoints < cost) {
+    showNotification('Not enough BP to resolve drama!', 'error');
+    return;
+  }
+  const result = dramaSystem.resolveDrama(cost);
+  if (result) {
+    gameState.boopPoints = Math.max(0, gameState.boopPoints - cost);
+    showNotification(`☮️ Drama resolved! Cost: ${formatNumber(cost)} BP`, 'success');
+    updateDramaUI();
+    updateResourceDisplay();
+  }
+}
+
+// Make drama functions global
 window.toggleDramaPanel = toggleDramaPanel;
+window.harvestDrama = harvestDrama;
+window.resolveDrama = resolveDrama;
 
 // ===================================
 // HARDCORE MODE UI
@@ -2489,6 +2661,264 @@ function showNemesisWarning(nemesis) {
   setTimeout(() => {
     warning.classList.add('hidden');
   }, 5000);
+}
+
+function openNemesisModal() {
+  const modal = document.getElementById('nemesis-modal');
+  if (!modal) return;
+  renderNemesisRoster();
+  modal.classList.remove('hidden');
+  trapFocusInModal(modal);
+}
+
+function closeNemesisModal() {
+  const modal = document.getElementById('nemesis-modal');
+  if (modal) { returnFocusFromModal(modal); modal.classList.add('hidden'); }
+}
+
+function renderNemesisRoster() {
+  if (!nemesisSystem) return;
+
+  const activeList = document.getElementById('nemesis-active-list');
+  const defeatedList = document.getElementById('nemesis-defeated-list');
+  const statCreated = document.getElementById('nemesis-stat-created');
+  const statDefeated = document.getElementById('nemesis-stat-defeated');
+  const statDefected = document.getElementById('nemesis-stat-defected');
+
+  if (statCreated) statCreated.textContent = `Created: ${nemesisSystem.stats.nemesesCreated}`;
+  if (statDefeated) statDefeated.textContent = `Defeated: ${nemesisSystem.stats.nemesesDefeated}`;
+  if (statDefected) statDefected.textContent = `Defected: ${nemesisSystem.stats.nemesesDefected}`;
+
+  if (activeList) {
+    const active = nemesisSystem.getActiveNemeses ? nemesisSystem.getActiveNemeses() : nemesisSystem.nemeses || [];
+    if (active.length === 0) {
+      activeList.innerHTML = '<p class="empty-message">No active nemeses</p>';
+    } else {
+      activeList.innerHTML = active.map(n => {
+        const display = nemesisSystem.getNemesisDisplay ? nemesisSystem.getNemesisDisplay(n) : n;
+        return `<div class="nemesis-card">
+          <div class="nemesis-card-header">
+            <span class="nemesis-emoji">${display.emoji || '💀'}</span>
+            <span class="nemesis-name">${display.title || n.title || 'Unknown'}</span>
+            <span class="nemesis-level">Lv.${n.level || 1}</span>
+          </div>
+          <div class="nemesis-card-body">
+            <div class="nemesis-abilities">${(n.abilities || []).map(a => a.emoji || '⚔️').join(' ')}</div>
+            <div class="nemesis-encounters">Encounters: ${n.encounters || 0}</div>
+            <div class="nemesis-taunt-text">"${nemesisSystem.getTaunt ? nemesisSystem.getTaunt(n) : '...'}"</div>
+          </div>
+        </div>`;
+      }).join('');
+    }
+  }
+
+  if (defeatedList) {
+    const defeated = nemesisSystem.defeatedNemeses || [];
+    if (defeated.length === 0) {
+      defeatedList.innerHTML = '<p class="empty-message">No defeated nemeses yet</p>';
+    } else {
+      defeatedList.innerHTML = defeated.slice(-10).reverse().map(n =>
+        `<div class="nemesis-card defeated">
+          <span class="nemesis-emoji">${n.emoji || '💀'}</span>
+          <span class="nemesis-name">${n.title || 'Unknown'}</span>
+          <span class="nemesis-level">Lv.${n.level || 1}</span>
+        </div>`
+      ).join('');
+    }
+  }
+}
+
+window.openNemesisModal = openNemesisModal;
+window.closeNemesisModal = closeNemesisModal;
+
+// ===================================
+// PARASITE MANAGEMENT UI
+// ===================================
+
+function openParasiteModal() {
+  const modal = document.getElementById('parasite-modal');
+  if (!modal) return;
+  renderParasiteUI();
+  modal.classList.remove('hidden');
+  trapFocusInModal(modal);
+}
+
+function closeParasiteModal() {
+  const modal = document.getElementById('parasite-modal');
+  if (modal) { returnFocusFromModal(modal); modal.classList.add('hidden'); }
+}
+
+function renderParasiteUI() {
+  if (!parasiteSystem) return;
+
+  const countEl = document.getElementById('parasite-count');
+  const maxEl = document.getElementById('parasite-max');
+  const storedEl = document.getElementById('parasite-stored');
+  const potentialEl = document.getElementById('parasite-potential');
+  const poppedEl = document.getElementById('parasite-total-popped');
+  const activeList = document.getElementById('parasite-active-list');
+  const upgradesEl = document.getElementById('parasite-upgrades');
+
+  if (countEl) countEl.textContent = parasiteSystem.parasites.length;
+  if (maxEl) maxEl.textContent = parasiteSystem.getMaxParasites();
+  if (storedEl) storedEl.textContent = formatNumber(parasiteSystem.getTotalStored());
+  if (potentialEl) potentialEl.textContent = formatNumber(parasiteSystem.getPotentialReturn());
+  if (poppedEl) poppedEl.textContent = parasiteSystem.stats.totalPopped;
+
+  if (activeList) {
+    if (parasiteSystem.parasites.length === 0) {
+      activeList.innerHTML = '<p class="empty-message">No parasites active. They spawn over time.</p>';
+    } else {
+      activeList.innerHTML = parasiteSystem.parasites.map(p =>
+        `<div class="parasite-item" style="border-left: 3px solid ${p.type.color}">
+          <span class="parasite-emoji">${p.type.emoji}</span>
+          <div class="parasite-info">
+            <span class="parasite-name">${p.type.name}</span>
+            <span class="parasite-stored">Stored: ${formatNumber(p.storedAmount)}</span>
+          </div>
+          <button class="jade-button tiny" onclick="popSingleParasite('${p.id}')">Pop</button>
+        </div>`
+      ).join('');
+    }
+  }
+
+  if (upgradesEl) {
+    upgradesEl.innerHTML = Object.entries(window.PARASITE_UPGRADES || {}).map(([id, template]) => {
+      const level = parasiteSystem.upgrades[id] || 0;
+      const maxed = level >= template.maxLevel;
+      const cost = template.cost * (level + 1);
+      return `<div class="parasite-upgrade ${maxed ? 'maxed' : ''}">
+        <div class="upgrade-header">
+          <span class="upgrade-name">${template.name}</span>
+          <span class="upgrade-level">${level}/${template.maxLevel}</span>
+        </div>
+        <p class="upgrade-desc">${template.description}</p>
+        ${maxed ? '<span class="upgrade-maxed">MAXED</span>' :
+          `<button class="jade-button tiny" onclick="buyParasiteUpgrade('${id}')">Buy (${cost} pops)</button>`}
+      </div>`;
+    }).join('');
+  }
+}
+
+function popSingleParasite(parasiteId) {
+  if (!parasiteSystem) return;
+  const result = parasiteSystem.popParasite(parasiteId);
+  if (result) {
+    const amount = result.returnAmount;
+    if (result.returnType === 'pp') {
+      gameState.purrPower += amount;
+      showNotification(`💥 Popped! +${formatNumber(amount)} PP`, 'success');
+    } else {
+      gameState.boopPoints += amount;
+      showNotification(`💥 Popped! +${formatNumber(amount)} BP`, 'success');
+    }
+    if (result.bonusMaterials && result.bonusMaterials.length > 0) {
+      showNotification(`✨ Bonus materials: ${result.bonusMaterials.length} items!`, 'success');
+    }
+    renderParasiteUI();
+    updateResourceDisplay();
+  }
+}
+
+function popAllParasites() {
+  if (!parasiteSystem || parasiteSystem.parasites.length === 0) return;
+  const results = parasiteSystem.popAllParasites();
+  let totalBP = 0, totalPP = 0;
+  for (const r of results) {
+    if (r.returnType === 'pp') totalPP += r.returnAmount;
+    else totalBP += r.returnAmount;
+  }
+  gameState.boopPoints += totalBP;
+  gameState.purrPower += totalPP;
+  const parts = [];
+  if (totalBP > 0) parts.push(`${formatNumber(totalBP)} BP`);
+  if (totalPP > 0) parts.push(`${formatNumber(totalPP)} PP`);
+  showNotification(`💥 Popped ${results.length} parasites! +${parts.join(', ')}`, 'success');
+  renderParasiteUI();
+  updateResourceDisplay();
+}
+
+function buyParasiteUpgrade(upgradeId) {
+  if (!parasiteSystem) return;
+  const result = parasiteSystem.purchaseUpgrade(upgradeId);
+  if (result) {
+    showNotification(`🔧 Upgrade purchased!`, 'success');
+    renderParasiteUI();
+  } else {
+    showNotification('Not enough pops for this upgrade', 'error');
+  }
+}
+
+function updateParasiteMiniDisplay() {
+  if (!parasiteSystem) return;
+  const container = document.getElementById('parasite-container');
+  const miniEl = document.getElementById('parasite-mini-display');
+  if (!container || !miniEl) return;
+
+  const count = parasiteSystem.parasites.length;
+  if (count > 0) {
+    container.style.display = 'block';
+    miniEl.innerHTML = parasiteSystem.parasites.map(p =>
+      `<span class="parasite-mini" style="color: ${p.type.color}" title="${p.type.name}: ${formatNumber(p.storedAmount)} stored">${p.type.emoji}</span>`
+    ).join('');
+  } else {
+    container.style.display = 'none';
+    miniEl.innerHTML = '';
+  }
+}
+
+window.openParasiteModal = openParasiteModal;
+window.closeParasiteModal = closeParasiteModal;
+window.popSingleParasite = popSingleParasite;
+window.popAllParasites = popAllParasites;
+window.buyParasiteUpgrade = buyParasiteUpgrade;
+
+// ===================================
+// TIME/SEASON DISPLAY UI
+// ===================================
+
+function updateTimeSeasonUI() {
+  if (!timeSystem) return;
+
+  const timeIcon = document.getElementById('time-of-day-icon');
+  const seasonIcon = document.getElementById('season-icon');
+
+  const info = timeSystem.getCurrentTimeInfo ? timeSystem.getCurrentTimeInfo() : null;
+  if (info) {
+    if (timeIcon) {
+      const timeEmojis = { morning: '🌅', afternoon: '☀️', evening: '🌇', night: '🌙' };
+      timeIcon.textContent = timeEmojis[info.timeOfDay] || '☀️';
+      timeIcon.title = `${info.timeOfDay} - ${info.event ? info.event.name : 'No event'}`;
+    }
+    if (seasonIcon) {
+      const seasonEmojis = { spring: '🌸', summer: '🌻', autumn: '🍂', winter: '❄️' };
+      seasonIcon.textContent = seasonEmojis[info.season] || '🌸';
+      seasonIcon.title = `${info.season}${info.event ? ' - ' + info.event.name + ' active!' : ''}`;
+    }
+  }
+}
+
+// ===================================
+// IRL WEATHER DISPLAY UI
+// ===================================
+
+function updateIRLWeatherUI() {
+  if (!irlIntegrationSystem) return;
+
+  const weatherContainer = document.getElementById('irl-weather');
+  const weatherIcon = document.getElementById('irl-weather-icon');
+  const weatherName = document.getElementById('irl-weather-name');
+  const weatherBonus = document.getElementById('irl-weather-bonus');
+
+  const weather = irlIntegrationSystem.currentWeather;
+  if (weather && weatherContainer) {
+    weatherContainer.classList.remove('hidden');
+    if (weatherIcon) weatherIcon.textContent = weather.emoji || '🌤️';
+    if (weatherName) weatherName.textContent = weather.name || 'Clear';
+    if (weatherBonus) weatherBonus.textContent = weather.description || '';
+  } else if (weatherContainer) {
+    weatherContainer.classList.add('hidden');
+  }
 }
 
 /**
@@ -2776,8 +3206,20 @@ function showStanceSpecialEffect(specialName) {
   setTimeout(() => effectEl.remove(), 1500);
 }
 
+// Track floating text count to prevent memory leaks (MP-4 fix)
+const MAX_FLOATING_TEXT = 20;
+
 function showFloatingText(amountOrMessage, isCrit) {
   if (!elements.boopButton || !elements.floatingTextContainer) return;
+
+  // Limit floating text elements to prevent memory buildup
+  const existingTexts = elements.floatingTextContainer.querySelectorAll('.floating-text');
+  if (existingTexts.length >= MAX_FLOATING_TEXT) {
+    // Remove oldest elements
+    for (let i = 0; i < existingTexts.length - MAX_FLOATING_TEXT + 1; i++) {
+      existingTexts[i].remove();
+    }
+  }
 
   const text = document.createElement('div');
   text.className = 'floating-text' + (isCrit ? ' critical' : '');
@@ -2801,7 +3243,13 @@ function showFloatingText(amountOrMessage, isCrit) {
   text.style.top = (rect.top - containerRect.top + (Math.random() - 0.5) * 50) + 'px';
 
   elements.floatingTextContainer.appendChild(text);
-  setTimeout(() => text.remove(), isCrit ? 1500 : 1200);
+
+  // Use animation end event instead of setTimeout for cleaner cleanup
+  const duration = isCrit ? 1500 : 1200;
+  text.style.animationDuration = duration + 'ms';
+  setTimeout(() => {
+    if (text.parentNode) text.remove();
+  }, duration);
 }
 
 function animateBoopButton() {
@@ -3245,12 +3693,14 @@ function openWaifuModal() {
   if (modal) {
     modal.classList.remove('hidden');
     renderWaifuModal();
+    trapFocusInModal(modal);
   }
 }
 
 function closeWaifuModal() {
   const modal = document.getElementById('waifu-modal');
   if (modal) {
+    returnFocusFromModal(modal);
     modal.classList.add('hidden');
   }
   selectedWaifuForDetail = null;
@@ -3729,7 +4179,7 @@ function recalculateModifiers() {
     ppMultiplier: (upgradeEffects.ppMultiplier || 1) * (waifuEffects.ppMultiplier || 1) * (techniqueEffects.ppMultiplier || 1),
     afkMultiplier: (upgradeEffects.afkMultiplier || 1) * (waifuEffects.afkMultiplier || 1) * (masterEffects.afkMultiplier || 1) * (techniqueEffects.afkMultiplier || 1),
     critChance: (upgradeEffects.critChance || 0) + (techniqueEffects.critChance || 0),
-    critMultiplier: (upgradeEffects.critMultiplier || 1) + (techniqueEffects.critDamage || 0),
+    critMultiplier: (upgradeEffects.critMultiplier || 1) * (1 + (techniqueEffects.critDamage || 0)),
     autoBoopRate: upgradeEffects.autoBoopRate || 0,
     passiveBpPerSecond: upgradeEffects.passiveBpPerSecond || 0,
     catCapacity: upgradeEffects.catCapacity || 10,
@@ -4014,10 +4464,11 @@ function updateResourceDisplay() {
   if (elements.ppDisplay) elements.ppDisplay.textContent = formatNumber(gameState.purrPower);
   if (elements.catCountDisplay && catSystem) elements.catCountDisplay.textContent = catSystem.getCatCount();
 
-  // Update PP rate
+  // Update PP rate (MP-6 fix: guard against NaN)
   if (elements.ppRate && catSystem) {
     const ppPerSecond = catSystem.calculatePPPerSecond(gameState.modifiers);
-    elements.ppRate.textContent = `+${ppPerSecond.toFixed(1)}/s`;
+    const displayRate = isNaN(ppPerSecond) || !isFinite(ppPerSecond) ? 0 : ppPerSecond;
+    elements.ppRate.textContent = `+${displayRate.toFixed(1)}/s`;
   }
 
   // Update recruit button
@@ -4512,6 +4963,13 @@ function handleRebirth() {
   );
 
   if (result.success) {
+    // Clear combo timer to prevent stale references (MP-3 fix)
+    if (gameState.comboTimer) {
+      clearTimeout(gameState.comboTimer);
+      gameState.comboTimer = null;
+    }
+    gameState.comboCount = 0;
+
     // Update all displays
     updateResourceDisplay();
     renderCatCollection();
@@ -4530,6 +4988,251 @@ function handleRebirth() {
 
 // Make updateResourceDisplay available globally
 window.updateResourceDisplay = updateResourceDisplay;
+
+// ===================================
+// BUILDING SYSTEM UI (BH-1)
+// ===================================
+
+/**
+ * Build or upgrade a building
+ * Global event handler called by onclick="buildBuilding('buildingId')"
+ */
+function buildBuilding(buildingId) {
+  if (!buildingSystem) {
+    showNotification('Building system not loaded', 'error');
+    return;
+  }
+
+  const result = buildingSystem.build(buildingId, gameState);
+
+  if (result.success) {
+    const building = window.BUILDINGS ? window.BUILDINGS[buildingId] : null;
+    const name = building ? building.name : buildingId;
+    showNotification(`✨ ${name} upgraded to Level ${result.newLevel}!`, 'success');
+    if (audioSystem) audioSystem.playSFX('build');
+
+    // Update cost and level display for this building
+    const levelEl = document.getElementById(`${buildingId}-level`);
+    const costEl = document.getElementById(`${buildingId}-cost`);
+    if (levelEl) levelEl.textContent = result.newLevel;
+    if (costEl) {
+      const nextCost = buildingSystem.getBuildingCost(buildingId);
+      costEl.textContent = formatNumber(nextCost) + ' BP';
+    }
+
+    updateResourceDisplay();
+    recalculateModifiers();
+  } else {
+    showNotification(`Cannot build: ${result.reason}`, 'error');
+  }
+}
+
+window.buildBuilding = buildBuilding;
+
+// ===================================
+// PRESTIGE LAYER HANDLERS (BH-2/3/4)
+// ===================================
+
+/**
+ * Perform Ascension (Prestige Layer 1)
+ * Called by onclick="performAscension()" in prestige tab
+ */
+function performAscension() {
+  // handleRebirth already implements this logic
+  handleRebirth();
+}
+
+window.performAscension = performAscension;
+
+/**
+ * Perform Reincarnation (Prestige Layer 2)
+ * Called by onclick="performReincarnation()" in prestige tab
+ */
+function performReincarnation() {
+  if (!prestigeSystem) return;
+
+  const check = prestigeSystem.canReincarnate();
+  if (!check.can) {
+    showNotification(`Cannot reincarnate: ${check.reason}`, 'error');
+    return;
+  }
+
+  if (!confirm('Reincarnate?\n\nThis will reset ALL Ascension progress but grant Karma Points and a Past Life Memory.')) {
+    return;
+  }
+
+  const systems = { gameState, masterSystem, catSystem, waifuSystem, upgradeSystem };
+  const result = prestigeSystem.reincarnate(gameState, systems);
+
+  if (result.success) {
+    // Clear combo state
+    if (gameState.comboTimer) {
+      clearTimeout(gameState.comboTimer);
+      gameState.comboTimer = null;
+    }
+    gameState.comboCount = 0;
+
+    updateResourceDisplay();
+    renderCatCollection();
+    renderUpgrades();
+    renderPrestige();
+    updateWaifuUI();
+    recalculateModifiers();
+
+    if (audioSystem) audioSystem.playSFX('achievement');
+    showNotification(`🌀 Reincarnated! Earned ${result.karmaEarned} Karma Points`, 'success');
+    showFloatingText('Reincarnation Complete!', true);
+  }
+}
+
+window.performReincarnation = performReincarnation;
+
+/**
+ * Perform Transcendence (Prestige Layer 3)
+ * Called by onclick="performTranscendence()" in prestige tab
+ */
+function performTranscendence() {
+  if (!prestigeSystem) return;
+
+  const check = prestigeSystem.canTranscend();
+  if (!check.can) {
+    showNotification(`Cannot transcend: ${check.reason}`, 'error');
+    return;
+  }
+
+  if (!confirm('Transcend?!\n\nThis is the ULTIMATE reset. Everything resets, but you unlock the Celestial Realm and the True Story Ending.')) {
+    return;
+  }
+
+  const systems = { gameState, masterSystem, catSystem, waifuSystem, upgradeSystem };
+  const result = prestigeSystem.transcend(gameState, systems);
+
+  if (result.success) {
+    // Clear combo state
+    if (gameState.comboTimer) {
+      clearTimeout(gameState.comboTimer);
+      gameState.comboTimer = null;
+    }
+    gameState.comboCount = 0;
+
+    updateResourceDisplay();
+    renderCatCollection();
+    renderUpgrades();
+    renderPrestige();
+    updateWaifuUI();
+    recalculateModifiers();
+
+    if (audioSystem) audioSystem.playSFX('achievement');
+    showNotification('🌌 TRANSCENDENCE ACHIEVED! The Celestial Realm awaits...', 'success');
+    showFloatingText('TRANSCENDENCE!', true);
+  }
+}
+
+window.performTranscendence = performTranscendence;
+
+// ===================================
+// TRIBULATION HANDLER (BH-5)
+// ===================================
+
+/**
+ * Start a tribulation challenge
+ * Called by onclick="startTribulation()" in cultivation display
+ */
+function startTribulation() {
+  // Tribulation is a variant of breakthrough — delegate to existing handler
+  attemptBreakthrough();
+}
+
+window.startTribulation = startTribulation;
+
+// ===================================
+// CAT FUSION MODAL (BH-6)
+// ===================================
+
+/**
+ * Open the cat fusion modal
+ * Called by onclick="openFusionModal()" in teams tab
+ */
+function openFusionModal() {
+  const modal = document.getElementById('fusion-modal');
+  if (!modal) {
+    showNotification('Fusion system not available', 'error');
+    return;
+  }
+
+  // Initialize fusion system if needed
+  if (!window.catFusionSystem && window.CatFusionSystem) {
+    window.catFusionSystem = new CatFusionSystem(gameState);
+  }
+
+  renderFusionRecipes();
+  modal.classList.remove('hidden');
+  trapFocusInModal(modal);
+}
+
+function closeFusionModal() {
+  const modal = document.getElementById('fusion-modal');
+  if (modal) { returnFocusFromModal(modal); modal.classList.add('hidden'); }
+}
+
+function renderFusionRecipes() {
+  const list = document.getElementById('fusion-recipes-list');
+  if (!list) return;
+
+  const recipes = window.FUSION_RECIPES;
+  if (!recipes || !window.catFusionSystem) {
+    list.innerHTML = '<p class="fusion-empty">Fusion system loading...</p>';
+    return;
+  }
+
+  list.innerHTML = Object.entries(recipes).map(([recipeId, recipe]) => {
+    const check = window.catFusionSystem.canFuse(recipeId);
+    const canFuse = check.canFuse;
+
+    return `
+      <div class="fusion-recipe ${canFuse ? 'available' : 'locked'}">
+        <div class="fusion-recipe-header">
+          <span class="fusion-recipe-name">${recipe.name || recipeId}</span>
+          <span class="fusion-recipe-status">${canFuse ? '✅ Ready' : '🔒 ' + (check.reason || 'Locked')}</span>
+        </div>
+        <div class="fusion-recipe-ingredients">
+          ${(recipe.ingredients || []).map(ing =>
+            `<span class="fusion-ingredient">${ing.description || ing.type || 'Unknown'}</span>`
+          ).join(' + ')}
+        </div>
+        <div class="fusion-recipe-result">
+          → <strong>${recipe.result?.name || 'Mystery Cat'}</strong>
+          <span class="fusion-realm">(${recipe.result?.realm || '???'} realm)</span>
+        </div>
+        <button class="jade-button small" ${canFuse ? '' : 'disabled'} onclick="attemptFusion('${recipeId}')">
+          🔮 Fuse
+        </button>
+      </div>
+    `;
+  }).join('');
+}
+
+function attemptFusion(recipeId) {
+  if (!window.catFusionSystem) {
+    showNotification('Fusion system not ready', 'error');
+    return;
+  }
+
+  const result = window.catFusionSystem.performFusion(recipeId);
+
+  if (result.success) {
+    showNotification(`🔮 Fusion Success! ${result.newCat?.name || 'New cat'} has been created!`, 'success');
+    if (audioSystem) audioSystem.playSFX('achievement');
+    renderFusionRecipes();
+    renderCatCollection();
+  } else {
+    showNotification(`Fusion failed: ${result.message || result.reason || 'Unknown error'}`, 'error');
+  }
+}
+
+window.openFusionModal = openFusionModal;
+window.closeFusionModal = closeFusionModal;
+window.attemptFusion = attemptFusion;
 
 // ===================================
 // PAGODA SYSTEM UI
@@ -4656,6 +5359,425 @@ function updateAutoClearButton() {
 
 // Make auto-clear available globally
 window.autoClearPagoda = autoClearPagoda;
+
+// ===================================
+// DUNGEON SELECTION SYSTEM
+// ===================================
+
+// Track currently selected dungeon
+let selectedDungeonType = 'pagoda';
+
+// Dungeon configurations
+const DUNGEON_CONFIGS = {
+  pagoda: {
+    name: 'Infinite Pagoda',
+    icon: '🏯',
+    system: 'pagodaSystem',
+    startFn: 'startPagodaRun',
+    description: 'Climb endless floors for rewards'
+  },
+  bamboo: {
+    name: 'Bamboo Forest',
+    icon: '🎋',
+    system: 'waveSurvivalSystem',
+    startFn: 'startSurvivalRun',
+    description: 'Survive 30 minutes of waves'
+  },
+  tournament: {
+    name: 'Celestial Tournament',
+    icon: '⚔️',
+    system: 'tournamentSystem',
+    startFn: 'startTournament',
+    description: 'Battle the Seven Masters'
+  },
+  dream: {
+    name: 'Dream Realm',
+    icon: '🌙',
+    system: 'dreamRealmSystem',
+    startFn: 'startDreamRun',
+    description: 'Procedural dungeon from your data',
+    unlockCheck: () => cultivationSystem && cultivationSystem.currentRealm >= 5
+  },
+  goose: {
+    name: 'Goose Dimension',
+    icon: '🦢',
+    system: 'gooseDimensionSystem',
+    startFn: 'startGooseDimension',
+    description: 'HONK. Everything is geese.',
+    unlockCheck: () => gooseSystem && gooseSystem.cobraChickenDefeated
+  },
+  memory: {
+    name: 'Memory Fragments',
+    icon: '📜',
+    system: 'memoryFragmentSystem',
+    startFn: 'startMemoryDungeon',
+    description: 'Story dungeons that unlock lore'
+  }
+};
+
+/**
+ * Select and enter a dungeon directly (called from Enter buttons)
+ */
+function selectDungeon(dungeonType) {
+  console.log('[Dungeon] selectDungeon called with:', dungeonType);
+
+  const config = DUNGEON_CONFIGS[dungeonType];
+  if (!config) {
+    console.warn(`Unknown dungeon type: ${dungeonType}`);
+    showNotification(`Unknown dungeon: ${dungeonType}`, 'error');
+    return;
+  }
+
+  console.log('[Dungeon] Config found:', config.name);
+
+  // Check if dungeon is locked
+  if (config.unlockCheck && !config.unlockCheck()) {
+    console.log('[Dungeon] Dungeon is locked');
+    showNotification(`${config.name} is locked!`, 'error');
+    return;
+  }
+
+  // Update selection and start the dungeon
+  highlightDungeon(dungeonType);
+
+  if (audioSystem) audioSystem.playSFX('click');
+
+  // Directly start the dungeon when clicking Enter
+  console.log('[Dungeon] Starting dungeon...');
+  startSelectedDungeon();
+}
+
+/**
+ * Highlight a dungeon in the UI without starting it (for initialization)
+ */
+function highlightDungeon(dungeonType) {
+  const config = DUNGEON_CONFIGS[dungeonType];
+  if (!config) return;
+
+  selectedDungeonType = dungeonType;
+
+  // Update visual selection
+  document.querySelectorAll('.dungeon-card').forEach(card => {
+    card.classList.remove('selected');
+  });
+  const selectedCard = document.querySelector(`.dungeon-card[data-dungeon="${dungeonType}"]`);
+  if (selectedCard) {
+    selectedCard.classList.add('selected');
+  }
+
+  // Update the start button
+  const startBtn = document.getElementById('start-pagoda-btn');
+  if (startBtn) {
+    startBtn.innerHTML = `${config.icon} Enter ${config.name}`;
+    startBtn.onclick = startSelectedDungeon;
+  }
+
+  // Update active dungeon name display
+  const activeDungeonName = document.getElementById('active-dungeon-name');
+  if (activeDungeonName) {
+    activeDungeonName.textContent = config.name;
+  }
+}
+
+/**
+ * Check if there's an active run for a dungeon type
+ */
+function checkForActiveRun(dungeonType) {
+  switch (dungeonType) {
+    case 'pagoda':
+      return pagodaSystem && pagodaSystem.inRun;
+    case 'bamboo':
+      return waveSurvivalSystem && waveSurvivalSystem.inRun;
+    case 'tournament':
+      return window.tournamentSystem && window.tournamentSystem.inRun;
+    case 'dream':
+      return window.dreamRealmSystem && window.dreamRealmSystem.inRun;
+    case 'goose':
+      return window.gooseDimensionSystem && window.gooseDimensionSystem.inRun;
+    case 'memory':
+      return window.memoryFragmentSystem && window.memoryFragmentSystem.inRun;
+    default:
+      return false;
+  }
+}
+
+/**
+ * Update the UI for an active dungeon run
+ */
+function updateActiveDungeonUI(dungeonType) {
+  const combatDiv = document.getElementById('pagoda-combat');
+  const floorDisplay = document.getElementById('active-dungeon-floor');
+
+  switch (dungeonType) {
+    case 'pagoda':
+      if (combatDiv) combatDiv.classList.remove('hidden');
+      if (floorDisplay) floorDisplay.textContent = `Floor ${pagodaSystem.currentFloor}`;
+      updatePagodaCombat();
+      break;
+    case 'bamboo':
+      if (combatDiv) combatDiv.classList.add('hidden');
+      if (floorDisplay && waveSurvivalSystem) {
+        const time = waveSurvivalSystem.currentTime || 0;
+        const mins = Math.floor(time / 60);
+        const secs = Math.floor(time % 60);
+        floorDisplay.textContent = `Time: ${mins}:${secs.toString().padStart(2, '0')}`;
+      }
+      break;
+    case 'tournament':
+      if (combatDiv) combatDiv.classList.add('hidden');
+      if (floorDisplay) floorDisplay.textContent = 'Round 1';
+      break;
+    default:
+      if (combatDiv) combatDiv.classList.add('hidden');
+      if (floorDisplay) floorDisplay.textContent = '';
+  }
+}
+
+/**
+ * Start the selected dungeon
+ */
+function startSelectedDungeon() {
+  const config = DUNGEON_CONFIGS[selectedDungeonType];
+  if (!config) return;
+
+  // Check unlock again
+  if (config.unlockCheck && !config.unlockCheck()) {
+    showNotification(`${config.name} is locked!`, 'error');
+    return;
+  }
+
+  switch (selectedDungeonType) {
+    case 'pagoda':
+      startPagodaRun();
+      break;
+    case 'bamboo':
+      startSurvivalRun();
+      break;
+    case 'tournament':
+      startTournament();
+      break;
+    case 'dream':
+      startDreamRun();
+      break;
+    case 'goose':
+      startGooseDimension();
+      break;
+    case 'memory':
+      startMemoryDungeon();
+      break;
+    default:
+      showNotification('Dungeon not implemented yet!', 'error');
+  }
+}
+
+/**
+ * Start survival run (Bamboo Forest)
+ */
+function startSurvivalRun() {
+  if (!waveSurvivalSystem) {
+    showNotification('Wave Survival system not loaded!', 'error');
+    return;
+  }
+
+  if (!catSystem || catSystem.getAllCats().length === 0) {
+    showNotification('You need at least one cat!', 'error');
+    return;
+  }
+
+  const cat = catSystem.getAllCats()[0];
+  if (waveSurvivalSystem.startRun && waveSurvivalSystem.startRun(cat.id)) {
+    showNotification('🎋 Entering Bamboo Forest...', 'success');
+  } else {
+    showNotification('Could not start survival run', 'error');
+  }
+}
+
+/**
+ * Start tournament
+ */
+function startTournament() {
+  if (!window.tournamentSystem) {
+    showNotification('Tournament system not loaded!', 'error');
+    return;
+  }
+
+  if (window.tournamentSystem.startTournament) {
+    window.tournamentSystem.startTournament();
+    showNotification('⚔️ Tournament begins!', 'success');
+  }
+}
+
+/**
+ * Start dream realm run
+ */
+function startDreamRun() {
+  if (!window.dreamRealmSystem) {
+    showNotification('Dream Realm system not loaded!', 'error');
+    return;
+  }
+
+  if (window.dreamRealmSystem.startRun) {
+    window.dreamRealmSystem.startRun();
+    showNotification('🌙 Entering Dream Realm...', 'success');
+  }
+}
+
+/**
+ * Start goose dimension
+ */
+function startGooseDimension() {
+  if (!window.gooseDimensionSystem) {
+    showNotification('Goose Dimension not loaded!', 'error');
+    return;
+  }
+
+  if (window.gooseDimensionSystem.startRun) {
+    window.gooseDimensionSystem.startRun();
+    showNotification('🦢 HONK! Entering Goose Dimension...', 'success');
+  }
+}
+
+/**
+ * Start memory dungeon
+ */
+function startMemoryDungeon() {
+  if (!window.memoryFragmentSystem) {
+    showNotification('Memory Fragment system not loaded!', 'error');
+    return;
+  }
+
+  if (window.memoryFragmentSystem.startRun) {
+    window.memoryFragmentSystem.startRun();
+    showNotification('📜 Entering Memory Fragments...', 'success');
+  }
+}
+
+/**
+ * Abandon the current dungeon run
+ */
+function abandonRun() {
+  if (!confirm('Are you sure you want to abandon this run? You will lose any unclaimed rewards.')) {
+    return;
+  }
+
+  switch (selectedDungeonType) {
+    case 'pagoda':
+      if (pagodaSystem && pagodaSystem.inRun) {
+        pagodaSystem.endRun('fled');
+        showNotification('Run abandoned. You escaped with your life.', 'warning');
+      }
+      break;
+    case 'bamboo':
+      if (waveSurvivalSystem && waveSurvivalSystem.inRun) {
+        waveSurvivalSystem.endRun && waveSurvivalSystem.endRun('abandoned');
+        showNotification('Survival run abandoned.', 'warning');
+      }
+      break;
+    case 'tournament':
+      if (window.tournamentSystem && window.tournamentSystem.inRun) {
+        window.tournamentSystem.forfeit && window.tournamentSystem.forfeit();
+        showNotification('Tournament forfeited.', 'warning');
+      }
+      break;
+    default:
+      showNotification('No active run to abandon.', 'error');
+      return;
+  }
+
+  // Update UI
+  selectDungeon(selectedDungeonType);
+  renderPagoda();
+  updateResourceDisplay();
+}
+
+/**
+ * Render dungeon stats summary panel
+ */
+function renderDungeonStats() {
+  // Update Pagoda tokens
+  const tokensEl = document.getElementById('pagoda-tokens');
+  if (tokensEl && pagodaSystem) {
+    tokensEl.textContent = pagodaSystem.tokens || 0;
+  }
+
+  // Update total runs
+  const runsEl = document.getElementById('dungeon-runs');
+  if (runsEl && pagodaSystem) {
+    runsEl.textContent = pagodaSystem.stats?.totalRuns || 0;
+  }
+
+  // Update bosses defeated
+  const bossesEl = document.getElementById('bosses-defeated');
+  if (bossesEl && pagodaSystem) {
+    bossesEl.textContent = pagodaSystem.stats?.bossKills || 0;
+  }
+
+  // Update survival best time
+  const survivalTimeEl = document.getElementById('bamboo-best-time');
+  if (survivalTimeEl && waveSurvivalSystem) {
+    const bestTime = waveSurvivalSystem.stats?.bestTime || 0;
+    const mins = Math.floor(bestTime / 60);
+    const secs = Math.floor(bestTime % 60);
+    survivalTimeEl.textContent = `${mins}:${secs.toString().padStart(2, '0')}`;
+  }
+
+  // Update tournament wins
+  const tournamentWinsEl = document.getElementById('tournament-wins');
+  if (tournamentWinsEl && window.tournamentSystem) {
+    tournamentWinsEl.textContent = window.tournamentSystem.stats?.totalWins || 0;
+  }
+
+  // Update memory fragments
+  const memoryChaptersEl = document.getElementById('memory-chapters');
+  if (memoryChaptersEl && window.memoryFragmentSystem) {
+    memoryChaptersEl.textContent = window.memoryFragmentSystem.completedChapters?.length || 0;
+  }
+
+  // Check and update locked dungeons
+  updateDungeonUnlocks();
+}
+
+/**
+ * Check and update dungeon unlock status
+ */
+function updateDungeonUnlocks() {
+  // Dream Realm - unlocked at Nascent Soul
+  const dreamCard = document.querySelector('.dungeon-card[data-dungeon="dream"]');
+  if (dreamCard && cultivationSystem) {
+    const isUnlocked = cultivationSystem.currentRealm >= 5; // Nascent Soul
+    dreamCard.classList.toggle('locked', !isUnlocked);
+    const btn = dreamCard.querySelector('.jade-button');
+    if (btn) {
+      btn.disabled = !isUnlocked;
+      btn.textContent = isUnlocked ? 'Enter' : 'Locked';
+      if (isUnlocked) {
+        btn.onclick = () => selectDungeon('dream');
+      }
+    }
+  }
+
+  // Goose Dimension - unlocked after defeating Cobra Chicken
+  const gooseCard = document.querySelector('.dungeon-card[data-dungeon="goose"]');
+  if (gooseCard && gooseSystem) {
+    const isUnlocked = gooseSystem.cobraChickenDefeated;
+    gooseCard.classList.toggle('locked', !isUnlocked);
+    const btn = gooseCard.querySelector('.jade-button');
+    if (btn) {
+      btn.disabled = !isUnlocked;
+      btn.textContent = isUnlocked ? 'Enter' : 'Locked';
+      if (isUnlocked) {
+        btn.onclick = () => selectDungeon('goose');
+      }
+    }
+  }
+}
+
+// Make dungeon functions available globally
+window.selectDungeon = selectDungeon;
+window.highlightDungeon = highlightDungeon;
+window.abandonRun = abandonRun;
+window.startSelectedDungeon = startSelectedDungeon;
+window.renderDungeonStats = renderDungeonStats;
 
 function executePagodaCommand(cmdId) {
   if (!pagodaSystem) return;
@@ -5217,6 +6339,10 @@ function renderForgeTab() {
   // Clear selection
   selectedForgeItem = null;
   updateForgeItemDisplay();
+
+  // Also render crafting queue and blueprints
+  renderCraftingQueue();
+  renderBlueprintList();
 }
 
 function onForgeItemSelect(selectEl) {
@@ -5518,6 +6644,104 @@ window.upgradeSelectedItem = upgradeSelectedItem;
 window.enchantSelectedItem = enchantSelectedItem;
 window.removeEnchant = removeEnchant;
 window.renderForgeTab = renderForgeTab;
+
+// ===================================
+// CRAFTING QUEUE & BLUEPRINTS UI
+// ===================================
+
+function renderCraftingQueue() {
+  if (!craftingSystem) return;
+
+  const queueEl = document.getElementById('crafting-queue');
+  if (!queueEl) return;
+
+  const queue = craftingSystem.craftingQueue || [];
+  if (queue.length === 0) {
+    queueEl.innerHTML = `<p class="empty-message">No active crafts. (${queue.length}/${craftingSystem.maxQueueSize || 3} slots)</p>`;
+    return;
+  }
+
+  queueEl.innerHTML = queue.map(job => {
+    const bp = window.BLUEPRINT_TEMPLATES ? window.BLUEPRINT_TEMPLATES[job.blueprintId] : null;
+    const name = bp ? bp.name : job.blueprintId;
+    const progress = craftingSystem.getCraftProgress ? craftingSystem.getCraftProgress(job.id) : 0;
+    const percent = Math.floor((progress || 0) * 100);
+    return `<div class="craft-job">
+      <div class="craft-job-header">
+        <span class="craft-job-name">${name}</span>
+        <span class="craft-job-progress">${percent}%</span>
+      </div>
+      <div class="bond-bar" style="height: 4px;">
+        <div class="bond-fill" style="width: ${percent}%;"></div>
+      </div>
+      <button class="jade-button tiny" onclick="cancelCraftJob('${job.id}')">Cancel</button>
+    </div>`;
+  }).join('');
+}
+
+function renderBlueprintList() {
+  if (!craftingSystem) return;
+
+  const listEl = document.getElementById('blueprint-list');
+  if (!listEl) return;
+
+  const blueprints = craftingSystem.getUnlockedBlueprints ? craftingSystem.getUnlockedBlueprints() : [];
+
+  if (blueprints.length === 0) {
+    listEl.innerHTML = '<p class="empty-message">No blueprints unlocked yet. Find them in dungeons!</p>';
+    return;
+  }
+
+  listEl.innerHTML = blueprints.map(bp => {
+    const canCraft = craftingSystem.canCraft ? craftingSystem.canCraft(bp.id) : false;
+    const materials = bp.materials || {};
+    const matText = Object.entries(materials).map(([matId, count]) => {
+      const has = craftingSystem.getMaterialCount ? craftingSystem.getMaterialCount(matId) : 0;
+      const color = has >= count ? '#6bc5d2' : '#ff6b6b';
+      const matName = matId.replace(/_/g, ' ');
+      return `<span style="color: ${color}">${matName}: ${has}/${count}</span>`;
+    }).join(', ');
+    return `<div class="blueprint-item ${canCraft ? 'craftable' : 'locked'}">
+      <div class="blueprint-header">
+        <span class="blueprint-name">${bp.name}</span>
+      </div>
+      <div class="blueprint-materials">${matText || 'No materials needed'}</div>
+      <button class="jade-button tiny" onclick="startCraftItem('${bp.id}')" ${canCraft ? '' : 'disabled'}>
+        Craft
+      </button>
+    </div>`;
+  }).join('');
+}
+
+function startCraftItem(blueprintId) {
+  if (!craftingSystem || !craftingSystem.startCraft) return;
+  const result = craftingSystem.startCraft(blueprintId);
+  if (result) {
+    showNotification(`🔨 Started crafting!`, 'success');
+    renderCraftingQueue();
+    renderBlueprintList();
+    renderForgeTab();
+  } else {
+    showNotification('Cannot craft this item', 'error');
+  }
+}
+
+function cancelCraftJob(jobId) {
+  if (!craftingSystem || !craftingSystem.cancelCraft) return;
+  const result = craftingSystem.cancelCraft(jobId);
+  if (result) {
+    showNotification('Craft cancelled. 50% materials refunded.', 'warning');
+    renderCraftingQueue();
+    renderForgeTab();
+  }
+}
+
+window.startCraftItem = startCraftItem;
+window.cancelCraftJob = cancelCraftJob;
+
+// Enhance renderForgeTab to also render queue and blueprints
+const _originalRenderForgeTab = renderForgeTab;
+// We patch it inline: after the forge tab is called, also render queue/blueprints
 
 // ===================================
 // SHOP SYSTEM - BOMBAYCLYDE'S EMPORIUM
@@ -6028,6 +7252,7 @@ function updateGoldenSnootUI() {
   const container = document.getElementById('golden-snoot-container');
   const snootEl = document.getElementById('golden-snoot');
   const timerBar = document.getElementById('golden-snoot-timer-bar');
+  const labelEl = document.getElementById('golden-snoot-label');
 
   if (!container || !snootEl) return;
 
@@ -6041,8 +7266,16 @@ function updateGoldenSnootUI() {
     if (timerBar) {
       timerBar.style.width = (snootData.progress * 100) + '%';
     }
+
+    // Show event type label
+    if (labelEl && goldenSnootSystem.activeSnoot) {
+      const event = goldenSnootSystem.activeSnoot;
+      labelEl.textContent = event.name || 'Golden Snoot!';
+      labelEl.style.display = 'block';
+    }
   } else {
     container.classList.add('hidden');
+    if (labelEl) labelEl.style.display = 'none';
   }
 }
 
@@ -6128,6 +7361,145 @@ function updateActiveEffectsUI() {
 }
 
 // ===================================
+// WAVE SURVIVAL HUD
+// ===================================
+
+function updateSurvivalHUD() {
+  if (!waveSurvivalSystem || !waveSurvivalSystem.inGame) {
+    const hud = document.getElementById('survival-hud');
+    if (hud) hud.classList.add('hidden');
+    return;
+  }
+
+  const hud = document.getElementById('survival-hud');
+  if (!hud) return;
+  hud.classList.remove('hidden');
+
+  const timeEl = document.getElementById('survival-time');
+  const levelEl = document.getElementById('survival-level');
+  const killsEl = document.getElementById('survival-kills');
+  const hpFill = document.getElementById('survival-hp-fill');
+  const hpText = document.getElementById('survival-hp-text');
+  const upgradesEl = document.getElementById('survival-upgrades-display');
+
+  if (timeEl) timeEl.textContent = waveSurvivalSystem.formatTime ? waveSurvivalSystem.formatTime(waveSurvivalSystem.gameTime) : '00:00';
+  if (levelEl) levelEl.textContent = waveSurvivalSystem.playerLevel || 1;
+  if (killsEl) killsEl.textContent = waveSurvivalSystem.stats ? waveSurvivalSystem.stats.totalKills || 0 : 0;
+
+  if (hpFill && hpText) {
+    const hp = waveSurvivalSystem.playerHp || 0;
+    const maxHp = waveSurvivalSystem.playerMaxHp || 100;
+    const percent = Math.max(0, (hp / maxHp) * 100);
+    hpFill.style.width = percent + '%';
+    hpText.textContent = `${Math.floor(hp)}/${Math.floor(maxHp)}`;
+  }
+
+  if (upgradesEl) {
+    const upgrades = waveSurvivalSystem.collectedUpgrades || [];
+    upgradesEl.innerHTML = upgrades.slice(-8).map(u =>
+      `<span class="survival-upgrade-icon" title="${u.name}">${u.emoji || '⬆️'}</span>`
+    ).join('');
+  }
+
+  // Handle level-up modal
+  if (waveSurvivalSystem.pendingLevelUp) {
+    showSurvivalLevelUp(waveSurvivalSystem.pendingLevelUp);
+  }
+}
+
+function showSurvivalLevelUp(data) {
+  const modal = document.getElementById('levelup-modal');
+  const optionsEl = document.getElementById('levelup-options');
+  const textEl = document.getElementById('levelup-text');
+
+  if (!modal || !optionsEl) return;
+  if (!modal.classList.contains('hidden')) return; // Already showing
+
+  if (textEl) textEl.textContent = `Level ${waveSurvivalSystem.playerLevel} - Choose an upgrade:`;
+
+  optionsEl.innerHTML = (data.options || []).map(opt =>
+    `<div class="levelup-option" onclick="selectSurvivalUpgrade('${opt.id}')">
+      <span class="levelup-emoji">${opt.emoji || '⬆️'}</span>
+      <div class="levelup-info">
+        <span class="levelup-name">${opt.name}</span>
+        <span class="levelup-desc">${opt.description}</span>
+      </div>
+    </div>`
+  ).join('');
+
+  modal.classList.remove('hidden');
+}
+
+function selectSurvivalUpgrade(upgradeId) {
+  if (!waveSurvivalSystem) return;
+  const result = waveSurvivalSystem.selectUpgrade(upgradeId);
+  if (result) {
+    const modal = document.getElementById('levelup-modal');
+    if (modal) modal.classList.add('hidden');
+  }
+}
+
+window.selectSurvivalUpgrade = selectSurvivalUpgrade;
+
+// ===================================
+// ELEMENTAL DISPLAY UI
+// ===================================
+
+function updateElementalDisplay() {
+  if (!elementalSystem) return;
+
+  const container = document.getElementById('elemental-display');
+  const aurasEl = document.getElementById('elemental-auras');
+  const reactionEl = document.getElementById('elemental-reaction');
+
+  if (!container) return;
+
+  // Only show during dungeon combat
+  const inDungeon = (pagodaSystem && pagodaSystem.inRun) || (waveSurvivalSystem && waveSurvivalSystem.inGame);
+  if (!inDungeon) {
+    container.classList.add('hidden');
+    return;
+  }
+  container.classList.remove('hidden');
+
+  // Show recent reactions
+  if (reactionEl && elementalSystem.reactionHistory) {
+    const recent = elementalSystem.reactionHistory.slice(-1)[0];
+    if (recent && Date.now() - recent.timestamp < 3000) {
+      const reaction = window.ELEMENTAL_REACTIONS ? Object.values(window.ELEMENTAL_REACTIONS).find(r => r.id === recent.reactionId) : null;
+      if (reaction) {
+        reactionEl.classList.remove('hidden');
+        const emojiEl = document.getElementById('reaction-emoji');
+        const nameEl = document.getElementById('reaction-name');
+        if (emojiEl) emojiEl.textContent = reaction.emoji || '💥';
+        if (nameEl) nameEl.textContent = reaction.name || 'Reaction!';
+      }
+    } else {
+      reactionEl.classList.add('hidden');
+    }
+  }
+
+  // Show active elements on target
+  if (aurasEl) {
+    const allAuras = [];
+    for (const [targetId, auras] of elementalSystem.activeAuras || []) {
+      for (const aura of auras) {
+        if (Date.now() < aura.expiresAt) {
+          allAuras.push(aura);
+        }
+      }
+    }
+    if (allAuras.length > 0) {
+      aurasEl.innerHTML = allAuras.map(a =>
+        `<span class="elemental-aura-icon" title="${a.name}">${a.emoji || '🔮'}</span>`
+      ).join('');
+    } else {
+      aurasEl.innerHTML = '';
+    }
+  }
+}
+
+// ===================================
 // SAVE SYSTEM
 // ===================================
 
@@ -6153,25 +7525,28 @@ function gameLoop(timestamp) {
   // Update playtime
   gameState.playtime += deltaTime;
 
+  // Ensure modifiers object exists (safety check against corruption)
+  const modifiers = gameState.modifiers || {};
+
   // Generate PP from cats
-  const ppPerSecond = catSystem.calculatePPPerSecond(gameState.modifiers);
+  const ppPerSecond = catSystem ? catSystem.calculatePPPerSecond(modifiers) : 0;
   gameState.purrPower += ppPerSecond * deltaSeconds;
 
   // Generate passive BP from upgrades
-  if (gameState.modifiers.passiveBpPerSecond > 0) {
-    gameState.boopPoints += gameState.modifiers.passiveBpPerSecond * deltaSeconds;
+  if (modifiers.passiveBpPerSecond > 0) {
+    gameState.boopPoints += modifiers.passiveBpPerSecond * deltaSeconds;
   }
 
   // Auto-boop from upgrades
-  if (gameState.modifiers.autoBoopRate > 0) {
-    const autoBoops = gameState.modifiers.autoBoopRate * deltaSeconds;
-    const autoBP = autoBoops * gameState.boopPower * (gameState.modifiers.bpMultiplier || 1);
+  if (modifiers.autoBoopRate > 0 && gameState.boopPower > 0) {
+    const autoBoops = modifiers.autoBoopRate * deltaSeconds;
+    const autoBP = autoBoops * gameState.boopPower * (modifiers.bpMultiplier || 1);
     gameState.boopPoints += autoBP;
     gameState.totalBoops += autoBoops;
   }
 
   // Update cat happiness
-  if (catSystem) catSystem.updateHappiness(deltaSeconds, gameState.modifiers);
+  if (catSystem) catSystem.updateHappiness(deltaSeconds, modifiers);
 
   // Update Phase 3 systems (with null checks)
   if (elementalSystem) elementalSystem.update(deltaTime);
@@ -6180,8 +7555,8 @@ function gameLoop(timestamp) {
   if (dailySystem) dailySystem.update(deltaTime);
 
   // Update parasites (they drain BP/PP)
-  const ppRate = catSystem ? catSystem.calculatePPPerSecond(gameState.modifiers) : 0;
-  const bpRate = gameState.modifiers.passiveBpPerSecond || 0;
+  const ppRate = catSystem ? catSystem.calculatePPPerSecond(modifiers) : 0;
+  const bpRate = modifiers.passiveBpPerSecond || 0;
   if (parasiteSystem) parasiteSystem.update(deltaTime, bpRate, ppRate);
 
   // Update POST-LAUNCH systems (with null checks)
@@ -6219,18 +7594,23 @@ function gameLoop(timestamp) {
     updateGoldenSnootUI();
     updateActiveEffectsUI();
     updateIRLBonusUI();
+    updateIRLWeatherUI();
     updateHardcoreUI();
 
     // Update pagoda combat if in run
     if (pagodaSystem && pagodaSystem.inRun) {
       updatePagodaCombat();
     }
+    updateSurvivalHUD();
+    updateElementalDisplay();
+    updateParasiteMiniDisplay();
   }
 
   // Update cultivation display and drama UI less frequently
   if (timestamp % 2000 < deltaTime) {
     updateCultivationDisplay();
     updateDramaUI();
+    updateTimeSeasonUI();
   }
 
   // Check for waifu unlocks every 5 seconds

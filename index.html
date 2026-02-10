@@ -32,37 +32,37 @@
 
       <div id="masters-grid" class="masters-grid">
         <!-- Fallback master cards - JS will replace these if it loads successfully -->
-        <div class="master-card" data-master="gerald" onclick="window.showMasterPreview && window.showMasterPreview('gerald')" style="--master-color: #50C878; cursor: pointer;">
+        <div class="master-card" data-master="gerald" onclick="window.showMasterPreview && window.showMasterPreview('gerald')" style="--master-color: #50C878; cursor: pointer;" role="button" tabindex="0" aria-label="Select Gerald, The Jade Palm" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click()}">
           <div class="master-portrait">🐉</div>
           <h3>Gerald</h3>
           <p class="title">The Jade Palm</p>
         </div>
-        <div class="master-card" data-master="rusty" onclick="window.showMasterPreview && window.showMasterPreview('rusty')" style="--master-color: #DC143C; cursor: pointer;">
+        <div class="master-card" data-master="rusty" onclick="window.showMasterPreview && window.showMasterPreview('rusty')" style="--master-color: #DC143C; cursor: pointer;" role="button" tabindex="0" aria-label="Select Rusty, The Crimson Fist" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click()}">
           <div class="master-portrait">👊</div>
           <h3>Rusty</h3>
           <p class="title">The Crimson Fist</p>
         </div>
-        <div class="master-card" data-master="steve" onclick="window.showMasterPreview && window.showMasterPreview('steve')" style="--master-color: #4169E1; cursor: pointer;">
+        <div class="master-card" data-master="steve" onclick="window.showMasterPreview && window.showMasterPreview('steve')" style="--master-color: #4169E1; cursor: pointer;" role="button" tabindex="0" aria-label="Select Steve, The Flowing River" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click()}">
           <div class="master-portrait">🌊</div>
           <h3>Steve</h3>
           <p class="title">The Flowing River</p>
         </div>
-        <div class="master-card" data-master="andrew" onclick="window.showMasterPreview && window.showMasterPreview('andrew')" style="--master-color: #FFD700; cursor: pointer;">
+        <div class="master-card" data-master="andrew" onclick="window.showMasterPreview && window.showMasterPreview('andrew')" style="--master-color: #FFD700; cursor: pointer;" role="button" tabindex="0" aria-label="Select Andrew, The Thunder Step" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click()}">
           <div class="master-portrait">⚡</div>
           <h3>Andrew</h3>
           <p class="title">The Thunder Step</p>
         </div>
-        <div class="master-card" data-master="nik" onclick="window.showMasterPreview && window.showMasterPreview('nik')" style="--master-color: #483D8B; cursor: pointer;">
+        <div class="master-card" data-master="nik" onclick="window.showMasterPreview && window.showMasterPreview('nik')" style="--master-color: #483D8B; cursor: pointer;" role="button" tabindex="0" aria-label="Select Nik, The Shadow Moon" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click()}">
           <div class="master-portrait">🌙</div>
           <h3>Nik</h3>
           <p class="title">The Shadow Moon</p>
         </div>
-        <div class="master-card" data-master="yuelin" onclick="window.showMasterPreview && window.showMasterPreview('yuelin')" style="--master-color: #FFB6C1; cursor: pointer;">
+        <div class="master-card" data-master="yuelin" onclick="window.showMasterPreview && window.showMasterPreview('yuelin')" style="--master-color: #FFB6C1; cursor: pointer;" role="button" tabindex="0" aria-label="Select Yuelin, The Lotus Sage" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click()}">
           <div class="master-portrait">🪷</div>
           <h3>Yuelin</h3>
           <p class="title">The Lotus Sage</p>
         </div>
-        <div class="master-card" data-master="scott" onclick="window.showMasterPreview && window.showMasterPreview('scott')" style="--master-color: #8B4513; cursor: pointer;">
+        <div class="master-card" data-master="scott" onclick="window.showMasterPreview && window.showMasterPreview('scott')" style="--master-color: #8B4513; cursor: pointer;" role="button" tabindex="0" aria-label="Select Scott, The Mountain" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click()}">
           <div class="master-portrait">⛰️</div>
           <h3>Scott</h3>
           <p class="title">The Mountain</p>
@@ -177,7 +177,7 @@
           <div class="waifu-info">
             <h3 id="waifu-name">Mochi-chan</h3>
             <p id="waifu-title" class="waifu-title">The Welcoming Dawn</p>
-            <div class="bond-bar">
+            <div class="bond-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" aria-label="Waifu bond level">
               <div id="bond-fill" class="bond-fill" style="width: 0%"></div>
             </div>
             <p class="bond-label">Bond: <span id="bond-level">0</span>/100</p>
@@ -229,7 +229,7 @@
           <!-- Cats Tab -->
           <div id="cats-tab" class="tab-content active">
             <div class="recruit-section">
-              <button id="recruit-btn" class="recruit-button">
+              <button id="recruit-btn" class="recruit-button" aria-label="Recruit a new cat">
                 <span class="recruit-text">Recruit Cat</span>
                 <span id="recruit-cost" class="recruit-cost">100 BP</span>
               </button>
@@ -240,7 +240,8 @@
             </div>
             <!-- Cat Filters -->
             <div class="cat-filters">
-              <select id="cat-filter-element" class="cat-filter-select">
+              <label for="cat-filter-element" class="sr-only">Filter by element</label>
+              <select id="cat-filter-element" class="cat-filter-select" aria-label="Filter by element">
                 <option value="all">All Elements</option>
                 <option value="metal">🪙 Metal</option>
                 <option value="wood">🌿 Wood</option>
@@ -250,7 +251,8 @@
                 <option value="void">🌑 Void</option>
                 <option value="chaos">🌀 Chaos</option>
               </select>
-              <select id="cat-filter-realm" class="cat-filter-select">
+              <label for="cat-filter-realm" class="sr-only">Filter by realm</label>
+              <select id="cat-filter-realm" class="cat-filter-select" aria-label="Filter by realm">
                 <option value="all">All Realms</option>
                 <option value="kittenMortal">Mortal Kitten</option>
                 <option value="earthKitten">Earth Kitten</option>
@@ -258,7 +260,8 @@
                 <option value="heavenKitten">Heaven Kitten</option>
                 <option value="divineBeast">Divine Beast</option>
               </select>
-              <select id="cat-sort" class="cat-filter-select">
+              <label for="cat-sort" class="sr-only">Sort cats</label>
+              <select id="cat-sort" class="cat-filter-select" aria-label="Sort cats">
                 <option value="recent">Sort: Recent</option>
                 <option value="realm">Sort: Realm</option>
                 <option value="stars">Sort: Stars</option>
@@ -515,22 +518,22 @@
                   <div class="combat-enemy">
                     <span id="enemy-emoji" class="enemy-emoji">👹</span>
                     <span id="enemy-name" class="enemy-name">Enemy</span>
-                    <div class="enemy-hp-bar">
+                    <div class="enemy-hp-bar" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" aria-label="Enemy health">
                       <div id="enemy-hp-fill" class="hp-fill"></div>
                     </div>
                   </div>
                   <div class="combat-player">
-                    <div class="player-hp-bar">
+                    <div class="player-hp-bar" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" aria-label="Player health">
                       <div id="player-hp-fill" class="hp-fill player"></div>
                     </div>
                     <span id="player-hp-text">100/100</span>
                   </div>
-                  <div id="combat-log" class="combat-log"></div>
+                  <div id="combat-log" class="combat-log" role="log" aria-live="polite" aria-label="Combat log"></div>
 
                   <!-- Qi Meter for Boop Commands -->
                   <div class="qi-meter">
                     <span class="qi-label">Qi:</span>
-                    <div class="qi-bar">
+                    <div class="qi-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="10" aria-label="Qi meter">
                       <div id="qi-fill" class="qi-fill" style="width: 0%"></div>
                     </div>
                     <span id="qi-amount" class="qi-amount">0/10</span>
@@ -563,9 +566,6 @@
               </div>
             </div>
           </div>
-
-          <!-- Pagoda Tab (Legacy/Hidden - for compatibility) -->
-          <div id="pagoda-tab" class="tab-content hidden-tab"></div>
 
           <!-- Equipment Tab -->
           <div id="equipment-tab" class="tab-content">
@@ -609,14 +609,14 @@
               <div class="inventory-controls">
                 <h5 class="inventory-header">Inventory (<span id="inventory-count">0</span>)</h5>
                 <div class="inventory-toolbar">
-                  <input type="text" id="inventory-search" class="inventory-search" placeholder="Search...">
-                  <select id="inventory-sort" class="inventory-sort">
+                  <input type="text" id="inventory-search" class="inventory-search" placeholder="Search..." aria-label="Search inventory">
+                  <select id="inventory-sort" class="inventory-sort" aria-label="Sort inventory by">
                     <option value="rarity">Sort: Rarity</option>
                     <option value="slot">Sort: Slot</option>
                     <option value="level">Sort: Level</option>
                     <option value="name">Sort: Name</option>
                   </select>
-                  <select id="inventory-filter" class="inventory-filter">
+                  <select id="inventory-filter" class="inventory-filter" aria-label="Filter inventory by slot">
                     <option value="all">All Slots</option>
                     <option value="hat">🎩 Hats</option>
                     <option value="collar">📿 Collars</option>
@@ -626,8 +626,8 @@
                     <option value="tail">🎀 Tails</option>
                   </select>
                   <div class="view-toggle">
-                    <button id="view-grid" class="view-btn active" title="Grid View">▦</button>
-                    <button id="view-list" class="view-btn" title="List View">☰</button>
+                    <button id="view-grid" class="view-btn active" title="Grid View" aria-label="Grid View">▦</button>
+                    <button id="view-list" class="view-btn" title="List View" aria-label="List View">☰</button>
                   </div>
                 </div>
               </div>
@@ -645,7 +645,7 @@
               <!-- Item Selection -->
               <div class="forge-section">
                 <h5 class="forge-subtitle">Select Equipment to Upgrade</h5>
-                <select id="forge-item-select" class="forge-select">
+                <select id="forge-item-select" class="forge-select" aria-label="Select equipment to upgrade">
                   <option value="">-- Select Item --</option>
                 </select>
               </div>
@@ -681,13 +681,25 @@
               <!-- Enchant Section -->
               <div class="forge-section">
                 <h5 class="forge-subtitle">✨ Enchantments</h5>
-                <select id="enchant-select" class="forge-select">
+                <select id="enchant-select" class="forge-select" aria-label="Select enchantment to apply">
                   <option value="">-- Select Enchantment --</option>
                 </select>
                 <div id="enchant-cost" class="forge-cost"></div>
                 <button id="enchant-btn" class="jade-button forge-btn" onclick="enchantSelectedItem()">
                   Apply Enchantment
                 </button>
+              </div>
+
+              <!-- Crafting Queue -->
+              <div class="forge-section">
+                <h5 class="forge-subtitle">🔄 Crafting Queue</h5>
+                <div id="crafting-queue" class="crafting-queue"></div>
+              </div>
+
+              <!-- Blueprints -->
+              <div class="forge-section">
+                <h5 class="forge-subtitle">📋 Blueprints</h5>
+                <div id="blueprint-list" class="blueprint-list"></div>
               </div>
 
               <!-- Materials Display -->
@@ -775,7 +787,7 @@
                     <option value="1">Quackers (3x)</option>
                     <option value="2">Speedy (4x)</option>
                   </select>
-                  <input type="number" id="race-bet" value="10" min="1" max="100" style="width: 50px;">
+                  <input type="number" id="race-bet" value="10" min="1" max="100" style="width: 50px;" aria-label="Bet amount">
                   <button id="start-race-btn" class="jade-button" onclick="startGooseRace()">BET!</button>
                 </div>
                 <p id="race-result" class="race-result"></p>
@@ -830,9 +842,6 @@
               </div>
             </div>
           </div>
-
-          <!-- Facilities Tab (Legacy - redirect to Buildings) -->
-          <div id="facilities-tab" class="tab-content hidden-tab"></div>
 
           <!-- Buildings Tab (Expanded) -->
           <div id="buildings-tab" class="tab-content">
@@ -1568,7 +1577,7 @@
               <p id="cultivation-rank" class="realm-rank">Rank 1/9</p>
               <p id="cultivation-order" class="realm-order">Realm 1 of 10</p>
             </div>
-            <div class="cultivation-xp-bar">
+            <div class="cultivation-xp-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" aria-label="Cultivation experience">
               <div id="cultivation-xp-fill" class="xp-fill" style="width: 0%"></div>
               <span id="cultivation-xp-text" class="xp-text">0 / 100 XP</span>
             </div>
@@ -1604,12 +1613,12 @@
               <div id="stance-mastery-fill" class="mastery-fill" style="width: 0%"></div>
             </div>
             <div class="stance-selector">
-              <button class="stance-btn active" data-stance="jadePalm" title="Jade Palm - Balanced">🖐️</button>
-              <button class="stance-btn locked" data-stance="ironFinger" title="Iron Finger - Power (Qi Condensation)">👆</button>
-              <button class="stance-btn locked" data-stance="drunkenPaw" title="Drunken Paw - Random (Foundation)">🍺</button>
-              <button class="stance-btn locked" data-stance="shadowStep" title="Shadow Step - Speed (Core Formation)">👤</button>
-              <button class="stance-btn locked" data-stance="flowingRiver" title="Flowing River - AFK (Nascent Soul)">🌊</button>
-              <button class="stance-btn locked" data-stance="forbiddenTechnique" title="Forbidden - Ultimate (Spirit Severing)">💀</button>
+              <button class="stance-btn active" data-stance="jadePalm" title="Jade Palm - Balanced" aria-label="Jade Palm stance - Balanced">🖐️</button>
+              <button class="stance-btn locked" data-stance="ironFinger" title="Iron Finger - Power (Qi Condensation)" aria-label="Iron Finger stance - Power">👆</button>
+              <button class="stance-btn locked" data-stance="drunkenPaw" title="Drunken Paw - Random (Foundation)" aria-label="Drunken Paw stance - Random">🍺</button>
+              <button class="stance-btn locked" data-stance="shadowStep" title="Shadow Step - Speed (Core Formation)" aria-label="Shadow Step stance - Speed">👤</button>
+              <button class="stance-btn locked" data-stance="flowingRiver" title="Flowing River - AFK (Nascent Soul)" aria-label="Flowing River stance - AFK">🌊</button>
+              <button class="stance-btn locked" data-stance="forbiddenTechnique" title="Forbidden - Ultimate (Spirit Severing)" aria-label="Forbidden Technique stance - Ultimate">💀</button>
             </div>
             <div id="stance-special" class="stance-special hidden">
               <span id="stance-special-name">Special: None</span>
@@ -1640,19 +1649,29 @@
             <span id="irl-time-name" class="irl-name">Morning</span>
             <span id="irl-time-bonus" class="irl-bonus-text">+10% BP</span>
           </div>
+          <div id="irl-weather" class="irl-weather hidden">
+            <span id="irl-weather-icon" class="irl-icon">🌤️</span>
+            <span id="irl-weather-name" class="irl-name">Clear</span>
+            <span id="irl-weather-bonus" class="irl-bonus-text"></span>
+          </div>
 
           <!-- Drama Meter -->
           <div id="drama-meter" class="drama-meter">
-            <div class="drama-header" onclick="toggleDramaPanel()">
+            <button class="drama-header" onclick="toggleDramaPanel()" aria-label="Toggle drama panel" aria-expanded="false">
               <span>🎭</span>
               <span id="drama-level">0</span>
-            </div>
+            </button>
             <div id="drama-content" class="drama-content hidden">
               <h4>Drama Level</h4>
-              <div class="drama-bar">
+              <div class="drama-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" aria-label="Drama level">
                 <div id="drama-fill" class="drama-fill" style="width: 0%"></div>
               </div>
               <p id="drama-status">All is peaceful...</p>
+              <div class="drama-actions">
+                <button class="jade-button small" onclick="harvestDrama()" id="drama-harvest-btn" disabled>🎭 Harvest Drama</button>
+                <button class="jade-button small" onclick="resolveDrama()" id="drama-resolve-btn" disabled>☮️ Resolve</button>
+              </div>
+              <div id="drama-effects" class="drama-effects"></div>
               <div id="drama-events" class="drama-events"></div>
             </div>
           </div>
@@ -1707,13 +1726,37 @@
         <span class="golden-snoot-emoji">👃</span>
         <span class="golden-snoot-glow"></span>
       </div>
+      <div id="golden-snoot-label" class="golden-snoot-label"></div>
       <div class="golden-snoot-timer">
         <div id="golden-snoot-timer-bar" class="golden-timer-bar"></div>
       </div>
     </div>
 
     <!-- Parasite Container -->
-    <div id="parasite-container" class="parasite-container"></div>
+    <div id="parasite-container" class="parasite-container" onclick="openParasiteModal()" role="button" tabindex="0" aria-label="Open parasite management" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openParasiteModal()}">
+      <div id="parasite-mini-display" class="parasite-mini-display"></div>
+    </div>
+
+    <!-- Parasite Management Modal -->
+    <div id="parasite-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="parasite-modal-title">
+      <div class="modal-content scroll-panel parasite-modal">
+        <h2 id="parasite-modal-title">🐛 Parasite Management</h2>
+        <div class="parasite-summary">
+          <div class="parasite-stat"><span>Active:</span> <span id="parasite-count">0</span>/<span id="parasite-max">10</span></div>
+          <div class="parasite-stat"><span>Total Stored:</span> <span id="parasite-stored">0</span></div>
+          <div class="parasite-stat"><span>Potential Return:</span> <span id="parasite-potential" class="text-jade">0</span></div>
+          <div class="parasite-stat"><span>Total Popped:</span> <span id="parasite-total-popped">0</span></div>
+        </div>
+        <div class="parasite-actions">
+          <button class="jade-button small" onclick="popAllParasites()">💥 Pop All</button>
+        </div>
+        <h4>Active Parasites</h4>
+        <div id="parasite-active-list" class="parasite-list"></div>
+        <h4>🔧 Upgrades</h4>
+        <div id="parasite-upgrades" class="parasite-upgrades"></div>
+        <button class="jade-button" onclick="closeParasiteModal()">Close</button>
+      </div>
+    </div>
 
     <!-- Blessing Selection Modal -->
     <div id="blessing-modal" class="modal hidden">
@@ -1731,6 +1774,38 @@
         <h2>Level Up!</h2>
         <p id="levelup-text">Choose an upgrade</p>
         <div id="levelup-options" class="levelup-options"></div>
+      </div>
+    </div>
+
+    <!-- Wave Survival HUD -->
+    <div id="survival-hud" class="survival-hud hidden">
+      <div class="survival-hud-top">
+        <div class="survival-stat">
+          <span class="survival-label">Time</span>
+          <span id="survival-time" class="survival-value">00:00</span>
+        </div>
+        <div class="survival-stat">
+          <span class="survival-label">Level</span>
+          <span id="survival-level" class="survival-value">1</span>
+        </div>
+        <div class="survival-stat">
+          <span class="survival-label">Kills</span>
+          <span id="survival-kills" class="survival-value">0</span>
+        </div>
+      </div>
+      <div class="survival-hp-bar" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" aria-label="Survival mode health">
+        <div id="survival-hp-fill" class="survival-hp-fill" style="width: 100%"></div>
+        <span id="survival-hp-text" class="survival-hp-text">100/100</span>
+      </div>
+      <div id="survival-upgrades-display" class="survival-upgrades-display"></div>
+    </div>
+
+    <!-- Elemental Display (in dungeon combat) -->
+    <div id="elemental-display" class="elemental-display hidden">
+      <div id="elemental-auras" class="elemental-auras"></div>
+      <div id="elemental-reaction" class="elemental-reaction hidden">
+        <span id="reaction-emoji" class="reaction-emoji"></span>
+        <span id="reaction-name" class="reaction-name"></span>
       </div>
     </div>
 
@@ -1774,7 +1849,7 @@
             <button id="export-save-btn" class="jade-button small">Export Save</button>
             <button id="import-save-btn" class="jade-button small">Import Save</button>
           </div>
-          <textarea id="save-code" class="save-code-input" placeholder="Paste save code here..." rows="3"></textarea>
+          <textarea id="save-code" class="save-code-input" placeholder="Paste save code here..." rows="3" aria-label="Save code for import/export"></textarea>
         </div>
 
         <div class="settings-buttons">
@@ -1976,6 +2051,18 @@
       </div>
     </div>
 
+    <!-- Fusion Modal (BH-6) -->
+    <div id="fusion-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="fusion-title">
+      <div class="modal-content scroll-panel fusion-modal">
+        <h2 id="fusion-title">🔮 Cat Fusion Lab</h2>
+        <p class="fusion-intro">Combine cats to create powerful new forms!</p>
+        <div id="fusion-recipes-list" class="fusion-recipes-list">
+          <p class="fusion-empty">Loading fusion recipes...</p>
+        </div>
+        <button class="jade-button" onclick="closeFusionModal()">Close</button>
+      </div>
+    </div>
+
     <!-- Social Modal -->
     <div id="social-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="social-title">
       <div class="modal-content scroll-panel social-modal">
@@ -2141,16 +2228,16 @@
     </div>
 
     <!-- Active Effects Display -->
-    <div id="active-effects" class="active-effects"></div>
+    <div id="active-effects" class="active-effects" role="status" aria-live="polite"></div>
 
     <!-- Status Widgets Container (bottom-left) -->
     <div class="status-widgets">
       <!-- Daily Commissions Panel -->
       <div id="daily-panel" class="daily-panel">
-        <div class="daily-header" onclick="toggleDailyPanel()">
+        <button class="daily-header" onclick="toggleDailyPanel()" aria-label="Toggle daily commissions" aria-expanded="false">
           <span>📋</span>
           <span id="daily-progress">0/4</span>
-        </div>
+        </button>
         <div id="daily-content" class="daily-content hidden">
           <h4>Daily Commissions</h4>
           <div id="daily-streak" class="daily-streak">
@@ -2170,10 +2257,27 @@
     </div>
 
     <!-- Nemesis Warning -->
-    <div id="nemesis-warning" class="nemesis-warning hidden">
+    <div id="nemesis-warning" class="nemesis-warning hidden" onclick="openNemesisModal()" role="button" tabindex="0" aria-label="View nemesis roster">
       <div class="nemesis-alert">
         <h3 id="nemesis-title">💀 NEMESIS APPROACHES 💀</h3>
         <p id="nemesis-taunt">"I've been waiting..."</p>
+      </div>
+    </div>
+
+    <!-- Nemesis Roster Modal -->
+    <div id="nemesis-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="nemesis-modal-title">
+      <div class="modal-content scroll-panel nemesis-modal">
+        <h2 id="nemesis-modal-title">💀 Nemesis Roster</h2>
+        <div class="nemesis-stats-summary">
+          <span id="nemesis-stat-created">Created: 0</span>
+          <span id="nemesis-stat-defeated">Defeated: 0</span>
+          <span id="nemesis-stat-defected">Defected: 0</span>
+        </div>
+        <h4>Active Nemeses</h4>
+        <div id="nemesis-active-list" class="nemesis-list"></div>
+        <h4>Defeated</h4>
+        <div id="nemesis-defeated-list" class="nemesis-list"></div>
+        <button class="jade-button" onclick="closeNemesisModal()">Close</button>
       </div>
     </div>
 

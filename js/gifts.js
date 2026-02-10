@@ -264,11 +264,11 @@ class GiftSystem {
     if (!item || !item.cost) return false;
     if (!this.canAfford(itemId, gameState)) return false;
 
-    // Deduct cost
-    if (item.cost.bp) gameState.boopPoints -= item.cost.bp;
-    if (item.cost.pp) gameState.purrPower -= item.cost.pp;
-    if (item.cost.jadeCatnip) gameState.jadeCatnip -= item.cost.jadeCatnip;
-    if (item.cost.destinyThreads) gameState.destinyThreads -= item.cost.destinyThreads;
+    // Deduct cost (with safety checks to prevent negative values)
+    if (item.cost.bp) gameState.boopPoints = Math.max(0, gameState.boopPoints - item.cost.bp);
+    if (item.cost.pp) gameState.purrPower = Math.max(0, gameState.purrPower - item.cost.pp);
+    if (item.cost.jadeCatnip) gameState.jadeCatnip = Math.max(0, gameState.jadeCatnip - item.cost.jadeCatnip);
+    if (item.cost.destinyThreads) gameState.destinyThreads = Math.max(0, gameState.destinyThreads - item.cost.destinyThreads);
 
     // Add to inventory
     this.addToInventory(itemId);

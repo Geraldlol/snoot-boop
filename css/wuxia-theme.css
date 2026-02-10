@@ -353,22 +353,22 @@
 }
 
 .cultivation-text.small {
-  font-size: 10px;
+  font-size: var(--font-xs);
   letter-spacing: 1px;
 }
 
 .cultivation-text.medium {
-  font-size: 14px;
+  font-size: var(--font-sm);
   letter-spacing: 2px;
 }
 
 .cultivation-text.large {
-  font-size: 20px;
+  font-size: var(--font-md);
   letter-spacing: 3px;
 }
 
 .cultivation-text.xl {
-  font-size: 28px;
+  font-size: var(--font-xl);
   letter-spacing: 4px;
 }
 
@@ -394,7 +394,7 @@
   position: relative;
   display: inline-block;
   font-family: var(--font-pixel);
-  font-size: 18px;
+  font-size: var(--font-sm);
   color: var(--text-light);
   padding: 10px 30px;
 }
@@ -505,7 +505,7 @@
   display: flex;
   justify-content: space-between;
   font-family: var(--font-pixel);
-  font-size: 10px;
+  font-size: var(--font-xs);
   color: var(--qi-blue);
   margin-top: 8px;
 }
@@ -526,7 +526,7 @@
   padding: 4px 8px;
   border-radius: 4px;
   font-family: var(--font-pixel);
-  font-size: 8px;
+  font-size: var(--font-xs);
   text-transform: uppercase;
 }
 
@@ -710,7 +710,7 @@
   border: 3px solid var(--rusty-crimson);
   color: var(--rusty-crimson);
   font-family: var(--font-pixel);
-  font-size: 10px;
+  font-size: var(--font-xs);
   transform: rotate(-5deg);
   position: relative;
 }
@@ -773,13 +773,13 @@
 
 .wuxia-card-title {
   font-family: var(--font-pixel);
-  font-size: 12px;
+  font-size: var(--font-xs);
   color: var(--jade-light);
 }
 
 .wuxia-card-content {
   font-family: var(--font-pixel);
-  font-size: 10px;
+  font-size: var(--font-xs);
   color: var(--text-light);
   line-height: 1.6;
 }
@@ -829,7 +829,7 @@
 
 .tribulation-title {
   font-family: var(--font-pixel);
-  font-size: 24px;
+  font-size: var(--font-lg);
   color: var(--gold-accent);
   text-shadow:
     0 0 20px var(--gold-accent),

@@ -3,6 +3,15 @@
    All modal dialogs and overlays
    =================================== */
 
+/* --- Z-Index Stacking Order ---
+   100:   Inline overlays (codex tabs, tab highlights)
+   1000:  Base modals (settings, help, AFK, waifu)
+   2000:  Game overlays (goose, golden snoot, level-up, notifications)
+   2500:  Secret/priority banners
+   3000:  Critical overlays (blessing, waifu detail, achievements)
+   5000:  Event banners (top-most, always visible)
+   ----------------------------------- */
+
 /* --- Base Modal --- */
 .modal {
   position: fixed;
@@ -36,7 +45,7 @@
 }
 
 .modal-content h2 {
-  font-size: 14px;
+  font-size: var(--font-lg);
   margin-bottom: 20px;
 }
 
@@ -53,20 +62,20 @@
 }
 
 .gain-label {
-  font-size: 16px;
+  font-size: var(--font-sm);
   color: #666;
   display: block;
   margin-bottom: 5px;
 }
 
 .gain-value {
-  font-size: 16px;
+  font-size: var(--font-md);
   color: var(--jade);
 }
 
 .afk-events {
   margin: 20px 0;
-  font-size: 18px;
+  font-size: var(--font-md);
   text-align: left;
 }
 
@@ -103,7 +112,7 @@
 }
 
 .goose-alert h2 {
-  font-size: 24px;
+  font-size: var(--font-lg);
   color: var(--gold-accent);
   margin-bottom: 10px;
 }
@@ -150,7 +159,7 @@
 }
 
 .goose-mood {
-  font-size: 18px;
+  font-size: var(--font-md);
   margin-top: 15px;
   color: var(--gold-accent);
 }
@@ -171,13 +180,13 @@
 }
 
 .goose-ally-unlock h2 {
-  font-size: 20px;
+  font-size: var(--font-lg);
   color: var(--gold-accent);
   margin-bottom: 15px;
 }
 
 .goose-ally-unlock p {
-  font-size: 12px;
+  font-size: var(--font-sm);
   color: #aaa;
   margin-bottom: 20px;
 }
@@ -214,7 +223,7 @@
 
 .ally-desc {
   font-family: var(--font-pixel);
-  font-size: 14px;
+  font-size: var(--font-xs);
   color: #aaa;
 }
 
@@ -236,7 +245,7 @@
 
 .settings-section h3 {
   font-family: var(--font-pixel);
-  font-size: 18px;
+  font-size: var(--font-md);
   color: var(--jade);
   margin-bottom: 12px;
 }
@@ -251,13 +260,13 @@
 
 .setting-row label {
   font-family: var(--font-pixel);
-  font-size: 16px;
+  font-size: var(--font-sm);
   color: #ccc;
 }
 
 #volume-value {
   font-family: var(--font-pixel);
-  font-size: 14px;
+  font-size: var(--font-xs);
   color: #888;
   min-width: 35px;
   text-align: right;
@@ -270,7 +279,7 @@
   border-radius: 4px;
   color: #ccc;
   font-family: monospace;
-  font-size: 18px;
+  font-size: var(--font-md);
   padding: 8px;
   resize: none;
   margin-top: 10px;
@@ -308,13 +317,13 @@
 
 .help-section h3 {
   font-family: var(--font-pixel);
-  font-size: 18px;
+  font-size: var(--font-md);
   color: var(--jade);
   margin-bottom: 10px;
 }
 
 .help-section p {
-  font-size: 18px;
+  font-size: var(--font-md);
   color: #ccc;
   line-height: 1.6;
   margin-bottom: 8px;
@@ -332,7 +341,7 @@
 }
 
 .help-list li {
-  font-size: 18px;
+  font-size: var(--font-md);
   color: #ccc;
   padding: 5px 0 5px 15px;
   position: relative;
@@ -357,7 +366,7 @@
 }
 
 .codex-subtitle {
-  font-size: 18px;
+  font-size: var(--font-md);
   color: #888;
   text-align: center;
   margin-bottom: 15px;
@@ -377,7 +386,7 @@
   color: #888;
   padding: 8px 12px;
   font-family: var(--font-pixel);
-  font-size: 14px;
+  font-size: var(--font-xs);
   cursor: pointer;
   border-radius: 4px;
   transition: all 0.2s ease;
@@ -441,7 +450,7 @@
 
 .codex-entry-title {
   font-family: var(--font-pixel);
-  font-size: 18px;
+  font-size: var(--font-md);
   color: var(--jade);
 }
 
@@ -450,12 +459,12 @@
 }
 
 .codex-entry-subtitle {
-  font-size: 14px;
+  font-size: var(--font-sm);
   color: #888;
 }
 
 .codex-entry-preview {
-  font-size: 16px;
+  font-size: var(--font-sm);
   color: #aaa;
   font-style: italic;
   line-height: 1.5;
@@ -467,7 +476,7 @@
 
 .codex-entry-progress {
   margin-top: 8px;
-  font-size: 14px;
+  font-size: var(--font-xs);
   color: #666;
 }
 
@@ -492,13 +501,13 @@
 
 .codex-full-entry h3 {
   font-family: var(--font-pixel);
-  font-size: 12px;
+  font-size: var(--font-md);
   color: var(--jade);
   margin-bottom: 10px;
 }
 
 .codex-full-entry .story {
-  font-size: 18px;
+  font-size: var(--font-md);
   color: #ccc;
   line-height: 1.8;
   white-space: pre-wrap;
@@ -520,7 +529,7 @@
 }
 
 .blessing-subtitle {
-  font-size: 16px;
+  font-size: var(--font-sm);
   color: #888;
   margin-bottom: 15px;
 }
@@ -552,19 +561,19 @@
 .blessing-option.legendary { border-left: 4px solid #F59E0B; }
 
 .blessing-waifu {
-  font-size: 16px;
+  font-size: var(--font-sm);
   color: #888;
   margin-bottom: 4px;
 }
 
 .blessing-name {
-  font-size: 18px;
+  font-size: var(--font-md);
   color: var(--jade-light);
   margin-bottom: 4px;
 }
 
 .blessing-desc {
-  font-size: 16px;
+  font-size: var(--font-sm);
 }
 
 /* --- Level Up Modal --- */
@@ -604,12 +613,12 @@
 }
 
 .levelup-name {
-  font-size: 18px;
+  font-size: var(--font-md);
   color: var(--jade-light);
 }
 
 .levelup-desc {
-  font-size: 14px;
+  font-size: var(--font-sm);
   color: #888;
 }
 
@@ -660,13 +669,13 @@
 }
 
 .event-text h3 {
-  font-size: 12px;
+  font-size: var(--font-md);
   margin-bottom: 8px;
   color: var(--red-accent);
 }
 
 .event-text p {
-  font-size: 18px;
+  font-size: var(--font-md);
   margin-bottom: 5px;
 }
 
@@ -685,7 +694,7 @@
   padding: 8px;
   border-radius: 4px;
   margin: 10px 0;
-  font-size: 18px;
+  font-size: var(--font-md);
 }
 
 .event-timer-bar {
@@ -712,7 +721,7 @@
   color: white;
   padding: 15px 30px;
   border-radius: 8px;
-  font-size: 14px;
+  font-size: var(--font-md);
   z-index: 2000;
   opacity: 0;
   transition: all 0.3s ease;
@@ -775,20 +784,20 @@
 }
 
 .secret-text h3 {
-  font-size: 14px;
+  font-size: var(--font-lg);
   color: #FFD700;
   margin-bottom: 10px;
   text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
 }
 
 .secret-text h4 {
-  font-size: 12px;
+  font-size: var(--font-md);
   color: #DDA0DD;
   margin-bottom: 15px;
 }
 
 .secret-dialogue {
-  font-size: 18px;
+  font-size: var(--font-md);
   color: #C0C0C0;
   font-style: italic;
 }
@@ -801,11 +810,11 @@
   padding: 4px 12px;
   background: rgba(0, 0, 0, 0.3);
   border-radius: 20px;
-  font-size: 18px;
+  font-size: var(--font-md);
 }
 
 .time-emoji {
-  font-size: 14px;
+  font-size: var(--font-xs);
 }
 
 .time-text {
@@ -816,7 +825,7 @@
   padding: 2px 8px;
   background: rgba(255, 255, 255, 0.1);
   border-radius: 10px;
-  font-size: 16px;
+  font-size: var(--font-sm);
 }
 
 /* --- Weekly Challenge Banner --- */
@@ -836,12 +845,12 @@
 }
 
 .weekly-challenge-title {
-  font-size: 11px;
+  font-size: var(--font-sm);
   color: var(--jade-light);
 }
 
 .weekly-challenge-timer {
-  font-size: 18px;
+  font-size: var(--font-md);
   color: #C0C0C0;
 }
 
@@ -864,7 +873,7 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  font-size: 18px;
+  font-size: var(--font-md);
   color: white;
   text-shadow: 1px 1px 0 #000;
 }
@@ -878,7 +887,7 @@
   padding: 10px;
   text-align: center;
   z-index: 100;
-  font-size: 18px;
+  font-size: var(--font-md);
   animation: festival-glow 2s ease-in-out infinite;
 }
 
@@ -944,19 +953,19 @@
 }
 
 .achievement-unlocked {
-  font-size: 16px;
+  font-size: var(--font-sm);
   color: var(--gold-accent);
   text-transform: uppercase;
   letter-spacing: 1px;
 }
 
 .achievement-name {
-  font-size: 12px;
+  font-size: var(--font-md);
   color: white;
 }
 
 .achievement-desc {
-  font-size: 16px;
+  font-size: var(--font-sm);
   color: #aaa;
 }
 
@@ -995,12 +1004,12 @@
 }
 
 .expedition-complete-header .expedition-title {
-  font-size: 14px;
+  font-size: var(--font-md);
   color: var(--jade-light);
 }
 
 .expedition-destination {
-  font-size: 18px;
+  font-size: var(--font-md);
   color: #aaa;
   margin-bottom: 15px;
 }
@@ -1012,13 +1021,13 @@
 }
 
 .expedition-rewards .reward-item {
-  font-size: 12px;
+  font-size: var(--font-md);
   color: var(--gold-accent);
 }
 
 .expedition-rewards .reward-item.drops {
   color: var(--jade-light);
-  font-size: 18px;
+  font-size: var(--font-md);
 }
 
 .expedition-events {
@@ -1028,7 +1037,7 @@
 }
 
 .expedition-events .event-message {
-  font-size: 16px;
+  font-size: var(--font-sm);
   color: #aaa;
   font-style: italic;
 }
@@ -1058,14 +1067,14 @@
 }
 
 .nemesis-alert h3 {
-  font-size: 18px;
+  font-size: var(--font-xl);
   color: #ff0000;
   margin-bottom: 15px;
   text-shadow: 0 0 20px #ff0000;
 }
 
 .nemesis-alert p {
-  font-size: 12px;
+  font-size: var(--font-md);
   color: #ff6666;
   font-style: italic;
 }
@@ -1169,6 +1178,290 @@
 }
 
 /* ===================================
+   FUSION MODAL
+   Cat fusion lab interface
+   =================================== */
+
+.fusion-modal {
+  max-width: 500px;
+  width: 95%;
+  max-height: 85vh;
+  overflow-y: auto;
+}
+
+.fusion-intro {
+  color: var(--jade, #50C878);
+  font-size: 0.85rem;
+  margin-bottom: 12px;
+}
+
+.fusion-recipes-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.fusion-recipe {
+  background: rgba(0, 0, 0, 0.2);
+  border: 2px solid rgba(80, 200, 120, 0.3);
+  border-radius: 4px;
+  padding: 10px;
+}
+
+.fusion-recipe.available {
+  border-color: var(--jade, #50C878);
+}
+
+.fusion-recipe.locked {
+  opacity: 0.7;
+}
+
+.fusion-recipe-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.fusion-recipe-name {
+  font-weight: bold;
+  color: var(--gold-accent, #FFD700);
+}
+
+.fusion-recipe-status {
+  font-size: 0.8rem;
+}
+
+.fusion-recipe-ingredients {
+  font-size: 0.8rem;
+  color: #ccc;
+  margin-bottom: 4px;
+}
+
+.fusion-ingredient {
+  display: inline-block;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 2px 6px;
+  border-radius: 3px;
+  margin: 2px;
+}
+
+.fusion-recipe-result {
+  font-size: 0.85rem;
+  margin-bottom: 8px;
+}
+
+.fusion-realm {
+  color: var(--jade, #50C878);
+  font-size: 0.8rem;
+}
+
+.fusion-empty {
+  text-align: center;
+  color: #999;
+  padding: 20px;
+}
+
+/* ===================================
+   PARASITE MANAGEMENT MODAL
+   =================================== */
+
+.parasite-modal {
+  max-width: 500px;
+  width: 95%;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.parasite-summary {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  margin-bottom: 12px;
+  padding: 8px;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+}
+
+.parasite-stat {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.85rem;
+}
+
+.parasite-list {
+  margin-bottom: 12px;
+}
+
+.parasite-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  background: rgba(0, 0, 0, 0.15);
+  border-radius: 4px;
+  margin-bottom: 4px;
+}
+
+.parasite-emoji {
+  font-size: 1.2rem;
+}
+
+.parasite-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.parasite-name {
+  font-size: 0.85rem;
+  font-weight: bold;
+}
+
+.parasite-stored {
+  font-size: 0.75rem;
+  color: #aaa;
+}
+
+.parasite-upgrades {
+  margin-bottom: 12px;
+}
+
+.parasite-upgrade {
+  padding: 8px;
+  background: rgba(0, 0, 0, 0.15);
+  border-radius: 4px;
+  margin-bottom: 4px;
+}
+
+.parasite-upgrade.maxed {
+  opacity: 0.6;
+}
+
+.parasite-upgrade .upgrade-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+.parasite-upgrade .upgrade-name {
+  font-weight: bold;
+  font-size: 0.85rem;
+}
+
+.parasite-upgrade .upgrade-level {
+  color: var(--jade, #50C878);
+  font-size: 0.8rem;
+}
+
+.parasite-upgrade .upgrade-desc {
+  font-size: 0.75rem;
+  color: #bbb;
+  margin: 0 0 4px;
+}
+
+.parasite-upgrade .upgrade-maxed {
+  color: var(--jade, #50C878);
+  font-size: 0.75rem;
+}
+
+/* Parasite Mini Display */
+.parasite-container {
+  position: fixed;
+  bottom: 100px;
+  left: 20px;
+  cursor: pointer;
+  z-index: 100;
+}
+
+.parasite-mini-display {
+  display: flex;
+  gap: 4px;
+  font-size: 1.2rem;
+}
+
+.parasite-mini {
+  transition: transform 0.2s;
+}
+
+.parasite-mini:hover {
+  transform: scale(1.3);
+}
+
+/* ===================================
+   NEMESIS ROSTER MODAL
+   =================================== */
+
+.nemesis-modal {
+  max-width: 500px;
+  width: 95%;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.nemesis-stats-summary {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-bottom: 12px;
+  font-size: 0.85rem;
+  color: #aaa;
+}
+
+.nemesis-list {
+  margin-bottom: 12px;
+}
+
+.nemesis-card {
+  padding: 8px;
+  background: rgba(100, 0, 0, 0.2);
+  border: 1px solid rgba(200, 0, 0, 0.3);
+  border-radius: 4px;
+  margin-bottom: 6px;
+}
+
+.nemesis-card.defeated {
+  opacity: 0.5;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.nemesis-card-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.nemesis-emoji {
+  font-size: 1.2rem;
+}
+
+.nemesis-name {
+  flex: 1;
+  font-weight: bold;
+  font-size: 0.85rem;
+}
+
+.nemesis-level {
+  color: #ff6b6b;
+  font-size: 0.8rem;
+}
+
+.nemesis-card-body {
+  font-size: 0.75rem;
+  color: #bbb;
+}
+
+.nemesis-taunt-text {
+  font-style: italic;
+  color: #ff8888;
+  margin-top: 4px;
+}
+
+/* ===================================
    SOCIAL MODAL
    Discord sharing, leaderboards, etc.
    =================================== */
@@ -1181,7 +1474,7 @@
 }
 
 .social-subtitle {
-  font-size: 18px;
+  font-size: var(--font-md);
   color: #888;
   margin-bottom: 15px;
   text-align: center;
@@ -1202,7 +1495,7 @@
   color: #888;
   padding: 8px 15px;
   font-family: var(--font-pixel);
-  font-size: 16px;
+  font-size: var(--font-sm);
   cursor: pointer;
   border-radius: 4px;
   transition: all 0.2s ease;
@@ -1281,13 +1574,13 @@
 }
 
 .sect-card-name {
-  font-size: 14px;
+  font-size: var(--font-md);
   color: var(--jade-light);
   margin-bottom: 4px;
 }
 
 .sect-card-title {
-  font-size: 16px;
+  font-size: var(--font-sm);
   color: #888;
 }
 
@@ -1307,14 +1600,14 @@
 }
 
 .sect-stat-label {
-  font-size: 14px;
+  font-size: var(--font-xs);
   color: #666;
   display: block;
   margin-bottom: 3px;
 }
 
 .sect-stat-value {
-  font-size: 11px;
+  font-size: var(--font-md);
   color: var(--jade);
 }
 
@@ -1342,12 +1635,12 @@
 }
 
 .power-score-label {
-  font-size: 16px;
+  font-size: var(--font-sm);
   color: #888;
 }
 
 .power-score-value {
-  font-size: 18px;
+  font-size: var(--font-lg);
   color: var(--gold-accent);
   text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
 }
@@ -1361,7 +1654,7 @@
 }
 
 .card-actions .jade-button {
-  font-size: 14px;
+  font-size: var(--font-xs);
   padding: 8px 15px;
 }
 
@@ -1380,7 +1673,7 @@
   border-radius: 4px;
   color: #ccc;
   font-family: var(--font-pixel);
-  font-size: 16px;
+  font-size: var(--font-sm);
   padding: 8px 12px;
   cursor: pointer;
 }
@@ -1419,22 +1712,22 @@
 }
 
 .entry-rank {
-  font-size: 14px;
+  font-size: var(--font-md);
   min-width: 30px;
 }
 
 .entry-emoji {
-  font-size: 20px;
+  font-size: var(--font-md);
 }
 
 .entry-name {
   flex: 1;
-  font-size: 18px;
+  font-size: var(--font-md);
   color: var(--jade-light);
 }
 
 .entry-value {
-  font-size: 11px;
+  font-size: var(--font-md);
   color: var(--gold-accent);
 }
 
@@ -1453,7 +1746,7 @@
   border-radius: 4px;
   color: #aaa;
   font-family: monospace;
-  font-size: 16px;
+  font-size: var(--font-md);
   padding: 8px;
   resize: none;
   margin-top: 10px;
@@ -1473,7 +1766,7 @@
 }
 
 .save-sharing-section h4 {
-  font-size: 18px;
+  font-size: var(--font-md);
   color: var(--jade);
   margin-bottom: 10px;
 }
@@ -1492,7 +1785,7 @@
   border-radius: 4px;
   color: #aaa;
   font-family: monospace;
-  font-size: 16px;
+  font-size: var(--font-md);
   padding: 8px;
   resize: none;
 }
@@ -1512,13 +1805,13 @@
 }
 
 .import-preview-content h4 {
-  font-size: 11px;
+  font-size: var(--font-md);
   color: var(--jade-light);
   margin-bottom: 8px;
 }
 
 .import-preview-content p {
-  font-size: 16px;
+  font-size: var(--font-sm);
   color: #aaa;
   margin-bottom: 5px;
 }
@@ -1544,7 +1837,7 @@
 
 .error-message {
   color: #ff6b6b;
-  font-size: 18px;
+  font-size: var(--font-md);
   padding: 10px;
   background: rgba(255, 0, 0, 0.1);
   border-radius: 4px;
@@ -1561,7 +1854,7 @@
   padding: 12px 25px;
   border-radius: 8px;
   font-family: var(--font-pixel);
-  font-size: 18px;
+  font-size: var(--font-md);
   z-index: 3000;
   opacity: 0;
   transition: all 0.3s ease;
@@ -1580,7 +1873,7 @@
   color: var(--jade);
   padding: 8px 12px;
   font-family: var(--font-pixel);
-  font-size: 14px;
+  font-size: var(--font-xs);
   cursor: pointer;
   border-radius: 4px;
   transition: all 0.2s ease;
@@ -1628,10 +1921,10 @@
 }
 
 .badge-emoji {
-  font-size: 16px;
+  font-size: var(--font-sm);
 }
 
 .badge-name {
-  font-size: 12px;
+  font-size: var(--font-xs);
   color: #888;
 }

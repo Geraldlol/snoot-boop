@@ -402,7 +402,7 @@ class DramaSystem {
     }
 
     if (window.gameState) {
-      window.gameState.boopPoints -= resolveCost;
+      window.gameState.boopPoints = Math.max(0, window.gameState.boopPoints - resolveCost);
     }
 
     // Clear negative events

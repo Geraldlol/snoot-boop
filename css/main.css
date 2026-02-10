@@ -3,6 +3,9 @@
    Main Stylesheet
    =================================== */
 
+/* --- Font Imports --- */
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap');
+
 /* --- CSS Variables (Wuxia Color Palette) --- */
 :root {
   /* Base colors */
@@ -38,6 +41,19 @@
   /* Fonts */
   --font-pixel: 'Press Start 2P', monospace;
   --font-main: 'VT323', monospace;
+
+  /* Font Sizes - Easy to adjust! */
+  --font-xs: 16px;    /* Tiny labels, hints */
+  --font-sm: 16px;    /* Small text, secondary info */
+  --font-md: 20px;    /* Body text, default */
+  --font-lg: 24px;    /* Larger text, emphasis */
+  --font-xl: 28px;    /* Headers, titles */
+  --font-xxl: 36px;   /* Big headers */
+
+  /* Animation speeds (also in base.css — repeated here for reference) */
+  --anim-fast: 0.1s;
+  --anim-normal: 0.2s;
+  --anim-slow: 0.4s;
 }
 
 /* --- Reset & Base --- */
@@ -49,7 +65,7 @@
 
 body {
   font-family: var(--font-main);
-  font-size: 20px;
+  font-size: var(--font-md);
   background: linear-gradient(135deg, var(--bg-dark) 0%, var(--bg-light) 100%);
   color: var(--text-light);
   min-height: 100vh;
@@ -73,21 +89,7 @@ body {
   display: block;
 }
 
-/* --- Scroll Panel (Wuxia UI) --- */
-.scroll-panel {
-  background: linear-gradient(to bottom,
-    var(--bg-parchment) 0%,
-    var(--bg-parchment-dark) 50%,
-    var(--bg-parchment) 100%
-  );
-  border: 4px solid var(--scott-brown);
-  border-radius: 4px;
-  box-shadow:
-    inset 0 0 20px rgba(0,0,0,0.1),
-    4px 4px 0 rgba(0,0,0,0.3);
-  padding: 20px;
-  color: var(--text-dark);
-}
+/* .scroll-panel — defined in components.css (canonical source) */
 
 /* --- Title Panel --- */
 .title-panel {
@@ -96,7 +98,7 @@ body {
 }
 
 .game-title {
-  font-size: 28px;
+  font-size: var(--font-xl);
   color: var(--red-accent);
   text-shadow:
     2px 2px 0 #8B0000,
@@ -105,13 +107,13 @@ body {
 }
 
 .game-subtitle {
-  font-size: 12px;
+  font-size: var(--font-xs);
   color: var(--scott-brown);
 }
 
 .choose-text {
   text-align: center;
-  font-size: 14px;
+  font-size: var(--font-xs);
   margin-bottom: 30px;
   color: var(--gold-accent);
   text-shadow: 1px 1px 2px #000;
@@ -179,13 +181,13 @@ body {
 }
 
 .master-card h3 {
-  font-size: 18px;
+  font-size: var(--font-sm);
   margin-bottom: 5px;
   color: var(--text-light);
 }
 
 .master-card .title {
-  font-size: 14px;
+  font-size: var(--font-xs);
   color: var(--master-color, #aaa);
   text-transform: uppercase;
 }
@@ -229,23 +231,23 @@ body {
 }
 
 .preview-info h2 {
-  font-size: 16px;
+  font-size: var(--font-lg);
   margin-bottom: 8px;
 }
 
 .preview-title {
-  font-size: 18px;
+  font-size: var(--font-md);
   color: var(--jade-dark);
   margin-bottom: 4px;
 }
 
 .preview-role {
-  font-size: 16px;
-  color: #666;
+  font-size: var(--font-sm);
+  color: #8a7a6a;
 }
 
 .preview-description {
-  font-size: 18px;
+  font-size: var(--font-md);
   line-height: 1.8;
   margin-bottom: 20px;
   font-style: italic;
@@ -259,48 +261,25 @@ body {
 }
 
 .passive-label {
-  font-size: 16px;
-  color: #666;
+  font-size: var(--font-sm);
+  color: #8a7a6a;
   display: block;
   margin-bottom: 5px;
 }
 
 .passive-name {
-  font-size: 11px;
+  font-size: var(--font-md);
   color: var(--jade-dark);
   display: block;
   margin-bottom: 8px;
 }
 
 .passive-desc {
-  font-size: 18px;
+  font-size: var(--font-md);
   line-height: 1.6;
 }
 
-/* --- Jade Button --- */
-.jade-button {
-  background: linear-gradient(135deg, var(--jade-light), var(--jade-dark));
-  border: 3px solid var(--jade-dark);
-  border-radius: 4px;
-  color: #fff;
-  text-shadow: 1px 1px 0 #000;
-  font-family: var(--font-pixel);
-  font-size: 12px;
-  padding: 15px 30px;
-  cursor: pointer;
-  transition: all 0.1s;
-  display: block;
-  width: 100%;
-}
-
-.jade-button:hover {
-  background: linear-gradient(135deg, var(--jade), var(--jade-light));
-  box-shadow: 0 0 15px var(--jade);
-}
-
-.jade-button:active {
-  transform: scale(0.95);
-}
+/* .jade-button — defined in components.css (canonical source) */
 
 /* ===================================
    MAIN GAME SCREEN
@@ -328,13 +307,13 @@ body {
 }
 
 .resource-label {
-  font-size: 16px;
+  font-size: var(--font-sm);
   color: var(--gold-accent);
   margin-bottom: 4px;
 }
 
 .resource-value {
-  font-size: 14px;
+  font-size: var(--font-md);
 }
 
 .resource-expander {
@@ -346,7 +325,7 @@ body {
   border-radius: 50%;
   width: 28px;
   height: 28px;
-  font-size: 18px;
+  font-size: var(--font-md);
   color: var(--jade-light);
   cursor: pointer;
   transition: all 0.2s ease;
@@ -367,7 +346,7 @@ body {
   background: var(--jade-dark);
   padding: 8px 15px;
   border-radius: 4px;
-  font-size: 18px;
+  font-size: var(--font-md);
 }
 
 /* --- Boop Area --- */
@@ -422,7 +401,7 @@ body {
     0 6px 0 #5c0a0a,
     0 0 25px rgba(233, 69, 96, 0.5);
   font-family: var(--font-pixel);
-  font-size: 11px;
+  font-size: var(--font-sm);
   color: white;
   text-shadow: 2px 2px 0 #000;
   cursor: pointer;
@@ -456,7 +435,7 @@ body {
 
 .floating-text {
   position: absolute;
-  font-size: 14px;
+  font-size: var(--font-md);
   color: var(--qi-blue);
   text-shadow: 0 0 10px var(--qi-blue);
   animation: float-up 1s ease-out forwards;
@@ -464,7 +443,7 @@ body {
 }
 
 .floating-text.critical {
-  font-size: 20px;
+  font-size: var(--font-xl);
   color: var(--critical-gold);
   text-shadow: 0 0 20px var(--gold-accent);
 }
@@ -488,7 +467,7 @@ body {
 }
 
 .master-quote {
-  font-size: 18px;
+  font-size: var(--font-sm);
   font-style: italic;
   color: var(--gold-accent);
   text-shadow: 1px 1px 2px #000;
@@ -540,7 +519,7 @@ body {
   background: var(--red-accent);
   padding: 6px 12px;
   border-radius: 4px;
-  font-size: 18px;
+  font-size: var(--font-md);
   animation: pulse 0.5s ease-in-out infinite;
 }
 
@@ -554,7 +533,7 @@ body {
 }
 
 .resource-rate {
-  font-size: 16px;
+  font-size: var(--font-sm);
   color: var(--jade);
   display: block;
   margin-top: 2px;
@@ -582,11 +561,11 @@ body {
 }
 
 .panel-icon {
-  font-size: 20px;
+  font-size: var(--font-md);
 }
 
 .panel-title {
-  font-size: 18px;
+  font-size: var(--font-md);
   text-transform: uppercase;
   color: var(--gold-accent);
 }
@@ -619,12 +598,12 @@ body {
 }
 
 .waifu-info h3 {
-  font-size: 18px;
+  font-size: var(--font-md);
   margin-bottom: 5px;
 }
 
 .waifu-title {
-  font-size: 14px;
+  font-size: var(--font-sm);
   color: var(--yuelin-pink);
   margin-bottom: 10px;
 }
@@ -644,7 +623,7 @@ body {
 }
 
 .bond-label {
-  font-size: 14px;
+  font-size: var(--font-sm);
   color: #aaa;
 }
 
@@ -652,7 +631,7 @@ body {
   background: rgba(255, 255, 255, 0.05);
   border-radius: 8px;
   padding: 12px;
-  font-size: 16px;
+  font-size: var(--font-md);
   line-height: 1.6;
   font-style: italic;
   text-align: center;
@@ -665,7 +644,7 @@ body {
   padding: 8px;
   border-radius: 4px;
   text-align: center;
-  font-size: 18px;
+  font-size: var(--font-md);
 }
 
 /* ===================================
@@ -683,13 +662,13 @@ body {
 }
 
 .active-cat-name {
-  font-size: 18px;
+  font-size: var(--font-md);
   color: var(--gold-accent);
   margin-top: 10px;
 }
 
 .boop-power-display {
-  font-size: 18px;
+  font-size: var(--font-md);
   color: var(--jade);
   margin-top: 10px;
 }
@@ -711,7 +690,7 @@ body {
   border-radius: 4px;
   padding: 8px 5px;
   font-family: var(--font-pixel);
-  font-size: 14px;
+  font-size: var(--font-xs);
   color: #888;
   cursor: pointer;
   transition: all 0.2s;
@@ -772,14 +751,14 @@ body {
 
 .recruit-text {
   font-family: var(--font-pixel);
-  font-size: 18px;
+  font-size: var(--font-md);
   color: white;
   text-shadow: 1px 1px 0 #000;
 }
 
 .recruit-cost {
   font-family: var(--font-pixel);
-  font-size: 16px;
+  font-size: var(--font-sm);
   color: var(--gold-accent);
 }
 
@@ -792,7 +771,7 @@ body {
 }
 
 .empty-message {
-  font-size: 16px;
+  font-size: var(--font-sm);
   color: #666;
   text-align: center;
   padding: 20px;
@@ -821,7 +800,7 @@ body {
 }
 
 .cat-emoji {
-  font-size: 28px;
+  font-size: var(--font-xl);
 }
 
 .cat-info {
@@ -830,7 +809,7 @@ body {
 }
 
 .cat-name {
-  font-size: 16px;
+  font-size: var(--font-sm);
   margin-bottom: 3px;
   white-space: nowrap;
   overflow: hidden;
@@ -838,13 +817,13 @@ body {
 }
 
 .cat-realm {
-  font-size: 12px;
+  font-size: var(--font-xs);
   color: var(--realm-color, #888);
   text-transform: uppercase;
 }
 
 .cat-pp {
-  font-size: 14px;
+  font-size: var(--font-xs);
   color: var(--jade);
 }
 
@@ -857,7 +836,7 @@ body {
 }
 
 .category-header {
-  font-size: 18px;
+  font-size: var(--font-sm);
   color: var(--gold-accent);
   margin-bottom: 10px;
   padding-bottom: 5px;
@@ -906,25 +885,25 @@ body {
 }
 
 .upgrade-name {
-  font-size: 16px;
+  font-size: var(--font-sm);
   display: flex;
   align-items: center;
   gap: 5px;
 }
 
 .upgrade-level {
-  font-size: 14px;
+  font-size: var(--font-xs);
   color: var(--jade);
 }
 
 .upgrade-effect {
-  font-size: 14px;
+  font-size: var(--font-xs);
   color: #aaa;
   margin-bottom: 5px;
 }
 
 .upgrade-cost {
-  font-size: 14px;
+  font-size: var(--font-xs);
   color: var(--gold-accent);
 }
 
@@ -960,7 +939,7 @@ body {
 }
 
 .modal-content h2 {
-  font-size: 14px;
+  font-size: var(--font-xs);
   margin-bottom: 20px;
 }
 
@@ -976,20 +955,20 @@ body {
 }
 
 .gain-label {
-  font-size: 16px;
+  font-size: var(--font-sm);
   color: #666;
   display: block;
   margin-bottom: 5px;
 }
 
 .gain-value {
-  font-size: 16px;
+  font-size: var(--font-sm);
   color: var(--jade);
 }
 
 .afk-events {
   margin: 20px 0;
-  font-size: 18px;
+  font-size: var(--font-sm);
   text-align: left;
 }
 
@@ -1029,7 +1008,7 @@ body {
 }
 
 .goose-alert h2 {
-  font-size: 24px;
+  font-size: var(--font-lg);
   color: var(--gold-accent);
   margin-bottom: 10px;
 }
@@ -1079,7 +1058,7 @@ body {
 }
 
 .goose-mood {
-  font-size: 18px;
+  font-size: var(--font-sm);
   margin-top: 15px;
   color: var(--gold-accent);
 }
@@ -1095,7 +1074,7 @@ body {
   background: var(--jade-dark);
   padding: 10px 20px;
   border-radius: 4px;
-  font-size: 18px;
+  font-size: var(--font-sm);
   opacity: 0;
   transition: opacity 0.3s;
   pointer-events: none;
@@ -1173,13 +1152,13 @@ body {
   }
 
   .mobile-nav-btn .nav-icon {
-    font-size: 20px;
+    font-size: var(--font-md);
     margin-bottom: 2px;
   }
 
   .mobile-nav-btn .nav-label {
     font-family: 'Press Start 2P', monospace;
-    font-size: 12px;
+    font-size: var(--font-xs);
   }
 
   /* Mobile Tab Modal */

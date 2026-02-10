@@ -77,8 +77,9 @@ function formatNumber(n, options = {}) {
   }
 
   // Calculate the tier (which suffix to use)
+  const logValue = n > 0 ? Math.log10(n) : 0;
   const tier = Math.min(
-    Math.floor(Math.log10(n) / 3),
+    Math.floor(logValue / 3),
     CULTIVATION_SUFFIXES.length - 1
   );
 

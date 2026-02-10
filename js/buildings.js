@@ -769,8 +769,11 @@ class BuildingSystem {
     const currentLevel = this.buildings[buildingId] || 0;
     const cost = check.cost;
 
-    // Deduct cost
-    gameState.boopPoints -= cost;
+    // Double-check affordability and deduct cost (prevent negative resources)
+    if (gameState.boopPoints < cost) {
+      return { success: false, reason: 'Not enough BP' };
+    }
+    gameState.boopPoints = Math.max(0, gameState.boopPoints - cost);
 
     // Increase level
     this.buildings[buildingId] = currentLevel + 1;

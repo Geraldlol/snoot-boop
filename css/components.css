@@ -32,7 +32,7 @@
     2px 2px 0 #1a5c3a,
     0 0 10px rgba(255, 255, 255, 0.3);
   font-family: var(--font-pixel);
-  font-size: 16px;
+  font-size: var(--font-sm);
   padding: 20px 40px;
   min-height: 56px;
   cursor: pointer;
@@ -78,8 +78,15 @@
 
 .jade-button.small {
   padding: 12px 20px;
-  font-size: 12px;
+  font-size: var(--font-xs);
   min-height: 44px;
+}
+
+.jade-button.tiny {
+  padding: 4px 10px;
+  font-size: 0.7rem;
+  min-height: 28px;
+  min-width: auto;
 }
 
 /* --- Tab Buttons --- */
@@ -95,7 +102,7 @@
   min-width: 80px;
   min-height: 50px;
   padding: 14px 12px;
-  font-size: 12px;
+  font-size: var(--font-xs);
   background: linear-gradient(180deg, rgba(255,255,255,0.1), rgba(0,0,0,0.2));
   border: 2px solid rgba(255, 255, 255, 0.2);
   border-radius: 6px 6px 0 0;
@@ -160,7 +167,7 @@
   color: #ff6464;
   padding: 12px 20px;
   font-family: var(--font-pixel);
-  font-size: 13px;
+  font-size: var(--font-xs);
   cursor: pointer;
   border-radius: 6px;
   transition: all 0.2s ease;
@@ -186,7 +193,7 @@
   width: 50px;
   height: 50px;
   border-radius: 50%;
-  font-size: 22px;
+  font-size: var(--font-lg);
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -207,7 +214,7 @@
   width: 100%;
   padding: 16px;
   font-family: var(--font-pixel);
-  font-size: 14px;
+  font-size: var(--font-xs);
   background: linear-gradient(180deg, #ff4444, #cc0000);
   border: 2px solid #990000;
   color: white;
@@ -231,7 +238,7 @@
   border-radius: 8px;
   padding: 16px 28px;
   font-family: var(--font-pixel);
-  font-size: 14px;
+  font-size: var(--font-xs);
   cursor: pointer;
   transition: all 0.2s ease;
   margin-top: 15px;
@@ -255,7 +262,7 @@
   padding: 14px 20px;
   color: white;
   font-family: var(--font-pixel);
-  font-size: 13px;
+  font-size: var(--font-xs);
   cursor: pointer;
   transition: all var(--anim-fast) ease;
   min-height: 48px;
@@ -339,14 +346,14 @@
 
 .recruit-text {
   font-family: var(--font-pixel);
-  font-size: 16px;
+  font-size: var(--font-sm);
   color: white;
   text-shadow: 1px 1px 0 #000;
 }
 
 .recruit-cost {
   font-family: var(--font-pixel);
-  font-size: 13px;
+  font-size: var(--font-xs);
   color: var(--gold-accent);
 }
 
@@ -354,7 +361,7 @@
   margin-top: 12px;
   text-align: center;
   font-family: var(--font-pixel);
-  font-size: 13px;
+  font-size: var(--font-xs);
   color: #aaa;
 }
 
@@ -410,7 +417,7 @@
   border-radius: 8px;
   border: 2px solid var(--jade-dark);
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5), 0 0 10px rgba(80, 200, 120, 0.2);
-  font-size: 13px;
+  font-size: var(--font-sm);
   font-family: var(--font-pixel);
   line-height: 1.6;
   white-space: nowrap;
@@ -649,7 +656,7 @@ button:not(:disabled):active,
   top: -25px;
   left: 50%;
   transform: translateX(-50%);
-  font-size: 14px;
+  font-size: var(--font-xs);
   font-weight: bold;
   pointer-events: none;
   animation: resource-change-float 1s ease-out forwards;

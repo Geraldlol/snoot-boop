@@ -31,13 +31,13 @@
 }
 
 .game-subtitle {
-  font-size: 18px;
+  font-size: var(--font-sm);
   color: var(--scott-brown);
 }
 
 .choose-text {
   text-align: center;
-  font-size: 20px;
+  font-size: var(--font-md);
   margin-bottom: 40px;
   color: var(--gold-accent);
   text-shadow: 1px 1px 2px #000;
@@ -131,13 +131,13 @@
 }
 
 .master-card h3 {
-  font-size: 10px;
+  font-size: var(--font-xs);
   margin-bottom: 5px;
   color: var(--text-light);
 }
 
 .master-card .title {
-  font-size: 7px;
+  font-size: var(--font-xs);
   color: var(--master-color, #aaa);
   text-transform: uppercase;
 }
@@ -192,23 +192,23 @@
 }
 
 .preview-info h2 {
-  font-size: 16px;
+  font-size: var(--font-sm);
   margin-bottom: 8px;
 }
 
 .preview-title {
-  font-size: 10px;
+  font-size: var(--font-xs);
   color: var(--jade-dark);
   margin-bottom: 4px;
 }
 
 .preview-role {
-  font-size: 8px;
-  color: #666;
+  font-size: var(--font-xs);
+  color: #8a7a6a;
 }
 
 .preview-description {
-  font-size: 9px;
+  font-size: var(--font-xs);
   line-height: 1.8;
   margin-bottom: 20px;
   font-style: italic;
@@ -222,21 +222,21 @@
 }
 
 .passive-label {
-  font-size: 8px;
-  color: #666;
+  font-size: var(--font-xs);
+  color: #8a7a6a;
   display: block;
   margin-bottom: 5px;
 }
 
 .passive-name {
-  font-size: 11px;
+  font-size: var(--font-xs);
   color: var(--jade-dark);
   display: block;
   margin-bottom: 8px;
 }
 
 .passive-desc {
-  font-size: 9px;
+  font-size: var(--font-xs);
   line-height: 1.6;
 }
 
@@ -259,7 +259,7 @@
     inset 0 -10px 30px rgba(0, 0, 0, 0.3),
     inset 0 10px 30px rgba(255, 255, 255, 0.2);
   font-family: var(--font-pixel);
-  font-size: 16px;
+  font-size: var(--font-sm);
   color: white;
   text-shadow:
     2px 2px 0 #8B0000,

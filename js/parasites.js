@@ -329,7 +329,7 @@ class ParasiteSystem {
    * Get effective production (after parasite drain)
    */
   getEffectiveProduction(baseProduction, resourceType = 'bp') {
-    const drainRate = this.getTotalDrainRate(resourceType);
+    const drainRate = Math.min(this.getTotalDrainRate(resourceType), 1);
     return baseProduction * (1 - drainRate);
   }
 

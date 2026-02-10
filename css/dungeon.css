@@ -32,7 +32,7 @@
 
 .dungeon-card .jade-button {
   padding: 4px 8px;
-  font-size: 14px;
+  font-size: var(--font-xs);
   min-height: auto;
   white-space: nowrap;
   flex-shrink: 0;
@@ -55,8 +55,24 @@
   transform: none;
 }
 
+.dungeon-card.selected {
+  border-color: var(--jade);
+  background: linear-gradient(135deg, rgba(80, 200, 120, 0.2), rgba(30, 50, 50, 0.6));
+  box-shadow: 0 0 10px rgba(80, 200, 120, 0.3), inset 0 0 20px rgba(80, 200, 120, 0.1);
+}
+
+.dungeon-card.selected .dungeon-name {
+  color: #fff;
+  text-shadow: 0 0 5px var(--jade);
+}
+
+.dungeon-card.selected .jade-button {
+  background: var(--jade);
+  border-color: var(--jade-light);
+}
+
 .dungeon-icon {
-  font-size: 28px;
+  font-size: var(--font-xl);
   min-width: 36px;
   text-align: center;
 }
@@ -68,21 +84,21 @@
 
 .dungeon-name {
   font-family: var(--font-pixel);
-  font-size: 18px;
+  font-size: var(--font-sm);
   color: var(--jade-light);
   margin: 0 0 4px 0;
 }
 
 .dungeon-desc {
   font-family: var(--font-pixel);
-  font-size: 14px;
+  font-size: var(--font-xs);
   color: rgba(255, 255, 255, 0.6);
   margin: 0 0 4px 0;
 }
 
 .dungeon-progress {
   font-family: var(--font-pixel);
-  font-size: 16px;
+  font-size: var(--font-sm);
   color: var(--gold-accent);
 }
 
@@ -107,18 +123,18 @@
 }
 
 .dungeon-stat-item .stat-icon {
-  font-size: 16px;
+  font-size: var(--font-sm);
 }
 
 .dungeon-stat-item .stat-value {
   font-family: var(--font-pixel);
-  font-size: 12px;
+  font-size: var(--font-xs);
   color: var(--gold-accent);
 }
 
 .dungeon-stat-item .stat-label {
   font-family: var(--font-pixel);
-  font-size: 14px;
+  font-size: var(--font-xs);
   color: rgba(255, 255, 255, 0.6);
 }
 
@@ -142,13 +158,13 @@
 
 #active-dungeon-name {
   font-family: var(--font-pixel);
-  font-size: 18px;
+  font-size: var(--font-sm);
   color: var(--jade-light);
 }
 
 #active-dungeon-floor {
   font-family: var(--font-pixel);
-  font-size: 18px;
+  font-size: var(--font-sm);
   color: var(--gold-accent);
 }
 
@@ -166,14 +182,14 @@
 }
 
 .enemy-emoji {
-  font-size: 32px;
+  font-size: var(--font-xxl);
   display: block;
   margin-bottom: 4px;
 }
 
 .enemy-name {
   font-family: var(--font-pixel);
-  font-size: 18px;
+  font-size: var(--font-sm);
   color: var(--red-accent);
 }
 
@@ -203,7 +219,7 @@
 
 #player-hp-text {
   font-family: var(--font-pixel);
-  font-size: 16px;
+  font-size: var(--font-sm);
   color: var(--jade-light);
 }
 
@@ -211,7 +227,7 @@
   max-height: 60px;
   overflow-y: auto;
   font-family: var(--font-pixel);
-  font-size: 14px;
+  font-size: var(--font-xs);
   color: rgba(255, 255, 255, 0.7);
   padding: 5px;
   background: rgba(0, 0, 0, 0.3);
@@ -229,7 +245,7 @@
 
 .qi-label {
   font-family: var(--font-pixel);
-  font-size: 16px;
+  font-size: var(--font-sm);
   color: var(--qi-blue);
 }
 
@@ -250,7 +266,7 @@
 
 .qi-amount {
   font-family: var(--font-pixel);
-  font-size: 16px;
+  font-size: var(--font-sm);
   color: var(--qi-blue);
   min-width: 35px;
 }
@@ -265,7 +281,7 @@
 
 .cmd-btn {
   font-family: var(--font-pixel);
-  font-size: 14px;
+  font-size: var(--font-xs);
   padding: 6px 8px;
   background: rgba(80, 200, 120, 0.2);
   border: 2px solid var(--jade);
@@ -299,7 +315,7 @@
 
 .auto-clear-info {
   display: block;
-  font-size: 14px;
+  font-size: var(--font-xs);
   opacity: 0.7;
 }
 
@@ -387,7 +403,7 @@
 
 .floor-number {
   font-family: var(--font-pixel);
-  font-size: 24px;
+  font-size: var(--font-lg);
   color: var(--gold-accent);
   text-shadow:
     0 0 10px var(--gold-accent),
@@ -396,7 +412,7 @@
 
 .floor-label {
   font-family: var(--font-pixel);
-  font-size: 18px;
+  font-size: var(--font-sm);
   color: var(--text-light);
   opacity: 0.8;
 }
@@ -405,7 +421,7 @@
   padding: 4px 12px;
   border-radius: 4px;
   font-family: var(--font-pixel);
-  font-size: 16px;
+  font-size: var(--font-sm);
   text-transform: uppercase;
 }
 
@@ -501,7 +517,7 @@
 
 .enemy-name {
   font-family: var(--font-pixel);
-  font-size: 16px;
+  font-size: var(--font-sm);
   color: var(--text-light);
   margin-top: 8px;
   text-align: center;
@@ -548,7 +564,7 @@
 
 .party-title {
   font-family: var(--font-pixel);
-  font-size: 18px;
+  font-size: var(--font-sm);
   color: var(--jade);
   text-align: center;
   margin-bottom: 10px;
@@ -592,7 +608,7 @@
 
 .party-cat-name {
   font-family: var(--font-pixel);
-  font-size: 12px;
+  font-size: var(--font-xs);
   color: var(--text-light);
   margin-top: 4px;
   text-align: center;
@@ -635,7 +651,7 @@
 
 .party-reserve-label {
   font-family: var(--font-pixel);
-  font-size: 12px;
+  font-size: var(--font-xs);
   color: #888;
   text-align: center;
   margin-bottom: 5px;
@@ -655,7 +671,7 @@
 
 .relic-title {
   font-family: var(--font-pixel);
-  font-size: 18px;
+  font-size: var(--font-sm);
   color: var(--gold-accent);
   text-align: center;
   margin-bottom: 10px;
@@ -743,7 +759,7 @@
 
 .qi-meter-title {
   font-family: var(--font-pixel);
-  font-size: 18px;
+  font-size: var(--font-sm);
   color: var(--qi-blue);
   text-align: center;
   margin-bottom: 8px;
@@ -798,7 +814,7 @@
 
 .qi-meter-value {
   font-family: var(--font-pixel);
-  font-size: 16px;
+  font-size: var(--font-sm);
   color: var(--text-light);
   text-align: center;
   margin-top: 5px;
@@ -849,20 +865,20 @@
 }
 
 .boop-command-icon {
-  font-size: 24px;
+  font-size: var(--font-lg);
   margin-bottom: 5px;
 }
 
 .boop-command-name {
   font-family: var(--font-pixel);
-  font-size: 16px;
+  font-size: var(--font-sm);
   color: var(--text-light);
   text-align: center;
 }
 
 .boop-command-cost {
   font-family: var(--font-pixel);
-  font-size: 12px;
+  font-size: var(--font-xs);
   color: var(--qi-blue);
   margin-top: 4px;
 }
@@ -935,7 +951,7 @@
 
 .loot-popup-header {
   font-family: var(--font-pixel);
-  font-size: 16px;
+  font-size: var(--font-sm);
   color: var(--gold-accent);
   text-align: center;
   margin-bottom: 20px;
@@ -991,20 +1007,20 @@
 
 .loot-item-name {
   font-family: var(--font-pixel);
-  font-size: 18px;
+  font-size: var(--font-sm);
   color: var(--text-light);
 }
 
 .loot-item-desc {
   font-family: var(--font-pixel);
-  font-size: 14px;
+  font-size: var(--font-xs);
   color: #888;
   margin-top: 3px;
 }
 
 .loot-item-amount {
   font-family: var(--font-pixel);
-  font-size: 12px;
+  font-size: var(--font-xs);
   color: var(--gold-accent);
 }
 
@@ -1043,7 +1059,7 @@
 
 .boss-name {
   font-family: var(--font-pixel);
-  font-size: 14px;
+  font-size: var(--font-xs);
   color: var(--rusty-crimson);
   text-align: center;
   margin-bottom: 10px;
@@ -1105,7 +1121,7 @@
   left: 50%;
   transform: translate(-50%, -50%);
   font-family: var(--font-pixel);
-  font-size: 18px;
+  font-size: var(--font-sm);
   color: white;
   text-shadow: 1px 1px 2px #000;
 }
@@ -1478,4 +1494,38 @@
   border-radius: 50%;
   animation: combat-impact 0.4s ease-out forwards;
   pointer-events: none;
+}
+
+/* ===================================
+   DUNGEON RESPONSIVE - Mobile
+   =================================== */
+
+@media (max-width: 768px) {
+  .dungeon-container {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto 1fr auto;
+    height: auto;
+    max-height: none;
+    overflow-y: auto;
+  }
+
+  .dungeon-header {
+    grid-column: 1;
+  }
+
+  .dungeon-sidebar-left,
+  .dungeon-sidebar-right {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .dungeon-main {
+    min-height: 300px;
+  }
+
+  .dungeon-footer {
+    grid-column: 1;
+  }
 }

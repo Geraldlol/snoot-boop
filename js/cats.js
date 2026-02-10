@@ -2072,13 +2072,13 @@ function loadCatDataFromJSON(data) {
 
 // Integration with dataLoader when available
 if (window.dataLoader) {
-  dataLoader.onReady('cats', (data) => {
+  window.dataLoader.onReady('cats', (data) => {
     if (data) {
       loadCatDataFromJSON(data);
     }
   });
   // Also try to get already-loaded data
-  const existingData = dataLoader.get('cats');
+  const existingData = window.dataLoader.get('cats');
   if (existingData) {
     loadCatDataFromJSON(existingData);
   }

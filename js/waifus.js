@@ -947,12 +947,9 @@ class WaifuSystem {
    */
   unlockAll() {
     for (const waifuId of Object.keys(WAIFU_TEMPLATES)) {
-      if (!this.unlockedWaifus.includes(waifuId)) {
-        this.unlockedWaifus.push(waifuId);
-        this.waifuStates[waifuId] = {
-          bondLevel: 0,
-          unlocked: true
-        };
+      // Use .some() to check object array, and use unlockWaifu for consistency
+      if (!this.unlockedWaifus.some(w => w.id === waifuId)) {
+        this.unlockWaifu(waifuId);
       }
     }
   }
@@ -1182,9 +1179,9 @@ class WaifuSystem {
     // Check for cat happiness bonus (cat watching)
     if (activity.catHappinessBonus) {
       rewards.catHappinessBonus = activity.catHappinessBonus;
-      // Apply to cats if system exists
-      if (window.catSystem && window.catSystem.addHappinessToAll) {
-        window.catSystem.addHappinessToAll(activity.catHappinessBonus);
+      // Apply to cats if system exists (use boostHappiness method)
+      if (window.catSystem && window.catSystem.boostHappiness) {
+        window.catSystem.boostHappiness(activity.catHappinessBonus);
       }
     }
 

@@ -1506,8 +1506,11 @@ class CelestialTournamentSystem {
    * Get team HP percentage
    */
   getTeamHpPercent(team) {
-    const totalMax = team.reduce((sum, c) => sum + c.maxHp, 0);
-    const totalCurrent = team.reduce((sum, c) => sum + Math.max(0, c.currentHp), 0);
+    // Guard against empty team or zero max HP (MP-5 fix)
+    if (!team || team.length === 0) return 0;
+    const totalMax = team.reduce((sum, c) => sum + (c.maxHp || 0), 0);
+    if (totalMax === 0) return 0;
+    const totalCurrent = team.reduce((sum, c) => sum + Math.max(0, c.currentHp || 0), 0);
     return totalCurrent / totalMax;
   }
 

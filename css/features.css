@@ -42,12 +42,12 @@
 }
 
 .waifu-info h3 {
-  font-size: 18px;
+  font-size: var(--font-sm);
   margin-bottom: 5px;
 }
 
 .waifu-title {
-  font-size: 14px;
+  font-size: var(--font-xs);
   color: var(--yuelin-pink);
   margin-bottom: 10px;
 }
@@ -83,7 +83,7 @@
 }
 
 .bond-label {
-  font-size: 14px;
+  font-size: var(--font-xs);
   color: #aaa;
 }
 
@@ -92,7 +92,7 @@
   border: 2px solid rgba(255, 182, 193, 0.3);
   border-radius: 12px;
   padding: 15px;
-  font-size: 16px;
+  font-size: var(--font-sm);
   line-height: 1.6;
   font-style: italic;
   text-align: center;
@@ -119,7 +119,7 @@
   padding: 8px;
   border-radius: 4px;
   text-align: center;
-  font-size: 18px;
+  font-size: var(--font-sm);
 }
 
 /* Make waifu panel clickable */
@@ -153,7 +153,7 @@
   flex: 1;
   padding: 10px;
   font-family: var(--font-pixel);
-  font-size: 16px;
+  font-size: var(--font-sm);
   background: rgba(0, 0, 0, 0.3);
   border: 2px solid rgba(255, 255, 255, 0.2);
   border-radius: 4px;
@@ -242,13 +242,13 @@
 
 .waifu-card-name {
   font-family: var(--font-pixel);
-  font-size: 16px;
+  font-size: var(--font-sm);
   color: var(--text-light);
   margin-bottom: 4px;
 }
 
 .waifu-card-title {
-  font-size: 12px;
+  font-size: var(--font-xs);
   color: var(--waifu-color, #aaa);
   margin-bottom: 8px;
 }
@@ -258,7 +258,7 @@
 }
 
 .waifu-card-unlock {
-  font-size: 12px;
+  font-size: var(--font-xs);
   color: #888;
   margin-top: 8px;
 }
@@ -266,7 +266,7 @@
 /* Gift Shop Grid */
 .gift-shop-intro,
 .gift-inventory-intro {
-  font-size: 18px;
+  font-size: var(--font-sm);
   color: #aaa;
   text-align: center;
   margin-bottom: 15px;
@@ -312,18 +312,18 @@
 
 .gift-name {
   font-family: var(--font-pixel);
-  font-size: 14px;
+  font-size: var(--font-xs);
   color: var(--text-light);
   margin-bottom: 3px;
 }
 
 .gift-cost {
-  font-size: 14px;
+  font-size: var(--font-xs);
   color: var(--gold-accent);
 }
 
 .gift-count {
-  font-size: 16px;
+  font-size: var(--font-sm);
   color: var(--jade);
   font-weight: bold;
 }
@@ -365,12 +365,12 @@
 }
 
 .waifu-detail-info h3 {
-  font-size: 12px;
+  font-size: var(--font-xs);
   margin-bottom: 5px;
 }
 
 .waifu-detail-title {
-  font-size: 18px;
+  font-size: var(--font-sm);
   color: var(--yuelin-pink);
   margin-bottom: 10px;
 }
@@ -384,7 +384,7 @@
   border-left: 3px solid var(--yuelin-pink);
   padding: 10px 15px;
   font-style: italic;
-  font-size: 18px;
+  font-size: var(--font-sm);
   margin-bottom: 10px;
 }
 
@@ -392,7 +392,7 @@
   background: var(--jade-dark);
   padding: 8px 12px;
   border-radius: 4px;
-  font-size: 18px;
+  font-size: var(--font-sm);
   margin-bottom: 10px;
   text-align: center;
 }
@@ -421,7 +421,7 @@
 
 .activity-waifu-select label {
   font-family: var(--font-pixel);
-  font-size: 18px;
+  font-size: var(--font-sm);
   color: #aaa;
 }
 
@@ -432,7 +432,7 @@
   border-radius: 4px;
   padding: 8px 12px;
   font-family: var(--font-pixel);
-  font-size: 16px;
+  font-size: var(--font-sm);
   color: var(--text-light);
   cursor: pointer;
 }
@@ -499,13 +499,13 @@
 
 .activity-card-name {
   font-family: var(--font-pixel);
-  font-size: 16px;
+  font-size: var(--font-sm);
   color: var(--text-light);
   margin-bottom: 4px;
 }
 
 .activity-card-desc {
-  font-size: 14px;
+  font-size: var(--font-xs);
   color: #888;
   margin-bottom: 8px;
   line-height: 1.4;
@@ -514,7 +514,7 @@
 .activity-card-stats {
   display: flex;
   justify-content: space-between;
-  font-size: 14px;
+  font-size: var(--font-xs);
   color: #aaa;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
   padding-top: 8px;
@@ -535,7 +535,7 @@
 }
 
 .activity-card-requirement {
-  font-size: 12px;
+  font-size: var(--font-xs);
   color: #ff6b6b;
   margin-top: 6px;
 }
@@ -577,13 +577,13 @@
 
 .activity-info h4 {
   font-family: var(--font-pixel);
-  font-size: 12px;
+  font-size: var(--font-xs);
   color: var(--yuelin-pink);
   margin-bottom: 4px;
 }
 
 .activity-info p {
-  font-size: 18px;
+  font-size: var(--font-sm);
   color: #aaa;
 }
 
@@ -634,13 +634,13 @@
 
 .activity-time {
   font-family: var(--font-pixel);
-  font-size: 14px;
+  font-size: var(--font-xs);
   color: var(--jade);
   margin-bottom: 15px;
 }
 
 #activity-time-remaining {
-  font-size: 18px;
+  font-size: var(--font-sm);
   color: var(--gold-accent);
 }
 
@@ -649,7 +649,7 @@
   border-left: 3px solid var(--yuelin-pink);
   padding: 10px 15px;
   font-style: italic;
-  font-size: 18px;
+  font-size: var(--font-sm);
   margin-bottom: 15px;
   text-align: left;
   color: #ccc;
@@ -679,7 +679,7 @@
 
 .activity-history-header {
   font-family: var(--font-pixel);
-  font-size: 18px;
+  font-size: var(--font-sm);
   color: var(--yuelin-pink);
   margin-bottom: 10px;
 }
@@ -697,11 +697,11 @@
   background: rgba(0, 0, 0, 0.2);
   border-radius: 4px;
   margin-bottom: 5px;
-  font-size: 16px;
+  font-size: var(--font-sm);
 }
 
 .activity-history-item .history-emoji {
-  font-size: 16px;
+  font-size: var(--font-sm);
 }
 
 .activity-history-item .history-text {
@@ -720,7 +720,7 @@
 
 .activity-history-item .history-time {
   color: #666;
-  font-size: 14px;
+  font-size: var(--font-xs);
 }
 
 /* Night Activity Indicator */
@@ -743,7 +743,7 @@
 }
 
 .empty-message {
-  font-size: 16px;
+  font-size: var(--font-sm);
   color: #666;
   text-align: center;
   padding: 20px;
@@ -805,7 +805,7 @@
   background: linear-gradient(135deg, var(--jade), var(--jade-dark));
   color: white;
   font-family: var(--font-pixel);
-  font-size: 14px;
+  font-size: var(--font-xs);
   padding: 2px 5px;
   border-radius: 8px;
   border: 2px solid var(--bg-dark);
@@ -827,7 +827,7 @@
 }
 
 .cat-stack .cat-name {
-  font-size: 12px;
+  font-size: var(--font-xs);
   margin-bottom: 2px;
   white-space: nowrap;
   overflow: hidden;
@@ -837,14 +837,14 @@
 }
 
 .cat-stack .cat-realm {
-  font-size: 5px;
+  font-size: var(--font-xs);
   color: var(--realm-color, #888);
   text-transform: uppercase;
   margin-bottom: 2px;
 }
 
 .cat-stack .cat-pp {
-  font-size: 12px;
+  font-size: var(--font-xs);
   color: var(--jade);
   font-weight: bold;
 }
@@ -972,7 +972,7 @@
 }
 
 .cat-select-item .cat-power {
-  font-size: 14px;
+  font-size: var(--font-xs);
   color: var(--jade-light);
 }
 
@@ -985,7 +985,7 @@
 }
 
 .category-header {
-  font-size: 18px;
+  font-size: var(--font-sm);
   color: var(--gold-accent);
   margin-bottom: 10px;
   padding-bottom: 5px;
@@ -1023,20 +1023,20 @@
 
 .upgrade-card.locked .upgrade-requirement {
   color: #ff6b6b;
-  font-size: 14px;
+  font-size: var(--font-xs);
   margin: 4px 0;
   font-style: italic;
 }
 
 .upgrade-requirement {
   color: #888;
-  font-size: 14px;
+  font-size: var(--font-xs);
   margin: 4px 0;
 }
 
 .upgrade-current-effect {
   color: var(--jade);
-  font-size: 14px;
+  font-size: var(--font-xs);
   margin: 4px 0;
   font-weight: bold;
 }
@@ -1105,25 +1105,25 @@
 }
 
 .upgrade-name {
-  font-size: 16px;
+  font-size: var(--font-sm);
   display: flex;
   align-items: center;
   gap: 5px;
 }
 
 .upgrade-level {
-  font-size: 14px;
+  font-size: var(--font-xs);
   color: var(--jade);
 }
 
 .upgrade-effect {
-  font-size: 14px;
+  font-size: var(--font-xs);
   color: #aaa;
   margin-bottom: 5px;
 }
 
 .upgrade-cost {
-  font-size: 14px;
+  font-size: var(--font-xs);
   color: var(--gold-accent);
 }
 
@@ -1177,18 +1177,18 @@
 }
 
 .slot-name {
-  font-size: 14px;
+  font-size: var(--font-xs);
   color: #888;
 }
 
 .equipped-item {
-  font-size: 14px;
+  font-size: var(--font-xs);
   color: var(--jade-light);
   margin-top: 5px;
 }
 
 .inventory-header {
-  font-size: 18px;
+  font-size: var(--font-sm);
   color: var(--jade-light);
   margin-bottom: 10px;
 }
@@ -1256,13 +1256,13 @@
   border: 1px solid var(--jade);
   border-radius: 4px;
   padding: 3px 8px;
-  font-size: 12px;
+  font-size: var(--font-xs);
   color: var(--jade-light);
 }
 
 /* Equipped Item Display */
 .equipped-item {
-  font-size: 14px;
+  font-size: var(--font-xs);
   color: var(--jade-light);
   margin-top: 5px;
 }
@@ -1305,7 +1305,7 @@
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 4px;
   color: #fff;
-  font-size: 16px;
+  font-size: var(--font-sm);
   font-family: var(--font-pixel);
 }
 
@@ -1321,7 +1321,7 @@
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 4px;
   color: #fff;
-  font-size: 14px;
+  font-size: var(--font-xs);
   font-family: var(--font-pixel);
   cursor: pointer;
 }
@@ -1337,7 +1337,7 @@
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 3px;
   color: #888;
-  font-size: 18px;
+  font-size: var(--font-sm);
   cursor: pointer;
   transition: all 0.2s ease;
 }
@@ -1449,12 +1449,12 @@
 }
 
 .inv-item-icon {
-  font-size: 20px;
+  font-size: var(--font-md);
   filter: drop-shadow(0 2px 3px rgba(0,0,0,0.5));
 }
 
 .inv-item-name {
-  font-size: 18px;
+  font-size: var(--font-sm);
   font-weight: bold;
   flex: 1;
   white-space: nowrap;
@@ -1463,7 +1463,7 @@
 }
 
 .inv-item-level {
-  font-size: 18px;
+  font-size: var(--font-sm);
   font-weight: bold;
   color: var(--gold-accent);
   text-shadow: 0 0 5px rgba(255, 215, 0, 0.5);
@@ -1471,7 +1471,7 @@
 
 /* Item Stats */
 .inv-item-stats {
-  font-size: 14px;
+  font-size: var(--font-xs);
   color: #aaa;
   padding: 5px 0;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
@@ -1495,7 +1495,7 @@
 }
 
 .enchant-badge {
-  font-size: 12px;
+  font-size: var(--font-xs);
   padding: 2px 5px;
   border-radius: 3px;
   background: rgba(138, 92, 246, 0.3);
@@ -1530,7 +1530,7 @@
   border-radius: 4px;
   padding: 5px 8px;
   font-family: var(--font-pixel);
-  font-size: 14px;
+  font-size: var(--font-xs);
   color: #000;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -1556,7 +1556,7 @@
 }
 
 .grid-view .inv-item-stats {
-  font-size: 12px;
+  font-size: var(--font-xs);
 }
 
 .grid-view .inv-item-actions {
@@ -1633,7 +1633,7 @@
 .salvage-preview h6 {
   color: var(--gold-accent);
   margin-bottom: 10px;
-  font-size: 18px;
+  font-size: var(--font-sm);
 }
 
 .salvage-materials {
@@ -1650,7 +1650,7 @@
   background: rgba(255, 255, 255, 0.1);
   padding: 5px 10px;
   border-radius: 4px;
-  font-size: 16px;
+  font-size: var(--font-sm);
 }
 
 .salvage-actions {
@@ -1665,7 +1665,7 @@
   border: none;
   border-radius: 4px;
   font-family: var(--font-pixel);
-  font-size: 16px;
+  font-size: var(--font-sm);
   cursor: pointer;
 }
 
@@ -1743,24 +1743,24 @@
 }
 
 .destination-name {
-  font-size: 18px;
+  font-size: var(--font-sm);
   color: var(--jade-light);
 }
 
 .destination-difficulty {
   margin-left: auto;
-  font-size: 16px;
+  font-size: var(--font-sm);
   color: #888;
 }
 
 .destination-description {
-  font-size: 16px;
+  font-size: var(--font-sm);
   color: #aaa;
   margin-bottom: 8px;
 }
 
 .destination-rewards {
-  font-size: 14px;
+  font-size: var(--font-xs);
   color: var(--gold-accent);
 }
 
@@ -1784,12 +1784,12 @@
 }
 
 .expedition-item-name {
-  font-size: 18px;
+  font-size: var(--font-sm);
   color: var(--jade-light);
 }
 
 .expedition-item-time {
-  font-size: 16px;
+  font-size: var(--font-sm);
   color: var(--gold-accent);
 }
 
@@ -1807,7 +1807,7 @@
 }
 
 .expedition-cats {
-  font-size: 14px;
+  font-size: var(--font-xs);
   color: #888;
   margin-top: 5px;
 }
@@ -1836,12 +1836,12 @@
 }
 
 .prestige-info h4 {
-  font-size: 11px;
+  font-size: var(--font-xs);
   color: #C9B1FF;
 }
 
 .prestige-info .tier-name {
-  font-size: 18px;
+  font-size: var(--font-sm);
   color: #aaa;
 }
 
@@ -1864,7 +1864,7 @@
 }
 
 .prestige-progress-text {
-  font-size: 16px;
+  font-size: var(--font-sm);
   color: #888;
   display: flex;
   justify-content: space-between;
@@ -1879,12 +1879,12 @@
 }
 
 .prestige-multiplier .multiplier-value {
-  font-size: 24px;
+  font-size: var(--font-lg);
   color: var(--gold-accent);
 }
 
 .prestige-multiplier .multiplier-label {
-  font-size: 16px;
+  font-size: var(--font-sm);
   color: #888;
 }
 
@@ -1892,7 +1892,7 @@
   width: 100%;
   padding: 12px;
   font-family: var(--font-pixel);
-  font-size: 18px;
+  font-size: var(--font-sm);
   background: linear-gradient(135deg, #9B7FD9 0%, #7B5FC9 100%);
   color: white;
   border: none;
@@ -1916,7 +1916,7 @@
 }
 
 .prestige-perks h5 {
-  font-size: 18px;
+  font-size: var(--font-sm);
   color: #C9B1FF;
   margin-bottom: 10px;
 }
@@ -1929,7 +1929,7 @@
   background: rgba(0, 0, 0, 0.2);
   border-radius: 4px;
   margin-bottom: 5px;
-  font-size: 16px;
+  font-size: var(--font-sm);
 }
 
 .perk-item.locked {
@@ -1937,7 +1937,7 @@
 }
 
 .perk-icon {
-  font-size: 16px;
+  font-size: var(--font-sm);
 }
 
 .perk-name {
@@ -1946,7 +1946,7 @@
 
 .perk-desc {
   color: #888;
-  font-size: 14px;
+  font-size: var(--font-xs);
 }
 
 /* ===================================
@@ -1960,7 +1960,7 @@
 }
 
 .pagoda-subtitle {
-  font-size: 14px;
+  font-size: var(--font-xs);
   color: #888;
   margin-bottom: 15px;
 }
@@ -1979,19 +1979,19 @@
 }
 
 .pagoda-stat .stat-label {
-  font-size: 14px;
+  font-size: var(--font-xs);
   color: #888;
 }
 
 .pagoda-stat .stat-value {
-  font-size: 14px;
+  font-size: var(--font-xs);
   color: var(--jade-light);
 }
 
 .pagoda-start-btn {
   width: 100%;
   padding: 15px;
-  font-size: 18px;
+  font-size: var(--font-sm);
 }
 
 .pagoda-start-btn.hidden {
@@ -2001,7 +2001,7 @@
 .auto-clear-btn {
   width: 100%;
   padding: 12px;
-  font-size: 18px;
+  font-size: var(--font-sm);
   margin-top: 8px;
   background: linear-gradient(135deg, #ffd700, #ff8c00);
   border-color: #ff6600;
@@ -2021,7 +2021,7 @@
 }
 
 .auto-clear-info {
-  font-size: 14px;
+  font-size: var(--font-xs);
   color: rgba(0, 0, 0, 0.7);
   font-weight: normal;
 }
@@ -2066,7 +2066,7 @@
 }
 
 .enemy-name {
-  font-size: 18px;
+  font-size: var(--font-sm);
   color: var(--red-accent);
 }
 
@@ -2097,7 +2097,7 @@
 }
 
 #player-hp-text {
-  font-size: 16px;
+  font-size: var(--font-sm);
   color: var(--jade-light);
 }
 
@@ -2107,7 +2107,7 @@
   background: rgba(0, 0, 0, 0.2);
   border-radius: 4px;
   padding: 8px;
-  font-size: 14px;
+  font-size: var(--font-xs);
   margin-bottom: 10px;
 }
 
@@ -2161,7 +2161,7 @@
   padding: 8px 12px;
   background: rgba(80, 200, 120, 0.2);
   cursor: pointer;
-  font-size: 18px;
+  font-size: var(--font-sm);
 }
 
 .daily-header:hover {
@@ -2174,13 +2174,13 @@
 }
 
 .daily-content h4 {
-  font-size: 18px;
+  font-size: var(--font-sm);
   margin-bottom: 8px;
   color: var(--jade-light);
 }
 
 .daily-streak {
-  font-size: 14px;
+  font-size: var(--font-xs);
   color: var(--gold-accent);
   margin-bottom: 10px;
 }
@@ -2218,16 +2218,16 @@
   top: 50%;
   transform: translateY(-50%);
   color: var(--jade);
-  font-size: 16px;
+  font-size: var(--font-sm);
 }
 
 .daily-item-name {
-  font-size: 16px;
+  font-size: var(--font-sm);
   margin-bottom: 4px;
 }
 
 .daily-item-progress {
-  font-size: 14px;
+  font-size: var(--font-xs);
   color: #888;
 }
 
@@ -2274,12 +2274,12 @@
 
 .ally-name {
   font-family: var(--font-pixel);
-  font-size: 18px;
+  font-size: var(--font-sm);
   color: #FFD700;
 }
 
 .ally-effect {
-  font-size: 16px;
+  font-size: var(--font-sm);
   color: #ccc;
 }
 
@@ -2318,7 +2318,7 @@
 
 .ally-btn .ally-label {
   font-family: var(--font-pixel);
-  font-size: 12px;
+  font-size: var(--font-xs);
   color: #888;
 }
 
@@ -2327,7 +2327,7 @@
 }
 
 .ally-quote {
-  font-size: 16px;
+  font-size: var(--font-sm);
   color: #888;
   font-style: italic;
   text-align: center;
@@ -2354,7 +2354,7 @@
   padding: 8px 12px;
   background: rgba(255, 105, 180, 0.2);
   cursor: pointer;
-  font-size: 18px;
+  font-size: var(--font-sm);
 }
 
 .drama-meter .drama-header:hover {
@@ -2367,7 +2367,7 @@
 }
 
 .drama-content h4 {
-  font-size: 18px;
+  font-size: var(--font-sm);
   color: #ff69b4;
   margin-bottom: 8px;
 }
@@ -2387,7 +2387,7 @@
 }
 
 #drama-status {
-  font-size: 14px;
+  font-size: var(--font-xs);
   color: #888;
   margin-bottom: 8px;
 }
@@ -2398,7 +2398,7 @@
 }
 
 .drama-event {
-  font-size: 14px;
+  font-size: var(--font-xs);
   color: #ff69b4;
   padding: 3px 0;
   border-bottom: 1px solid rgba(255, 105, 180, 0.2);
@@ -2434,7 +2434,7 @@
 
 .pp-breakdown h4 {
   font-family: var(--font-pixel);
-  font-size: 16px;
+  font-size: var(--font-sm);
   color: var(--jade);
   margin-bottom: 10px;
   text-align: center;
@@ -2445,7 +2445,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 4px 0;
-  font-size: 14px;
+  font-size: var(--font-xs);
   color: #ccc;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
@@ -2473,7 +2473,7 @@
 .pp-breakdown-row.total .label,
 .pp-breakdown-row.total .value {
   color: var(--jade);
-  font-size: 16px;
+  font-size: var(--font-sm);
 }
 
 .pp-breakdown::before {
@@ -2513,7 +2513,7 @@
 
 .technique-list .empty-message {
   color: var(--text-secondary);
-  font-size: 14px;
+  font-size: var(--font-xs);
   text-align: center;
   padding: 15px;
   opacity: 0.7;
@@ -2562,13 +2562,13 @@
 }
 
 .technique-name {
-  font-size: 16px;
+  font-size: var(--font-sm);
   font-weight: bold;
   color: var(--text-primary);
 }
 
 .technique-tier {
-  font-size: 12px;
+  font-size: var(--font-xs);
   padding: 2px 6px;
   border-radius: 3px;
   margin-left: auto;
@@ -2582,7 +2582,7 @@
 .technique-tier.mythic { background: #ff6b9d; color: #fff; }
 
 .technique-description {
-  font-size: 14px;
+  font-size: var(--font-xs);
   color: var(--text-secondary);
   margin-bottom: 8px;
   line-height: 1.4;
@@ -2595,7 +2595,7 @@
 }
 
 .technique-effect {
-  font-size: 12px;
+  font-size: var(--font-xs);
   padding: 2px 6px;
   background: rgba(80, 200, 120, 0.2);
   border: 1px solid var(--jade);
@@ -2633,13 +2633,13 @@
 }
 
 .legendary-internal-name {
-  font-size: 18px;
+  font-size: var(--font-sm);
   font-weight: bold;
   color: var(--gold-accent);
 }
 
 .legendary-internal-category {
-  font-size: 12px;
+  font-size: var(--font-xs);
   color: var(--text-secondary);
   text-transform: uppercase;
 }
@@ -2649,18 +2649,18 @@
 }
 
 .stage-label {
-  font-size: 12px;
+  font-size: var(--font-xs);
   color: var(--text-secondary);
 }
 
 .stage-value {
-  font-size: 18px;
+  font-size: var(--font-sm);
   font-weight: bold;
   color: var(--jade);
 }
 
 .legendary-internal-description {
-  font-size: 14px;
+  font-size: var(--font-xs);
   color: var(--text-secondary);
   margin-bottom: 10px;
   font-style: italic;
@@ -2671,7 +2671,7 @@
 }
 
 .internal-effect {
-  font-size: 14px;
+  font-size: var(--font-xs);
   color: var(--jade);
   padding: 3px 0;
 }
@@ -2697,14 +2697,14 @@
 }
 
 .ability-name {
-  font-size: 14px;
+  font-size: var(--font-xs);
   font-weight: bold;
   color: var(--gold-accent);
   margin-bottom: 4px;
 }
 
 .ability-desc {
-  font-size: 12px;
+  font-size: var(--font-xs);
   color: var(--text-secondary);
 }
 
@@ -2717,14 +2717,14 @@
 }
 
 .requirement-label {
-  font-size: 12px;
+  font-size: var(--font-xs);
   color: var(--red-accent);
   text-transform: uppercase;
   margin-bottom: 4px;
 }
 
 .requirement-text {
-  font-size: 14px;
+  font-size: var(--font-xs);
   color: var(--text-secondary);
 }
 
@@ -2737,7 +2737,7 @@
   border-radius: 4px;
   color: #000;
   font-family: var(--font-pixel);
-  font-size: 14px;
+  font-size: var(--font-xs);
   cursor: pointer;
   transition: all 0.2s ease;
 }
@@ -2787,18 +2787,18 @@
 }
 
 .consumable-emoji {
-  font-size: 20px;
+  font-size: var(--font-md);
   margin-bottom: 4px;
 }
 
 .consumable-name {
-  font-size: 14px;
+  font-size: var(--font-xs);
   color: var(--text-primary);
   margin-bottom: 2px;
 }
 
 .consumable-count {
-  font-size: 16px;
+  font-size: var(--font-sm);
   font-weight: bold;
   color: var(--jade);
 }
@@ -2811,7 +2811,7 @@
   border-radius: 3px;
   color: #000;
   font-family: var(--font-pixel);
-  font-size: 12px;
+  font-size: var(--font-xs);
   cursor: pointer;
 }
 
@@ -2840,23 +2840,23 @@
 }
 
 .skill-emoji {
-  font-size: 16px;
+  font-size: var(--font-sm);
 }
 
 .skill-name {
-  font-size: 16px;
+  font-size: var(--font-sm);
   font-weight: bold;
   color: #9370db;
 }
 
 .skill-description {
-  font-size: 14px;
+  font-size: var(--font-xs);
   color: var(--text-secondary);
   margin-bottom: 6px;
 }
 
 .skill-discovery {
-  font-size: 12px;
+  font-size: var(--font-xs);
   color: var(--text-secondary);
   font-style: italic;
   opacity: 0.7;
@@ -2874,7 +2874,7 @@
 }
 
 .passive-icon {
-  font-size: 16px;
+  font-size: var(--font-sm);
 }
 
 .passive-info {
@@ -2882,13 +2882,13 @@
 }
 
 .passive-name {
-  font-size: 14px;
+  font-size: var(--font-xs);
   font-weight: bold;
   color: var(--jade);
 }
 
 .passive-effect {
-  font-size: 12px;
+  font-size: var(--font-xs);
   color: var(--text-secondary);
 }
 
@@ -2909,7 +2909,7 @@
 }
 
 .forge-subtitle {
-  font-size: 18px;
+  font-size: var(--font-sm);
   color: var(--gold-accent);
   margin-bottom: 10px;
   text-transform: uppercase;
@@ -2922,7 +2922,7 @@
   border: 2px solid var(--jade-dark);
   border-radius: 4px;
   color: #fff;
-  font-size: 18px;
+  font-size: var(--font-sm);
   margin-bottom: 10px;
 }
 
@@ -2947,25 +2947,25 @@
 }
 
 .forge-item-name {
-  font-size: 18px;
+  font-size: var(--font-sm);
   font-weight: bold;
   color: var(--gold-accent);
 }
 
 .forge-item-level {
-  font-size: 12px;
+  font-size: var(--font-xs);
   font-weight: bold;
   color: var(--jade);
 }
 
 .forge-item-stats {
-  font-size: 16px;
+  font-size: var(--font-sm);
   color: #aaa;
   margin-bottom: 8px;
 }
 
 .forge-item-enchants {
-  font-size: 16px;
+  font-size: var(--font-sm);
 }
 
 .forge-item-enchant {
@@ -2979,7 +2979,7 @@
 }
 
 .forge-cost {
-  font-size: 16px;
+  font-size: var(--font-sm);
   color: #888;
   margin-bottom: 10px;
   padding: 8px;
@@ -3007,7 +3007,7 @@
 
 .forge-checkbox {
   display: block;
-  font-size: 16px;
+  font-size: var(--font-sm);
   color: #aaa;
   margin: 5px 0;
   cursor: pointer;
@@ -3020,7 +3020,7 @@
 .forge-btn {
   width: 100%;
   padding: 10px;
-  font-size: 18px;
+  font-size: var(--font-sm);
 }
 
 .forge-btn:disabled {
@@ -3032,7 +3032,7 @@
   margin-top: 10px;
   padding: 10px;
   border-radius: 4px;
-  font-size: 18px;
+  font-size: var(--font-sm);
   text-align: center;
 }
 
@@ -3065,18 +3065,18 @@
 }
 
 .material-emoji {
-  font-size: 16px;
+  font-size: var(--font-sm);
   margin-bottom: 4px;
 }
 
 .material-name {
-  font-size: 12px;
+  font-size: var(--font-xs);
   color: #888;
   text-align: center;
 }
 
 .material-count {
-  font-size: 18px;
+  font-size: var(--font-sm);
   font-weight: bold;
   color: var(--gold-accent);
 }
@@ -3086,7 +3086,7 @@
   margin-top: 10px;
   padding: 8px 12px;
   border-radius: 4px;
-  font-size: 18px;
+  font-size: var(--font-sm);
   text-align: center;
   animation: forge-result-fade 0.3s ease-out;
 }
@@ -3117,17 +3117,17 @@
 }
 
 .forge-item-name {
-  font-size: 11px;
+  font-size: var(--font-xs);
   font-weight: bold;
 }
 
 .forge-item-level {
-  font-size: 18px;
+  font-size: var(--font-sm);
   color: var(--gold-accent);
 }
 
 .forge-item-stats {
-  font-size: 16px;
+  font-size: var(--font-sm);
   color: #aaa;
   margin-bottom: 10px;
 }
@@ -3137,7 +3137,7 @@
 }
 
 .forge-item-enchants {
-  font-size: 16px;
+  font-size: var(--font-sm);
   margin-bottom: 10px;
 }
 
@@ -3160,7 +3160,7 @@
   background: var(--red-accent);
   border: none;
   color: white;
-  font-size: 16px;
+  font-size: var(--font-sm);
   padding: 2px 5px;
   border-radius: 2px;
   cursor: pointer;
@@ -3174,7 +3174,7 @@
 /* Cost display styles */
 .cost-header {
   color: var(--gold-accent);
-  font-size: 18px;
+  font-size: var(--font-sm);
   margin-bottom: 5px;
 }
 
@@ -3182,7 +3182,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: 5px;
-  font-size: 16px;
+  font-size: var(--font-sm);
 }
 
 .cost-list span {
@@ -3208,13 +3208,13 @@
 }
 
 .success-rate {
-  font-size: 16px;
+  font-size: var(--font-sm);
   color: #888;
   margin-top: 5px;
 }
 
 .maxed-out {
-  font-size: 18px;
+  font-size: var(--font-sm);
   color: var(--gold-accent);
   text-align: center;
   font-weight: bold;
@@ -3258,14 +3258,14 @@
 }
 
 .shop-keeper-name {
-  font-size: 14px;
+  font-size: var(--font-xs);
   color: #ffd700;
   margin: 0 0 4px 0;
   text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
 }
 
 .shop-keeper-title {
-  font-size: 14px;
+  font-size: var(--font-xs);
   color: #b8860b;
   margin: 0;
   font-style: italic;
@@ -3279,7 +3279,7 @@
 }
 
 .lore-text {
-  font-size: 16px;
+  font-size: var(--font-sm);
   color: #ccc;
   line-height: 1.5;
   margin: 0;
@@ -3301,19 +3301,19 @@
   background: rgba(0, 0, 0, 0.3);
   border-radius: 6px;
   margin-bottom: 10px;
-  font-size: 18px;
+  font-size: var(--font-sm);
 }
 
 .shop-bp {
   color: var(--gold-accent);
   font-weight: bold;
-  font-size: 12px;
+  font-size: var(--font-xs);
 }
 
 .shop-jade {
   color: var(--jade);
   font-weight: bold;
-  font-size: 12px;
+  font-size: var(--font-xs);
 }
 
 .shop-balance-divider {
@@ -3336,7 +3336,7 @@
   border: 2px solid rgba(184, 134, 11, 0.3);
   border-radius: 6px;
   color: #888;
-  font-size: 14px;
+  font-size: var(--font-xs);
   font-family: var(--font-pixel);
   cursor: pointer;
   transition: all 0.2s ease;
@@ -3363,7 +3363,7 @@
 }
 
 .shop-dialogue p {
-  font-size: 16px;
+  font-size: var(--font-sm);
   color: #b8860b;
   margin: 0;
   font-style: italic;
@@ -3408,17 +3408,17 @@
 }
 
 .shop-item-icon {
-  font-size: 20px;
+  font-size: var(--font-md);
 }
 
 .shop-item-name {
-  font-size: 18px;
+  font-size: var(--font-sm);
   font-weight: bold;
   flex: 1;
 }
 
 .shop-item-desc {
-  font-size: 14px;
+  font-size: var(--font-xs);
   color: #888;
   margin-bottom: 8px;
   line-height: 1.4;
@@ -3431,13 +3431,13 @@
 }
 
 .shop-item-price {
-  font-size: 18px;
+  font-size: var(--font-sm);
   color: var(--gold-accent);
   font-weight: bold;
 }
 
 .shop-item-stock {
-  font-size: 14px;
+  font-size: var(--font-xs);
   color: #666;
 }
 
@@ -3447,7 +3447,7 @@
   border-radius: 4px;
   padding: 5px 12px;
   color: #000;
-  font-size: 14px;
+  font-size: var(--font-xs);
   font-family: var(--font-pixel);
   cursor: pointer;
   transition: all 0.2s ease;
@@ -3482,7 +3482,7 @@
 }
 
 .shop-footer-text {
-  font-size: 14px;
+  font-size: var(--font-xs);
   color: #666;
   text-align: center;
   font-style: italic;
@@ -3510,14 +3510,14 @@
 }
 
 .shop-item-description {
-  font-size: 14px;
+  font-size: var(--font-xs);
   color: #888;
   margin-bottom: 8px;
   line-height: 1.4;
 }
 
 .shop-item-stats {
-  font-size: 14px;
+  font-size: var(--font-xs);
   color: var(--jade);
   margin-bottom: 6px;
   display: flex;
@@ -3532,7 +3532,7 @@
 }
 
 .shop-item-effect {
-  font-size: 14px;
+  font-size: var(--font-xs);
   color: var(--qi-blue);
   margin-bottom: 6px;
   background: rgba(0, 191, 255, 0.1);
@@ -3541,7 +3541,7 @@
 }
 
 .shop-item-reward {
-  font-size: 14px;
+  font-size: var(--font-xs);
   color: var(--gold-accent);
   margin-bottom: 6px;
   background: rgba(255, 215, 0, 0.1);
@@ -3555,7 +3555,7 @@
   border-radius: 4px;
   padding: 5px 12px;
   color: #000;
-  font-size: 14px;
+  font-size: var(--font-xs);
   font-family: var(--font-pixel);
   cursor: pointer;
   transition: all 0.2s ease;
@@ -3586,7 +3586,7 @@
   text-align: center;
   padding: 30px;
   color: #666;
-  font-size: 18px;
+  font-size: var(--font-sm);
   font-style: italic;
 }
 
@@ -3624,13 +3624,13 @@
 }
 
 .cultivation-icon {
-  font-size: 18px;
+  font-size: var(--font-sm);
   filter: drop-shadow(0 0 5px var(--realm-color, #A0A0A0));
 }
 
 .cultivation-title {
   font-family: var(--font-pixel);
-  font-size: 18px;
+  font-size: var(--font-sm);
   color: var(--realm-color, #A0A0A0);
   text-transform: uppercase;
   letter-spacing: 1px;
@@ -3643,7 +3643,7 @@
 
 .realm-name {
   font-family: var(--font-pixel);
-  font-size: 18px;
+  font-size: var(--font-sm);
   color: var(--realm-color, #A0A0A0);
   margin: 0 0 4px 0;
   text-shadow: 0 0 10px var(--realm-color, rgba(160, 160, 160, 0.5));
@@ -3662,7 +3662,7 @@
 
 .realm-rank {
   font-family: var(--font-pixel);
-  font-size: 16px;
+  font-size: var(--font-sm);
   color: rgba(255, 255, 255, 0.7);
   margin: 0;
 }
@@ -3704,7 +3704,7 @@
   left: 50%;
   transform: translate(-50%, -50%);
   font-family: var(--font-pixel);
-  font-size: 12px;
+  font-size: var(--font-xs);
   color: white;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
   white-space: nowrap;
@@ -3716,7 +3716,7 @@
 }
 
 .cultivation-description p {
-  font-size: 14px;
+  font-size: var(--font-xs);
   color: rgba(255, 255, 255, 0.6);
   text-align: center;
   margin: 0;
@@ -3744,17 +3744,17 @@
 }
 
 .cultivation-passive .passive-icon {
-  font-size: 18px;
+  font-size: var(--font-sm);
 }
 
 .cultivation-passive .passive-name {
   font-family: var(--font-pixel);
-  font-size: 12px;
+  font-size: var(--font-xs);
   color: var(--realm-color, #A0A0A0);
 }
 
 .cultivation-passive .passive-effect {
-  font-size: 12px;
+  font-size: var(--font-xs);
   color: rgba(255, 255, 255, 0.5);
   margin-left: auto;
 }
@@ -3897,12 +3897,12 @@
 }
 
 .stance-icon {
-  font-size: 16px;
+  font-size: var(--font-sm);
 }
 
 .stance-title {
   font-family: var(--font-pixel);
-  font-size: 16px;
+  font-size: var(--font-sm);
   color: var(--jade);
   text-transform: uppercase;
   letter-spacing: 1px;
@@ -3915,7 +3915,7 @@
 
 .stance-name {
   font-family: var(--font-pixel);
-  font-size: 18px;
+  font-size: var(--font-sm);
   color: var(--jade-light);
   display: block;
   margin-bottom: 4px;
@@ -3923,7 +3923,7 @@
 
 .stance-mastery {
   font-family: var(--font-pixel);
-  font-size: 14px;
+  font-size: var(--font-xs);
   color: rgba(255, 255, 255, 0.6);
 }
 
@@ -3956,7 +3956,7 @@
   border-radius: 4px;
   background: rgba(0, 0, 0, 0.4);
   cursor: pointer;
-  font-size: 14px;
+  font-size: var(--font-xs);
   transition: all 0.2s ease;
 }
 
@@ -3980,7 +3980,7 @@
   margin-top: 6px;
   text-align: center;
   font-family: var(--font-pixel);
-  font-size: 14px;
+  font-size: var(--font-xs);
   color: var(--gold-accent);
 }
 
@@ -4018,12 +4018,12 @@
 }
 
 .harmony-icon {
-  font-size: 14px;
+  font-size: var(--font-xs);
 }
 
 .harmony-title {
   font-family: var(--font-pixel);
-  font-size: 16px;
+  font-size: var(--font-sm);
   color: var(--yuelin-pink);
   text-transform: uppercase;
   letter-spacing: 1px;
@@ -4038,12 +4038,12 @@
 
 .harmony-text {
   font-family: var(--font-pixel);
-  font-size: 18px;
+  font-size: var(--font-sm);
   color: var(--text-light);
 }
 
 .harmony-emoji {
-  font-size: 16px;
+  font-size: var(--font-sm);
 }
 
 .harmony-bar {
@@ -4063,7 +4063,7 @@
 .jealousy-alert {
   margin-top: 6px;
   font-family: var(--font-pixel);
-  font-size: 14px;
+  font-size: var(--font-xs);
   color: var(--red-accent);
   text-align: center;
 }
@@ -4089,14 +4089,14 @@
 }
 
 .teams-info {
-  font-size: 16px;
+  font-size: var(--font-sm);
   color: rgba(255, 255, 255, 0.6);
   margin-bottom: 15px;
   text-align: center;
 }
 
 .team-section-header {
-  font-size: 18px;
+  font-size: var(--font-sm);
   color: var(--jade-light);
   margin-bottom: 8px;
   padding-bottom: 4px;
@@ -4151,7 +4151,7 @@
 }
 
 .slot-position {
-  font-size: 12px;
+  font-size: var(--font-xs);
   color: rgba(255, 255, 255, 0.5);
   text-transform: uppercase;
   margin-bottom: 4px;
@@ -4165,17 +4165,17 @@
   justify-content: center;
   background: rgba(0, 0, 0, 0.4);
   border-radius: 4px;
-  font-size: 20px;
+  font-size: var(--font-md);
   margin-bottom: 4px;
 }
 
 .slot-cat.empty {
   color: rgba(255, 255, 255, 0.3);
-  font-size: 16px;
+  font-size: var(--font-sm);
 }
 
 .slot-label {
-  font-size: 14px;
+  font-size: var(--font-xs);
   color: rgba(255, 255, 255, 0.6);
 }
 
@@ -4216,14 +4216,14 @@
 }
 
 .formation-icon {
-  font-size: 16px;
+  font-size: var(--font-sm);
   line-height: 1.2;
   margin-bottom: 4px;
   color: var(--jade-light);
 }
 
 .formation-name {
-  font-size: 12px;
+  font-size: var(--font-xs);
   color: rgba(255, 255, 255, 0.7);
 }
 
@@ -4239,7 +4239,7 @@
 }
 
 .synergy-list .empty-message {
-  font-size: 16px;
+  font-size: var(--font-sm);
   color: rgba(255, 255, 255, 0.4);
   text-align: center;
   font-style: italic;
@@ -4256,7 +4256,7 @@
 }
 
 .synergy-icon {
-  font-size: 14px;
+  font-size: var(--font-xs);
 }
 
 .synergy-info {
@@ -4264,12 +4264,12 @@
 }
 
 .synergy-name {
-  font-size: 16px;
+  font-size: var(--font-sm);
   color: var(--jade-light);
 }
 
 .synergy-bonus {
-  font-size: 14px;
+  font-size: var(--font-xs);
   color: var(--gold-accent);
 }
 
@@ -4290,14 +4290,14 @@
 }
 
 .resonance-bonus {
-  font-size: 16px;
+  font-size: var(--font-sm);
   font-weight: bold;
   color: var(--gold-accent);
   text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
 }
 
 .resonance-label {
-  font-size: 16px;
+  font-size: var(--font-sm);
   color: rgba(255, 255, 255, 0.6);
 }
 
@@ -4312,7 +4312,7 @@
 }
 
 .cat-selector-modal h3 {
-  font-size: 12px;
+  font-size: var(--font-xs);
   color: var(--jade-light);
   margin-bottom: 15px;
   text-align: center;
@@ -4369,16 +4369,313 @@
 }
 
 .cat-selector-info .cat-name {
-  font-size: 18px;
+  font-size: var(--font-sm);
   color: var(--text-light);
 }
 
 .cat-selector-info .cat-realm {
-  font-size: 14px;
+  font-size: var(--font-xs);
   color: rgba(255, 255, 255, 0.5);
 }
 
 .cat-selector-item .cat-element {
-  font-size: 16px;
+  font-size: var(--font-sm);
   text-transform: capitalize;
+}
+
+/* ===================================
+   DRAMA ACTIONS
+   =================================== */
+
+.drama-actions {
+  display: flex;
+  gap: 6px;
+  margin: 8px 0;
+}
+
+.drama-actions .jade-button {
+  font-size: 0.7rem;
+  padding: 4px 8px;
+}
+
+.drama-effects {
+  font-size: 0.75rem;
+  margin-bottom: 4px;
+}
+
+.drama-effect-line {
+  color: var(--jade, #50C878);
+  font-size: 0.7rem;
+}
+
+/* ===================================
+   IRL WEATHER DISPLAY
+   =================================== */
+
+.irl-weather {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 8px;
+  font-size: 0.8rem;
+}
+
+/* ===================================
+   GOLDEN SNOOT LABEL
+   =================================== */
+
+.golden-snoot-label {
+  text-align: center;
+  font-size: 0.7rem;
+  color: #FFD700;
+  text-shadow: 0 0 4px rgba(255, 215, 0, 0.6);
+  margin-top: 4px;
+  font-weight: bold;
+}
+
+/* ===================================
+   CRAFTING QUEUE & BLUEPRINTS
+   =================================== */
+
+.crafting-queue {
+  margin-bottom: 8px;
+}
+
+.craft-job {
+  padding: 6px 8px;
+  background: rgba(0, 0, 0, 0.15);
+  border-radius: 4px;
+  margin-bottom: 4px;
+}
+
+.craft-job-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+.craft-job-name {
+  font-size: 0.8rem;
+  font-weight: bold;
+}
+
+.craft-job-progress {
+  font-size: 0.75rem;
+  color: var(--jade, #50C878);
+}
+
+.blueprint-list {
+  margin-bottom: 8px;
+}
+
+.blueprint-item {
+  padding: 8px;
+  background: rgba(0, 0, 0, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  margin-bottom: 4px;
+}
+
+.blueprint-item.craftable {
+  border-color: var(--jade, #50C878);
+}
+
+.blueprint-item.locked {
+  opacity: 0.7;
+}
+
+.blueprint-header {
+  margin-bottom: 4px;
+}
+
+.blueprint-name {
+  font-size: 0.85rem;
+  font-weight: bold;
+}
+
+.blueprint-materials {
+  font-size: 0.7rem;
+  margin-bottom: 6px;
+}
+
+/* ===================================
+   WAVE SURVIVAL HUD
+   =================================== */
+
+.survival-hud {
+  position: fixed;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2000;
+  background: rgba(26, 26, 46, 0.9);
+  border: 2px solid var(--jade, #50C878);
+  border-radius: 8px;
+  padding: 8px 16px;
+  min-width: 300px;
+}
+
+.survival-hud.hidden {
+  display: none;
+}
+
+.survival-hud-top {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 6px;
+}
+
+.survival-stat {
+  text-align: center;
+}
+
+.survival-label {
+  display: block;
+  font-size: 0.65rem;
+  color: #888;
+  text-transform: uppercase;
+}
+
+.survival-value {
+  display: block;
+  font-size: 1rem;
+  font-weight: bold;
+  color: var(--jade, #50C878);
+}
+
+.survival-hp-bar {
+  position: relative;
+  height: 16px;
+  background: rgba(0, 0, 0, 0.4);
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 6px;
+}
+
+.survival-hp-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #ff4444, #ff6b6b);
+  border-radius: 8px;
+  transition: width 0.3s;
+}
+
+.survival-hp-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 0.7rem;
+  color: white;
+  text-shadow: 1px 1px 0 #000;
+}
+
+.survival-upgrades-display {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  justify-content: center;
+}
+
+.survival-upgrade-icon {
+  font-size: 0.9rem;
+}
+
+/* Level Up Options */
+.levelup-option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 6px;
+  margin-bottom: 6px;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.levelup-option:hover {
+  border-color: var(--jade, #50C878);
+  background: rgba(80, 200, 120, 0.1);
+}
+
+.levelup-emoji {
+  font-size: 1.5rem;
+}
+
+.levelup-info {
+  flex: 1;
+}
+
+.levelup-name {
+  display: block;
+  font-weight: bold;
+  font-size: 0.85rem;
+}
+
+.levelup-desc {
+  display: block;
+  font-size: 0.75rem;
+  color: #aaa;
+}
+
+/* ===================================
+   ELEMENTAL DISPLAY
+   =================================== */
+
+.elemental-display {
+  position: fixed;
+  top: 60px;
+  right: 20px;
+  z-index: 100;
+}
+
+.elemental-display.hidden {
+  display: none;
+}
+
+.elemental-auras {
+  display: flex;
+  gap: 4px;
+  font-size: 1.2rem;
+}
+
+.elemental-aura-icon {
+  animation: aura-pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes aura-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.7; transform: scale(1.1); }
+}
+
+.elemental-reaction {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 8px;
+  background: rgba(255, 200, 0, 0.2);
+  border: 1px solid rgba(255, 200, 0, 0.4);
+  border-radius: 4px;
+  margin-top: 4px;
+  animation: reaction-flash 0.5s ease-out;
+}
+
+.elemental-reaction.hidden {
+  display: none;
+}
+
+.reaction-emoji {
+  font-size: 1.2rem;
+}
+
+.reaction-name {
+  font-size: 0.8rem;
+  font-weight: bold;
+  color: #FFD700;
+}
+
+@keyframes reaction-flash {
+  0% { transform: scale(1.3); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
 }

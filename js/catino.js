@@ -82,7 +82,7 @@ class CatinoSystem {
    */
   unlock() {
     if (window.gameState && window.gameState.boopPoints >= this.unlockCost) {
-      window.gameState.boopPoints -= this.unlockCost;
+      window.gameState.boopPoints = Math.max(0, window.gameState.boopPoints - this.unlockCost);
       this.unlocked = true;
       return true;
     }
@@ -94,9 +94,9 @@ class CatinoSystem {
    */
   playSlots(bet) {
     if (!this.unlocked) return null;
-    if (window.gameState.boopPoints < bet) return null;
+    if (!window.gameState || window.gameState.boopPoints < bet) return null;
 
-    window.gameState.boopPoints -= bet;
+    window.gameState.boopPoints = Math.max(0, window.gameState.boopPoints - bet);
     this.totalGambled += bet;
     this.stats.slotsPlayed++;
 
@@ -204,9 +204,9 @@ class CatinoSystem {
 
     // bets = { gooseId: betAmount, ... }
     const totalBet = Object.values(bets).reduce((sum, b) => sum + b, 0);
-    if (window.gameState.boopPoints < totalBet) return null;
+    if (!window.gameState || window.gameState.boopPoints < totalBet) return null;
 
-    window.gameState.boopPoints -= totalBet;
+    window.gameState.boopPoints = Math.max(0, window.gameState.boopPoints - totalBet);
     this.totalGambled += totalBet;
     this.stats.racesWatched++;
 
@@ -309,9 +309,9 @@ class CatinoSystem {
    */
   spinWheel(cost = 10000) {
     if (!this.unlocked) return null;
-    if (window.gameState.boopPoints < cost) return null;
+    if (!window.gameState || window.gameState.boopPoints < cost) return null;
 
-    window.gameState.boopPoints -= cost;
+    window.gameState.boopPoints = Math.max(0, window.gameState.boopPoints - cost);
     this.totalGambled += cost;
     this.stats.wheelSpins++;
 

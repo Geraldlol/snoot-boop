@@ -1234,8 +1234,8 @@ CraftingSystem.prototype.upgradeEquipment = function(equipment, gameState, usePr
     useClover = false;
   }
 
-  // Consume resources
-  gameState.boopPoints -= cost.bp;
+  // Consume resources (with safety check to prevent negative values)
+  gameState.boopPoints = Math.max(0, gameState.boopPoints - cost.bp);
   this.removeMaterial(cost.stone, cost.stoneCount);
   for (const [matId, amount] of Object.entries(cost.materials)) {
     this.removeMaterial(matId, amount);
