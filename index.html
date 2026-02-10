@@ -2447,6 +2447,16 @@
   </div>
 
   <!-- Scripts -->
+  <!-- Error diagnostics (catches script load failures) -->
+  <script>
+    window._scriptErrors = [];
+    window.onerror = function(msg, url, line, col, err) {
+      window._scriptErrors.push({msg: msg, url: url, line: line});
+      var d = document.getElementById('error-display');
+      if (!d) { d = document.createElement('div'); d.id = 'error-display'; d.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:99999;background:#300;color:#f88;padding:10px;font:14px monospace;max-height:50vh;overflow:auto;'; document.body ? document.body.prepend(d) : document.addEventListener('DOMContentLoaded', function() { document.body.prepend(d); }); }
+      d.innerHTML += '<div>' + msg + '<br><small>' + url + ':' + line + '</small></div>';
+    };
+  </script>
   <!-- Core Utilities (load first) -->
   <script src="js/core/bigNumber.js"></script>
   <script src="js/core/eventBus.js"></script>
