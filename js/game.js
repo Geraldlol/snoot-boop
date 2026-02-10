@@ -642,6 +642,15 @@ function init() {
   try {
     console.log('Snoot Booper: Initializing...');
 
+    // Allow ?reset=1 URL param to clear corrupt saves
+    if (new URLSearchParams(window.location.search).get('reset') === '1') {
+      console.warn('Force reset requested via URL param');
+      SaveSystem.deleteSave();
+      alert('Save data cleared! Reloading...');
+      window.location.href = window.location.pathname;
+      return;
+    }
+
     // Validate critical DOM elements exist
     if (!validateCriticalElements()) {
       console.warn('Some critical elements missing - game may have issues');
@@ -654,7 +663,15 @@ function init() {
     if (saveData && saveData.master) {
       // Load existing game
       console.log('Loading saved game...');
-      loadGame(saveData);
+      try {
+        loadGame(saveData);
+      } catch (loadError) {
+        console.error('Save load failed, starting fresh:', loadError);
+        alert('Save data could not be loaded (it may be corrupted). Starting a new game.\n\nError: ' + loadError.message);
+        // Fall through to new game
+        renderMasterCards();
+        setupEventListeners();
+      }
     } else {
       // New game - show master select
       console.log('New game - showing master select...');
