@@ -5609,13 +5609,23 @@ function updatePagodaCombat() {
 }
 
 function startPagodaRun() {
-  if (!pagodaSystem || !catSystem) return;
+  if (!pagodaSystem) {
+    showNotification('Pagoda system not loaded!', 'error');
+    return;
+  }
+  if (!catSystem || catSystem.getAllCats().length === 0) {
+    showNotification('You need at least one cat!', 'error');
+    return;
+  }
 
   const cats = catSystem.getAllCats();
   const catIds = cats.slice(0, 3).map(c => c.id); // Use first 3 cats
 
   if (pagodaSystem.startRun(catIds)) {
+    showNotification('🏯 Entering the Infinite Pagoda...', 'success');
     renderPagoda();
+  } else {
+    showNotification('Could not start pagoda run', 'error');
   }
 }
 
@@ -5878,6 +5888,9 @@ function startSelectedDungeon() {
     return;
   }
 
+  // Show the correct dungeon UI panel
+  showDungeonUI(selectedDungeonType);
+
   switch (selectedDungeonType) {
     case 'pagoda':
       startPagodaRun();
@@ -5900,6 +5913,48 @@ function startSelectedDungeon() {
     default:
       showNotification('Dungeon not implemented yet!', 'error');
   }
+}
+
+/**
+ * Show the correct dungeon sub-UI and hide others
+ */
+function showDungeonUI(dungeonType) {
+  // Map dungeon types to their UI container IDs
+  const uiMap = {
+    pagoda: 'dungeon-active-run',
+    tournament: 'tournament-ui',
+    dream: 'dream-realm-ui',
+    goose: 'goose-dimension-ui',
+    memory: 'memory-fragments-ui'
+  };
+
+  // Hide all dungeon sub-UIs
+  const activeRun = document.getElementById('dungeon-active-run');
+  if (activeRun) activeRun.classList.add('hidden');
+  document.querySelectorAll('.dungeon-sub-ui').forEach(el => el.classList.add('hidden'));
+
+  // Show the selected one
+  const targetId = uiMap[dungeonType];
+  if (targetId) {
+    const targetEl = document.getElementById(targetId);
+    if (targetEl) targetEl.classList.remove('hidden');
+  }
+
+  // Hide the dungeon start area when a run is active
+  const startArea = document.getElementById('dungeon-start-area');
+  if (startArea) startArea.classList.add('hidden');
+}
+
+/**
+ * Hide all dungeon sub-UIs and restore the selection/start view
+ */
+function hideDungeonUI() {
+  const activeRun = document.getElementById('dungeon-active-run');
+  if (activeRun) activeRun.classList.add('hidden');
+  document.querySelectorAll('.dungeon-sub-ui').forEach(el => el.classList.add('hidden'));
+
+  const startArea = document.getElementById('dungeon-start-area');
+  if (startArea) startArea.classList.remove('hidden');
 }
 
 /**
@@ -6085,8 +6140,8 @@ function abandonRun() {
       return;
   }
 
-  // Update UI
-  selectDungeon(selectedDungeonType);
+  // Reset dungeon UI back to selection view
+  hideDungeonUI();
   renderPagoda();
   updateResourceDisplay();
 }
