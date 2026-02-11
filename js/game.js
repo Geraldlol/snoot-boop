@@ -5726,35 +5726,35 @@ const DUNGEON_CONFIGS = {
  * Select and enter a dungeon directly (called from Enter buttons)
  */
 function selectDungeon(dungeonType) {
-  console.log('[Dungeon] selectDungeon called with:', dungeonType);
+  try {
+    const config = DUNGEON_CONFIGS[dungeonType];
+    if (!config) {
+      showNotification('Unknown dungeon: ' + dungeonType, 'error');
+      return;
+    }
 
-  const config = DUNGEON_CONFIGS[dungeonType];
-  if (!config) {
-    console.warn(`Unknown dungeon type: ${dungeonType}`);
-    showNotification(`Unknown dungeon: ${dungeonType}`, 'error');
-    return;
+    // Check if dungeon is locked
+    if (config.unlockCheck && !config.unlockCheck()) {
+      showNotification(config.name + ' is locked!', 'error');
+      return;
+    }
+
+    highlightDungeon(dungeonType);
+
+    try {
+      if (audioSystem) {
+        audioSystem.playSFX('click');
+        audioSystem.playMusic('dungeon');
+      }
+    } catch (audioErr) {
+      // Audio errors should not block dungeon entry
+    }
+
+    startSelectedDungeon();
+  } catch (e) {
+    showNotification('Dungeon error: ' + e.message, 'error');
+    console.error('[Dungeon] Error in selectDungeon:', e);
   }
-
-  console.log('[Dungeon] Config found:', config.name);
-
-  // Check if dungeon is locked
-  if (config.unlockCheck && !config.unlockCheck()) {
-    console.log('[Dungeon] Dungeon is locked');
-    showNotification(`${config.name} is locked!`, 'error');
-    return;
-  }
-
-  // Update selection and start the dungeon
-  highlightDungeon(dungeonType);
-
-  if (audioSystem) {
-    audioSystem.playSFX('click');
-    audioSystem.playMusic('dungeon');
-  }
-
-  // Directly start the dungeon when clicking Enter
-  console.log('[Dungeon] Starting dungeon...');
-  startSelectedDungeon();
 }
 
 /**
