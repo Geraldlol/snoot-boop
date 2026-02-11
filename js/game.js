@@ -5609,23 +5609,35 @@ function updatePagodaCombat() {
 }
 
 function startPagodaRun() {
+  console.log('[Dungeon] startPagodaRun called');
   if (!pagodaSystem) {
+    console.warn('[Dungeon] pagodaSystem not found');
     showNotification('Pagoda system not loaded!', 'error');
     return;
   }
   if (!catSystem || catSystem.getAllCats().length === 0) {
+    console.warn('[Dungeon] No cats available');
     showNotification('You need at least one cat!', 'error');
     return;
   }
 
   const cats = catSystem.getAllCats();
-  const catIds = cats.slice(0, 3).map(c => c.id); // Use first 3 cats
+  const catIds = cats.slice(0, 3).map(c => c.id);
+  console.log('[Dungeon] Starting run with cats:', catIds);
 
   if (pagodaSystem.startRun(catIds)) {
+    console.log('[Dungeon] Pagoda run started successfully');
     showNotification('🏯 Entering the Infinite Pagoda...', 'success');
     renderPagoda();
   } else {
-    showNotification('Could not start pagoda run', 'error');
+    console.warn('[Dungeon] pagodaSystem.startRun returned false (already in run?)');
+    // If already in a run, just show the current state
+    if (pagodaSystem.inRun) {
+      showNotification('Resuming pagoda run...', 'success');
+      renderPagoda();
+    } else {
+      showNotification('Could not start pagoda run', 'error');
+    }
   }
 }
 
@@ -5726,19 +5738,23 @@ const DUNGEON_CONFIGS = {
  * Select and enter a dungeon directly (called from Enter buttons)
  */
 function selectDungeon(dungeonType) {
+  console.log('[Dungeon] selectDungeon called:', dungeonType);
   try {
     const config = DUNGEON_CONFIGS[dungeonType];
     if (!config) {
+      console.warn('[Dungeon] Unknown dungeon type:', dungeonType);
       showNotification('Unknown dungeon: ' + dungeonType, 'error');
       return;
     }
 
     // Check if dungeon is locked
     if (config.unlockCheck && !config.unlockCheck()) {
+      console.log('[Dungeon] Locked:', config.name);
       showNotification(config.name + ' is locked!', 'error');
       return;
     }
 
+    console.log('[Dungeon] Highlighting:', dungeonType);
     highlightDungeon(dungeonType);
 
     try {
@@ -5750,7 +5766,9 @@ function selectDungeon(dungeonType) {
       // Audio errors should not block dungeon entry
     }
 
+    console.log('[Dungeon] Starting dungeon...');
     startSelectedDungeon();
+    console.log('[Dungeon] selectDungeon complete');
   } catch (e) {
     showNotification('Dungeon error: ' + e.message, 'error');
     console.error('[Dungeon] Error in selectDungeon:', e);
@@ -5879,8 +5897,12 @@ function updateActiveDungeonUI(dungeonType) {
  * Start the selected dungeon
  */
 function startSelectedDungeon() {
+  console.log('[Dungeon] startSelectedDungeon, type:', selectedDungeonType);
   const config = DUNGEON_CONFIGS[selectedDungeonType];
-  if (!config) return;
+  if (!config) {
+    console.warn('[Dungeon] No config for:', selectedDungeonType);
+    return;
+  }
 
   // Check unlock again
   if (config.unlockCheck && !config.unlockCheck()) {
@@ -5889,6 +5911,7 @@ function startSelectedDungeon() {
   }
 
   // Show the correct dungeon UI panel
+  console.log('[Dungeon] Calling showDungeonUI...');
   showDungeonUI(selectedDungeonType);
 
   switch (selectedDungeonType) {
@@ -5919,6 +5942,8 @@ function startSelectedDungeon() {
  * Show the correct dungeon sub-UI and hide others
  */
 function showDungeonUI(dungeonType) {
+  console.log('[Dungeon] showDungeonUI:', dungeonType);
+
   // Map dungeon types to their UI container IDs
   const uiMap = {
     pagoda: 'dungeon-active-run',
@@ -5928,16 +5953,25 @@ function showDungeonUI(dungeonType) {
     memory: 'memory-fragments-ui'
   };
 
-  // Hide all dungeon sub-UIs
+  // Hide all dungeon sub-UIs first
   const activeRun = document.getElementById('dungeon-active-run');
   if (activeRun) activeRun.classList.add('hidden');
   document.querySelectorAll('.dungeon-sub-ui').forEach(el => el.classList.add('hidden'));
 
-  // Show the selected one
+  // Hide the dungeon selection cards and stats so the active UI is at top
+  const selector = document.querySelector('.dungeon-selector');
+  if (selector) selector.classList.add('hidden');
+  const statsSummary = document.querySelector('.dungeon-stats-summary');
+  if (statsSummary) statsSummary.classList.add('hidden');
+
+  // Show the selected dungeon UI
   const targetId = uiMap[dungeonType];
   if (targetId) {
     const targetEl = document.getElementById(targetId);
-    if (targetEl) targetEl.classList.remove('hidden');
+    if (targetEl) {
+      targetEl.classList.remove('hidden');
+      console.log('[Dungeon] Showed', targetId);
+    }
   }
 
   // Hide the dungeon start area when a run is active
@@ -5949,9 +5983,16 @@ function showDungeonUI(dungeonType) {
  * Hide all dungeon sub-UIs and restore the selection/start view
  */
 function hideDungeonUI() {
+  console.log('[Dungeon] hideDungeonUI');
   const activeRun = document.getElementById('dungeon-active-run');
   if (activeRun) activeRun.classList.add('hidden');
   document.querySelectorAll('.dungeon-sub-ui').forEach(el => el.classList.add('hidden'));
+
+  // Restore dungeon selection cards and stats
+  const selector = document.querySelector('.dungeon-selector');
+  if (selector) selector.classList.remove('hidden');
+  const statsSummary = document.querySelector('.dungeon-stats-summary');
+  if (statsSummary) statsSummary.classList.remove('hidden');
 
   const startArea = document.getElementById('dungeon-start-area');
   if (startArea) startArea.classList.remove('hidden');
@@ -6231,6 +6272,8 @@ function updateDungeonUnlocks() {
 // Make dungeon functions available globally
 window.selectDungeon = selectDungeon;
 window.highlightDungeon = highlightDungeon;
+window.showDungeonUI = showDungeonUI;
+window.hideDungeonUI = hideDungeonUI;
 window.abandonRun = abandonRun;
 window.startSelectedDungeon = startSelectedDungeon;
 window.renderDungeonStats = renderDungeonStats;
@@ -6642,7 +6685,7 @@ function showNotification(message, type = 'info') {
     right: '20px',
     padding: '10px 20px',
     borderRadius: '6px',
-    fontSize: '10px',
+    fontSize: '14px',
     fontFamily: 'var(--font-pixel)',
     zIndex: '9999',
     animation: 'notification-slide 0.3s ease-out',
