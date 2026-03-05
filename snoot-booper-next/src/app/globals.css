@@ -1,0 +1,43 @@
+@import "tailwindcss";
+
+:root {
+  /* Wuxia theme colors */
+  --bg-dark: #1a1a2e;
+  --bg-light: #16213e;
+  --jade: #50C878;
+  --jade-light: #7FFFD4;
+  --crimson: #DC143C;
+  --river-blue: #4169E1;
+  --thunder-gold: #FFD700;
+  --shadow-purple: #483D8B;
+  --lotus-pink: #FFB6C1;
+  --mountain-brown: #8B4513;
+  --qi-blue: #00BFFF;
+  --red-accent: #E94560;
+  --critical-gold: #FFF8DC;
+}
+
+body {
+  background: var(--bg-dark);
+  color: #fff;
+  font-family: 'Courier New', monospace;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Pixel-perfect rendering for sprites */
+.pixel-art {
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+
+/* Screen shake animation */
+@keyframes shake {
+  0%, 100% { transform: translate(0, 0); }
+  25% { transform: translate(-4px, 2px); }
+  50% { transform: translate(4px, -2px); }
+  75% { transform: translate(-2px, 4px); }
+}
+
+.shake {
+  animation: shake 0.3s ease-in-out;
+}
