@@ -1,5 +1,6 @@
 /**
- * MasterSelect - Character selection screen
+ * MasterSelect — wuxia-style character selection.
+ * Same logic as the prior screen, reskinned with the wuxia visual language.
  */
 
 'use client';
@@ -11,14 +12,18 @@ import { useUIStore } from '@/store/ui-store';
 import { engine } from '@/engine/engine';
 import type { MasterId } from '@/engine/types';
 
-const ROLE_ICONS: Record<string, string> = {
-  'Sect Leader': '\uD83D\uDC09',
-  'War General': '\uD83D\uDC4A',
-  'Strategist': '\uD83C\uDF0A',
-  'Scout': '\u26A1',
-  'Assassin': '\uD83C\uDF19',
-  'Healer': '\uD83C\uDF38',
-  'Guardian': '\u26F0\uFE0F',
+import WorldCanvas from '../shell/WorldCanvas';
+import ParallaxMountains from '../shell/ParallaxMountains';
+
+// One Chinese-character glyph per role.
+const ROLE_GLYPHS: Record<string, string> = {
+  'Sect Leader': '尊',  // venerated
+  'War General':  '戰', // war
+  'Strategist':   '謀', // strategy
+  'Scout':        '速', // speed
+  'Assassin':     '影', // shadow
+  'Healer':       '蓮', // lotus
+  'Guardian':     '山', // mountain
 };
 
 export default function MasterSelect() {
@@ -45,143 +50,186 @@ export default function MasterSelect() {
     }
   }, [hovered]);
 
-  const handleSelect = (masterId: string) => {
+  function commit(masterId: string) {
+    engine.master.selectMaster(masterId as MasterId);
+    useGameStore.setState({ selectedMaster: masterId as MasterId });
+    setScreen('game');
+  }
+
+  function handleSelect(masterId: string) {
     if (isTouchDevice && selectedForDetail !== masterId) {
       setSelectedForDetail(masterId);
       return;
     }
-    engine.master.selectMaster(masterId as MasterId);
-    useGameStore.setState({ selectedMaster: masterId as MasterId });
-    setScreen('game');
-  };
+    commit(masterId);
+  }
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-[#1a1a2e] p-8 relative overflow-hidden">
-      {/* Background shimmer */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div
-          className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[600px] h-[200px] rounded-full opacity-10"
-          style={{
-            background: 'radial-gradient(ellipse, #50C878 0%, transparent 70%)',
-            animation: 'shimmerPulse 4s ease-in-out infinite',
-          }}
-        />
-      </div>
+    <div className="relative min-h-screen flex flex-col items-center justify-center px-8 py-16 overflow-hidden">
+      <WorldCanvas />
+      <ParallaxMountains />
 
       {/* Title */}
-      <h1 className="text-3xl font-mono text-[#50C878] mb-2 tracking-wider relative z-10">
-        CHOOSE YOUR PATH
-      </h1>
-      <p className="text-sm text-[#7FFFD4]/60 font-mono mb-8">
-        Select a Master of the Celestial Snoot Sect
-      </p>
+      <div className="relative z-10 text-center mb-12" style={{ zIndex: 5 }}>
+        <div className="h-eyebrow mb-3">Sect of the Sleeping Loaf</div>
+        <h1
+          className="font-display text-[44px] md:text-[56px] font-black gold-text"
+          style={{ letterSpacing: '0.20em' }}
+        >
+          CHOOSE YOUR PATH
+        </h1>
+        <div className="flex items-center justify-center gap-3 mt-4">
+          <span className="diamond" />
+          <span className="h-eyebrow">Select a Master to lead the sect</span>
+          <span className="diamond" />
+        </div>
+      </div>
 
-      {/* Master Grid */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-4 mb-8 max-w-5xl">
+      {/* Master grid */}
+      <div
+        className="relative grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-4 mb-10 max-w-5xl"
+        style={{ zIndex: 5 }}
+      >
         {MASTER_IDS.map((id) => {
           const master = MASTERS[id];
-          const icon = ROLE_ICONS[master.role] || '\uD83D\uDC31';
+          const glyph = ROLE_GLYPHS[master.role] ?? '士';
           const isActive = activeId === id;
 
           return (
             <button
               key={id}
-              className="flex flex-col items-center p-4 rounded-lg border-2 transition-all duration-200 cursor-pointer focus-visible:ring-2 focus-visible:ring-[#50C878]"
+              className="panel relative flex flex-col items-center p-4 transition-all cursor-pointer focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--gold)]"
               style={{
-                borderColor: isActive ? master.color : 'rgba(255,255,255,0.1)',
-                backgroundColor: isActive ? `${master.color}15` : 'rgba(255,255,255,0.03)',
-                boxShadow: isActive ? `0 0 20px ${master.color}40` : 'none',
-                transform: isActive ? 'scale(1.05)' : 'scale(1)',
+                borderColor: isActive ? master.color : 'rgba(230, 194, 117, 0.22)',
+                boxShadow: isActive
+                  ? `0 0 0 1px ${master.color}, 0 0 28px -4px ${master.color}99, inset 0 1px 0 rgba(255,225,170,0.12)`
+                  : undefined,
+                transform: isActive ? 'translateY(-2px)' : 'translateY(0)',
               }}
               onMouseEnter={() => setHoveredId(id)}
               onMouseLeave={() => setHoveredId(null)}
               onClick={() => handleSelect(id)}
               aria-label={`Select ${master.name}, ${master.title}`}
             >
-              {/* Portrait icon */}
+              {/* Portrait — big tinted glyph badge */}
               <div
-                className="w-20 h-20 rounded-lg mb-2 flex items-center justify-center text-3xl relative overflow-hidden"
+                className="rune mb-3"
                 style={{
-                  background: `linear-gradient(135deg, ${master.color}40, ${master.color}15)`,
-                  border: `2px solid ${master.color}50`,
-                  boxShadow: isActive ? `inset 0 0 15px ${master.color}30, 0 0 10px ${master.color}20` : `inset 0 2px 4px rgba(0,0,0,0.3)`,
+                  width: 64,
+                  height: 64,
+                  background: `radial-gradient(circle at 35% 30%, ${master.color}55, ${master.color}22 60%, rgba(0,0,0,0.4))`,
+                  border: `1px solid ${master.color}88`,
+                  color: '#fff7df',
+                  fontSize: 28,
+                  textShadow: `0 0 14px ${master.color}cc`,
                 }}
               >
-                {icon}
+                {glyph}
               </div>
-              <span className="text-xs font-mono font-bold" style={{ color: master.color }}>
+              <span
+                className="font-display text-[13px] font-bold tracking-[0.10em] uppercase"
+                style={{ color: master.color, textShadow: `0 0 8px ${master.color}66` }}
+              >
                 {master.name}
               </span>
-              <span className="text-xs text-white/50 font-mono">{master.role}</span>
+              <span className="h-eyebrow mt-0.5">{master.role}</span>
             </button>
           );
         })}
       </div>
 
-      {/* Detail Panel */}
+      {/* Detail card */}
       <div
-        className="w-full max-w-lg p-6 rounded-lg border transition-all duration-300 min-h-[160px]"
+        className="relative panel panel-ornate w-full max-w-2xl p-6 transition-all duration-300 min-h-[200px]"
         style={{
-          borderColor: hovered ? `${hovered.color}60` : 'rgba(255,255,255,0.1)',
-          backgroundColor: hovered ? `${hovered.color}08` : 'rgba(255,255,255,0.02)',
+          borderColor: hovered ? `${hovered.color}aa` : 'rgba(230, 194, 117, 0.22)',
           transform: detailVisible ? 'translateY(0)' : 'translateY(8px)',
-          opacity: detailVisible ? 1 : 0,
+          opacity: hovered ? (detailVisible ? 1 : 0) : 1,
+          zIndex: 5,
         }}
       >
         {hovered ? (
           <>
-            <div className="flex items-center gap-3 mb-3">
-              <span className="text-lg font-mono font-bold" style={{ color: hovered.color }}>
-                {hovered.name}
-              </span>
-              <span className="text-xs text-white/50 font-mono">{hovered.title}</span>
-            </div>
-            <p className="text-xs text-white/60 font-mono mb-3">{hovered.description}</p>
-            <div className="p-3 rounded border border-white/10 bg-white/5">
-              <span className="text-xs text-white/50 font-mono uppercase tracking-wider">
-                Passive: {hovered.passive.name}
-              </span>
-              <p className="text-xs text-[#7FFFD4] font-mono mt-1">{hovered.passive.description}</p>
-            </div>
-            <p className="text-xs text-white/50 font-mono mt-3 italic">
-              &quot;{hovered.quotes[0]}&quot;
-            </p>
-            {isTouchDevice && selectedForDetail === activeId && (
-              <button
-                className="mt-3 px-4 py-2 rounded border font-mono text-xs transition-all focus-visible:ring-2 focus-visible:ring-[#50C878]"
+            <div className="flex items-center gap-4 mb-4">
+              <div
+                className="rune"
                 style={{
-                  borderColor: hovered.color,
-                  color: hovered.color,
-                  backgroundColor: `${hovered.color}15`,
-                }}
-                onClick={() => {
-                  engine.master.selectMaster(activeId as MasterId);
-                  useGameStore.setState({ selectedMaster: activeId as MasterId });
-                  setScreen('game');
+                  width: 48,
+                  height: 48,
+                  background: `radial-gradient(circle at 35% 30%, ${hovered.color}55, ${hovered.color}22 60%, rgba(0,0,0,0.4))`,
+                  border: `1px solid ${hovered.color}88`,
+                  color: '#fff7df',
+                  fontSize: 22,
+                  textShadow: `0 0 14px ${hovered.color}cc`,
                 }}
               >
-                Select {hovered.name}
+                {ROLE_GLYPHS[hovered.role] ?? '士'}
+              </div>
+              <div className="leading-tight">
+                <div
+                  className="font-display text-[20px] font-black tracking-[0.10em] uppercase"
+                  style={{ color: hovered.color, textShadow: `0 0 10px ${hovered.color}66` }}
+                >
+                  {hovered.name}
+                </div>
+                <div className="h-eyebrow">{hovered.title}</div>
+              </div>
+            </div>
+
+            <p className="text-base mb-4" style={{ color: 'var(--ink)' }}>
+              {hovered.description}
+            </p>
+
+            <div className="p-3 mb-4" style={{ background: 'rgba(0,0,0,0.35)', border: '1px solid var(--rule)' }}>
+              <div className="h-eyebrow mb-1">Passive · {hovered.passive.name}</div>
+              <div className="text-sm" style={{ color: 'var(--jade-bright)' }}>
+                {hovered.passive.description}
+              </div>
+            </div>
+
+            <p
+              className="text-sm italic mb-4"
+              style={{ color: 'var(--ink-mute)' }}
+            >
+              &ldquo;{hovered.quotes[0]}&rdquo;
+            </p>
+
+            {isTouchDevice && selectedForDetail === activeId && (
+              <button
+                className="btn btn-primary w-full"
+                onClick={() => commit(activeId as MasterId)}
+              >
+                Begin · {hovered.name}
+              </button>
+            )}
+            {!isTouchDevice && (
+              <button
+                className="btn btn-primary w-full"
+                onClick={() => commit(activeId as MasterId)}
+              >
+                Begin Cultivation
               </button>
             )}
           </>
         ) : (
-          <p className="text-xs text-white/50 font-mono text-center pt-12">
-            {isTouchDevice ? 'Tap a master to see their details' : 'Hover over a master to see their details'}
+          <p
+            className="text-center text-sm pt-12"
+            style={{ color: 'var(--ink-dim)' }}
+          >
+            {isTouchDevice
+              ? 'Tap a master to read their scroll'
+              : 'Hover over a master to read their scroll'}
           </p>
         )}
       </div>
 
-      {/* Footer */}
-      <p className="text-xs text-white/40 font-mono mt-8">
-        &quot;The journey of a thousand boops begins with a single snoot.&quot;
+      {/* Footer maxim */}
+      <p
+        className="relative font-display italic text-sm mt-10 tracking-[0.16em]"
+        style={{ color: 'var(--ink-dim)', zIndex: 5 }}
+      >
+        &ldquo;The journey of a thousand boops begins with a single snoot.&rdquo;
       </p>
-
-      <style>{`
-        @keyframes shimmerPulse {
-          0%, 100% { opacity: 0.08; transform: translateX(-50%) scale(1); }
-          50% { opacity: 0.15; transform: translateX(-50%) scale(1.1); }
-        }
-      `}</style>
     </div>
   );
 }

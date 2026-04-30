@@ -17,27 +17,31 @@ export interface Notification {
 }
 
 export type PanelId =
-  | 'cats'
-  | 'waifus'
+  | 'sanctuary'    // The Snoot Altar (default view, boop happens here)
+  | 'cats'         // Roster
+  | 'waifus'       // Bond Hall
   | 'upgrades'
-  | 'equipment'
-  | 'buildings'
-  | 'cultivation'
+  | 'equipment'    // Relics
+  | 'buildings'    // Sect Hall
+  | 'cultivation'  // Realms
   | 'techniques'
   | 'goose'
   | 'achievements'
   | 'lore'
   | 'settings'
-  | 'prestige'
+  | 'prestige'     // Dao Tree (Ascend)
+  | 'reincarnation'// Reincarnation (separate from prestige in design)
   | 'wheel'
   | 'crafting'
   | 'daily'
   | 'catino'
-  | 'social';
+  | 'social'       // Friends
+  | 'sectWar'      // Sect War
+  | 'tournament';  // Celestial Tournament
 
 interface UIState {
   currentScreen: GameScreen;
-  activePanel: PanelId | null;
+  activePanel: PanelId;
   modalStack: string[];
   notifications: Notification[];
   showSaveIndicator: boolean;
@@ -46,7 +50,7 @@ interface UIState {
   // Actions
   setScreen: (screen: GameScreen) => void;
   openPanel: (panel: PanelId) => void;
-  closePanel: () => void;
+  closePanel: () => void; // returns to sanctuary
   togglePanel: (panel: PanelId) => void;
   pushModal: (modalId: string) => void;
   popModal: () => void;
@@ -62,7 +66,7 @@ let notifCounter = 0;
 
 export const useUIStore = create<UIState>()((set, get) => ({
   currentScreen: 'master_select',
-  activePanel: null,
+  activePanel: 'sanctuary',
   modalStack: [],
   notifications: [],
   showSaveIndicator: false,
@@ -77,12 +81,12 @@ export const useUIStore = create<UIState>()((set, get) => ({
   },
 
   closePanel: () => {
-    set({ activePanel: null });
+    set({ activePanel: 'sanctuary' });
   },
 
   togglePanel: (panel: PanelId) => {
     set((state) => ({
-      activePanel: state.activePanel === panel ? null : panel,
+      activePanel: state.activePanel === panel ? 'sanctuary' : panel,
     }));
   },
 

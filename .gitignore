@@ -13,3 +13,7 @@ Thumbs.db
 
 # Backup copies
 Snootboop/
+
+# Handoff/reference materials (design bundles, audits)
+.handoff/
+snoot-booper-next/.handoff/
