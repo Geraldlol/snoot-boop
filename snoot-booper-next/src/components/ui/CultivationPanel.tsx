@@ -1,35 +1,30 @@
+/**
+ * CultivationPanel — Realms (wuxia reskin).
+ * Realm progression with breakthrough ritual button.
+ */
+
 'use client';
 
-import { useGameStore } from '@/store/game-store';
 import { formatNumber } from '@/engine/big-number';
 import { engine } from '@/engine/engine';
 import { CULTIVATION_REALMS, type RealmPassive } from '@/engine/systems/progression/cultivation-system';
 import { useState } from 'react';
 
-export default function CultivationPanel() {
-  const bp = useGameStore((s) => s.currencies.bp);
-  const [, forceUpdate] = useState(0);
+const REALM_ORDER = [
+  'mortal', 'qi_condensation', 'foundation', 'core_formation',
+  'nascent_soul', 'dao_seeking', 'tribulation', 'immortal', 'heavenly_sovereign',
+] as const;
 
+export default function CultivationPanel() {
+  const [, force] = useState(0);
   const cult = engine.cultivation;
   const realmData = cult.getCurrentRealmData();
   const progress = cult.getProgress();
   const xpNeeded = cult.getXPForNextRank();
   const canBreak = cult.canBreakthrough();
   const stats = cult.getStats();
-  const nextRealm = getNextRealmName();
-
-  function getNextRealmName(): string | null {
-    const order = ['mortal', 'qi_condensation', 'foundation', 'core_formation', 'nascent_soul', 'dao_seeking', 'tribulation', 'immortal', 'heavenly_sovereign'];
-    const idx = order.indexOf(cult.currentRealm);
-    if (idx < 0 || idx >= order.length - 1) return null;
-    return CULTIVATION_REALMS[order[idx + 1] as keyof typeof CULTIVATION_REALMS].name;
-  }
-
-  function handleBreakthrough() {
-    engine.attemptBreakthrough();
-    forceUpdate((n) => n + 1);
-  }
-
+  const idx = REALM_ORDER.indexOf(cult.currentRealm as typeof REALM_ORDER[number]);
+  const nextRealm = idx >= 0 && idx < REALM_ORDER.length - 1 ? CULTIVATION_REALMS[REALM_ORDER[idx + 1]] : null;
   const attempts = cult.tribulationAttempts[
     Object.keys(CULTIVATION_REALMS).find(
       (k) => CULTIVATION_REALMS[k as keyof typeof CULTIVATION_REALMS].order === realmData.order + 1
@@ -39,85 +34,97 @@ export default function CultivationPanel() {
 
   return (
     <div>
-      <h2 className="text-sm font-mono font-bold mb-3" style={{ color: realmData.color }}>
-        🧘 Cultivation
-      </h2>
+      <div className="flex items-center gap-3 mb-4">
+        <div
+          className="glyph-badge"
+          style={{ color: realmData.color, width: 38, height: 38 }}
+        >
+          <span style={{ fontSize: 16 }}>境</span>
+        </div>
+        <div>
+          <div className="h-section">Cultivation Realms</div>
+          <div className="h-eyebrow">The path of qi refinement</div>
+        </div>
+      </div>
 
-      {/* Realm Progress */}
-      <div className="mb-4 p-3 rounded-lg border" style={{ borderColor: `${realmData.color}30`, backgroundColor: `${realmData.color}10` }}>
-        <div className="flex items-center gap-2 mb-2">
-          <span
-            className="px-2 py-0.5 rounded text-xs font-mono font-bold"
-            style={{ backgroundColor: `${realmData.color}30`, color: realmData.color }}
+      {/* Current realm hero card */}
+      <div
+        className="panel panel-ornate panel-elite p-5 mb-5 relative"
+        style={{ borderColor: `${realmData.color}aa`, background: `linear-gradient(180deg, ${realmData.color}10, rgba(8,14,22,0.95))` }}
+      >
+        <div className="flex items-start gap-4 mb-4">
+          <div
+            className="rune"
+            style={{
+              width: 64, height: 64, fontSize: 30,
+              background: `radial-gradient(circle at 35% 30%, ${realmData.color}66, ${realmData.color}22 60%, rgba(0,0,0,0.4))`,
+              border: `1px solid ${realmData.color}aa`,
+              color: '#fff7df',
+              textShadow: `0 0 16px ${realmData.color}cc`,
+            }}
           >
-            {realmData.name}
-          </span>
-          <span className="text-xs text-white/50 font-mono">
-            Rank {cult.currentRank}/{realmData.ranks === 999 ? '∞' : realmData.ranks}
-          </span>
-        </div>
-
-        {/* XP Bar */}
-        <div className="mb-1">
-          <div className="flex justify-between text-[9px] font-mono text-white/40 mb-1">
-            <span>XP</span>
-            <span>{formatNumber(cult.cultivationXP)} / {formatNumber(xpNeeded)}</span>
+            道
           </div>
-          <div className="w-full h-2 bg-white/5 rounded-full overflow-hidden">
-            <div
-              className="h-full rounded-full transition-all duration-300"
-              style={{ width: `${Math.min(100, progress * 100)}%`, backgroundColor: realmData.color }}
-            />
+          <div className="flex-1">
+            <div className="font-display text-[18px] font-black tracking-[0.08em]" style={{ color: realmData.color }}>
+              {realmData.name}
+            </div>
+            <div className="h-eyebrow mt-1">
+              Rank {cult.currentRank} / {realmData.ranks === 999 ? '∞' : realmData.ranks}
+            </div>
           </div>
         </div>
 
-        {/* Breakthrough */}
+        <div className="flex justify-between h-eyebrow mb-1">
+          <span>Cultivation XP</span>
+          <span>{formatNumber(cult.cultivationXP)} / {formatNumber(xpNeeded)}</span>
+        </div>
+        <div className="meter mb-3">
+          <div
+            className="meter-fill"
+            style={{ width: `${Math.min(100, progress * 100)}%`, background: `linear-gradient(90deg, ${realmData.color}55, ${realmData.color}, ${realmData.color}cc)` }}
+          />
+        </div>
+
         {canBreak && nextRealm && (
-          <div className="mt-3">
-            <div className="text-[9px] font-mono text-white/40 mb-1">
-              Breakthrough to {nextRealm} — {successChance}% success
+          <>
+            <div className="h-eyebrow mb-2">
+              Breakthrough to <span style={{ color: nextRealm.color }}>{nextRealm.name}</span> · {successChance}% success
             </div>
             <button
-              className="w-full px-3 py-2 rounded text-xs font-mono font-bold transition-all cursor-pointer"
-              style={{
-                backgroundColor: `${realmData.color}20`,
-                color: realmData.color,
-                border: `1px solid ${realmData.color}30`,
-              }}
-              onClick={handleBreakthrough}
+              className="btn ascend-btn ready w-full"
+              onClick={() => { engine.attemptBreakthrough(); force((n) => n + 1); }}
             >
-              ⚡ Attempt Breakthrough
+              ⚡ Attempt the Breakthrough
             </button>
-          </div>
+          </>
         )}
       </div>
 
-      {/* Passives */}
-      <div className="mb-4">
-        <h3 className="text-xs font-mono text-white/60 font-bold mb-2">Realm Passives</h3>
+      {/* Current realm passives */}
+      <div className="mb-5">
+        <div className="h-section mb-2 text-left" style={{ fontSize: 11 }}>Realm Passives</div>
         <div className="flex flex-col gap-1.5">
-          {realmData.passives.map((passive) => {
-            const key = `${cult.currentRealm}_${passive.rank}`;
+          {realmData.passives.map((p) => {
+            const key = `${cult.currentRealm}_${p.rank}`;
             const unlocked = cult.passivesUnlocked.includes(key);
-            return (
-              <PassiveRow key={key} passive={passive} unlocked={unlocked} color={realmData.color} />
-            );
+            return <PassiveRow key={key} passive={p} unlocked={unlocked} color={realmData.color} />;
           })}
         </div>
       </div>
 
-      {/* Previously unlocked passives from earlier realms */}
+      {/* All unlocked */}
       {cult.passivesUnlocked.length > 0 && (
-        <div className="mb-4">
-          <h3 className="text-xs font-mono text-white/60 font-bold mb-2">
-            All Unlocked ({cult.getUnlockedPassives().length})
-          </h3>
-          <div className="flex flex-col gap-1">
+        <div className="mb-5">
+          <div className="h-section mb-2 text-left" style={{ fontSize: 11 }}>
+            Unlocked Across All Realms ({cult.getUnlockedPassives().length})
+          </div>
+          <div className="flex flex-col gap-0.5">
             {cult.getUnlockedPassives().map((p, i) => (
-              <div key={i} className="text-[9px] font-mono text-white/40 flex items-center gap-1">
+              <div key={i} className="text-xs flex items-center gap-2">
                 <span style={{ color: realmData.color }}>✦</span>
-                <span className="text-white/60">{p.name}</span>
-                <span className="text-white/50">— {p.description}</span>
+                <span style={{ color: 'var(--ink)' }}>{p.name}</span>
+                <span style={{ color: 'var(--ink-dim)' }}>— {p.description}</span>
               </div>
             ))}
           </div>
@@ -125,14 +132,14 @@ export default function CultivationPanel() {
       )}
 
       {/* Stats */}
-      <div className="pt-3 border-t border-white/5">
-        <h3 className="text-xs font-mono text-white/60 font-bold mb-2">Stats</h3>
-        <div className="grid grid-cols-2 gap-1 text-[9px] font-mono text-white/40">
-          <span>Total XP:</span><span className="text-right text-white/60">{formatNumber(stats.totalXPEarned)}</span>
-          <span>Breakthroughs:</span><span className="text-right text-white/60">{stats.realmBreakthroughs}</span>
-          <span>Tribulation Wins:</span><span className="text-right text-white/60">{stats.tribulationSuccesses}</span>
-          <span>Tribulation Fails:</span><span className="text-right text-white/60">{stats.tribulationFailures}</span>
-          <span>Dao Wounds:</span><span className="text-right text-white/60">{cult.daoWounds}</span>
+      <div className="panel p-3" style={{ background: 'rgba(0,0,0,0.3)' }}>
+        <div className="h-eyebrow mb-2">Sect Records</div>
+        <div className="grid grid-cols-2 gap-x-4 gap-y-1 font-mono text-[11px]">
+          <Pair label="Total XP" value={formatNumber(stats.totalXPEarned)} />
+          <Pair label="Breakthroughs" value={String(stats.realmBreakthroughs)} />
+          <Pair label="Tribulation Wins" value={String(stats.tribulationSuccesses)} />
+          <Pair label="Tribulation Fails" value={String(stats.tribulationFailures)} />
+          <Pair label="Dao Wounds" value={String(cult.daoWounds)} />
         </div>
       </div>
     </div>
@@ -142,17 +149,29 @@ export default function CultivationPanel() {
 function PassiveRow({ passive, unlocked, color }: { passive: RealmPassive; unlocked: boolean; color: string }) {
   return (
     <div
-      className="flex items-center gap-2 px-2 py-1.5 rounded text-xs font-mono"
+      className="flex items-center gap-3 px-3 py-2 font-mono text-xs"
       style={{
-        backgroundColor: unlocked ? `${color}10` : 'rgba(255,255,255,0.02)',
-        opacity: unlocked ? 1 : 0.4,
+        background: unlocked ? `${color}10` : 'rgba(0,0,0,0.3)',
+        border: `1px solid ${unlocked ? `${color}44` : 'var(--rule)'}`,
+        opacity: unlocked ? 1 : 0.5,
       }}
     >
-      <span className="text-white/50 w-6">R{passive.rank}</span>
-      <span style={{ color: unlocked ? color : 'rgba(255,255,255,0.4)' }} className="font-bold">
+      <span className="font-display text-[10px] tracking-[0.16em]" style={{ color: 'var(--ink-dim)', minWidth: 24 }}>
+        R{passive.rank}
+      </span>
+      <span className="font-display text-[12px]" style={{ color: unlocked ? color : 'var(--ink-mute)' }}>
         {passive.name}
       </span>
-      <span className="text-white/40 ml-auto text-[9px]">{passive.description}</span>
+      <span className="ml-auto" style={{ color: 'var(--ink-mute)' }}>{passive.description}</span>
     </div>
+  );
+}
+
+function Pair({ label, value }: { label: string; value: string }) {
+  return (
+    <>
+      <span style={{ color: 'var(--ink-dim)' }}>{label}</span>
+      <span className="text-right" style={{ color: 'var(--gold-bright)' }}>{value}</span>
+    </>
   );
 }

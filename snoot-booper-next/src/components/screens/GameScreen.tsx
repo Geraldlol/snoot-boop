@@ -66,13 +66,12 @@ const PANEL_COMPONENTS: Partial<Record<PanelId, React.ComponentType>> = {
   lore: LorePanel,
   settings: SettingsPanel,
   prestige: PrestigePanel,
-  reincarnation: PrestigePanel, // shares engine.prestige; tab inside selects reincarnation view in Phase 4
+  // 'reincarnation' is rendered as PrestigePanel with tabHint='reincarnation' in PanelRouter.
   crafting: CraftingPanel,
   daily: DailyPanel,
   catino: CatinoPanel,
   social: SocialPanel,
   sectWar: SectWarPanel,
-  // Phase 5 will add a real TournamentPanel; for Phase 1 we render a placeholder.
 };
 
 export default function GameScreen() {
@@ -123,10 +122,14 @@ export default function GameScreen() {
 
 // Panels that have already been reskinned for the wuxia shell handle their
 // own .panel framing. Wrapping them again would double up.
-const SELF_STYLED: ReadonlyArray<PanelId> = ['sanctuary', 'cats', 'waifus', 'equipment', 'goose'];
+const SELF_STYLED: ReadonlyArray<PanelId> = [
+  'sanctuary', 'cats', 'waifus', 'equipment', 'goose',
+  'upgrades', 'techniques', 'cultivation', 'buildings', 'prestige', 'reincarnation',
+];
 
 function PanelRouter({ id }: { id: PanelId }) {
   if (id === 'sanctuary') return <SnootAltar />;
+  if (id === 'reincarnation') return <PrestigePanel tabHint="reincarnation" />;
 
   if (id === 'tournament') {
     return (

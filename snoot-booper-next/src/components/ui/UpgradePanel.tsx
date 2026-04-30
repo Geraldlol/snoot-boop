@@ -1,5 +1,6 @@
 /**
- * UpgradePanel - Purchase upgrades from the 3 categories.
+ * UpgradePanel — wuxia reskin.
+ * Tabbed by upgrade category. Reads engine.upgrade.*; calls engine.purchaseUpgrade.
  */
 
 'use client';
@@ -11,88 +12,95 @@ import { UPGRADE_CATEGORIES, UPGRADE_TEMPLATES, type UpgradeTemplate } from '@/e
 import { useState } from 'react';
 
 export default function UpgradePanel() {
-  const [selectedCategory, setSelectedCategory] = useState(UPGRADE_CATEGORIES[0].id);
+  const [selected, setSelected] = useState(UPGRADE_CATEGORIES[0].id);
   const bp = useGameStore((s) => s.currencies.bp);
-
-  const upgrades = UPGRADE_TEMPLATES.filter((t) => t.category === selectedCategory);
+  const upgrades = UPGRADE_TEMPLATES.filter((t) => t.category === selected);
 
   return (
     <div>
-      <h2 className="text-sm font-mono text-[#50C878] font-bold mb-3">Upgrades</h2>
-
-      {/* Category tabs */}
-      <div className="flex gap-2 mb-4">
-        {UPGRADE_CATEGORIES.map((cat) => (
-          <button
-            key={cat.id}
-            className="px-3 py-1.5 rounded text-xs font-mono font-bold transition-all cursor-pointer"
-            style={{
-              backgroundColor: selectedCategory === cat.id ? `${cat.color}30` : 'rgba(255,255,255,0.05)',
-              color: selectedCategory === cat.id ? cat.color : 'rgba(255,255,255,0.4)',
-              borderBottom: selectedCategory === cat.id ? `2px solid ${cat.color}` : '2px solid transparent',
-            }}
-            onClick={() => setSelectedCategory(cat.id)}
-          >
-            {cat.emoji} {cat.name}
-          </button>
-        ))}
+      <div className="flex items-center gap-3 mb-4">
+        <div className="glyph-badge" style={{ color: 'var(--gold-bright)', width: 38, height: 38 }}>
+          <span style={{ fontSize: 16 }}>增</span>
+        </div>
+        <div>
+          <div className="h-section">Cultivation Upgrades</div>
+          <div className="h-eyebrow">Spend boop points to refine your path</div>
+        </div>
       </div>
 
-      {/* Upgrade list */}
+      {/* Category tabs */}
+      <div className="flex gap-0 mb-4 border-b" style={{ borderColor: 'var(--rule)' }}>
+        {UPGRADE_CATEGORIES.map((cat) => {
+          const active = selected === cat.id;
+          return (
+            <button
+              key={cat.id}
+              onClick={() => setSelected(cat.id)}
+              className="font-display text-[11px] tracking-[0.16em] uppercase px-4 py-2 cursor-pointer relative"
+              style={{
+                color: active ? cat.color : 'var(--ink-mute)',
+                borderBottom: `2px solid ${active ? cat.color : 'transparent'}`,
+                marginBottom: -1,
+              }}
+            >
+              {cat.name}
+            </button>
+          );
+        })}
+      </div>
+
       <div className="flex flex-col gap-2">
-        {upgrades.map((template) => (
-          <UpgradeRow key={template.id} template={template} currentBP={bp} />
+        {upgrades.map((t) => (
+          <UpgradeRow key={t.id} template={t} currentBP={bp} accent={UPGRADE_CATEGORIES.find((c) => c.id === selected)?.color ?? 'var(--gold)'} />
         ))}
       </div>
     </div>
   );
 }
 
-function UpgradeRow({ template, currentBP }: { template: UpgradeTemplate; currentBP: number }) {
+function UpgradeRow({ template, currentBP, accent }: { template: UpgradeTemplate; currentBP: number; accent: string }) {
   const level = engine.upgrade.getLevel(template.id);
   const cost = engine.upgrade.getCost(template.id);
   const maxed = level >= template.maxLevel;
   const canBuy = !maxed && engine.upgrade.canPurchase(template.id, currentBP);
-
-  // Check requirements
   const reqsMet = !template.requires || template.requires.every(
     (req) => engine.upgrade.getLevel(req.upgradeId) >= req.level
   );
 
-  const handlePurchase = () => {
-    if (!canBuy) return;
-    engine.purchaseUpgrade(template.id);
-  };
-
   return (
     <div
-      className={`p-3 rounded border transition-all ${
-        !reqsMet ? 'opacity-40' : ''
-      }`}
+      className="panel p-3"
       style={{
-        borderColor: maxed ? 'rgba(80, 200, 120, 0.3)' : canBuy ? 'rgba(255,255,255,0.15)' : 'rgba(255,255,255,0.05)',
-        backgroundColor: maxed ? 'rgba(80, 200, 120, 0.05)' : 'rgba(0,0,0,0.2)',
+        background: 'rgba(0,0,0,0.3)',
+        borderColor: maxed ? 'var(--jade-deep)' : `${accent}33`,
+        opacity: reqsMet ? 1 : 0.4,
       }}
     >
       <div className="flex items-center justify-between mb-1">
-        <span className="text-xs font-mono font-bold text-white/90">{template.name}</span>
-        <span className="text-xs font-mono text-white/40">
+        <span className="font-display text-[12px] tracking-[0.06em]" style={{ color: '#fff7df' }}>
+          {template.name}
+        </span>
+        <span className="font-mono text-[10px]" style={{ color: 'var(--ink-mute)' }}>
           Lv {level}/{template.maxLevel}
         </span>
       </div>
+      <div className="meter mb-2" style={{ height: 4 }}>
+        <div
+          className={`meter-fill ${maxed ? 'jade' : ''}`}
+          style={{ width: `${(level / template.maxLevel) * 100}%`, background: maxed ? undefined : `linear-gradient(90deg, ${accent}66, ${accent})` }}
+        />
+      </div>
 
-      <p className="text-xs font-mono text-white/50 mb-2">{template.description}</p>
+      <p className="text-xs mb-2" style={{ color: 'var(--ink-mute)' }}>{template.description}</p>
 
-      {/* Requirements */}
       {template.requires && !reqsMet && (
-        <div className="text-[9px] font-mono text-red-400/70 mb-2">
-          Requires:{' '}
-          {template.requires.map((req) => {
-            const reqTemplate = UPGRADE_TEMPLATES.find((t) => t.id === req.upgradeId);
+        <div className="font-mono text-[10px] mb-2" style={{ color: 'var(--vermillion-bright)' }}>
+          Requires: {template.requires.map((req) => {
+            const reqT = UPGRADE_TEMPLATES.find((t) => t.id === req.upgradeId);
             const met = engine.upgrade.getLevel(req.upgradeId) >= req.level;
             return (
-              <span key={req.upgradeId} className={met ? 'text-green-400/70' : ''}>
-                {reqTemplate?.name ?? req.upgradeId} Lv{req.level}
+              <span key={req.upgradeId} style={{ color: met ? 'var(--jade-bright)' : undefined }}>
+                {reqT?.name ?? req.upgradeId} Lv{req.level}{' '}
               </span>
             );
           })}
@@ -101,21 +109,17 @@ function UpgradeRow({ template, currentBP }: { template: UpgradeTemplate; curren
 
       {!maxed && reqsMet && (
         <button
-          className={`w-full py-1.5 rounded text-xs font-mono font-bold transition-all ${
-            canBuy
-              ? 'bg-[#E94560]/20 text-[#E94560] border border-[#E94560]/30 hover:bg-[#E94560]/30 cursor-pointer'
-              : 'bg-white/5 text-white/50 border border-white/5 cursor-not-allowed'
-          }`}
-          onClick={handlePurchase}
+          className={`btn w-full ${canBuy ? 'btn-primary' : ''}`}
           disabled={!canBuy}
+          onClick={() => engine.purchaseUpgrade(template.id)}
         >
-          {cost === Infinity ? 'MAX' : `Buy — ${formatNumber(cost)} BP`}
+          {cost === Infinity ? 'Maxed' : `Refine · ${formatNumber(cost)} bp`}
         </button>
       )}
 
       {maxed && (
-        <div className="text-xs font-mono text-[#50C878] text-center">
-          MASTERED
+        <div className="text-center font-display text-[11px] tracking-[0.16em] uppercase" style={{ color: 'var(--jade-bright)' }}>
+          ✦ Mastered
         </div>
       )}
     </div>

@@ -1,6 +1,10 @@
+/**
+ * TechniquePanel — wuxia reskin.
+ * Stances + Hidden Skills tabs. Reads engine.technique.
+ */
+
 'use client';
 
-import { useGameStore } from '@/store/game-store';
 import { engine } from '@/engine/engine';
 import { STANCES, HIDDEN_SKILLS, type StanceData } from '@/engine/systems/progression/technique-system';
 import { useState } from 'react';
@@ -9,69 +13,105 @@ type Tab = 'stances' | 'skills';
 
 export default function TechniquePanel() {
   const [tab, setTab] = useState<Tab>('stances');
-  const [, forceUpdate] = useState(0);
-
+  const [, force] = useState(0);
   const tech = engine.technique;
 
   return (
     <div>
-      <h2 className="text-sm font-mono text-[#DC143C] font-bold mb-3">⚔️ Techniques</h2>
+      <div className="flex items-center gap-3 mb-4">
+        <div className="glyph-badge" style={{ color: 'var(--vermillion-bright)', width: 38, height: 38 }}>
+          <span style={{ fontSize: 16 }}>技</span>
+        </div>
+        <div>
+          <div className="h-section">Combat Techniques</div>
+          <div className="h-eyebrow">Stances of the inner discipline</div>
+        </div>
+      </div>
 
-      {/* Tabs */}
-      <div className="flex gap-2 mb-4">
-        {(['stances', 'skills'] as Tab[]).map((t) => (
-          <button
-            key={t}
-            className="px-3 py-1.5 rounded text-xs font-mono font-bold transition-all cursor-pointer"
-            style={{
-              backgroundColor: tab === t ? '#DC143C30' : 'rgba(255,255,255,0.05)',
-              color: tab === t ? '#DC143C' : 'rgba(255,255,255,0.4)',
-              borderBottom: tab === t ? '2px solid #DC143C' : '2px solid transparent',
-            }}
-            onClick={() => setTab(t)}
-          >
-            {t === 'stances' ? '🥋 Stances' : '🔮 Hidden Skills'}
-          </button>
-        ))}
+      <div className="flex gap-0 mb-4 border-b" style={{ borderColor: 'var(--rule)' }}>
+        {(['stances', 'skills'] as Tab[]).map((t) => {
+          const active = tab === t;
+          return (
+            <button
+              key={t}
+              onClick={() => setTab(t)}
+              className="font-display text-[11px] tracking-[0.16em] uppercase px-4 py-2 cursor-pointer"
+              style={{
+                color: active ? 'var(--vermillion-bright)' : 'var(--ink-mute)',
+                borderBottom: `2px solid ${active ? 'var(--vermillion-bright)' : 'transparent'}`,
+                marginBottom: -1,
+              }}
+            >
+              {t === 'stances' ? 'Stances' : 'Hidden Skills'}
+            </button>
+          );
+        })}
       </div>
 
       {tab === 'stances' && (
-        <StancesTab tech={tech} onSwitch={(id) => { tech.switchStance(id); forceUpdate((n) => n + 1); }} />
+        <div className="flex flex-col gap-3">
+          {Object.values(STANCES).map((stance) => {
+            const unlocked = tech.unlockedStances.includes(stance.id);
+            const active = tech.currentStance === stance.id;
+            const masteryLevel = tech.stanceMastery[stance.id] ?? 1;
+            const masteryXP = tech.stanceMasteryXP[stance.id] ?? 0;
+            const xpNeeded = Math.pow(masteryLevel + 1, 2) * 100;
+            const masteryProgress = masteryLevel >= stance.mastery.maxLevel ? 1 : masteryXP / xpNeeded;
+            return (
+              <StanceCard
+                key={stance.id}
+                stance={stance}
+                unlocked={unlocked}
+                active={active}
+                masteryLevel={masteryLevel}
+                masteryProgress={masteryProgress}
+                maxMastery={stance.mastery.maxLevel}
+                onSwitch={() => { tech.switchStance(stance.id); force((n) => n + 1); }}
+              />
+            );
+          })}
+        </div>
       )}
-      {tab === 'skills' && <SkillsTab tech={tech} />}
-    </div>
-  );
-}
 
-function StancesTab({ tech, onSwitch }: {
-  tech: typeof engine.technique;
-  onSwitch: (id: string) => void;
-}) {
-  const currentStance = tech.currentStance;
-
-  return (
-    <div className="flex flex-col gap-2.5">
-      {Object.values(STANCES).map((stance) => {
-        const unlocked = tech.unlockedStances.includes(stance.id);
-        const active = currentStance === stance.id;
-        const masteryLevel = tech.stanceMastery[stance.id] ?? 1;
-        const masteryXP = tech.stanceMasteryXP[stance.id] ?? 0;
-        const xpNeeded = Math.pow(masteryLevel + 1, 2) * 100;
-        const masteryProgress = masteryLevel >= stance.mastery.maxLevel ? 1 : masteryXP / xpNeeded;
-
-        return (
-          <StanceCard
-            key={stance.id}
-            stance={stance}
-            unlocked={unlocked}
-            active={active}
-            masteryLevel={masteryLevel}
-            masteryProgress={masteryProgress}
-            maxMastery={stance.mastery.maxLevel}
-            onSwitch={() => onSwitch(stance.id)}
-          />
-        );
-      })}
+      {tab === 'skills' && (
+        <div>
+          <div className="h-eyebrow mb-3">
+            Discovered: {tech.learnedSkills.length} / {HIDDEN_SKILLS.length}
+          </div>
+          <div className="flex flex-col gap-2">
+            {HIDDEN_SKILLS.map((skill) => {
+              const found = tech.learnedSkills.includes(skill.id);
+              return (
+                <div
+                  key={skill.id}
+                  className="panel p-3"
+                  style={{
+                    background: 'rgba(0,0,0,0.3)',
+                    opacity: found ? 1 : 0.4,
+                    filter: found ? 'none' : 'grayscale(0.6)',
+                  }}
+                >
+                  {found ? (
+                    <>
+                      <div className="font-display text-[12px] tracking-[0.06em] mb-1" style={{ color: 'var(--vermillion-bright)' }}>
+                        {skill.name}
+                      </div>
+                      <div className="text-xs mb-1" style={{ color: 'var(--ink-mute)' }}>{skill.description}</div>
+                      <div className="font-mono text-[10px]" style={{ color: 'var(--jade-bright)' }}>
+                        {Object.entries(skill.effect).map(([k, v]) => `${k}: ${v}`).join(' · ')}
+                      </div>
+                    </>
+                  ) : (
+                    <div className="font-display text-[12px] tracking-[0.06em]" style={{ color: 'var(--ink-dim)' }}>
+                      ??? Hidden Skill
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -87,82 +127,73 @@ function StanceCard({ stance, unlocked, active, masteryLevel, masteryProgress, m
 }) {
   return (
     <div
-      className="p-3 rounded-lg border"
+      className={`panel p-4 ${active ? 'selected-ring' : ''}`}
       style={{
-        borderColor: active ? `${stance.color}60` : unlocked ? 'rgba(255,255,255,0.08)' : 'rgba(255,255,255,0.03)',
-        backgroundColor: active ? `${stance.color}10` : 'rgba(255,255,255,0.02)',
-        opacity: unlocked ? 1 : 0.4,
+        background: 'rgba(0,0,0,0.3)',
+        borderColor: active ? stance.color : `${stance.color}33`,
+        opacity: unlocked ? 1 : 0.45,
       }}
     >
-      <div className="flex items-center justify-between mb-1">
+      <div className="flex items-center justify-between mb-2">
         <div className="flex items-center gap-2">
-          <span className="text-[11px] font-mono font-bold" style={{ color: unlocked ? stance.color : 'rgba(255,255,255,0.4)' }}>
+          <span className="font-display text-[14px] tracking-[0.06em]" style={{ color: unlocked ? stance.color : 'var(--ink-mute)' }}>
             {stance.name}
           </span>
           {active && (
-            <span className="px-1.5 py-0.5 rounded text-[10px] font-mono font-bold" style={{ backgroundColor: `${stance.color}30`, color: stance.color }}>
+            <span className="font-display text-[9px] tracking-[0.16em] px-1.5 py-0.5 uppercase" style={{ background: `${stance.color}22`, color: stance.color, border: `1px solid ${stance.color}66` }}>
               Active
             </span>
           )}
         </div>
         {!unlocked && (
-          <span className="text-[10px] font-mono text-white/50">
-            Requires: {stance.unlockRealm.replace(/_/g, ' ')}
+          <span className="font-mono text-[10px]" style={{ color: 'var(--ink-dim)' }}>
+            requires {stance.unlockRealm.replace(/_/g, ' ')}
           </span>
         )}
       </div>
 
-      <div className="text-[9px] font-mono text-white/40 mb-2">{stance.description}</div>
+      <p className="text-xs mb-3" style={{ color: 'var(--ink-mute)' }}>{stance.description}</p>
 
-      {/* Stats */}
-      <div className="grid grid-cols-3 gap-x-2 gap-y-0.5 mb-2 text-[10px] font-mono">
-        <Stat label="Power" value={`${stance.stats.boopPower}x`} />
-        <Stat label="Speed" value={`${stance.stats.boopSpeed}x`} />
-        <Stat label="Crit" value={`${(stance.stats.critChance * 100).toFixed(0)}%`} />
+      <div className="grid grid-cols-3 gap-x-3 gap-y-1 mb-3 font-mono text-[10px]">
+        <Stat label="Power"     value={`${stance.stats.boopPower}x`} />
+        <Stat label="Speed"     value={`${stance.stats.boopSpeed}x`} />
+        <Stat label="Crit"      value={`${(stance.stats.critChance * 100).toFixed(0)}%`} />
         <Stat label="Crit Mult" value={`${stance.stats.critMultiplier}x`} />
-        <Stat label="Decay" value={`${stance.stats.comboDecay}x`} />
+        <Stat label="Decay"     value={`${stance.stats.comboDecay}x`} />
       </div>
 
-      {/* Special */}
-      <div className="text-[10px] font-mono text-[#FFD700]/60 mb-2">
-        ⚡ {stance.special.name}: {stance.special.description}
+      <div className="text-xs mb-3" style={{ color: 'var(--gold-bright)' }}>
+        ✦ {stance.special.name}: <span style={{ color: 'var(--ink-mute)' }}>{stance.special.description}</span>
       </div>
 
       {stance.id === 'forbiddenTechnique' && (
-        <div className="text-[10px] font-mono text-red-400/60 mb-2">
-          ⚠️ Costs 5 Qi per boop
+        <div className="font-mono text-[10px] mb-3" style={{ color: 'var(--vermillion-bright)' }}>
+          ⚠ costs 5 qi per boop
         </div>
       )}
 
-      {/* Mastery bar */}
       {unlocked && (
-        <div className="mb-2">
-          <div className="flex justify-between text-[10px] font-mono text-white/50 mb-0.5">
-            <span>Mastery Lv {masteryLevel}/{maxMastery}</span>
+        <>
+          <div className="flex justify-between h-eyebrow mb-1">
+            <span>Mastery · Lv {masteryLevel}/{maxMastery}</span>
             <span>{(masteryProgress * 100).toFixed(0)}%</span>
           </div>
-          <div className="w-full h-1.5 bg-white/5 rounded-full overflow-hidden">
+          <div className="meter mb-3">
             <div
-              className="h-full rounded-full transition-all duration-300"
-              style={{ width: `${Math.min(100, masteryProgress * 100)}%`, backgroundColor: stance.color }}
+              className="meter-fill"
+              style={{ width: `${Math.min(100, masteryProgress * 100)}%`, background: `linear-gradient(90deg, ${stance.color}55, ${stance.color})` }}
             />
           </div>
-        </div>
-      )}
-
-      {/* Switch button */}
-      {unlocked && !active && (
-        <button
-          className="w-full px-2 py-1.5 rounded text-[9px] font-mono font-bold transition-all cursor-pointer"
-          style={{
-            backgroundColor: `${stance.color}20`,
-            color: stance.color,
-            border: `1px solid ${stance.color}30`,
-          }}
-          onClick={onSwitch}
-        >
-          Switch to {stance.name}
-        </button>
+          {!active && (
+            <button
+              className="btn w-full"
+              style={{ borderColor: `${stance.color}66`, color: stance.color }}
+              onClick={onSwitch}
+            >
+              Adopt · {stance.name}
+            </button>
+          )}
+        </>
       )}
     </div>
   );
@@ -171,53 +202,8 @@ function StanceCard({ stance, unlocked, active, masteryLevel, masteryProgress, m
 function Stat({ label, value }: { label: string; value: string }) {
   return (
     <div className="flex justify-between">
-      <span className="text-white/50">{label}</span>
-      <span className="text-white/60">{value}</span>
-    </div>
-  );
-}
-
-function SkillsTab({ tech }: { tech: typeof engine.technique }) {
-  const learned = tech.learnedSkills;
-  const totalSkills = HIDDEN_SKILLS.length;
-  const remaining = totalSkills - learned.length;
-
-  return (
-    <div>
-      <div className="text-[9px] font-mono text-white/40 mb-3">
-        Discovered: {learned.length}/{totalSkills}
-      </div>
-
-      <div className="flex flex-col gap-2">
-        {HIDDEN_SKILLS.map((skill) => {
-          const discovered = learned.includes(skill.id);
-          return (
-            <div
-              key={skill.id}
-              className="p-2.5 rounded-lg border border-white/5 bg-white/[0.02]"
-              style={{ opacity: discovered ? 1 : 0.3 }}
-            >
-              {discovered ? (
-                <>
-                  <div className="text-xs font-mono font-bold text-[#DC143C] mb-0.5">{skill.name}</div>
-                  <div className="text-[9px] font-mono text-white/40">{skill.description}</div>
-                  <div className="text-[10px] font-mono text-[#50C878]/50 mt-1">
-                    {Object.entries(skill.effect).map(([k, v]) => `${k}: ${v}`).join(', ')}
-                  </div>
-                </>
-              ) : (
-                <div className="text-xs font-mono text-white/50">??? Unknown Skill</div>
-              )}
-            </div>
-          );
-        })}
-      </div>
-
-      {remaining > 0 && (
-        <div className="text-[9px] font-mono text-white/50 text-center mt-3">
-          {remaining} skill{remaining !== 1 ? 's' : ''} yet to discover...
-        </div>
-      )}
+      <span style={{ color: 'var(--ink-dim)' }}>{label}</span>
+      <span style={{ color: 'var(--ink)' }}>{value}</span>
     </div>
   );
 }
