@@ -121,6 +121,10 @@ export default function GameScreen() {
   );
 }
 
+// Panels that have already been reskinned for the wuxia shell handle their
+// own .panel framing. Wrapping them again would double up.
+const SELF_STYLED: ReadonlyArray<PanelId> = ['sanctuary', 'cats', 'waifus', 'equipment', 'goose'];
+
 function PanelRouter({ id }: { id: PanelId }) {
   if (id === 'sanctuary') return <SnootAltar />;
 
@@ -152,8 +156,11 @@ function PanelRouter({ id }: { id: PanelId }) {
     );
   }
 
-  // Existing panels render inside a wuxia frame. Their internals stay the
-  // current style until Phases 3–6 reskin them.
+  // Reskinned panels render bare (they own their .panel framing).
+  // Legacy panels render inside a wuxia frame until reskinned in later phases.
+  if (SELF_STYLED.includes(id)) {
+    return <Component />;
+  }
   return (
     <div className="panel panel-ornate p-6 min-h-[480px]">
       <Component />

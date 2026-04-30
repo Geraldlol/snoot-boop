@@ -1,16 +1,25 @@
 /**
- * CatPanel - Cat collection view with recruitment, details, and management.
+ * CatPanel — Sanctuary Roster (wuxia reskin).
+ * Reads from cat-store + game-store; calls engine.recruitCat / cat.getXPToLevel.
  */
 
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useCatStore } from '@/store/cat-store';
 import { useGameStore } from '@/store/game-store';
 import { engine } from '@/engine/engine';
 import { formatNumber } from '@/engine/big-number';
-import { CAT_REALMS, REALM_ORDER, CAT_ELEMENTS, CAT_PERSONALITIES, STAR_BONUSES, RECRUITMENT_COSTS } from '@/engine/data/cats';
-import type { Cat, CatRealmId } from '@/engine/types';
+import {
+  CAT_REALMS, REALM_ORDER, CAT_ELEMENTS, CAT_PERSONALITIES, RECRUITMENT_COSTS,
+} from '@/engine/data/cats';
+import { TRAITS, type TraitId } from '@/engine/data/traits';
+import type { Cat, CatRealmId, ElementType } from '@/engine/types';
+
+const ELEMENT_GLYPHS: Record<ElementType, string> = {
+  metal: '金', wood: '木', water: '水', fire: '火',
+  earth: '土', void: '玄', chaos: '亂',
+};
 
 export default function CatPanel() {
   const cats = useCatStore((s) => s.cats);
@@ -18,195 +27,288 @@ export default function CatPanel() {
   const selectCat = useCatStore((s) => s.selectCat);
   const bp = useGameStore((s) => s.currencies.bp);
   const [recruitRealm, setRecruitRealm] = useState<CatRealmId>('kittenMortal');
+  const [flashId, setFlashId] = useState<string | null>(null);
+
+  // React to barks from BarkToast — flash the targeted cat row.
+  useEffect(() => {
+    function onBark(e: Event) {
+      const detail = (e as CustomEvent<{ catInstanceId: string }>).detail;
+      if (!detail?.catInstanceId) return;
+      setFlashId(detail.catInstanceId);
+      const t = setTimeout(() => setFlashId((id) => (id === detail.catInstanceId ? null : id)), 480);
+      return () => clearTimeout(t);
+    }
+    window.addEventListener('snoot:bark', onBark);
+    return () => window.removeEventListener('snoot:bark', onBark);
+  }, []);
 
   const selectedCat = selectedCatId ? cats.find((c) => c.instanceId === selectedCatId) : null;
-
-  const handleRecruit = () => {
-    engine.recruitCat(recruitRealm);
-  };
-
   const cost = RECRUITMENT_COSTS[recruitRealm];
   const canRecruit = bp >= cost;
 
   return (
     <div>
-      <h2 className="text-sm font-mono text-[#FFD700] font-bold mb-3">
-        Cat Sanctuary ({cats.length})
-      </h2>
+      {/* Header */}
+      <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center gap-3">
+          <div className="glyph-badge" style={{ color: 'var(--gold-bright)', width: 38, height: 38 }}>
+            <span style={{ fontSize: 16 }}>貓</span>
+          </div>
+          <div>
+            <div className="h-section">Sanctuary Roster</div>
+            <div className="h-eyebrow">{cats.length} disciples cultivate within</div>
+          </div>
+        </div>
+      </div>
 
       {/* Recruitment */}
-      <div className="mb-4 p-3 rounded border border-white/10 bg-black/20">
-        <div className="text-xs font-mono text-white/50 mb-2">RECRUIT CAT</div>
-        <div className="flex gap-2 mb-2 flex-wrap">
+      <div className="panel p-4 mb-5" style={{ background: 'rgba(0,0,0,0.3)' }}>
+        <div className="h-eyebrow mb-3">Recruit a wandering cat</div>
+        <div className="flex gap-2 mb-3 flex-wrap">
           {REALM_ORDER.slice(0, 5).map((realmId) => {
             const realm = CAT_REALMS[realmId];
+            const active = recruitRealm === realmId;
             return (
               <button
                 key={realmId}
-                className="px-2 py-1 rounded text-[9px] font-mono cursor-pointer transition-all"
-                style={{
-                  backgroundColor: recruitRealm === realmId ? `${realm.color}30` : 'rgba(255,255,255,0.05)',
-                  color: recruitRealm === realmId ? realm.color : 'rgba(255,255,255,0.4)',
-                  borderBottom: recruitRealm === realmId ? `2px solid ${realm.color}` : '2px solid transparent',
-                }}
                 onClick={() => setRecruitRealm(realmId)}
+                className="px-3 py-1.5 font-display text-[10px] tracking-[0.16em] uppercase transition-all cursor-pointer"
+                style={{
+                  background: active ? `${realm.color}22` : 'rgba(255,255,255,0.04)',
+                  border: `1px solid ${active ? realm.color : 'var(--rule)'}`,
+                  color: active ? realm.color : 'var(--ink-mute)',
+                  borderRadius: 1,
+                }}
               >
-                {realm.emoji} {realm.name}
+                {realm.emoji ? `${realm.emoji} ` : ''}{realm.name}
               </button>
             );
           })}
         </div>
         <button
-          className={`w-full py-1.5 rounded text-xs font-mono font-bold transition-all ${
-            canRecruit
-              ? 'bg-[#FFD700]/20 text-[#FFD700] border border-[#FFD700]/30 hover:bg-[#FFD700]/30 cursor-pointer'
-              : 'bg-white/5 text-white/50 border border-white/5 cursor-not-allowed'
-          }`}
-          onClick={handleRecruit}
+          className={`btn w-full ${canRecruit ? 'btn-primary' : ''}`}
+          onClick={() => engine.recruitCat(recruitRealm)}
           disabled={!canRecruit}
         >
-          Recruit — {formatNumber(cost)} BP
+          Recruit · {formatNumber(cost)} bp
         </button>
       </div>
 
-      {/* Cat List */}
-      <div className="flex flex-col gap-1.5 max-h-[300px] overflow-y-auto">
-        {cats.length === 0 ? (
-          <p className="text-xs text-white/50 font-mono text-center py-4">
-            No cats yet. Recruit your first feline disciple!
-          </p>
-        ) : (
-          cats.map((cat) => (
-            <CatRow
+      {/* Roster grid */}
+      {cats.length === 0 ? (
+        <p className="text-center py-12 italic" style={{ color: 'var(--ink-dim)' }}>
+          The sanctuary halls are empty. Recruit your first feline disciple.
+        </p>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          {cats.map((cat) => (
+            <CatCard
               key={cat.instanceId}
               cat={cat}
               selected={selectedCatId === cat.instanceId}
+              flash={flashId === cat.instanceId}
               onClick={() => selectCat(selectedCatId === cat.instanceId ? null : cat.instanceId)}
             />
-          ))
-        )}
-      </div>
+          ))}
+        </div>
+      )}
 
-      {/* Selected Cat Detail */}
-      {selectedCat && <CatDetail cat={selectedCat} />}
+      {/* Selected cat detail */}
+      {selectedCat && (
+        <div className="mt-5">
+          <CatDetail cat={selectedCat} />
+        </div>
+      )}
     </div>
   );
 }
 
-// ─── Cat Row ─────────────────────────────────────────────────
+// ─── Cat Card ──────────────────────────────────────────────
 
-function CatRow({ cat, selected, onClick }: { cat: Cat; selected: boolean; onClick: () => void }) {
+function CatCard({
+  cat, selected, flash, onClick,
+}: {
+  cat: Cat; selected: boolean; flash: boolean; onClick: () => void;
+}) {
   const realm = CAT_REALMS[cat.realm];
   const element = CAT_ELEMENTS[cat.element];
-  const stars = '★'.repeat(cat.stars) + '☆'.repeat(6 - cat.stars);
+  const traits = (cat.traits ?? []) as TraitId[];
 
   return (
     <button
-      className="flex items-center gap-2 p-2 rounded border transition-all cursor-pointer text-left w-full"
-      style={{
-        borderColor: selected ? realm.color : 'rgba(255,255,255,0.05)',
-        backgroundColor: selected ? `${realm.color}15` : 'rgba(0,0,0,0.2)',
-      }}
       onClick={onClick}
+      className={`panel card-row relative p-3 text-left ${selected ? 'selected-ring' : ''} ${flash ? 'cat-flash' : ''}`}
+      style={{
+        borderColor: selected ? 'var(--jade-bright)' : `${realm.color}55`,
+        background: 'rgba(0,0,0,0.35)',
+      }}
     >
-      <span className="text-sm">{cat.emoji ?? '🐱'}</span>
-      <div className="flex-1 min-w-0">
-        <div className="flex items-center gap-1">
-          <span className="text-xs font-mono font-bold text-white/90 truncate">{cat.name}</span>
-          {cat.legendary && <span className="text-[10px] text-[#FFD700]">★</span>}
-        </div>
-        <div className="flex items-center gap-2">
-          <span className="text-[10px] font-mono" style={{ color: realm.color }}>
-            {realm.name}
-          </span>
-          <span className="text-[10px] font-mono" style={{ color: element?.color ?? '#888' }}>
-            {element?.name ?? '?'}
-          </span>
-          <span className="text-[10px] font-mono text-[#FFD700]">{stars}</span>
-        </div>
-      </div>
-      {/* Happiness bar */}
-      <div className="w-12 h-1.5 bg-white/10 rounded-full overflow-hidden">
+      <div className="flex items-start gap-3">
+        {/* Portrait rune */}
         <div
-          className="h-full rounded-full transition-all"
+          className="rune flex-shrink-0"
           style={{
-            width: `${cat.happiness}%`,
-            backgroundColor: cat.happiness > 70 ? '#50C878' : cat.happiness > 30 ? '#FFD700' : '#E94560',
+            width: 56, height: 56, fontSize: 24,
+            background: `radial-gradient(circle at 35% 30%, ${element.color}55, ${element.color}22 60%, rgba(0,0,0,0.4))`,
+            border: `1px solid ${element.color}88`,
+            color: '#fff7df',
+            textShadow: `0 0 10px ${element.color}cc`,
           }}
-        />
+        >
+          {ELEMENT_GLYPHS[cat.element]}
+        </div>
+
+        {/* Identity */}
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center gap-2">
+            <span className="font-display text-[13px] font-bold tracking-[0.06em] truncate" style={{ color: '#fff7df' }}>
+              {cat.name}
+            </span>
+            {cat.legendary && (
+              <span className="font-display text-[10px]" style={{ color: 'var(--gold-bright)' }}>★</span>
+            )}
+          </div>
+          <div className="h-eyebrow mt-0.5 flex flex-wrap gap-x-2">
+            <span style={{ color: realm.color }}>{realm.name}</span>
+            <span style={{ color: element.color }}>{element.name}</span>
+            <span>{CAT_PERSONALITIES[cat.personality]?.name}</span>
+          </div>
+
+          {/* Traits */}
+          {traits.length > 0 && (
+            <div className="flex gap-1 mt-2 flex-wrap">
+              {traits.map((id) => {
+                const t = TRAITS[id];
+                if (!t) return null;
+                return (
+                  <span
+                    key={id}
+                    className="trait-chip"
+                    style={{ color: t.color, borderColor: `${t.color}66`, background: `${t.color}14` }}
+                    title={t.description}
+                  >
+                    {t.glyph} {t.name}
+                  </span>
+                );
+              })}
+            </div>
+          )}
+
+          {/* Stars + happiness */}
+          <div className="flex items-center gap-3 mt-2">
+            <span className="font-mono text-[10px]" style={{ color: 'var(--gold-bright)' }}>
+              {'★'.repeat(cat.stars)}{'☆'.repeat(6 - cat.stars)}
+            </span>
+            <div className="meter flex-1">
+              <div
+                className={`meter-fill ${cat.happiness > 70 ? 'jade' : cat.happiness > 30 ? '' : 'crimson'}`}
+                style={{ width: `${Math.max(2, cat.happiness)}%` }}
+              />
+            </div>
+          </div>
+        </div>
       </div>
     </button>
   );
 }
 
-// ─── Cat Detail ──────────────────────────────────────────────
+// ─── Cat Detail ─────────────────────────────────────────────
 
 function CatDetail({ cat }: { cat: Cat }) {
   const realm = CAT_REALMS[cat.realm];
   const element = CAT_ELEMENTS[cat.element];
-  const personalityData = CAT_PERSONALITIES[cat.personality];
+  const personality = CAT_PERSONALITIES[cat.personality];
   const xpNeeded = engine.cat.getXPToLevel(cat);
+  const xpPct = Math.min(100, (cat.cultivationXP / xpNeeded) * 100);
 
   return (
-    <div className="mt-4 p-3 rounded border border-white/10 bg-black/20">
-      <div className="flex items-center gap-2 mb-2">
-        <span className="text-lg">{cat.emoji ?? '🐱'}</span>
-        <div>
-          <span className="text-xs font-mono font-bold text-white/90">{cat.name}</span>
-          {cat.legendary && <span className="text-[9px] text-[#FFD700] ml-1">LEGENDARY</span>}
-          <div className="text-[9px] font-mono text-white/40">
-            {realm.name} · {element?.name} · {personalityData?.name}
+    <div className="panel panel-ornate p-5" style={{ borderColor: `${realm.color}88` }}>
+      <div className="flex items-center gap-4 mb-4">
+        <div
+          className="rune"
+          style={{
+            width: 64, height: 64, fontSize: 28,
+            background: `radial-gradient(circle at 35% 30%, ${element.color}55, ${element.color}22 60%, rgba(0,0,0,0.4))`,
+            border: `1px solid ${element.color}88`,
+            color: '#fff7df',
+            textShadow: `0 0 12px ${element.color}cc`,
+          }}
+        >
+          {ELEMENT_GLYPHS[cat.element]}
+        </div>
+        <div className="flex-1">
+          <div className="font-display text-[18px] font-black tracking-[0.06em]" style={{ color: '#fff7df' }}>
+            {cat.name}{cat.legendary && <span className="ml-2 text-[12px]" style={{ color: 'var(--gold-bright)' }}>★ LEGENDARY</span>}
+          </div>
+          <div className="h-eyebrow">
+            <span style={{ color: realm.color }}>{realm.name}</span> ·{' '}
+            <span style={{ color: element.color }}>{element.name}</span> ·{' '}
+            <span>{personality?.name}</span>
           </div>
         </div>
       </div>
 
-      <p className="text-[9px] font-mono text-white/50 mb-2">{cat.description}</p>
+      <p className="text-sm mb-4 italic" style={{ color: 'var(--ink-mute)' }}>
+        {cat.description}
+      </p>
 
       {/* Stats */}
-      <div className="grid grid-cols-2 gap-1 mb-2">
-        <StatBar label="Snoot" value={cat.stats.snootMeridians} color="#E94560" />
-        <StatBar label="Purr" value={cat.stats.innerPurr} color="#FFD700" />
-        <StatBar label="Floof" value={cat.stats.floofArmor} color="#4169E1" />
-        <StatBar label="Zoom" value={cat.stats.zoomieSteps} color="#50C878" />
-        <StatBar label="Loaf" value={cat.stats.loafMastery} color="#9370DB" />
+      <div className="grid grid-cols-2 gap-x-4 gap-y-2 mb-4">
+        <StatRow label="Snoot" value={cat.stats.snootMeridians} hue="var(--vermillion)" />
+        <StatRow label="Purr"  value={cat.stats.innerPurr}      hue="var(--gold)" />
+        <StatRow label="Floof" value={cat.stats.floofArmor}     hue="#76b6d4" />
+        <StatRow label="Zoom"  value={cat.stats.zoomieSteps}    hue="var(--jade)" />
+        <StatRow label="Loaf"  value={cat.stats.loafMastery}    hue="#8a7cc0" />
       </div>
 
-      {/* Cultivation */}
-      <div className="text-[9px] font-mono text-white/40 mb-1">
-        Level {cat.level} · XP {formatNumber(cat.cultivationXP)}/{formatNumber(xpNeeded)}
-      </div>
-      <div className="w-full h-1.5 bg-white/10 rounded-full overflow-hidden mb-2">
-        <div
-          className="h-full bg-[#00BFFF] rounded-full transition-all"
-          style={{ width: `${Math.min(100, (cat.cultivationXP / xpNeeded) * 100)}%` }}
-        />
-      </div>
-
-      {/* Happiness */}
-      <div className="text-[9px] font-mono text-white/40">
-        Happiness: {Math.round(cat.happiness)}%
+      {/* XP */}
+      <div className="mb-3">
+        <div className="flex justify-between h-eyebrow mb-1">
+          <span>Cultivation · Level {cat.level}</span>
+          <span>{formatNumber(cat.cultivationXP)} / {formatNumber(xpNeeded)}</span>
+        </div>
+        <div className="meter">
+          <div className="meter-fill jade" style={{ width: `${xpPct}%` }} />
+        </div>
       </div>
 
-      {/* Stars */}
-      <div className="text-[9px] font-mono text-[#FFD700]">
-        {'★'.repeat(cat.stars)}{'☆'.repeat(6 - cat.stars)}
-        {cat.stars >= 6 && <span className="text-[#FF69B4] ml-1">AWAKENED</span>}
+      {/* Stars + happiness */}
+      <div className="grid grid-cols-2 gap-4">
+        <div>
+          <div className="h-eyebrow mb-1">Awakening</div>
+          <div className="font-display text-[14px]" style={{ color: 'var(--gold-bright)' }}>
+            {'★'.repeat(cat.stars)}{'☆'.repeat(6 - cat.stars)}
+            {cat.stars >= 6 && <span className="ml-2 text-[10px]" style={{ color: '#FF69B4' }}>AWAKENED</span>}
+          </div>
+        </div>
+        <div>
+          <div className="h-eyebrow mb-1">Happiness</div>
+          <div className="meter">
+            <div
+              className={`meter-fill ${cat.happiness > 70 ? 'jade' : cat.happiness > 30 ? '' : 'crimson'}`}
+              style={{ width: `${cat.happiness}%` }}
+            />
+          </div>
+          <div className="font-mono text-[10px] mt-0.5" style={{ color: 'var(--ink-mute)' }}>
+            {Math.round(cat.happiness)}%
+          </div>
+        </div>
       </div>
     </div>
   );
 }
 
-function StatBar({ label, value, color }: { label: string; value: number; color: string }) {
-  const maxDisplay = 10;
-  const percent = Math.min(100, (value / maxDisplay) * 100);
-
+function StatRow({ label, value, hue }: { label: string; value: number; hue: string }) {
+  const pct = Math.min(100, (value / 10) * 100);
   return (
-    <div className="flex items-center gap-1">
-      <span className="text-[10px] font-mono text-white/40 w-8">{label}</span>
-      <div className="flex-1 h-1 bg-white/10 rounded-full overflow-hidden">
-        <div className="h-full rounded-full" style={{ width: `${percent}%`, backgroundColor: color }} />
+    <div>
+      <div className="flex justify-between h-eyebrow mb-0.5">
+        <span>{label}</span>
+        <span style={{ color: 'var(--ink-mute)' }}>{value.toFixed(1)}</span>
       </div>
-      <span className="text-[10px] font-mono text-white/50 w-6 text-right">{value.toFixed(1)}</span>
+      <div className="meter">
+        <div className="meter-fill" style={{ width: `${pct}%`, background: `linear-gradient(90deg, ${hue}88, ${hue})` }} />
+      </div>
     </div>
   );
 }
