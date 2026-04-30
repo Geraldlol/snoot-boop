@@ -71,12 +71,12 @@ export default function SectWarPanel() {
       {!war || war.finished ? (
         /* War type picker */
         <div>
-          <p className="text-[10px] font-mono text-white/50 mb-2">Choose a war type:</p>
+          <p className="text-xs font-mono text-white/50 mb-2">Choose a war type:</p>
           <div className="flex flex-col gap-1 mb-3">
             {WAR_TYPE_LIST.map(wt => (
               <button
                 key={wt.id}
-                className="text-left px-3 py-2 rounded-lg border text-[10px] font-mono transition-all cursor-pointer"
+                className="text-left px-3 py-2 rounded-lg border text-xs font-mono transition-all cursor-pointer"
                 style={{
                   borderColor: selectedType === wt.id ? '#E9456030' : 'rgba(255,255,255,0.05)',
                   backgroundColor: selectedType === wt.id ? '#E9456015' : 'rgba(0,0,0,0.2)',
@@ -90,7 +90,7 @@ export default function SectWarPanel() {
             ))}
           </div>
           <button
-            className="w-full py-2 rounded-lg text-[10px] font-mono font-bold cursor-pointer transition-all bg-[#E94560]/20 text-[#E94560] border border-[#E94560]/30 hover:bg-[#E94560]/30"
+            className="w-full py-2 rounded-lg text-xs font-mono font-bold cursor-pointer transition-all bg-[#E94560]/20 text-[#E94560] border border-[#E94560]/30 hover:bg-[#E94560]/30"
             onClick={handleStartWar}
           >
             ⚔️ Start War
@@ -100,7 +100,7 @@ export default function SectWarPanel() {
         /* Active war */
         <div>
           <div className="flex items-center justify-between mb-2">
-            <span className="text-[10px] font-mono font-bold text-[#E94560]">
+            <span className="text-xs font-mono font-bold text-[#E94560]">
               ⚔️ {WAR_TYPES[war.warType].name}
             </span>
             <span className="text-[9px] font-mono text-white/40">
@@ -162,7 +162,7 @@ function LeaderboardRow({ rank, participant, isPlayer, unit }: {
 
   return (
     <div
-      className="flex items-center gap-2 px-2 py-1.5 rounded border text-[10px] font-mono"
+      className="flex items-center gap-2 px-2 py-1.5 rounded border text-xs font-mono"
       style={{
         borderColor: isPlayer ? '#FFD70030' : 'rgba(255,255,255,0.05)',
         backgroundColor: isPlayer ? '#FFD70010' : 'rgba(0,0,0,0.2)',
@@ -187,7 +187,7 @@ function HistoryRow({ entry }: { entry: WarHistoryEntry }) {
         <span className={playerWon ? 'text-[#FFD700]' : ''}>{WAR_TYPES[entry.warType].name}</span>
         <span>{new Date(entry.startTime).toLocaleDateString()}</span>
       </div>
-      <div className="text-[8px]">
+      <div className="text-[10px]">
         Winner: {winner?.name ?? 'Unknown'}
       </div>
     </div>

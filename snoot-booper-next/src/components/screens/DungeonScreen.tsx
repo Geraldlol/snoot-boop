@@ -187,7 +187,7 @@ function LobbyView({ forceUpdate, onBack }: { forceUpdate: () => void; onBack: (
                     <span className="text-sm font-bold">{info.name}</span>
                     <span className="text-xs text-white/40 ml-auto">Lv {level}</span>
                   </div>
-                  <p className="text-[10px] text-white/40 mb-2">{info.desc}</p>
+                  <p className="text-xs text-white/40 mb-2">{info.desc}</p>
                   <button
                     onClick={() => handleBuyUpgrade(type)}
                     disabled={!canAfford}
@@ -227,7 +227,7 @@ function StatCard({ label, value, emoji }: { label: string; value: number; emoji
     <div className="bg-[#16213e] border border-white/10 rounded-lg p-3 text-center">
       <span className="text-lg">{emoji}</span>
       <div className="text-lg font-bold text-[#FFD700]">{formatNumber(value)}</div>
-      <div className="text-[10px] text-white/40">{label}</div>
+      <div className="text-xs text-white/40">{label}</div>
     </div>
   );
 }
@@ -350,7 +350,7 @@ function CombatView({ forceUpdate }: { forceUpdate: () => void }) {
       {/* Top Bar */}
       <div className="bg-[#16213e]/95 border-b border-white/10 px-4 py-2 flex items-center gap-3">
         <span className="text-sm font-bold text-[#FFD700]">Floor {pagoda.currentFloor}</span>
-        {enemy.isBoss && <span className="text-[10px] bg-[#E94560]/20 text-[#E94560] px-2 py-0.5 rounded">BOSS</span>}
+        {enemy.isBoss && <span className="text-xs bg-[#E94560]/20 text-[#E94560] px-2 py-0.5 rounded">BOSS</span>}
         {pagoda.floorModifiers.map((mod) => (
           <ModifierBadge key={mod.id} mod={mod} />
         ))}
@@ -369,19 +369,19 @@ function CombatView({ forceUpdate }: { forceUpdate: () => void }) {
                   <span className="font-bold">{enemy.name}</span>
                   {enemy.element && (
                     <span
-                      className="text-[10px] px-1.5 py-0.5 rounded"
+                      className="text-xs px-1.5 py-0.5 rounded"
                       style={{ backgroundColor: `${ELEMENT_COLORS[enemy.element]}20`, color: ELEMENT_COLORS[enemy.element] }}
                     >
                       {enemy.element}
                     </span>
                   )}
                   {enemy.isBoss && enemy.maxPhases > 1 && (
-                    <span className="text-[10px] text-white/40">Phase {enemy.phase}/{enemy.maxPhases}</span>
+                    <span className="text-xs text-white/40">Phase {enemy.phase}/{enemy.maxPhases}</span>
                   )}
                 </div>
                 {/* Enemy HP Bar */}
                 <HPBar current={enemy.hp} max={enemy.maxHp} color="#E94560" />
-                <div className="text-[10px] text-white/40 mt-1">
+                <div className="text-xs text-white/40 mt-1">
                   ATK: {enemy.damage} | DEF: {enemy.defense} | SPD: {enemy.speed.toFixed(1)}
                 </div>
               </div>
@@ -396,7 +396,7 @@ function CombatView({ forceUpdate }: { forceUpdate: () => void }) {
               <span className="text-2xl">🐱</span>
               <div className="flex-1">
                 <HPBar current={player.hp} max={player.maxHp} color="#50C878" />
-                <div className="flex items-center gap-3 mt-1 text-[10px] text-white/50">
+                <div className="flex items-center gap-3 mt-1 text-xs text-white/50">
                   <span>ATK: {player.damage}</span>
                   <span>DEF: {player.defense}</span>
                   <span>CRIT: {(player.crit * 100).toFixed(0)}%</span>
@@ -421,7 +421,7 @@ function CombatView({ forceUpdate }: { forceUpdate: () => void }) {
                 <button
                   key={cat}
                   onClick={() => setActiveTab(cat)}
-                  className="px-2 py-1 rounded text-[10px] font-bold cursor-pointer transition-all"
+                  className="px-2 py-1 rounded text-xs font-bold cursor-pointer transition-all"
                   style={{
                     backgroundColor: activeTab === cat ? 'rgba(255,215,0,0.15)' : 'rgba(255,255,255,0.05)',
                     borderColor: activeTab === cat ? 'rgba(255,215,0,0.3)' : 'rgba(255,255,255,0.1)',
@@ -445,17 +445,17 @@ function CombatView({ forceUpdate }: { forceUpdate: () => void }) {
 
         {/* Right: Combat Log */}
         <div className="w-64 border-l border-white/10 bg-black/20 flex flex-col">
-          <div className="px-3 py-2 border-b border-white/10 text-[10px] text-white/40 font-bold">
+          <div className="px-3 py-2 border-b border-white/10 text-xs text-white/40 font-bold">
             Combat Log
           </div>
           <div ref={logRef} className="flex-1 overflow-y-auto p-2 space-y-1">
             {combatLog.map((entry, i) => (
-              <div key={i} className="text-[10px]" style={{ color: entry.color }}>
+              <div key={i} className="text-xs" style={{ color: entry.color }}>
                 {entry.text}
               </div>
             ))}
             {combatLog.length === 0 && (
-              <div className="text-[10px] text-white/20 text-center mt-4">Choose a command to begin...</div>
+              <div className="text-xs text-white/50 text-center mt-4">Choose a command to begin...</div>
             )}
           </div>
         </div>
@@ -489,20 +489,20 @@ function CommandButton({ cmd, onClick }: {
     >
       <div className="flex items-center gap-1.5">
         <span className="text-sm">{cmd.emoji}</span>
-        <span className="text-[10px] font-bold truncate">{cmd.name}</span>
+        <span className="text-xs font-bold truncate">{cmd.name}</span>
       </div>
       {cmd.onCooldown && (
-        <div className="absolute top-0 right-0 bg-black/70 text-[10px] text-[#E94560] px-1 rounded-bl">
+        <div className="absolute top-0 right-0 bg-black/70 text-xs text-[#E94560] px-1 rounded-bl">
           {cmd.cooldownLeft}
         </div>
       )}
       {cmd.used && (
-        <div className="absolute top-0 right-0 bg-black/70 text-[10px] text-white/30 px-1 rounded-bl">
+        <div className="absolute top-0 right-0 bg-black/70 text-xs text-white/50 px-1 rounded-bl">
           Used
         </div>
       )}
       {cmd.locked && (
-        <div className="absolute top-0 right-0 bg-black/70 text-[10px] text-white/20 px-1 rounded-bl">
+        <div className="absolute top-0 right-0 bg-black/70 text-xs text-white/50 px-1 rounded-bl">
           🔒
         </div>
       )}
@@ -629,7 +629,7 @@ function StatusEffects({ buffs, debuffs }: { buffs: { id: string; stat: string; 
 
 function ModifierBadge({ mod }: { mod: FloorModifier }) {
   return (
-    <span className="text-[10px] bg-[#9370DB]/20 text-[#9370DB] px-1.5 py-0.5 rounded" title={mod.description}>
+    <span className="text-xs bg-[#9370DB]/20 text-[#9370DB] px-1.5 py-0.5 rounded" title={mod.description}>
       {mod.name}
     </span>
   );

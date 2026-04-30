@@ -208,7 +208,7 @@ export default function SettingsPanel() {
                 {debugMode ? 'ON' : 'OFF'}
               </button>
             </div>
-            <p className="text-[10px] font-mono text-white/30">
+            <p className="text-xs font-mono text-white/50">
               Version: 3.0.0 (React Rewrite)
             </p>
           </div>

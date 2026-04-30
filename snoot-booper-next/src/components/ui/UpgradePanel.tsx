@@ -25,7 +25,7 @@ export default function UpgradePanel() {
         {UPGRADE_CATEGORIES.map((cat) => (
           <button
             key={cat.id}
-            className="px-3 py-1.5 rounded text-[10px] font-mono font-bold transition-all cursor-pointer"
+            className="px-3 py-1.5 rounded text-xs font-mono font-bold transition-all cursor-pointer"
             style={{
               backgroundColor: selectedCategory === cat.id ? `${cat.color}30` : 'rgba(255,255,255,0.05)',
               color: selectedCategory === cat.id ? cat.color : 'rgba(255,255,255,0.4)',
@@ -76,12 +76,12 @@ function UpgradeRow({ template, currentBP }: { template: UpgradeTemplate; curren
     >
       <div className="flex items-center justify-between mb-1">
         <span className="text-xs font-mono font-bold text-white/90">{template.name}</span>
-        <span className="text-[10px] font-mono text-white/40">
+        <span className="text-xs font-mono text-white/40">
           Lv {level}/{template.maxLevel}
         </span>
       </div>
 
-      <p className="text-[10px] font-mono text-white/50 mb-2">{template.description}</p>
+      <p className="text-xs font-mono text-white/50 mb-2">{template.description}</p>
 
       {/* Requirements */}
       {template.requires && !reqsMet && (
@@ -101,10 +101,10 @@ function UpgradeRow({ template, currentBP }: { template: UpgradeTemplate; curren
 
       {!maxed && reqsMet && (
         <button
-          className={`w-full py-1.5 rounded text-[10px] font-mono font-bold transition-all ${
+          className={`w-full py-1.5 rounded text-xs font-mono font-bold transition-all ${
             canBuy
               ? 'bg-[#E94560]/20 text-[#E94560] border border-[#E94560]/30 hover:bg-[#E94560]/30 cursor-pointer'
-              : 'bg-white/5 text-white/20 border border-white/5 cursor-not-allowed'
+              : 'bg-white/5 text-white/50 border border-white/5 cursor-not-allowed'
           }`}
           onClick={handlePurchase}
           disabled={!canBuy}
@@ -114,7 +114,7 @@ function UpgradeRow({ template, currentBP }: { template: UpgradeTemplate; curren
       )}
 
       {maxed && (
-        <div className="text-[10px] font-mono text-[#50C878] text-center">
+        <div className="text-xs font-mono text-[#50C878] text-center">
           MASTERED
         </div>
       )}

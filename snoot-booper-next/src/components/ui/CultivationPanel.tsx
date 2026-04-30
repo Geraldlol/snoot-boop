@@ -47,12 +47,12 @@ export default function CultivationPanel() {
       <div className="mb-4 p-3 rounded-lg border" style={{ borderColor: `${realmData.color}30`, backgroundColor: `${realmData.color}10` }}>
         <div className="flex items-center gap-2 mb-2">
           <span
-            className="px-2 py-0.5 rounded text-[10px] font-mono font-bold"
+            className="px-2 py-0.5 rounded text-xs font-mono font-bold"
             style={{ backgroundColor: `${realmData.color}30`, color: realmData.color }}
           >
             {realmData.name}
           </span>
-          <span className="text-[10px] text-white/50 font-mono">
+          <span className="text-xs text-white/50 font-mono">
             Rank {cult.currentRank}/{realmData.ranks === 999 ? '∞' : realmData.ranks}
           </span>
         </div>
@@ -78,7 +78,7 @@ export default function CultivationPanel() {
               Breakthrough to {nextRealm} — {successChance}% success
             </div>
             <button
-              className="w-full px-3 py-2 rounded text-[10px] font-mono font-bold transition-all cursor-pointer"
+              className="w-full px-3 py-2 rounded text-xs font-mono font-bold transition-all cursor-pointer"
               style={{
                 backgroundColor: `${realmData.color}20`,
                 color: realmData.color,
@@ -94,7 +94,7 @@ export default function CultivationPanel() {
 
       {/* Passives */}
       <div className="mb-4">
-        <h3 className="text-[10px] font-mono text-white/60 font-bold mb-2">Realm Passives</h3>
+        <h3 className="text-xs font-mono text-white/60 font-bold mb-2">Realm Passives</h3>
         <div className="flex flex-col gap-1.5">
           {realmData.passives.map((passive) => {
             const key = `${cult.currentRealm}_${passive.rank}`;
@@ -109,7 +109,7 @@ export default function CultivationPanel() {
       {/* Previously unlocked passives from earlier realms */}
       {cult.passivesUnlocked.length > 0 && (
         <div className="mb-4">
-          <h3 className="text-[10px] font-mono text-white/60 font-bold mb-2">
+          <h3 className="text-xs font-mono text-white/60 font-bold mb-2">
             All Unlocked ({cult.getUnlockedPassives().length})
           </h3>
           <div className="flex flex-col gap-1">
@@ -117,7 +117,7 @@ export default function CultivationPanel() {
               <div key={i} className="text-[9px] font-mono text-white/40 flex items-center gap-1">
                 <span style={{ color: realmData.color }}>✦</span>
                 <span className="text-white/60">{p.name}</span>
-                <span className="text-white/30">— {p.description}</span>
+                <span className="text-white/50">— {p.description}</span>
               </div>
             ))}
           </div>
@@ -126,7 +126,7 @@ export default function CultivationPanel() {
 
       {/* Stats */}
       <div className="pt-3 border-t border-white/5">
-        <h3 className="text-[10px] font-mono text-white/60 font-bold mb-2">Stats</h3>
+        <h3 className="text-xs font-mono text-white/60 font-bold mb-2">Stats</h3>
         <div className="grid grid-cols-2 gap-1 text-[9px] font-mono text-white/40">
           <span>Total XP:</span><span className="text-right text-white/60">{formatNumber(stats.totalXPEarned)}</span>
           <span>Breakthroughs:</span><span className="text-right text-white/60">{stats.realmBreakthroughs}</span>
@@ -142,13 +142,13 @@ export default function CultivationPanel() {
 function PassiveRow({ passive, unlocked, color }: { passive: RealmPassive; unlocked: boolean; color: string }) {
   return (
     <div
-      className="flex items-center gap-2 px-2 py-1.5 rounded text-[10px] font-mono"
+      className="flex items-center gap-2 px-2 py-1.5 rounded text-xs font-mono"
       style={{
         backgroundColor: unlocked ? `${color}10` : 'rgba(255,255,255,0.02)',
         opacity: unlocked ? 1 : 0.4,
       }}
     >
-      <span className="text-white/30 w-6">R{passive.rank}</span>
+      <span className="text-white/50 w-6">R{passive.rank}</span>
       <span style={{ color: unlocked ? color : 'rgba(255,255,255,0.4)' }} className="font-bold">
         {passive.name}
       </span>

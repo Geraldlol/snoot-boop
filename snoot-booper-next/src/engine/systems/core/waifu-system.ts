@@ -205,6 +205,10 @@ export class WaifuSystem {
     return this.currentActivity !== null;
   }
 
+  getActiveWaifuId(): string | null {
+    return this.currentActivity?.waifuId ?? null;
+  }
+
   checkPendingActivity(): { bondGain: number; effects: Record<string, number> } | null {
     const progress = this.getActivityProgress();
     if (progress?.isComplete) {

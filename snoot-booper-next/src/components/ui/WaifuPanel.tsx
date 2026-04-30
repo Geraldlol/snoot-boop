@@ -44,11 +44,11 @@ export default function WaifuPanel() {
               <div className="flex items-center gap-2 mb-2">
                 <span className="text-lg">{tmpl.emoji}</span>
                 <div>
-                  <div className="text-[10px] font-mono font-bold text-white/80">{tmpl.name}</div>
-                  <div className="text-[8px] font-mono text-white/40">{tmpl.title}</div>
+                  <div className="text-xs font-mono font-bold text-white/80">{tmpl.name}</div>
+                  <div className="text-[10px] font-mono text-white/40">{tmpl.title}</div>
                 </div>
                 <span
-                  className="ml-auto text-[8px] font-mono px-1.5 py-0.5 rounded"
+                  className="ml-auto text-[10px] font-mono px-1.5 py-0.5 rounded"
                   style={{ backgroundColor: `${COLOR}20`, color: COLOR }}
                 >
                   {tier} Bond
@@ -57,7 +57,7 @@ export default function WaifuPanel() {
 
               {/* Bond Bar */}
               <div className="mb-2">
-                <div className="flex justify-between text-[8px] font-mono text-white/40 mb-0.5">
+                <div className="flex justify-between text-[10px] font-mono text-white/40 mb-0.5">
                   <span>Bond</span>
                   <span>{bond}/100</span>
                 </div>
@@ -70,7 +70,7 @@ export default function WaifuPanel() {
               </div>
 
               {/* Bonus */}
-              <div className="text-[8px] font-mono text-white/40 mb-1">
+              <div className="text-[10px] font-mono text-white/40 mb-1">
                 Bonus: {tmpl.bonus.description}
               </div>
 
@@ -83,7 +83,7 @@ export default function WaifuPanel() {
               </div>
 
               {/* Activity Section */}
-              {inActivity && activityProgress && (engine.waifu as any).currentActivity?.waifuId === ws.id ? (
+              {inActivity && activityProgress && engine.waifu.getActiveWaifuId() === ws.id ? (
                 <div className="p-2 rounded border border-white/5 bg-black/20">
                   <div className="text-[9px] font-mono text-white/60 mb-1">
                     In activity... ({Math.round(activityProgress.progress * 100)}%)
@@ -95,7 +95,7 @@ export default function WaifuPanel() {
                     />
                   </div>
                   <button
-                    className="text-[8px] font-mono px-2 py-1 rounded"
+                    className="text-[10px] font-mono px-2 py-1 rounded"
                     style={{ backgroundColor: 'rgba(255,255,255,0.05)', color: 'rgba(255,255,255,0.4)' }}
                     onClick={() => { engine.cancelWaifuActivity(); refresh(); }}
                   >
@@ -104,7 +104,7 @@ export default function WaifuPanel() {
                 </div>
               ) : !inActivity && activities.length > 0 ? (
                 <div>
-                  <div className="text-[8px] font-mono text-white/30 mb-1">Activities:</div>
+                  <div className="text-[10px] font-mono text-white/50 mb-1">Activities:</div>
                   <div className="flex flex-col gap-1">
                     {activities.slice(0, 4).map((act) => (
                       <div key={act.id} className="flex items-center justify-between p-1.5 rounded bg-black/20">
@@ -113,16 +113,16 @@ export default function WaifuPanel() {
                             {act.emoji} {act.name}
                           </span>
                           {act.preferred && (
-                            <span className="ml-1 text-[7px] font-mono px-1 rounded" style={{ backgroundColor: `${COLOR}30`, color: COLOR }}>
+                            <span className="ml-1 text-[9px] font-mono px-1 rounded" style={{ backgroundColor: `${COLOR}30`, color: COLOR }}>
                               ♥
                             </span>
                           )}
-                          <div className="text-[7px] font-mono text-white/30">
+                          <div className="text-[9px] font-mono text-white/50">
                             {Math.round(act.duration / 60000)}min · +{act.bondGain} bond
                           </div>
                         </div>
                         <button
-                          className="text-[8px] font-mono px-2 py-1 rounded cursor-pointer"
+                          className="text-[10px] font-mono px-2 py-1 rounded cursor-pointer"
                           style={{ backgroundColor: `${COLOR}20`, color: COLOR, border: `1px solid ${COLOR}30` }}
                           onClick={() => { engine.startWaifuActivity(ws.id, act.id); refresh(); }}
                         >
@@ -138,7 +138,7 @@ export default function WaifuPanel() {
         })}
 
         {unlocked.length === 0 && (
-          <div className="text-[10px] font-mono text-white/30 text-center py-8">
+          <div className="text-xs font-mono text-white/50 text-center py-8">
             No companions unlocked yet. Keep cultivating!
           </div>
         )}

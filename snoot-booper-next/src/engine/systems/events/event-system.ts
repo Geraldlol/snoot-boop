@@ -149,7 +149,8 @@ export class EventSystem {
 
     const now = Date.now();
     const hasDuration = selected.effects.some(e => e.duration);
-    const maxDuration = Math.max(0, ...selected.effects.map(e => e.duration ?? 0));
+    const durations = selected.effects.map(e => e.duration ?? 0);
+    const maxDuration = durations.length > 0 ? Math.max(0, ...durations) : 0;
 
     this.eventHistory.push({ eventId: selected.id, time: now });
     if (this.eventHistory.length > 100) this.eventHistory.shift();

@@ -43,7 +43,9 @@ export function formatNumber(n: number | string | null | undefined, options: For
   if (n === null || n === undefined || isNaN(Number(n))) return '0';
 
   let num = Number(n);
-  if (!isFinite(num)) return num > 0 ? 'Infinity' : '-Infinity';
+  if (!isFinite(num)) {
+    num = num > 0 ? Number.MAX_SAFE_INTEGER : -Number.MAX_SAFE_INTEGER;
+  }
 
   const isNegative = num < 0;
   num = Math.abs(num);
@@ -151,18 +153,22 @@ export function compareNumbers(a: number, b: number, tolerance = 1e-9): number {
   return diff < 0 ? -1 : 1;
 }
 
+const GAME_MAX = 1e45; // Ji tier ceiling (10^42 is highest suffix)
+
 export function safeAdd(a: number, b: number): number {
   if (a > 1e300 || b > 1e300) {
-    if (a > b * 1e10) return a;
-    if (b > a * 1e10) return b;
+    if (a > b * 1e10) return Math.min(a, GAME_MAX);
+    if (b > a * 1e10) return Math.min(b, GAME_MAX);
   }
-  return a + b;
+  const result = a + b;
+  if (!isFinite(result)) return (a > 0) === (b > 0) ? GAME_MAX : -GAME_MAX;
+  return result;
 }
 
 export function safeMultiply(a: number, b: number): number {
   const result = a * b;
-  if (!isFinite(result)) return (a > 0) === (b > 0) ? Infinity : -Infinity;
-  return result;
+  if (!isFinite(result)) return (a > 0) === (b > 0) ? GAME_MAX : -GAME_MAX;
+  return Math.abs(result) > GAME_MAX ? (result > 0 ? GAME_MAX : -GAME_MAX) : result;
 }
 
 export function clamp(value: number, min: number, max: number): number {

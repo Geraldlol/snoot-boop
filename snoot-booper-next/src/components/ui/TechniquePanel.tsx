@@ -22,7 +22,7 @@ export default function TechniquePanel() {
         {(['stances', 'skills'] as Tab[]).map((t) => (
           <button
             key={t}
-            className="px-3 py-1.5 rounded text-[10px] font-mono font-bold transition-all cursor-pointer"
+            className="px-3 py-1.5 rounded text-xs font-mono font-bold transition-all cursor-pointer"
             style={{
               backgroundColor: tab === t ? '#DC143C30' : 'rgba(255,255,255,0.05)',
               color: tab === t ? '#DC143C' : 'rgba(255,255,255,0.4)',
@@ -100,13 +100,13 @@ function StanceCard({ stance, unlocked, active, masteryLevel, masteryProgress, m
             {stance.name}
           </span>
           {active && (
-            <span className="px-1.5 py-0.5 rounded text-[8px] font-mono font-bold" style={{ backgroundColor: `${stance.color}30`, color: stance.color }}>
+            <span className="px-1.5 py-0.5 rounded text-[10px] font-mono font-bold" style={{ backgroundColor: `${stance.color}30`, color: stance.color }}>
               Active
             </span>
           )}
         </div>
         {!unlocked && (
-          <span className="text-[8px] font-mono text-white/30">
+          <span className="text-[10px] font-mono text-white/50">
             Requires: {stance.unlockRealm.replace(/_/g, ' ')}
           </span>
         )}
@@ -115,7 +115,7 @@ function StanceCard({ stance, unlocked, active, masteryLevel, masteryProgress, m
       <div className="text-[9px] font-mono text-white/40 mb-2">{stance.description}</div>
 
       {/* Stats */}
-      <div className="grid grid-cols-3 gap-x-2 gap-y-0.5 mb-2 text-[8px] font-mono">
+      <div className="grid grid-cols-3 gap-x-2 gap-y-0.5 mb-2 text-[10px] font-mono">
         <Stat label="Power" value={`${stance.stats.boopPower}x`} />
         <Stat label="Speed" value={`${stance.stats.boopSpeed}x`} />
         <Stat label="Crit" value={`${(stance.stats.critChance * 100).toFixed(0)}%`} />
@@ -124,12 +124,12 @@ function StanceCard({ stance, unlocked, active, masteryLevel, masteryProgress, m
       </div>
 
       {/* Special */}
-      <div className="text-[8px] font-mono text-[#FFD700]/60 mb-2">
+      <div className="text-[10px] font-mono text-[#FFD700]/60 mb-2">
         ⚡ {stance.special.name}: {stance.special.description}
       </div>
 
       {stance.id === 'forbiddenTechnique' && (
-        <div className="text-[8px] font-mono text-red-400/60 mb-2">
+        <div className="text-[10px] font-mono text-red-400/60 mb-2">
           ⚠️ Costs 5 Qi per boop
         </div>
       )}
@@ -137,7 +137,7 @@ function StanceCard({ stance, unlocked, active, masteryLevel, masteryProgress, m
       {/* Mastery bar */}
       {unlocked && (
         <div className="mb-2">
-          <div className="flex justify-between text-[8px] font-mono text-white/30 mb-0.5">
+          <div className="flex justify-between text-[10px] font-mono text-white/50 mb-0.5">
             <span>Mastery Lv {masteryLevel}/{maxMastery}</span>
             <span>{(masteryProgress * 100).toFixed(0)}%</span>
           </div>
@@ -171,7 +171,7 @@ function StanceCard({ stance, unlocked, active, masteryLevel, masteryProgress, m
 function Stat({ label, value }: { label: string; value: string }) {
   return (
     <div className="flex justify-between">
-      <span className="text-white/30">{label}</span>
+      <span className="text-white/50">{label}</span>
       <span className="text-white/60">{value}</span>
     </div>
   );
@@ -199,14 +199,14 @@ function SkillsTab({ tech }: { tech: typeof engine.technique }) {
             >
               {discovered ? (
                 <>
-                  <div className="text-[10px] font-mono font-bold text-[#DC143C] mb-0.5">{skill.name}</div>
+                  <div className="text-xs font-mono font-bold text-[#DC143C] mb-0.5">{skill.name}</div>
                   <div className="text-[9px] font-mono text-white/40">{skill.description}</div>
-                  <div className="text-[8px] font-mono text-[#50C878]/50 mt-1">
+                  <div className="text-[10px] font-mono text-[#50C878]/50 mt-1">
                     {Object.entries(skill.effect).map(([k, v]) => `${k}: ${v}`).join(', ')}
                   </div>
                 </>
               ) : (
-                <div className="text-[10px] font-mono text-white/20">??? Unknown Skill</div>
+                <div className="text-xs font-mono text-white/50">??? Unknown Skill</div>
               )}
             </div>
           );
@@ -214,7 +214,7 @@ function SkillsTab({ tech }: { tech: typeof engine.technique }) {
       </div>
 
       {remaining > 0 && (
-        <div className="text-[9px] font-mono text-white/20 text-center mt-3">
+        <div className="text-[9px] font-mono text-white/50 text-center mt-3">
           {remaining} skill{remaining !== 1 ? 's' : ''} yet to discover...
         </div>
       )}

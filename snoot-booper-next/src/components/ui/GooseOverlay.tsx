@@ -31,7 +31,7 @@ export default function GooseOverlay() {
         style={{ borderColor: mood.color, backgroundColor: `${mood.color}20`, color: mood.color }}
       >
         <div className="font-bold text-sm">{activeGoose.name}</div>
-        <div className="text-[10px] opacity-70">{activeGoose.title} - {mood.label}</div>
+        <div className="text-xs opacity-70">{activeGoose.title} - {mood.label}</div>
       </div>
 
       {/* HP bar */}

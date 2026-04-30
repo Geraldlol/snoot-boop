@@ -983,7 +983,7 @@ export class Engine {
       const newWaifus = this.waifu.checkUnlockConditions({
         catCount: this.cat.getAllCats().length,
         totalAfkTime: this.time.getTotalAfkTime(),
-        allBasicUpgrades: false, // TODO: wire when upgrade system tracks this
+        allBasicUpgrades: this.upgrade.areAllBasicUpgradesPurchased(),
         allWaifusMaxBond: this.waifu.allMaxBond(),
       });
       for (const id of newWaifus) {
@@ -997,7 +997,7 @@ export class Engine {
         totalAfkHours: this.time.getTotalAfkTime() / 3600,
         totalPP: this.economy.getBalance('pp'),
         catCount: this.cat.getAllCats().length,
-        maxWaifuBond: Math.max(0, ...this.waifu.getUnlockedWaifus().map(w => w.bondLevel)),
+        maxWaifuBond: this.waifu.getUnlockedWaifus().length > 0 ? Math.max(0, ...this.waifu.getUnlockedWaifus().map(w => w.bondLevel)) : 0,
         gooseBoops: this.goose.gooseBoops,
         cobraChickenDefeated: this.goose.cobraChickenDefeated,
       };
@@ -1022,7 +1022,7 @@ export class Engine {
         cobraChickenDefeated: this.goose.cobraChickenDefeated,
         goldenGooseCrit: this.goose.goldenGooseCrit,
         waifuCount: this.waifu.getUnlockedWaifus().length,
-        maxBond: Math.max(0, ...this.waifu.getUnlockedWaifus().map(w => w.bondLevel)),
+        maxBond: this.waifu.getUnlockedWaifus().length > 0 ? Math.max(0, ...this.waifu.getUnlockedWaifus().map(w => w.bondLevel)) : 0,
         upgradeCount: Object.keys(this.upgrade.serialize().upgrades).length,
         totalBP: this.economy.getBalance('bp'),
         highestCatRealm: this.cat.getAllCats().reduce((best, c) => {

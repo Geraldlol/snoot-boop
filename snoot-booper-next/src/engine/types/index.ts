@@ -450,6 +450,10 @@ export interface SaveDataV3 {
   catino: { chips: number; stats: Record<string, number> };
   hardcore: { completedModes: string[]; stats: Record<string, number> };
   partners: { ownedPartners: unknown[]; stats: Record<string, number> };
+
+  // Late additions
+  sectWar?: Record<string, unknown>;
+  idle?: Record<string, unknown>;
 }
 
 // Serialized sub-types for save data

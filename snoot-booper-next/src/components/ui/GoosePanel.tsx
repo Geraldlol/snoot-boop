@@ -67,7 +67,7 @@ export default function GoosePanel() {
             <p className="text-xs font-mono text-white/40">
               Defeat the Cobra Chicken to unlock Goose Allies
             </p>
-            <p className="text-[10px] font-mono text-white/20 mt-1">
+            <p className="text-xs font-mono text-white/50 mt-1">
               (Requires 1000+ geese booped for Cobra Chicken to appear)
             </p>
           </div>
@@ -88,13 +88,13 @@ export default function GoosePanel() {
                     {ally.name}
                   </span>
                   {selectedAlly === ally.id && (
-                    <span className="text-[10px] font-mono text-[#50C878] border border-[#50C878]/50 px-2 py-0.5 rounded">
+                    <span className="text-xs font-mono text-[#50C878] border border-[#50C878]/50 px-2 py-0.5 rounded">
                       ACTIVE
                     </span>
                   )}
                 </div>
                 <p className="text-xs font-mono text-white/50 mt-1">{ally.description}</p>
-                <p className="text-[10px] font-mono text-white/30 mt-1 italic">
+                <p className="text-xs font-mono text-white/50 mt-1 italic">
                   &quot;{ally.quote}&quot;
                 </p>
               </button>
@@ -131,7 +131,7 @@ export default function GoosePanel() {
                     {encountered ? goose.name : '???'}
                   </span>
                   <span
-                    className="text-[10px] font-mono px-1.5 py-0.5 rounded"
+                    className="text-xs font-mono px-1.5 py-0.5 rounded"
                     style={{
                       color: encountered ? '#50C878' : '#888',
                       backgroundColor: encountered ? 'rgba(80,200,120,0.1)' : 'rgba(0,0,0,0.2)',
@@ -141,7 +141,7 @@ export default function GoosePanel() {
                   </span>
                 </div>
                 {encountered && (
-                  <p className="text-[10px] font-mono text-white/40 mt-1">
+                  <p className="text-xs font-mono text-white/40 mt-1">
                     {goose.title} — Mood: {goose.baseMood}
                   </p>
                 )}
@@ -157,7 +157,7 @@ export default function GoosePanel() {
 function Stat({ label, value, color }: { label: string; value: string; color?: string }) {
   return (
     <div className="bg-black/20 rounded p-2">
-      <p className="text-[10px] font-mono text-white/40">{label}</p>
+      <p className="text-xs font-mono text-white/40">{label}</p>
       <p className="text-xs font-mono font-bold" style={{ color: color ?? '#F5F5F5' }}>
         {value}
       </p>

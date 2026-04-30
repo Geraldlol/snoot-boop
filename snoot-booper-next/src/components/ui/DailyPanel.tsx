@@ -43,7 +43,7 @@ export default function DailyPanel() {
             );
           })}
         </div>
-        <div className="text-[8px] font-mono text-white/30 text-center mt-1">
+        <div className="text-[10px] font-mono text-white/50 text-center mt-1">
           Day {streak}
         </div>
       </div>
@@ -54,14 +54,14 @@ export default function DailyPanel() {
         {commissions.map((comm) => (
           <div key={comm.id} className="p-2.5 rounded-lg border border-white/5 bg-white/[0.02]">
             <div className="flex items-center justify-between mb-1">
-              <div className="text-[10px] font-mono font-bold text-white/80">{comm.name}</div>
+              <div className="text-xs font-mono font-bold text-white/80">{comm.name}</div>
               {comm.completed && (
-                <span className="text-[8px] font-mono px-1.5 py-0.5 rounded" style={{ backgroundColor: '#50C87820', color: '#50C878' }}>
+                <span className="text-[10px] font-mono px-1.5 py-0.5 rounded" style={{ backgroundColor: '#50C87820', color: '#50C878' }}>
                   ✓ Done
                 </span>
               )}
             </div>
-            <div className="text-[8px] font-mono text-white/40 mb-1.5">{comm.description}</div>
+            <div className="text-[10px] font-mono text-white/40 mb-1.5">{comm.description}</div>
             {/* Progress bar */}
             <div className="flex items-center gap-2">
               <div className="flex-1 h-1.5 bg-black/30 rounded-full overflow-hidden">
@@ -73,14 +73,14 @@ export default function DailyPanel() {
                   }}
                 />
               </div>
-              <span className="text-[8px] font-mono text-white/40">
+              <span className="text-[10px] font-mono text-white/40">
                 {formatNumber(comm.progress)}/{formatNumber(comm.target)}
               </span>
             </div>
             {/* Rewards */}
             <div className="flex gap-1 mt-1">
               {comm.rewards.map((r, i) => (
-                <span key={i} className="text-[7px] font-mono px-1 rounded bg-black/20 text-white/30">
+                <span key={i} className="text-[9px] font-mono px-1 rounded bg-black/20 text-white/50">
                   {r.type}: {formatNumber(r.value)}
                 </span>
               ))}
@@ -92,15 +92,15 @@ export default function DailyPanel() {
       {/* All-complete bonus */}
       {allDone && (
         <div className="p-3 rounded-lg border border-[#50C878]/30 bg-[#50C878]/10 text-center mb-3">
-          <div className="text-[10px] font-mono font-bold text-[#50C878]">
+          <div className="text-xs font-mono font-bold text-[#50C878]">
             🎉 All Commissions Complete!
           </div>
-          <div className="text-[8px] font-mono text-white/40">Bonus rewards claimed!</div>
+          <div className="text-[10px] font-mono text-white/40">Bonus rewards claimed!</div>
         </div>
       )}
 
       {/* Stats */}
-      <div className="text-[8px] font-mono text-white/30 text-center">
+      <div className="text-[10px] font-mono text-white/50 text-center">
         Total commissions completed: {totalCompleted}
       </div>
     </div>

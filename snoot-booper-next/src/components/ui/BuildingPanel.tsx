@@ -58,7 +58,7 @@ export default function BuildingPanel() {
         (t) => !engine.building.getUnlockedTerritories().includes(t.id)
       ) && (
         <div className="mb-4">
-          <h3 className="text-[10px] font-mono text-white/60 font-bold mb-2">Territories</h3>
+          <h3 className="text-xs font-mono text-white/60 font-bold mb-2">Territories</h3>
           <div className="flex flex-col gap-1.5">
             {Object.values(TERRITORIES)
               .filter((t) => !engine.building.getUnlockedTerritories().includes(t.id))
@@ -108,7 +108,7 @@ export default function BuildingPanel() {
               className="p-2.5 rounded-lg border border-white/5 bg-white/[0.02]"
             >
               <div className="flex items-center justify-between mb-1">
-                <span className="text-[10px] font-mono font-bold text-white/80">{b.data.name}</span>
+                <span className="text-xs font-mono font-bold text-white/80">{b.data.name}</span>
                 <span className="text-[9px] font-mono text-white/40">
                   Lv {b.level}/{b.data.maxLevel}
                 </span>
@@ -116,14 +116,14 @@ export default function BuildingPanel() {
               <div className="text-[9px] font-mono text-white/40 mb-2">{b.data.description}</div>
 
               {effectPreview && (
-                <div className="text-[8px] font-mono text-[#50C878]/60 mb-2">
+                <div className="text-[10px] font-mono text-[#50C878]/60 mb-2">
                   Next: {Object.entries(effectPreview).map(([k, v]) => `${k}: ${v}`).join(', ')}
                 </div>
               )}
 
               {!atMax && (
                 <div className="flex items-center justify-between">
-                  <span className="text-[9px] font-mono text-white/30">
+                  <span className="text-[9px] font-mono text-white/50">
                     {formatNumber(cost)} BP{needsSlot ? ' (1 slot)' : ''}
                   </span>
                   <button
@@ -148,7 +148,7 @@ export default function BuildingPanel() {
           );
         })}
         {buildings.length === 0 && (
-          <div className="text-[10px] font-mono text-white/30 text-center py-4">
+          <div className="text-xs font-mono text-white/50 text-center py-4">
             No buildings in this category
           </div>
         )}
@@ -163,8 +163,8 @@ function TerritoryRow({ territory, canAfford, onUnlock }: {
   return (
     <div className="flex items-center justify-between p-2 rounded border border-white/5 bg-white/[0.02]">
       <div>
-        <div className="text-[10px] font-mono font-bold text-white/70">{territory.name}</div>
-        <div className="text-[8px] font-mono text-white/30">
+        <div className="text-xs font-mono font-bold text-white/70">{territory.name}</div>
+        <div className="text-[10px] font-mono text-white/50">
           {territory.catCapacity} cats | {territory.buildingSlots} slots
         </div>
       </div>

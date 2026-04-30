@@ -1,11 +1,12 @@
 /**
  * Building3D - Procedural voxel buildings for the sanctuary.
  * Each building type has a unique shape. Level affects scale/glow.
+ * Improved with roof overhangs, garden details, float animation.
  */
 
 'use client';
 
-import { useRef, useMemo } from 'react';
+import { useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 
@@ -15,7 +16,6 @@ interface Building3DProps {
   position: [number, number, number];
 }
 
-// Building visual configs
 const BUILDING_VISUALS: Record<string, { color: string; accentColor: string; type: 'pagoda' | 'garden' | 'dojo' | 'vault' | 'tower' | 'house' }> = {
   cat_pagoda:       { color: '#DC143C', accentColor: '#FFD700', type: 'pagoda' },
   meditation_garden: { color: '#50C878', accentColor: '#C4A7E7', type: 'garden' },
@@ -44,6 +44,7 @@ function easeOutBounce(x: number): number {
 export default function Building3D({ buildingId, level, position }: Building3DProps) {
   const groupRef = useRef<THREE.Group>(null);
   const constructionProgress = useRef(0);
+  const dustRef = useRef<THREE.Group>(null);
   const visual = BUILDING_VISUALS[buildingId] ?? { color: '#888', accentColor: '#FFF', type: 'house' as const };
   const scale = 0.8 + level * 0.05;
   const baseEmissive = Math.min(0.4, level * 0.04);
@@ -51,26 +52,38 @@ export default function Building3D({ buildingId, level, position }: Building3DPr
   useFrame(({ clock }, delta) => {
     if (!groupRef.current) return;
 
-    // Construction pop animation (scale up over 1 second on mount)
+    // Construction pop animation
     if (constructionProgress.current < 1) {
       constructionProgress.current = Math.min(1, constructionProgress.current + delta);
     }
     const constructionScale = constructionProgress.current < 1
       ? easeOutBounce(constructionProgress.current)
       : 1;
-    groupRef.current.scale.y = constructionScale * scale;
+    groupRef.current.scale.set(scale, constructionScale * scale, scale);
 
-    // Gentle bob for higher-level buildings
-    groupRef.current.position.y = position[1] + Math.sin(clock.elapsedTime * 0.5 + position[0]) * 0.02 * level;
+    // Gentle float/bob animation
+    groupRef.current.position.y = position[1] + Math.sin(clock.elapsedTime * 0.5 + position[0]) * 0.02;
 
-    // Enhanced glow pulse on building materials
+    // Construction dust particles
+    if (dustRef.current && constructionProgress.current < 1) {
+      dustRef.current.visible = true;
+      dustRef.current.children.forEach((child, i) => {
+        const mesh = child as THREE.Mesh;
+        mesh.position.y += delta * (1 + i * 0.3);
+        (mesh.material as THREE.MeshBasicMaterial).opacity = Math.max(0, 1 - constructionProgress.current);
+        if (mesh.position.y > 2) mesh.position.y = 0;
+      });
+    } else if (dustRef.current) {
+      dustRef.current.visible = false;
+    }
+
+    // Glow pulse
     const glowPulse = Math.sin(clock.elapsedTime * 2) * 0.05 * level;
     groupRef.current.traverse((child) => {
       if ((child as THREE.Mesh).isMesh) {
         const mat = (child as THREE.Mesh).material;
         if (mat && 'emissiveIntensity' in mat && (mat as THREE.MeshToonMaterial).emissiveIntensity !== undefined) {
           const toonMat = mat as THREE.MeshToonMaterial;
-          // Only pulse materials that already have emissive set (not zero-emissive accent pieces)
           if (toonMat.emissive && toonMat.emissive.r + toonMat.emissive.g + toonMat.emissive.b > 0) {
             toonMat.emissiveIntensity = Math.max(0, baseEmissive + glowPulse);
           }
@@ -87,7 +100,17 @@ export default function Building3D({ buildingId, level, position }: Building3DPr
       {visual.type === 'vault' && <VaultModel color={visual.color} accent={visual.accentColor} emissive={baseEmissive} />}
       {visual.type === 'tower' && <TowerModel color={visual.color} accent={visual.accentColor} level={level} emissive={baseEmissive} />}
       {visual.type === 'house' && <HouseModel color={visual.color} accent={visual.accentColor} emissive={baseEmissive} />}
-      {/* Level glow */}
+
+      {/* Construction dust particles */}
+      <group ref={dustRef} visible={false}>
+        {Array.from({ length: 6 }).map((_, i) => (
+          <mesh key={i} position={[(Math.random() - 0.5) * 1.5, Math.random() * 0.5, (Math.random() - 0.5) * 1.5]}>
+            <sphereGeometry args={[0.06, 4, 4]} />
+            <meshBasicMaterial color="#b8a080" transparent opacity={0.6} />
+          </mesh>
+        ))}
+      </group>
+
       {level >= 5 && <pointLight intensity={0.3} color={visual.accentColor} distance={3} position={[0, 2, 0]} />}
     </group>
   );
@@ -105,19 +128,34 @@ function PagodaModel({ color, accent, level, emissive }: { color: string; accent
         <meshToonMaterial color="#696969" />
       </mesh>
       {/* Tiers */}
-      {Array.from({ length: tiers }).map((_, i) => (
-        <group key={i} position={[0, 0.2 + i * 0.8, 0]}>
-          <mesh castShadow>
-            <boxGeometry args={[1.2 - i * 0.25, 0.6, 1.2 - i * 0.25]} />
-            <meshToonMaterial color={color} emissive={color} emissiveIntensity={emissive} />
-          </mesh>
-          {/* Roof */}
-          <mesh position={[0, 0.45, 0]} castShadow>
-            <boxGeometry args={[1.4 - i * 0.25, 0.1, 1.4 - i * 0.25]} />
-            <meshToonMaterial color={accent} />
-          </mesh>
-        </group>
-      ))}
+      {Array.from({ length: tiers }).map((_, i) => {
+        const wallWidth = 1.2 - i * 0.25;
+        const roofWidth = wallWidth + 0.2; // overhang
+        return (
+          <group key={i} position={[0, 0.2 + i * 0.8, 0]}>
+            <mesh castShadow>
+              <boxGeometry args={[wallWidth, 0.6, wallWidth]} />
+              <meshToonMaterial color={color} emissive={color} emissiveIntensity={emissive} />
+            </mesh>
+            {/* Roof with overhang */}
+            <mesh position={[0, 0.45, 0]} castShadow>
+              <boxGeometry args={[roofWidth, 0.1, roofWidth]} />
+              <meshToonMaterial color={accent} />
+            </mesh>
+            {/* Upturned roof corners */}
+            {[[-1, -1], [-1, 1], [1, -1], [1, 1]].map(([dx, dz], ci) => (
+              <mesh
+                key={ci}
+                position={[(dx * roofWidth * 0.48), 0.5, (dz * roofWidth * 0.48)]}
+                rotation={[dz * 0.3, 0, -dx * 0.3]}
+              >
+                <boxGeometry args={[0.12, 0.04, 0.12]} />
+                <meshToonMaterial color={accent} />
+              </mesh>
+            ))}
+          </group>
+        );
+      })}
       {/* Spire */}
       <mesh position={[0, 0.2 + tiers * 0.8 + 0.3, 0]} castShadow>
         <coneGeometry args={[0.1, 0.6, 4]} />
@@ -128,6 +166,7 @@ function PagodaModel({ color, accent, level, emissive }: { color: string; accent
 }
 
 function GardenModel({ color, accent, emissive }: { color: string; accent: string; emissive: number }) {
+  const flowerColors = ['#FF69B4', '#FFD700', '#FF6347', '#87CEEB', '#FF69B4', '#FFD700', '#9370DB', '#FFA07A'];
   return (
     <group>
       {/* Stone border */}
@@ -140,15 +179,32 @@ function GardenModel({ color, accent, emissive }: { color: string; accent: strin
         <circleGeometry args={[0.8, 8]} />
         <meshToonMaterial color="#3d6b35" />
       </mesh>
-      {/* Small bushes */}
-      {[[-0.3, 0, -0.3], [0.3, 0, 0.3], [0.3, 0, -0.3]].map(([x, _, z], i) => (
-        <mesh key={i} position={[x!, 0.25, z!]} castShadow>
-          <sphereGeometry args={[0.2, 6, 5]} />
-          <meshToonMaterial color={color} emissive={color} emissiveIntensity={emissive} />
+      {/* Bushes and flowers */}
+      {[
+        [-0.3, 0, -0.3], [0.3, 0, 0.3], [0.3, 0, -0.3],
+        [-0.4, 0, 0.2], [0.0, 0, -0.5], [0.5, 0, 0.0],
+        [-0.2, 0, 0.4], [0.1, 0, 0.1],
+      ].map(([x, _, z], i) => (
+        <mesh key={i} position={[x!, 0.2 + Math.random() * 0.1, z!]} castShadow>
+          <sphereGeometry args={[0.12 + Math.random() * 0.1, 6, 5]} />
+          <meshToonMaterial color={i < 3 ? color : flowerColors[i]} emissive={i < 3 ? color : flowerColors[i]} emissiveIntensity={emissive * 0.5} />
         </mesh>
       ))}
+      {/* Small fountain (stacked cylinders + sphere) */}
+      <mesh position={[0, 0.15, 0]} castShadow>
+        <cylinderGeometry args={[0.15, 0.2, 0.3, 8]} />
+        <meshToonMaterial color="#696969" />
+      </mesh>
+      <mesh position={[0, 0.35, 0]} castShadow>
+        <cylinderGeometry args={[0.08, 0.12, 0.15, 8]} />
+        <meshToonMaterial color="#555" />
+      </mesh>
+      <mesh position={[0, 0.5, 0]}>
+        <sphereGeometry args={[0.06, 8, 8]} />
+        <meshToonMaterial color="#4169E1" emissive="#4169E1" emissiveIntensity={0.3} />
+      </mesh>
       {/* Spirit crystal */}
-      <mesh position={[0, 0.4, 0]} rotation={[0, Math.PI / 4, 0]} castShadow>
+      <mesh position={[0.5, 0.4, -0.3]} rotation={[0, Math.PI / 4, 0]} castShadow>
         <octahedronGeometry args={[0.15]} />
         <meshToonMaterial color={accent} emissive={accent} emissiveIntensity={0.5} />
       </mesh>

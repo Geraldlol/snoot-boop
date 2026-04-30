@@ -151,6 +151,7 @@ export class EventBus {
   private history: HistoryEntry[] = [];
   private maxHistorySize = 100;
   private debug = false;
+  private onError: ((event: string, error: unknown) => void) | null = null;
 
   on(event: string, callback: (data: unknown) => void, context: unknown = null): () => void {
     if (!this.listeners.has(event)) {
@@ -211,6 +212,7 @@ export class EventBus {
           listenerCount++;
         } catch (error) {
           console.error(`[EventBus] Error in listener for '${event}':`, error);
+          this.handleError(event, error);
         }
       }
     }
@@ -230,6 +232,7 @@ export class EventBus {
           listenerCount++;
         } catch (error) {
           console.error(`[EventBus] Error in once listener for '${event}':`, error);
+          this.handleError(event, error);
         }
       }
     }
@@ -267,6 +270,19 @@ export class EventBus {
 
   setDebug(enabled: boolean): void {
     this.debug = enabled;
+  }
+
+  setOnError(handler: ((event: string, error: unknown) => void) | null): void {
+    this.onError = handler;
+  }
+
+  private handleError(event: string, error: unknown): void {
+    if (this.onError) {
+      this.onError(event, error);
+    }
+    if (this.debug) {
+      throw error;
+    }
   }
 
   private addToHistory(event: string, data: unknown): void {

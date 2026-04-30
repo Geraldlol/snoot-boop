@@ -31,7 +31,7 @@ export default function PrestigePanel() {
         {tabs.filter((t) => t.visible).map((t) => (
           <button
             key={t.id}
-            className="px-3 py-1.5 rounded text-[10px] font-mono font-bold transition-all cursor-pointer"
+            className="px-3 py-1.5 rounded text-xs font-mono font-bold transition-all cursor-pointer"
             style={{
               backgroundColor: tab === t.id ? '#FFD70030' : 'rgba(255,255,255,0.05)',
               color: tab === t.id ? '#FFD700' : 'rgba(255,255,255,0.4)',
@@ -94,7 +94,7 @@ function RebirthTab({ forceUpdate }: { forceUpdate: () => void }) {
               style={{ width: `${Math.min(100, progress * 100)}%` }}
             />
           </div>
-          <div className="text-[8px] font-mono text-white/30 mt-1">
+          <div className="text-[10px] font-mono text-white/50 mt-1">
             Perks: {currentTierData.perks.join(', ')}
           </div>
         </div>
@@ -102,7 +102,7 @@ function RebirthTab({ forceUpdate }: { forceUpdate: () => void }) {
 
       {/* Rebirth button */}
       <button
-        className="w-full px-3 py-2.5 rounded text-[10px] font-mono font-bold transition-all mb-4"
+        className="w-full px-3 py-2.5 rounded text-xs font-mono font-bold transition-all mb-4"
         style={{
           backgroundColor: canRebirth.can ? '#FFD70020' : 'rgba(255,255,255,0.05)',
           color: canRebirth.can ? '#FFD700' : 'rgba(255,255,255,0.2)',
@@ -118,10 +118,10 @@ function RebirthTab({ forceUpdate }: { forceUpdate: () => void }) {
       {/* Unlocked perks */}
       {prestige.unlockedPerks.size > 0 && (
         <div>
-          <h3 className="text-[10px] font-mono text-white/60 font-bold mb-2">Unlocked Perks</h3>
+          <h3 className="text-xs font-mono text-white/60 font-bold mb-2">Unlocked Perks</h3>
           <div className="flex flex-wrap gap-1">
             {[...prestige.unlockedPerks].map((perk) => (
-              <span key={perk} className="px-2 py-0.5 rounded text-[8px] font-mono bg-[#FFD700]/10 text-[#FFD700]/70">
+              <span key={perk} className="px-2 py-0.5 rounded text-[10px] font-mono bg-[#FFD700]/10 text-[#FFD700]/70">
                 {perk.replace(/_/g, ' ')}
               </span>
             ))}
@@ -131,7 +131,7 @@ function RebirthTab({ forceUpdate }: { forceUpdate: () => void }) {
 
       {/* Tier overview */}
       <div className="mt-4">
-        <h3 className="text-[10px] font-mono text-white/60 font-bold mb-2">All Tiers</h3>
+        <h3 className="text-xs font-mono text-white/60 font-bold mb-2">All Tiers</h3>
         <div className="flex flex-col gap-1">
           {REBIRTH_TIERS.map((tier) => {
             const reached = prestige.currentTier >= tier.tier;
@@ -141,12 +141,12 @@ function RebirthTab({ forceUpdate }: { forceUpdate: () => void }) {
                 className="flex items-center gap-2 text-[9px] font-mono"
                 style={{ opacity: reached ? 1 : 0.4 }}
               >
-                <span className={reached ? 'text-[#FFD700]' : 'text-white/30'}>
+                <span className={reached ? 'text-[#FFD700]' : 'text-white/50'}>
                   {reached ? '✦' : '○'}
                 </span>
                 <span className="text-white/60 w-8">T{tier.tier}</span>
                 <span className="text-white/50 flex-1">{tier.name}</span>
-                <span className="text-white/30">x{tier.multiplier}</span>
+                <span className="text-white/50">x{tier.multiplier}</span>
               </div>
             );
           })}
@@ -191,7 +191,7 @@ function ReincarnationTab({ forceUpdate }: { forceUpdate: () => void }) {
 
       {/* Reincarnate button */}
       <button
-        className="w-full px-3 py-2.5 rounded text-[10px] font-mono font-bold transition-all mb-4"
+        className="w-full px-3 py-2.5 rounded text-xs font-mono font-bold transition-all mb-4"
         style={{
           backgroundColor: canReincarnate.can ? '#9370DB20' : 'rgba(255,255,255,0.05)',
           color: canReincarnate.can ? '#9370DB' : 'rgba(255,255,255,0.2)',
@@ -205,7 +205,7 @@ function ReincarnationTab({ forceUpdate }: { forceUpdate: () => void }) {
       </button>
 
       {/* Karma Shop */}
-      <h3 className="text-[10px] font-mono text-white/60 font-bold mb-2">Karma Shop</h3>
+      <h3 className="text-xs font-mono text-white/60 font-bold mb-2">Karma Shop</h3>
       <div className="flex flex-col gap-2">
         {KARMA_SHOP.map((item) => {
           const purchased = prestige.karmaShopPurchases[item.id] ?? 0;
@@ -215,8 +215,8 @@ function ReincarnationTab({ forceUpdate }: { forceUpdate: () => void }) {
           return (
             <div key={item.id} className="p-2.5 rounded-lg border border-white/5 bg-white/[0.02]">
               <div className="flex items-center justify-between mb-0.5">
-                <span className="text-[10px] font-mono font-bold text-white/80">{item.name}</span>
-                <span className="text-[8px] font-mono text-white/30">
+                <span className="text-xs font-mono font-bold text-white/80">{item.name}</span>
+                <span className="text-[10px] font-mono text-white/50">
                   {purchased}/{item.maxPurchases}
                 </span>
               </div>
@@ -236,7 +236,7 @@ function ReincarnationTab({ forceUpdate }: { forceUpdate: () => void }) {
                 </button>
               )}
               {maxed && (
-                <span className="text-[8px] font-mono text-[#FFD700]/60">✦ Maxed</span>
+                <span className="text-[10px] font-mono text-[#FFD700]/60">✦ Maxed</span>
               )}
             </div>
           );
@@ -275,7 +275,7 @@ function TranscendenceTab({ forceUpdate }: { forceUpdate: () => void }) {
 
       {/* Transcend button */}
       <button
-        className="w-full px-3 py-2.5 rounded text-[10px] font-mono font-bold transition-all mb-4"
+        className="w-full px-3 py-2.5 rounded text-xs font-mono font-bold transition-all mb-4"
         style={{
           backgroundColor: canTranscend.can ? 'rgba(255,255,255,0.1)' : 'rgba(255,255,255,0.05)',
           color: canTranscend.can ? '#FFFFFF' : 'rgba(255,255,255,0.2)',
@@ -289,7 +289,7 @@ function TranscendenceTab({ forceUpdate }: { forceUpdate: () => void }) {
       </button>
 
       {/* Celestial Bonuses */}
-      <h3 className="text-[10px] font-mono text-white/60 font-bold mb-2">Celestial Bonuses</h3>
+      <h3 className="text-xs font-mono text-white/60 font-bold mb-2">Celestial Bonuses</h3>
       <div className="flex flex-col gap-2">
         {CELESTIAL_BONUSES.map((bonus) => {
           const unlocked = prestige.transcendencePoints >= bonus.minPoints;
@@ -300,10 +300,10 @@ function TranscendenceTab({ forceUpdate }: { forceUpdate: () => void }) {
               style={{ opacity: unlocked ? 1 : 0.4 }}
             >
               <div className="flex items-center justify-between mb-0.5">
-                <span className="text-[10px] font-mono font-bold" style={{ color: unlocked ? '#FFD700' : 'rgba(255,255,255,0.4)' }}>
+                <span className="text-xs font-mono font-bold" style={{ color: unlocked ? '#FFD700' : 'rgba(255,255,255,0.4)' }}>
                   {unlocked ? '✦' : '○'} {bonus.name}
                 </span>
-                <span className="text-[8px] font-mono text-white/30">
+                <span className="text-[10px] font-mono text-white/50">
                   {bonus.minPoints} pts
                 </span>
               </div>

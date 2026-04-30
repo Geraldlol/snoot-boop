@@ -2,13 +2,15 @@
  * SanctuaryScene - Base 3D world: ground, dynamic lighting, sky, decorations.
  * Voxel-Wuxia aesthetic using MeshToonMaterial.
  * Day/night cycle + seasonal effects driven by effects-store.
+ * Includes fog, scattered rocks, fireflies at night, ambient dust motes.
  */
 
 'use client';
 
-import { useRef } from 'react';
+import { useRef, useMemo } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
+import { useEffectsStore } from '@/store/effects-store';
 import CatPopulation from '../cats/CatPopulation';
 import GooseInSanctuary from '../goose/GooseInSanctuary';
 import BuildingsInSanctuary from '../buildings/BuildingsInSanctuary';
@@ -22,6 +24,9 @@ import ScreenShake from '../effects/ScreenShake';
 export default function SanctuaryScene() {
   return (
     <group>
+      {/* Fog for depth */}
+      <fog attach="fog" args={['#1a2a1a', 15, 45]} />
+
       {/* Dynamic Lighting */}
       <DayNightLighting />
 
@@ -36,6 +41,9 @@ export default function SanctuaryScene() {
       <CherryTree position={[-3, 0, 5]} scale={1.1} />
       <Lantern position={[-2, 0, -2]} />
       <Lantern position={[2, 0, -2]} />
+
+      {/* Scattered rocks */}
+      <ScatteredRocks />
 
       {/* 3D Cats */}
       <CatPopulation />
@@ -52,6 +60,12 @@ export default function SanctuaryScene() {
       <SeasonalEffects />
       <QiParticles />
 
+      {/* Ambient dust motes */}
+      <DustMotes />
+
+      {/* Night fireflies */}
+      <Fireflies />
+
       {/* Animated Sky */}
       <SkyDomeAnimated />
     </group>
@@ -62,10 +76,133 @@ export default function SanctuaryScene() {
 
 function Ground() {
   return (
-    <mesh rotation={[-Math.PI / 2, 0, 0]} receiveShadow position={[0, -0.01, 0]}>
-      <planeGeometry args={[40, 40]} />
-      <meshToonMaterial color="#2d5a27" />
-    </mesh>
+    <group>
+      {/* Main ground */}
+      <mesh rotation={[-Math.PI / 2, 0, 0]} receiveShadow position={[0, -0.01, 0]}>
+        <planeGeometry args={[40, 40]} />
+        <meshToonMaterial color="#2d5a27" />
+      </mesh>
+      {/* Slightly raised textured layer */}
+      <mesh rotation={[-Math.PI / 2, 0, 0]} receiveShadow position={[0, 0.0, 0]}>
+        <planeGeometry args={[38, 38]} />
+        <meshToonMaterial color="#336b2c" transparent opacity={0.4} />
+      </mesh>
+    </group>
+  );
+}
+
+// ─── Scattered Rocks ────────────────────────────────────────
+
+function ScatteredRocks() {
+  const rocks = useMemo(() => {
+    const arr: { pos: [number, number, number]; scale: number; rot: number }[] = [];
+    const seed = [
+      [-8, -5], [6, 3], [-4, 8], [10, -3], [-12, 1],
+      [3, -8], [-7, 6], [9, 7],
+    ];
+    for (const [x, z] of seed) {
+      arr.push({
+        pos: [x, 0.1, z],
+        scale: 0.1 + Math.abs(Math.sin(x * z)) * 0.2,
+        rot: x + z,
+      });
+    }
+    return arr;
+  }, []);
+
+  return (
+    <group>
+      {rocks.map((rock, i) => (
+        <mesh key={i} position={rock.pos} rotation={[0, rock.rot, 0]} scale={rock.scale} castShadow>
+          <icosahedronGeometry args={[1, 0]} />
+          <meshToonMaterial color="#808080" />
+        </mesh>
+      ))}
+    </group>
+  );
+}
+
+// ─── Dust Motes ─────────────────────────────────────────────
+
+const DUST_COUNT = 25;
+const _dustDummy = new THREE.Object3D();
+
+function DustMotes() {
+  const meshRef = useRef<THREE.InstancedMesh>(null);
+
+  const particles = useMemo(() => {
+    return Array.from({ length: DUST_COUNT }, (_, i) => ({
+      x: (Math.random() - 0.5) * 20,
+      y: Math.random() * 6 + 0.5,
+      z: (Math.random() - 0.5) * 14,
+      speed: 0.05 + Math.random() * 0.1,
+      offset: i * 0.73,
+    }));
+  }, []);
+
+  useFrame(({ clock }) => {
+    if (!meshRef.current) return;
+    const t = clock.elapsedTime;
+
+    for (let i = 0; i < DUST_COUNT; i++) {
+      const p = particles[i];
+      const y = p.y + Math.sin(t * p.speed + p.offset) * 0.5;
+      const x = p.x + Math.sin(t * 0.2 + p.offset) * 0.3;
+      _dustDummy.position.set(x, y, p.z);
+      _dustDummy.scale.setScalar(0.02);
+      _dustDummy.updateMatrix();
+      meshRef.current.setMatrixAt(i, _dustDummy.matrix);
+    }
+    meshRef.current.instanceMatrix.needsUpdate = true;
+  });
+
+  return (
+    <instancedMesh ref={meshRef} args={[undefined, undefined, DUST_COUNT]} frustumCulled={false}>
+      <sphereGeometry args={[1, 4, 4]} />
+      <meshBasicMaterial color="#ffffff" transparent opacity={0.15} depthWrite={false} />
+    </instancedMesh>
+  );
+}
+
+// ─── Fireflies (night only) ────────────────────────────────
+
+function Fireflies() {
+  const groupRef = useRef<THREE.Group>(null);
+  const positions = useMemo(() => {
+    return Array.from({ length: 8 }, () => ({
+      x: (Math.random() - 0.5) * 20,
+      y: 1 + Math.random() * 3,
+      z: (Math.random() - 0.5) * 14,
+      phase: Math.random() * Math.PI * 2,
+      speed: 0.3 + Math.random() * 0.4,
+    }));
+  }, []);
+
+  useFrame(({ clock }) => {
+    if (!groupRef.current) return;
+    const { sunIntensity } = useEffectsStore.getState();
+    const isNight = sunIntensity < 0.3;
+    const t = clock.elapsedTime;
+
+    groupRef.current.children.forEach((child, i) => {
+      const light = child as THREE.PointLight;
+      const p = positions[i];
+      light.position.set(
+        p.x + Math.sin(t * p.speed + p.phase) * 2,
+        p.y + Math.sin(t * p.speed * 0.7 + p.phase) * 0.5,
+        p.z + Math.cos(t * p.speed * 0.5 + p.phase) * 2,
+      );
+      const targetIntensity = isNight ? 0.3 + Math.sin(t * 2 + p.phase) * 0.1 : 0;
+      light.intensity = THREE.MathUtils.lerp(light.intensity, targetIntensity, 0.05);
+    });
+  });
+
+  return (
+    <group ref={groupRef}>
+      {positions.map((_, i) => (
+        <pointLight key={i} intensity={0} color="#FFFF88" distance={2} />
+      ))}
+    </group>
   );
 }
 

@@ -60,7 +60,10 @@ export default function GameApp() {
     const saveData = saveManager.load();
 
     // Init engine with save data
+    // SaveDataV3 fields are structurally compatible with engine.init's expected types.
+    // We spread saveData and only override fields that need specific shaping.
     engine.init(saveData ? {
+      ...saveData as unknown as Parameters<typeof engine.init>[0],
       master: saveData.master as MasterId | null,
       resources: saveData.resources,
       stats: {
@@ -71,42 +74,6 @@ export default function GameApp() {
       upgrades: saveData.upgrades,
       economy: saveData.economy,
       cats: saveData.cats as { cats?: unknown[]; catIdCounter?: number; version?: number },
-      waifus: saveData.waifus as unknown as Record<string, unknown> | undefined,
-      goose: saveData.goose as unknown as Record<string, unknown> | undefined,
-      events: saveData.events as unknown as Record<string, unknown> | undefined,
-      time: saveData.time as unknown as Record<string, unknown> | undefined,
-      daily: saveData.daily as unknown as Record<string, unknown> | undefined,
-      achievements: saveData.achievements as unknown as Record<string, unknown> | undefined,
-      // Phase 4
-      cultivation: saveData.cultivation as unknown as Record<string, unknown> | undefined,
-      prestige: saveData.prestige as unknown as Record<string, unknown> | undefined,
-      buildings: saveData.buildings as unknown as Record<string, unknown> | undefined,
-      techniques: saveData.techniques as unknown as Record<string, unknown> | undefined,
-      blessings: saveData.blessings as unknown as Record<string, unknown> | undefined,
-      // Phase 5
-      equipment: saveData.equipment as unknown as Record<string, unknown> | undefined,
-      crafting: saveData.crafting as unknown as Record<string, unknown> | undefined,
-      // Phase 6
-      pagoda: saveData.pagoda as unknown as Record<string, unknown> | undefined,
-      survival: saveData.survival as unknown as Record<string, unknown> | undefined,
-      tournament: saveData.tournament as unknown as Record<string, unknown> | undefined,
-      dreamRealm: saveData.dreamRealm as unknown as Record<string, unknown> | undefined,
-      gooseDimension: saveData.gooseDimension as unknown as Record<string, unknown> | undefined,
-      memoryFragments: saveData.memoryFragments as unknown as Record<string, unknown> | undefined,
-      // Phase 7
-      lore: saveData.lore as unknown as Record<string, unknown> | undefined,
-      secrets: saveData.secrets as unknown as Record<string, unknown> | undefined,
-      catino: saveData.catino as unknown as Record<string, unknown> | undefined,
-      drama: saveData.drama as unknown as Record<string, unknown> | undefined,
-      nemesis: saveData.nemesis as unknown as Record<string, unknown> | undefined,
-      hardcore: saveData.hardcore as unknown as Record<string, unknown> | undefined,
-      irlIntegration: saveData.irlIntegration as unknown as Record<string, unknown> | undefined,
-      partners: saveData.partners as unknown as Record<string, unknown> | undefined,
-      parasites: saveData.parasites as unknown as Record<string, unknown> | undefined,
-      goldenSnoot: saveData.goldenSnoot as unknown as Record<string, unknown> | undefined,
-      elemental: (saveData as unknown as Record<string, unknown>).elemental as Record<string, unknown> | undefined,
-      sectWar: (saveData as unknown as Record<string, unknown>).sectWar as Record<string, unknown> | undefined,
-      idle: (saveData as unknown as Record<string, unknown>).idle as Record<string, unknown> | undefined,
     } : undefined);
 
     // Sync initial engine state to stores

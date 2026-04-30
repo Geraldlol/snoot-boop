@@ -46,7 +46,7 @@ export default function EquipmentPanel() {
         {(['inventory', 'equipped'] as const).map((t) => (
           <button
             key={t}
-            className="text-[10px] font-mono px-3 py-1.5 rounded cursor-pointer"
+            className="text-xs font-mono px-3 py-1.5 rounded cursor-pointer"
             style={{
               backgroundColor: tab === t ? `${COLOR}30` : 'rgba(255,255,255,0.05)',
               color: tab === t ? COLOR : 'rgba(255,255,255,0.4)',
@@ -66,7 +66,7 @@ export default function EquipmentPanel() {
             {SLOT_IDS.map((s) => (
               <button
                 key={s}
-                className="text-[8px] font-mono px-2 py-1 rounded cursor-pointer"
+                className="text-[10px] font-mono px-2 py-1 rounded cursor-pointer"
                 style={{
                   backgroundColor: slotFilter === s ? `${COLOR}20` : 'rgba(255,255,255,0.05)',
                   color: slotFilter === s ? COLOR : 'rgba(255,255,255,0.3)',
@@ -84,7 +84,7 @@ export default function EquipmentPanel() {
               <ItemRow key={item.id} item={item} refresh={refresh} />
             ))}
             {filtered.length === 0 && (
-              <div className="text-[9px] font-mono text-white/30 text-center py-4">No items</div>
+              <div className="text-[9px] font-mono text-white/50 text-center py-4">No items</div>
             )}
           </div>
         </>
@@ -95,7 +95,7 @@ export default function EquipmentPanel() {
           {/* Cat selector */}
           <div className="mb-3">
             <select
-              className="w-full text-[10px] font-mono bg-black/30 border border-white/10 rounded p-1.5 text-white/70"
+              className="w-full text-xs font-mono bg-black/30 border border-white/10 rounded p-1.5 text-white/70"
               value={selectedCat}
               onChange={(e) => setSelectedCat(e.target.value)}
             >
@@ -118,15 +118,15 @@ export default function EquipmentPanel() {
                       className="p-2 rounded border border-white/5 bg-black/20 text-center cursor-pointer"
                       onClick={() => { if (item) { engine.unequipItem(selectedCat, slot); refresh(); } }}
                     >
-                      <div className="text-[8px] font-mono text-white/30 mb-0.5">
+                      <div className="text-[10px] font-mono text-white/50 mb-0.5">
                         {SLOT_EMOJIS[slot]} {slot}
                       </div>
                       {item ? (
-                        <div className="text-[8px] font-mono font-bold" style={{ color: rarityColor(item.rarity) }}>
+                        <div className="text-[10px] font-mono font-bold" style={{ color: rarityColor(item.rarity) }}>
                           {item.name} Lv.{item.level}
                         </div>
                       ) : (
-                        <div className="text-[8px] font-mono text-white/20">Empty</div>
+                        <div className="text-[10px] font-mono text-white/50">Empty</div>
                       )}
                     </div>
                   );
@@ -139,9 +139,9 @@ export default function EquipmentPanel() {
                 if (sets.length === 0) return null;
                 return (
                   <div className="mb-3 p-2 rounded border border-white/5 bg-black/20">
-                    <div className="text-[8px] font-mono text-white/40 mb-1">Set Bonuses:</div>
+                    <div className="text-[10px] font-mono text-white/40 mb-1">Set Bonuses:</div>
                     {sets.map((s, i) => (
-                      <div key={i} className="text-[8px] font-mono text-[#50C878]">
+                      <div key={i} className="text-[10px] font-mono text-[#50C878]">
                         {s.description} ({s.count}pc)
                       </div>
                     ))}
@@ -156,10 +156,10 @@ export default function EquipmentPanel() {
                 if (entries.length === 0) return null;
                 return (
                   <div className="p-2 rounded border border-white/5 bg-black/20">
-                    <div className="text-[8px] font-mono text-white/40 mb-1">Total Equipment Stats:</div>
+                    <div className="text-[10px] font-mono text-white/40 mb-1">Total Equipment Stats:</div>
                     <div className="grid grid-cols-2 gap-x-4 gap-y-0.5">
                       {entries.map(([stat, val]) => (
-                        <div key={stat} className="text-[8px] font-mono text-white/50">
+                        <div key={stat} className="text-[10px] font-mono text-white/50">
                           {stat}: <span className="text-white/70">+{formatNumber(val)}</span>
                         </div>
                       ))}
@@ -184,10 +184,10 @@ function ItemRow({ item, refresh }: { item: EquipmentInstance; refresh: () => vo
     <div className="p-2 rounded-lg border border-white/5 bg-white/[0.02] flex items-center gap-2">
       <span className="text-sm">{SLOT_EMOJIS[item.slot] ?? '?'}</span>
       <div className="flex-1 min-w-0">
-        <div className="text-[10px] font-mono font-bold" style={{ color: rarityColor(item.rarity) }}>
+        <div className="text-xs font-mono font-bold" style={{ color: rarityColor(item.rarity) }}>
           {item.name}
         </div>
-        <div className="text-[8px] font-mono text-white/30">
+        <div className="text-[10px] font-mono text-white/50">
           {item.slot} · Lv.{item.level}/{item.maxLevel}
           {Object.entries(item.stats).slice(0, 2).map(([k, v]) => ` · ${k}:${v}`).join('')}
         </div>
@@ -195,7 +195,7 @@ function ItemRow({ item, refresh }: { item: EquipmentInstance; refresh: () => vo
       <div className="flex gap-1">
         {canLevel && !isEquipped && (
           <button
-            className="text-[7px] font-mono px-1.5 py-0.5 rounded cursor-pointer"
+            className="text-[9px] font-mono px-1.5 py-0.5 rounded cursor-pointer"
             style={{ backgroundColor: '#9370DB20', color: '#9370DB', border: '1px solid #9370DB30' }}
             onClick={() => { engine.levelUpEquipment(item.id); refresh(); }}
           >
@@ -204,7 +204,7 @@ function ItemRow({ item, refresh }: { item: EquipmentInstance; refresh: () => vo
         )}
         {!isEquipped && (
           <button
-            className="text-[7px] font-mono px-1.5 py-0.5 rounded cursor-pointer"
+            className="text-[9px] font-mono px-1.5 py-0.5 rounded cursor-pointer"
             style={{ backgroundColor: 'rgba(255,255,255,0.05)', color: 'rgba(255,255,255,0.3)' }}
             onClick={() => { engine.salvageEquipment(item.id); refresh(); }}
           >

@@ -72,7 +72,7 @@ export default function AFKReturnModal({ result, masterId, onCollect }: AFKRetur
                 <p className="text-xl font-mono font-bold text-[#FFD700]">
                   +{formatNumber(result.pp)}
                 </p>
-                <p className="text-[10px] font-mono text-[#FFD700]/60">PP</p>
+                <p className="text-xs font-mono text-[#FFD700]/60">PP</p>
               </div>
             )}
             {result.bp > 0 && (
@@ -80,13 +80,13 @@ export default function AFKReturnModal({ result, masterId, onCollect }: AFKRetur
                 <p className="text-xl font-mono font-bold text-[#50C878]">
                   +{formatNumber(result.bp)}
                 </p>
-                <p className="text-[10px] font-mono text-[#50C878]/60">BP</p>
+                <p className="text-xs font-mono text-[#50C878]/60">BP</p>
               </div>
             )}
           </div>
 
           {result.happinessDecay > 1 && (
-            <p className="text-[10px] font-mono text-[#FF6347] text-center">
+            <p className="text-xs font-mono text-[#FF6347] text-center">
               Cat happiness decreased by {result.happinessDecay.toFixed(1)}% while away
             </p>
           )}
@@ -124,7 +124,7 @@ export default function AFKReturnModal({ result, masterId, onCollect }: AFKRetur
                     >
                       {evt.event.name}
                     </p>
-                    <p className="text-[10px] font-mono text-white/40">
+                    <p className="text-xs font-mono text-white/40">
                       {evt.event.description}
                     </p>
                   </div>

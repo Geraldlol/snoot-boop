@@ -29,7 +29,7 @@ export default function SocialPanel() {
         {SUB_TABS.map(tab => (
           <button
             key={tab.id}
-            className="px-3 py-1 text-[10px] font-mono rounded transition-all cursor-pointer"
+            className="px-3 py-1 text-xs font-mono rounded transition-all cursor-pointer"
             style={{
               backgroundColor: activeTab === tab.id ? '#E9456030' : 'rgba(255,255,255,0.05)',
               color: activeTab === tab.id ? '#E94560' : 'rgba(255,255,255,0.4)',
@@ -102,7 +102,7 @@ function SectCardTab() {
         <div className="flex items-center gap-2 mb-2">
           <div className="w-8 h-8 rounded-full flex-shrink-0" style={{ backgroundColor: master.color + '40', border: `2px solid ${master.color}` }} />
           <div>
-            <div className="text-[10px] font-mono font-bold" style={{ color: master.color }}>{master.name}</div>
+            <div className="text-xs font-mono font-bold" style={{ color: master.color }}>{master.name}</div>
             <div className="text-[9px] font-mono text-white/40">{master.title} — {master.role}</div>
           </div>
         </div>
@@ -130,7 +130,7 @@ function SectCardTab() {
 
       {/* Copy for Discord */}
       <button
-        className="w-full py-2 rounded-lg text-[10px] font-mono font-bold cursor-pointer transition-all bg-[#5865F2]/20 text-[#5865F2] border border-[#5865F2]/30 hover:bg-[#5865F2]/30"
+        className="w-full py-2 rounded-lg text-xs font-mono font-bold cursor-pointer transition-all bg-[#5865F2]/20 text-[#5865F2] border border-[#5865F2]/30 hover:bg-[#5865F2]/30"
         onClick={handleCopyToDiscord}
       >
         {copied ? '✓ Copied!' : '📋 Copy Sect Card for Discord'}
@@ -142,7 +142,7 @@ function SectCardTab() {
 function StatBox({ label, value, color }: { label: string; value: string; color: string }) {
   return (
     <div className="p-2 rounded bg-black/20 border border-white/5">
-      <div className="text-[8px] font-mono text-white/30">{label}</div>
+      <div className="text-[10px] font-mono text-white/50">{label}</div>
       <div className="text-[11px] font-mono font-bold" style={{ color }}>{value}</div>
     </div>
   );
@@ -183,16 +183,16 @@ function SaveSharingTab() {
     <div>
       {/* Export */}
       <div className="mb-4">
-        <p className="text-[10px] font-mono text-white/50 mb-2">Export your save as a shareable code:</p>
+        <p className="text-xs font-mono text-white/50 mb-2">Export your save as a shareable code:</p>
         <button
-          className="w-full py-2 rounded-lg text-[10px] font-mono font-bold cursor-pointer transition-all bg-[#50C878]/20 text-[#50C878] border border-[#50C878]/30 hover:bg-[#50C878]/30 mb-2"
+          className="w-full py-2 rounded-lg text-xs font-mono font-bold cursor-pointer transition-all bg-[#50C878]/20 text-[#50C878] border border-[#50C878]/30 hover:bg-[#50C878]/30 mb-2"
           onClick={handleExport}
         >
           📤 Export Save (copies to clipboard)
         </button>
         {exportedCode && (
           <textarea
-            className="w-full h-16 bg-black/30 border border-white/10 rounded text-[8px] font-mono text-white/60 p-2 resize-none"
+            className="w-full h-16 bg-black/30 border border-white/10 rounded text-[10px] font-mono text-white/60 p-2 resize-none"
             readOnly
             value={exportedCode}
           />
@@ -201,15 +201,15 @@ function SaveSharingTab() {
 
       {/* Import */}
       <div>
-        <p className="text-[10px] font-mono text-white/50 mb-2">Import a save code:</p>
+        <p className="text-xs font-mono text-white/50 mb-2">Import a save code:</p>
         <textarea
-          className="w-full h-16 bg-black/30 border border-white/10 rounded text-[8px] font-mono text-white/60 p-2 resize-none mb-2"
+          className="w-full h-16 bg-black/30 border border-white/10 rounded text-[10px] font-mono text-white/60 p-2 resize-none mb-2"
           placeholder="Paste save code here..."
           value={importCode}
           onChange={(e) => setImportCode(e.target.value)}
         />
         <button
-          className={`w-full py-2 rounded-lg text-[10px] font-mono font-bold cursor-pointer transition-all ${
+          className={`w-full py-2 rounded-lg text-xs font-mono font-bold cursor-pointer transition-all ${
             importStatus === 'success'
               ? 'bg-[#50C878]/20 text-[#50C878] border border-[#50C878]/30'
               : importStatus === 'error'
@@ -222,7 +222,7 @@ function SaveSharingTab() {
           {importStatus === 'success' ? '✓ Imported! Reloading...' : importStatus === 'error' ? '✗ Invalid save code' : '📥 Import Save'}
         </button>
         {importStatus === 'idle' && (
-          <p className="text-[8px] font-mono text-[#E94560]/50 mt-1">⚠️ This will overwrite your current save!</p>
+          <p className="text-[10px] font-mono text-[#E94560]/50 mt-1">⚠️ This will overwrite your current save!</p>
         )}
       </div>
     </div>

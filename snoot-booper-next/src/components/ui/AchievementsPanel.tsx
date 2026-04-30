@@ -65,7 +65,7 @@ export default function AchievementsPanel() {
           <AchievementRow key={ach.id} achievement={ach} />
         ))}
         {filtered.length === 0 && (
-          <p className="text-[10px] text-white/30 font-mono text-center py-4">
+          <p className="text-xs text-white/50 font-mono text-center py-4">
             No achievements in this category yet.
           </p>
         )}
@@ -90,7 +90,7 @@ function AchievementRow({ achievement }: {
     >
       <span className="text-base flex-shrink-0">{isHidden ? '❓' : achievement.emoji}</span>
       <div className="flex-1 min-w-0">
-        <div className="text-[10px] font-mono font-bold" style={{ color: achievement.unlocked ? '#FFD700' : 'rgba(255,255,255,0.5)' }}>
+        <div className="text-xs font-mono font-bold" style={{ color: achievement.unlocked ? '#FFD700' : 'rgba(255,255,255,0.5)' }}>
           {isHidden ? '???' : achievement.name}
         </div>
         <div className="text-[9px] font-mono text-white/40">
@@ -103,7 +103,7 @@ function AchievementRow({ achievement }: {
         )}
       </div>
       {achievement.unlocked && (
-        <span className="text-[9px] font-mono text-white/30 flex-shrink-0">✓</span>
+        <span className="text-[9px] font-mono text-white/50 flex-shrink-0">✓</span>
       )}
     </div>
   );

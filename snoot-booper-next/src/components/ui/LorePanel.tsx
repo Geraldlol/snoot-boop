@@ -37,7 +37,7 @@ export default function LorePanel() {
         {CATEGORIES.map((cat) => (
           <button
             key={cat}
-            className="text-[10px] font-mono px-3 py-1.5 rounded cursor-pointer capitalize"
+            className="text-xs font-mono px-3 py-1.5 rounded cursor-pointer capitalize"
             style={{
               backgroundColor: tab === cat ? `${COLOR}30` : 'rgba(255,255,255,0.05)',
               color: tab === cat ? COLOR : 'rgba(255,255,255,0.4)',
@@ -61,11 +61,11 @@ export default function LorePanel() {
           return (
             <div key={id} className="p-2.5 rounded-lg border border-white/5 bg-white/[0.02]">
               <div className="flex items-center justify-between mb-1">
-                <div className="text-[10px] font-mono font-bold" style={{ color: unlocked ? COLOR : 'rgba(255,255,255,0.3)' }}>
+                <div className="text-xs font-mono font-bold" style={{ color: unlocked ? COLOR : 'rgba(255,255,255,0.3)' }}>
                   {unlocked ? entry.title : '???'}
                 </div>
                 {unlocked && (
-                  <span className="text-[7px] font-mono px-1.5 py-0.5 rounded" style={{ backgroundColor: `${COLOR}20`, color: COLOR }}>
+                  <span className="text-[9px] font-mono px-1.5 py-0.5 rounded" style={{ backgroundColor: `${COLOR}20`, color: COLOR }}>
                     Unlocked
                   </span>
                 )}
@@ -82,18 +82,18 @@ export default function LorePanel() {
                     }}
                   />
                 </div>
-                <span className="text-[8px] font-mono text-white/30">
+                <span className="text-[10px] font-mono text-white/50">
                   {current}/{required} fragments
                 </span>
               </div>
 
               {/* Story text */}
               {unlocked ? (
-                <div className="text-[8px] font-mono text-white/50 italic leading-relaxed mt-1">
+                <div className="text-[10px] font-mono text-white/50 italic leading-relaxed mt-1">
                   {entry.story}
                 </div>
               ) : (
-                <div className="text-[8px] font-mono text-white/20 italic">
+                <div className="text-[10px] font-mono text-white/50 italic">
                   Collect more fragments to reveal this story...
                 </div>
               )}

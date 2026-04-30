@@ -3,6 +3,8 @@
 import { useRef, useMemo } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
+import { useGameStore } from '@/store/game-store';
+import { MASTERS } from '@/engine/data/masters';
 
 const PARTICLE_COUNT = 60;
 const _dummy = new THREE.Object3D();
@@ -16,6 +18,7 @@ interface QiParticle {
 
 export default function QiParticles() {
   const meshRef = useRef<THREE.InstancedMesh>(null);
+  const matRef = useRef<THREE.MeshBasicMaterial>(null);
 
   const particles = useMemo(() => {
     const arr: QiParticle[] = [];
@@ -38,12 +41,19 @@ export default function QiParticles() {
     if (!meshRef.current) return;
     const t = clock.elapsedTime;
 
+    // Update color based on selected master
+    if (matRef.current) {
+      const selectedMaster = useGameStore.getState().selectedMaster;
+      const masterColor = selectedMaster ? MASTERS[selectedMaster]?.color : '#00BFFF';
+      matRef.current.color.set(masterColor ?? '#00BFFF');
+    }
+
     for (let i = 0; i < PARTICLE_COUNT; i++) {
       const p = particles[i];
 
-      // Float upward + gentle sway
+      // Float upward + lateral sway (sin wave on x)
       p.pos.y += p.speed * 0.01;
-      const swayX = Math.sin(t * 0.5 + p.offset) * 0.01;
+      const swayX = Math.sin(t * 0.8 + p.offset) * 0.015;
       const swayZ = Math.cos(t * 0.3 + p.offset) * 0.01;
       p.pos.x += swayX;
       p.pos.z += swayZ;
@@ -58,7 +68,6 @@ export default function QiParticles() {
       const pulse = 1 + Math.sin(t * 2 + p.offset) * 0.3;
       _dummy.position.copy(p.pos);
       _dummy.scale.setScalar(p.size * pulse);
-      _dummy.rotation.set(t * 0.5 + p.offset, t * 0.3, 0);
       _dummy.updateMatrix();
       meshRef.current.setMatrixAt(i, _dummy.matrix);
     }
@@ -68,8 +77,8 @@ export default function QiParticles() {
 
   return (
     <instancedMesh ref={meshRef} args={[undefined, undefined, PARTICLE_COUNT]} frustumCulled={false}>
-      <boxGeometry args={[1, 1, 1]} />
-      <meshBasicMaterial color="#00BFFF" transparent opacity={0.35} depthWrite={false} />
+      <sphereGeometry args={[1, 6, 6]} />
+      <meshBasicMaterial ref={matRef} color="#00BFFF" transparent opacity={0.35} depthWrite={false} />
     </instancedMesh>
   );
 }

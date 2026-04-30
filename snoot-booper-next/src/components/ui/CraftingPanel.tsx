@@ -25,7 +25,7 @@ export default function CraftingPanel() {
         {(['craft', 'materials', 'enchant'] as const).map((t) => (
           <button
             key={t}
-            className="text-[10px] font-mono px-3 py-1.5 rounded cursor-pointer"
+            className="text-xs font-mono px-3 py-1.5 rounded cursor-pointer"
             style={{
               backgroundColor: tab === t ? `${COLOR}30` : 'rgba(255,255,255,0.05)',
               color: tab === t ? COLOR : 'rgba(255,255,255,0.4)',
@@ -55,7 +55,7 @@ function CraftTab({ refresh }: { refresh: () => void }) {
       {/* Queue */}
       {queue.length > 0 && (
         <div className="mb-3">
-          <div className="text-[8px] font-mono text-white/40 mb-1">Queue ({queue.length}/3):</div>
+          <div className="text-[10px] font-mono text-white/40 mb-1">Queue ({queue.length}/3):</div>
           {queue.map((job) => {
             const progress = engine.crafting.getCraftProgress(job.id);
             return (
@@ -70,7 +70,7 @@ function CraftTab({ refresh }: { refresh: () => void }) {
                   </div>
                 </div>
                 <button
-                  className="text-[7px] font-mono px-1.5 py-0.5 rounded cursor-pointer"
+                  className="text-[9px] font-mono px-1.5 py-0.5 rounded cursor-pointer"
                   style={{ backgroundColor: 'rgba(255,255,255,0.05)', color: 'rgba(255,255,255,0.3)' }}
                   onClick={() => { engine.cancelCraft(job.id); refresh(); }}
                 >
@@ -83,16 +83,16 @@ function CraftTab({ refresh }: { refresh: () => void }) {
       )}
 
       {/* Blueprints */}
-      <div className="text-[8px] font-mono text-white/40 mb-1">Blueprints:</div>
+      <div className="text-[10px] font-mono text-white/40 mb-1">Blueprints:</div>
       <div className="flex flex-col gap-1.5 max-h-[350px] overflow-y-auto">
         {blueprints.map((bp) => {
           const canCraft = engine.crafting.canCraft(bp.id);
           return (
             <div key={bp.id} className="p-2 rounded-lg border border-white/5 bg-white/[0.02]">
               <div className="flex items-center justify-between mb-1">
-                <div className="text-[10px] font-mono font-bold text-white/80">{bp.name}</div>
+                <div className="text-xs font-mono font-bold text-white/80">{bp.name}</div>
                 <button
-                  className="text-[8px] font-mono px-2 py-1 rounded"
+                  className="text-[10px] font-mono px-2 py-1 rounded"
                   style={{
                     backgroundColor: canCraft ? `${COLOR}20` : 'rgba(255,255,255,0.05)',
                     color: canCraft ? COLOR : 'rgba(255,255,255,0.2)',
@@ -104,7 +104,7 @@ function CraftTab({ refresh }: { refresh: () => void }) {
                   Craft
                 </button>
               </div>
-              <div className="text-[8px] font-mono text-white/30">
+              <div className="text-[10px] font-mono text-white/50">
                 Time: {Math.round(bp.craftTime / 1000)}s
               </div>
               <div className="flex flex-wrap gap-1 mt-1">
@@ -114,7 +114,7 @@ function CraftTab({ refresh }: { refresh: () => void }) {
                   return (
                     <span
                       key={matId}
-                      className="text-[7px] font-mono px-1 rounded"
+                      className="text-[9px] font-mono px-1 rounded"
                       style={{ color: ok ? '#50C878' : '#E94560', backgroundColor: 'rgba(0,0,0,0.3)' }}
                     >
                       {matId}: {have}/{needed}
@@ -126,7 +126,7 @@ function CraftTab({ refresh }: { refresh: () => void }) {
           );
         })}
         {blueprints.length === 0 && (
-          <div className="text-[9px] font-mono text-white/30 text-center py-4">No blueprints unlocked</div>
+          <div className="text-[9px] font-mono text-white/50 text-center py-4">No blueprints unlocked</div>
         )}
       </div>
     </div>
@@ -169,7 +169,7 @@ function MaterialsTab() {
         </div>
       ))}
       {entries.length === 0 && (
-        <div className="text-[9px] font-mono text-white/30 text-center py-4">No materials collected</div>
+        <div className="text-[9px] font-mono text-white/50 text-center py-4">No materials collected</div>
       )}
     </div>
   );
@@ -187,11 +187,11 @@ function EnchantTab({ refresh, bp }: { refresh: () => void; bp: number }) {
             <div key={ench.id} className="p-2 rounded-lg border border-white/5 bg-white/[0.02]">
               <div className="flex items-center justify-between mb-1">
                 <div>
-                  <div className="text-[10px] font-mono font-bold text-white/80">{ench.name}</div>
-                  <div className="text-[8px] font-mono text-white/30">Tier {ench.tier}</div>
+                  <div className="text-xs font-mono font-bold text-white/80">{ench.name}</div>
+                  <div className="text-[10px] font-mono text-white/50">Tier {ench.tier}</div>
                 </div>
                 <button
-                  className="text-[8px] font-mono px-2 py-1 rounded"
+                  className="text-[10px] font-mono px-2 py-1 rounded"
                   style={{
                     backgroundColor: canEnchant ? '#DC143C20' : 'rgba(255,255,255,0.05)',
                     color: canEnchant ? '#DC143C' : 'rgba(255,255,255,0.2)',
@@ -202,14 +202,14 @@ function EnchantTab({ refresh, bp }: { refresh: () => void; bp: number }) {
                   Enchant ({formatNumber(ench.bpCost)} BP)
                 </button>
               </div>
-              <div className="text-[8px] font-mono text-white/40">
+              <div className="text-[10px] font-mono text-white/40">
                 Stats: {Object.entries(ench.stats).map(([k, v]) => `${k}: +${v}`).join(', ')}
               </div>
             </div>
           );
         })}
         {enchantments.length === 0 && (
-          <div className="text-[9px] font-mono text-white/30 text-center py-4">No enchantments available</div>
+          <div className="text-[9px] font-mono text-white/50 text-center py-4">No enchantments available</div>
         )}
       </div>
     </div>
