@@ -48,6 +48,7 @@ import CatinoPanel from '../ui/CatinoPanel';
 import GoosePanel from '../ui/GoosePanel';
 import SettingsPanel from '../ui/SettingsPanel';
 import SectWarPanel from '../ui/SectWarPanel';
+import TournamentPanel from '../ui/TournamentPanel';
 
 // Overlays
 import NotificationToast from '../ui/NotificationToast';
@@ -72,6 +73,7 @@ const PANEL_COMPONENTS: Partial<Record<PanelId, React.ComponentType>> = {
   catino: CatinoPanel,
   social: SocialPanel,
   sectWar: SectWarPanel,
+  tournament: TournamentPanel,
 };
 
 export default function GameScreen() {
@@ -125,27 +127,12 @@ export default function GameScreen() {
 const SELF_STYLED: ReadonlyArray<PanelId> = [
   'sanctuary', 'cats', 'waifus', 'equipment', 'goose',
   'upgrades', 'techniques', 'cultivation', 'buildings', 'prestige', 'reincarnation',
+  'achievements', 'lore', 'daily', 'social', 'sectWar', 'tournament',
 ];
 
 function PanelRouter({ id }: { id: PanelId }) {
   if (id === 'sanctuary') return <SnootAltar />;
   if (id === 'reincarnation') return <PrestigePanel tabHint="reincarnation" />;
-
-  if (id === 'tournament') {
-    return (
-      <div className="panel panel-ornate p-8 min-h-[480px] flex flex-col items-center justify-center text-center">
-        <div className="glyph-badge mb-4" style={{ color: 'var(--gold-bright)', width: 56, height: 56 }}>
-          <span style={{ fontSize: 22 }}>盃</span>
-        </div>
-        <div className="h-section mb-2">Celestial Tournament</div>
-        <div className="h-eyebrow mb-6">Weekly bracket of the Seven Friends</div>
-        <p className="text-sm max-w-md" style={{ color: 'var(--ink-mute)' }}>
-          The tournament hall is being prepared. Visit again once the engine
-          extensions in Phase 2 are complete.
-        </p>
-      </div>
-    );
-  }
 
   const Component = PANEL_COMPONENTS[id];
   if (!Component) {
