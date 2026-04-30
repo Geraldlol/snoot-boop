@@ -775,6 +775,14 @@ export class Engine {
     if (gooseEffects.ppGenerationBonus) base.ppMultiplier *= gooseEffects.ppGenerationBonus as number;
     if (gooseEffects.eventFrequencyMult) base.eventDiscoveryBonus *= gooseEffects.eventFrequencyMult as number;
 
+    // Cat trait aggregate (Phase 2)
+    const traitMods = this.cat.getTraitMultipliers();
+    base.bpMultiplier *= traitMods.bp;
+    base.ppMultiplier *= traitMods.pp;
+    base.catHappinessMultiplier *= traitMods.bond;
+    base.critChanceBonus += traitMods.crit;
+    base.lootBonus *= traitMods.loot;
+
     // Event temporary multipliers
     base.bpMultiplier *= this.event.getActiveEffectMultiplier('bpMult');
     base.ppMultiplier *= this.event.getActiveEffectMultiplier('ppMult');

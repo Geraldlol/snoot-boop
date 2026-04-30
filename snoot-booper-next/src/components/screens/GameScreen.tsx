@@ -24,6 +24,12 @@ import Sidebar from '../shell/Sidebar';
 import SectTicker from '../shell/SectTicker';
 import SnootAltar from '../altar/SnootAltar';
 
+// HUD overlays (Phase 2)
+import AudioController from '../hud/AudioController';
+import ComboMeter from '../hud/ComboMeter';
+import StatOverlay from '../hud/StatOverlay';
+import BarkToast from '../hud/BarkToast';
+
 // Existing panels — kept as-is in Phase 1, reskinned in later phases.
 import UpgradePanel from '../ui/UpgradePanel';
 import CatPanel from '../ui/CatPanel';
@@ -105,6 +111,12 @@ export default function GameScreen() {
       {/* Overlays */}
       <NotificationToast />
       <GooseOverlay />
+
+      {/* Phase 2 HUDs */}
+      <AudioController />
+      <ComboMeter />
+      <StatOverlay />
+      <BarkToast />
     </div>
   );
 }

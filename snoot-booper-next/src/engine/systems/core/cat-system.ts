@@ -12,6 +12,7 @@ import {
   CAT_PERSONALITIES, STAR_BONUSES, RECRUITMENT_COSTS, CAT_TECHNIQUES,
   CAT_TEMPLATES, type CatTemplate, type RealmData,
 } from '../../data/cats';
+import { rollTraits, aggregateTraitMods, type TraitId, type AggregateTraitMods } from '../../data/traits';
 
 // ─── CatSystem ───────────────────────────────────────────────
 
@@ -114,10 +115,18 @@ export class CatSystem {
       totalBoops: 0,
       emoji: template.emoji,
       quotes: template.quotes,
+      traits: rollTraits(),
     };
 
     this.recalculateStats(cat);
     return cat;
+  }
+
+  /** Aggregate trait multipliers across all owned cats. */
+  getTraitMultipliers(): AggregateTraitMods {
+    return aggregateTraitMods(
+      this.ownedCats.map((c) => (c.traits ?? []) as TraitId[])
+    );
   }
 
   // ── Star Upgrade (Duplicates) ──────────────────────────────

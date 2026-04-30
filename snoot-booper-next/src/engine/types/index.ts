@@ -90,6 +90,8 @@ export interface Cat {
   totalBoops: number;
   emoji?: string;
   quotes?: string[];
+  // Traits (Phase 2) — rolled at recruit, fold into trait multipliers.
+  traits?: string[];
   // 3D world
   position?: { x: number; y: number; z: number };
 }
