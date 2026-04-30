@@ -80,7 +80,7 @@ function Rebirth({ refresh }: { refresh: () => void }) {
 
   function go() {
     engine.performRebirth();
-    window.dispatchEvent(new CustomEvent('snoot:ascend'));
+    window.dispatchEvent(new CustomEvent('snoot:ascend', { detail: { title: 'Reborn', subtitle: 'tier ascended' } }));
     refresh();
   }
 
@@ -185,7 +185,7 @@ function Reincarnation({ refresh }: { refresh: () => void }) {
 
   function reincarnate() {
     engine.performReincarnation();
-    window.dispatchEvent(new CustomEvent('snoot:ascend'));
+    window.dispatchEvent(new CustomEvent('snoot:ascend', { detail: { title: 'Reincarnated', subtitle: 'the wheel turns' } }));
     refresh();
   }
 
@@ -266,7 +266,7 @@ function Transcendence({ refresh }: { refresh: () => void }) {
 
   function go() {
     engine.performTranscendence();
-    window.dispatchEvent(new CustomEvent('snoot:ascend'));
+    window.dispatchEvent(new CustomEvent('snoot:ascend', { detail: { title: 'Transcended', subtitle: 'beyond the heavens' } }));
     refresh();
   }
 

@@ -1,69 +1,94 @@
 /**
- * GooseOverlay - HUD for active goose: HP bar, timer, mood indicator.
+ * GooseOverlay - wuxia HUD for active goose.
+ * Mood-tinted banner, HP meter, countdown ring on the boop button.
  */
 
 'use client';
 
+import { useEffect } from 'react';
 import { useGameStore } from '@/store/game-store';
 import { engine } from '@/engine/engine';
 
-const MOOD_LABELS: Record<string, { label: string; color: string }> = {
-  calm: { label: 'CALM', color: '#87CEEB' },
-  suspicious: { label: 'SUSPICIOUS', color: '#FFD700' },
-  aggressive: { label: 'AGGRESSIVE', color: '#FF6347' },
-  rage: { label: 'RAGE', color: '#FF0000' },
+const MOOD: Record<string, { label: string; color: string; glyph: string }> = {
+  calm:       { label: 'Calm',       color: '#76b6d4', glyph: '靜' },
+  suspicious: { label: 'Suspicious', color: 'var(--gold-bright)', glyph: '疑' },
+  aggressive: { label: 'Aggressive', color: 'var(--vermillion-bright)', glyph: '怒' },
+  rage:       { label: 'RAGE',       color: '#FF4500', glyph: '狂' },
 };
 
 export default function GooseOverlay() {
   const activeGoose = useGameStore((s) => s.activeGoose);
 
+  // Notify the audio system when a goose appears.
+  useEffect(() => {
+    if (activeGoose) {
+      window.dispatchEvent(new CustomEvent('snoot:goose', { detail: { phase: 'appear' } }));
+    }
+  }, [activeGoose?.id]); // eslint-disable-line react-hooks/exhaustive-deps
+
   if (!activeGoose) return null;
 
-  const hpPercent = (activeGoose.currentHp / activeGoose.maxHp) * 100;
-  const timePercent = Math.max(0, (activeGoose.timeRemaining / 30000) * 100);
-  const mood = MOOD_LABELS[activeGoose.mood] ?? MOOD_LABELS.calm;
+  const hpPct = (activeGoose.currentHp / activeGoose.maxHp) * 100;
+  const timePct = Math.max(0, (activeGoose.timeRemaining / 30000) * 100);
+  const mood = MOOD[activeGoose.mood] ?? MOOD.calm;
+
+  function boop() {
+    engine.boopGoose();
+    window.dispatchEvent(new CustomEvent('snoot:goose', { detail: { phase: 'hit' } }));
+  }
 
   return (
-    <div className="absolute top-16 left-1/2 -translate-x-1/2 z-30 flex flex-col items-center gap-1">
-      {/* Goose banner */}
+    <div className="fixed top-24 left-1/2 -translate-x-1/2 z-40 flex flex-col items-center gap-2 select-none">
+      {/* Banner */}
       <div
-        className="px-4 py-2 rounded-lg border backdrop-blur-sm font-mono text-xs text-center"
-        style={{ borderColor: mood.color, backgroundColor: `${mood.color}20`, color: mood.color }}
+        className="panel px-4 py-2 text-center"
+        style={{ borderColor: mood.color, background: `radial-gradient(circle at 50% 0%, ${mood.color}25, rgba(8,14,22,0.95))` }}
       >
-        <div className="font-bold text-sm">{activeGoose.name}</div>
-        <div className="text-xs opacity-70">{activeGoose.title} - {mood.label}</div>
+        <div className="flex items-center gap-2 justify-center mb-0.5">
+          <span className="font-display text-[14px]" style={{ color: mood.color }}>{mood.glyph}</span>
+          <span className="font-display text-[14px] tracking-[0.06em]" style={{ color: '#fff7df' }}>{activeGoose.name}</span>
+        </div>
+        <div className="h-eyebrow" style={{ color: mood.color }}>
+          {activeGoose.title} · {mood.label}
+        </div>
       </div>
 
-      {/* HP bar */}
+      {/* HP bar (multi-hp goose) */}
       {activeGoose.maxHp > 1 && (
-        <div className="w-48 h-2 bg-black/50 rounded-full overflow-hidden border border-white/10">
-          <div
-            className="h-full rounded-full transition-all duration-200"
-            style={{ width: `${hpPercent}%`, backgroundColor: mood.color }}
-          />
+        <div className="w-56">
+          <div className="meter" style={{ height: 6 }}>
+            <div className="meter-fill" style={{ width: `${hpPct}%`, background: `linear-gradient(90deg, ${mood.color}55, ${mood.color}, ${mood.color}cc)`, boxShadow: `0 0 12px ${mood.color}88` }} />
+          </div>
         </div>
       )}
 
-      {/* Timer bar */}
-      <div className="w-48 h-1.5 bg-black/50 rounded-full overflow-hidden">
-        <div
-          className="h-full rounded-full transition-all duration-300"
-          style={{
-            width: `${timePercent}%`,
-            backgroundColor: timePercent < 30 ? '#FF4500' : '#50C878',
-          }}
-        />
+      {/* Timer */}
+      <div className="w-56">
+        <div className="meter" style={{ height: 4 }}>
+          <div
+            className="meter-fill"
+            style={{
+              width: `${timePct}%`,
+              background: timePct < 30
+                ? 'linear-gradient(90deg, #5b1e14, var(--vermillion))'
+                : 'linear-gradient(90deg, var(--jade-deep), var(--jade), var(--jade-bright))',
+            }}
+          />
+        </div>
       </div>
 
-      {/* Boop goose button */}
+      {/* BOOP button */}
       <button
-        className="mt-1 px-4 py-1 rounded border font-mono text-xs font-bold cursor-pointer transition-transform active:scale-95"
+        onClick={boop}
+        className="btn"
         style={{
+          padding: '10px 20px',
+          fontSize: 12,
           borderColor: mood.color,
-          backgroundColor: `${mood.color}30`,
+          background: `linear-gradient(180deg, ${mood.color}33, ${mood.color}10)`,
           color: mood.color,
+          boxShadow: `0 0 22px ${mood.color}55, inset 0 1px 0 rgba(255,225,170,0.18)`,
         }}
-        onClick={() => engine.boopGoose()}
       >
         BOOP THE GOOSE
       </button>

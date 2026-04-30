@@ -1,3 +1,8 @@
+/**
+ * AFKReturnModal — wuxia cinematic return.
+ * Full-screen scrim with a center scroll showing time-away gains and events.
+ */
+
 'use client';
 
 import { formatNumber } from '@/engine/big-number';
@@ -11,6 +16,17 @@ interface AFKReturnModalProps {
   onCollect: () => void;
 }
 
+const TIER_TONES: Record<string, string> = {
+  common:    'var(--ink-mute)',
+  rare:      '#4169E1',
+  legendary: 'var(--gold-bright)',
+  special:   '#FF69B4',
+};
+
+const TIER_GLYPHS: Record<string, string> = {
+  common: '·', rare: '✦', legendary: '✧', special: '⊕',
+};
+
 function formatDuration(ms: number): string {
   const totalSec = Math.floor(ms / 1000);
   const hours = Math.floor(totalSec / 3600);
@@ -19,132 +35,111 @@ function formatDuration(ms: number): string {
   return `${minutes}m`;
 }
 
-const TIER_COLORS: Record<string, string> = {
-  common: '#A0A0A0',
-  rare: '#4169E1',
-  legendary: '#FFD700',
-  special: '#FF69B4',
-};
-
-const TIER_EMOJI: Record<string, string> = {
-  common: '.',
-  rare: '*',
-  legendary: '!',
-  special: '!!',
-};
-
 export default function AFKReturnModal({ result, masterId, onCollect }: AFKReturnModalProps) {
   const master = MASTERS[masterId];
+  const greeting = master?.quotes?.[0] ?? 'The path continues.';
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm">
+    <div className="fixed inset-0 z-50 flex items-center justify-center modal-back">
       <div
-        className="w-[420px] max-h-[80vh] overflow-y-auto rounded-lg border p-6 space-y-4"
-        style={{
-          background: 'linear-gradient(to bottom, #1a1a2e, #16213e)',
-          borderColor: 'rgba(255,255,255,0.15)',
-          boxShadow: '0 0 40px rgba(80,200,120,0.15)',
-        }}
+        className="panel panel-ornate panel-elite p-8 w-[480px] max-w-[92vw] max-h-[88vh] overflow-y-auto"
+        style={{ borderColor: 'var(--gold-bright)' }}
       >
-        {/* Header */}
-        <div className="text-center space-y-1">
-          <h2 className="text-lg font-mono font-bold text-[#50C878]">
-            Welcome back, {master?.name ?? 'Cultivator'}!
+        {/* Hero */}
+        <div className="text-center mb-5">
+          <div
+            className="rune mx-auto mb-3"
+            style={{
+              width: 80, height: 80, fontSize: 36,
+              background: master
+                ? `radial-gradient(circle at 35% 30%, ${master.color}77, ${master.color}33 60%, rgba(0,0,0,0.4))`
+                : 'radial-gradient(circle at 35% 30%, rgba(255,225,170,0.6), rgba(120,80,30,0.4) 60%, rgba(0,0,0,0.4))',
+              border: `1px solid ${master?.color ?? 'var(--gold-bright)'}`,
+              color: '#fff7df',
+              textShadow: `0 0 18px ${master?.color ?? 'rgba(255,225,170,0.8)'}`,
+              animation: 'orbBreath 4s ease-in-out infinite',
+            }}
+          >
+            道
+          </div>
+          <h2 className="font-display text-[20px] font-black tracking-[0.10em] gold-text">
+            Welcome Back
           </h2>
           {master && (
-            <p className="text-xs font-mono text-white/40">{master.title}</p>
+            <p className="font-display text-[12px] tracking-[0.10em] uppercase mt-1" style={{ color: master.color }}>
+              {master.name} · {master.title}
+            </p>
           )}
-          <p className="text-xs font-mono text-white/50">
-            You were away for{' '}
-            <span className="text-white/80">{formatDuration(result.timeAway)}</span>
+          <p className="text-sm italic mt-3" style={{ color: 'var(--ink-mute)' }}>
+            &ldquo;{greeting}&rdquo;
           </p>
+          <div className="h-eyebrow mt-3">
+            Away for · {formatDuration(result.timeAway)}
+          </div>
         </div>
 
-        {/* Gains Summary */}
-        <div className="bg-black/30 rounded-lg p-4 space-y-3">
-          <h3 className="text-xs font-mono text-white/60 uppercase tracking-wider text-center">
-            Cultivation Gains
-          </h3>
-
-          <div className="flex justify-center gap-6">
+        {/* Gains */}
+        <div className="panel p-4 mb-4" style={{ background: 'rgba(0,0,0,0.4)' }}>
+          <div className="h-section text-center mb-3" style={{ fontSize: 11 }}>Cultivation Gains</div>
+          <div className="flex justify-center gap-8">
             {result.pp > 0 && (
               <div className="text-center">
-                <p className="text-xl font-mono font-bold text-[#FFD700]">
+                <div className="font-display nums text-[28px] font-black" style={{ color: 'var(--gold-bright)', textShadow: '0 0 16px rgba(230,194,117,0.6)' }}>
                   +{formatNumber(result.pp)}
-                </p>
-                <p className="text-xs font-mono text-[#FFD700]/60">PP</p>
+                </div>
+                <div className="h-eyebrow">PP</div>
               </div>
             )}
             {result.bp > 0 && (
               <div className="text-center">
-                <p className="text-xl font-mono font-bold text-[#50C878]">
+                <div className="font-display nums text-[28px] font-black" style={{ color: 'var(--jade-bright)', textShadow: '0 0 16px rgba(109,197,168,0.6)' }}>
                   +{formatNumber(result.bp)}
-                </p>
-                <p className="text-xs font-mono text-[#50C878]/60">BP</p>
+                </div>
+                <div className="h-eyebrow">BP</div>
               </div>
             )}
           </div>
-
           {result.happinessDecay > 1 && (
-            <p className="text-xs font-mono text-[#FF6347] text-center">
-              Cat happiness decreased by {result.happinessDecay.toFixed(1)}% while away
+            <p className="text-xs text-center mt-3" style={{ color: 'var(--vermillion-bright)' }}>
+              Cat happiness decreased by {result.happinessDecay.toFixed(1)}% in your absence.
             </p>
           )}
         </div>
 
         {/* Events */}
         {result.events.length > 0 && (
-          <div className="bg-black/30 rounded-lg p-3 space-y-2">
-            <h3 className="text-xs font-mono text-white/60 uppercase tracking-wider">
-              Events ({result.events.length})
-            </h3>
-
-            <div className="max-h-40 overflow-y-auto space-y-1.5 pr-1">
-              {result.events.map((evt, i) => (
-                <div
-                  key={i}
-                  className="flex items-start gap-2 p-1.5 rounded"
-                  style={{
-                    backgroundColor:
-                      evt.event.tier === 'legendary' || evt.event.tier === 'special'
-                        ? 'rgba(255,215,0,0.05)'
-                        : 'transparent',
-                  }}
-                >
-                  <span
-                    className="text-xs font-mono font-bold shrink-0"
-                    style={{ color: TIER_COLORS[evt.event.tier] ?? '#888' }}
+          <div className="panel p-3 mb-4" style={{ background: 'rgba(0,0,0,0.4)' }}>
+            <div className="h-eyebrow mb-2">Events · {result.events.length}</div>
+            <div className="max-h-44 overflow-y-auto flex flex-col gap-1.5 pr-1">
+              {result.events.map((evt, i) => {
+                const tone = TIER_TONES[evt.event.tier] ?? 'var(--ink-mute)';
+                const glyph = TIER_GLYPHS[evt.event.tier] ?? '·';
+                const elite = evt.event.tier === 'legendary' || evt.event.tier === 'special';
+                return (
+                  <div
+                    key={i}
+                    className="flex items-start gap-2 px-2 py-1.5"
+                    style={{
+                      background: elite ? 'rgba(255,225,170,0.06)' : 'transparent',
+                      border: `1px solid ${elite ? 'rgba(230,194,117,0.3)' : 'transparent'}`,
+                    }}
                   >
-                    {TIER_EMOJI[evt.event.tier] ?? '.'}
-                  </span>
-                  <div className="min-w-0">
-                    <p
-                      className="text-xs font-mono font-bold truncate"
-                      style={{ color: TIER_COLORS[evt.event.tier] ?? '#888' }}
-                    >
-                      {evt.event.name}
-                    </p>
-                    <p className="text-xs font-mono text-white/40">
-                      {evt.event.description}
-                    </p>
+                    <span className="font-display text-[14px]" style={{ color: tone }}>{glyph}</span>
+                    <div className="flex-1 min-w-0">
+                      <div className="font-display text-[11px] tracking-[0.06em]" style={{ color: tone }}>
+                        {evt.event.name}
+                      </div>
+                      <div className="text-xs" style={{ color: 'var(--ink-mute)' }}>{evt.event.description}</div>
+                    </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
         )}
 
-        {/* Collect Button */}
-        <button
-          className="w-full py-3 rounded-lg font-mono text-sm font-bold text-white transition-all hover:brightness-110 active:scale-[0.98]"
-          style={{
-            background: 'linear-gradient(135deg, #50C878, #3D9970)',
-            border: '2px solid #50C878',
-            boxShadow: '0 4px 0 #2d7a50, 0 0 20px rgba(80,200,120,0.3)',
-            textShadow: '1px 1px 0 rgba(0,0,0,0.3)',
-          }}
-          onClick={onCollect}
-        >
+        {/* Collect button */}
+        <button className="btn ascend-btn ready w-full" onClick={onCollect}>
           Collect Gains
         </button>
       </div>

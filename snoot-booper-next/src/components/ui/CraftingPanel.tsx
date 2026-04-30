@@ -1,3 +1,8 @@
+/**
+ * CraftingPanel — Forge (wuxia reskin).
+ * Three sub-tabs: Craft / Materials / Enchant.
+ */
+
 'use client';
 
 import { useState } from 'react';
@@ -6,72 +11,76 @@ import { engine } from '@/engine/engine';
 import { formatNumber } from '@/engine/big-number';
 import { MATERIAL_TEMPLATES } from '@/engine/systems/equipment/crafting-system';
 
-const COLOR = '#DC143C';
-
 export default function CraftingPanel() {
   const bp = useGameStore((s) => s.currencies.bp);
   const [tab, setTab] = useState<'craft' | 'materials' | 'enchant'>('craft');
-  const [, forceUpdate] = useState(0);
-  const refresh = () => forceUpdate((n) => n + 1);
+  const [, force] = useState(0);
+  const refresh = () => force((n) => n + 1);
 
   return (
     <div>
-      <h2 className="text-sm font-mono font-bold mb-3" style={{ color: COLOR }}>
-        🔨 Crafting
-      </h2>
-
-      {/* Tabs */}
-      <div className="flex gap-2 mb-3">
-        {(['craft', 'materials', 'enchant'] as const).map((t) => (
-          <button
-            key={t}
-            className="text-xs font-mono px-3 py-1.5 rounded cursor-pointer"
-            style={{
-              backgroundColor: tab === t ? `${COLOR}30` : 'rgba(255,255,255,0.05)',
-              color: tab === t ? COLOR : 'rgba(255,255,255,0.4)',
-              borderBottom: tab === t ? `2px solid ${COLOR}` : '2px solid transparent',
-            }}
-            onClick={() => setTab(t)}
-          >
-            {t.charAt(0).toUpperCase() + t.slice(1)}
-          </button>
-        ))}
+      <div className="flex items-center gap-3 mb-4">
+        <div className="glyph-badge" style={{ color: 'var(--vermillion-bright)', width: 38, height: 38 }}>
+          <span style={{ fontSize: 16 }}>匠</span>
+        </div>
+        <div>
+          <div className="h-section">The Forge</div>
+          <div className="h-eyebrow">Craft and enchant the relics of the sect</div>
+        </div>
       </div>
 
-      {tab === 'craft' && <CraftTab refresh={refresh} />}
-      {tab === 'materials' && <MaterialsTab />}
-      {tab === 'enchant' && <EnchantTab refresh={refresh} bp={bp} />}
+      <div className="flex gap-0 mb-4 border-b" style={{ borderColor: 'var(--rule)' }}>
+        {(['craft', 'materials', 'enchant'] as const).map((t) => {
+          const a = tab === t;
+          return (
+            <button
+              key={t}
+              onClick={() => setTab(t)}
+              className="font-display text-[11px] tracking-[0.16em] uppercase px-4 py-2 cursor-pointer"
+              style={{
+                color: a ? 'var(--vermillion-bright)' : 'var(--ink-mute)',
+                borderBottom: `2px solid ${a ? 'var(--vermillion)' : 'transparent'}`,
+                marginBottom: -1,
+              }}
+            >
+              {t.charAt(0).toUpperCase() + t.slice(1)}
+            </button>
+          );
+        })}
+      </div>
+
+      {tab === 'craft' && <Craft refresh={refresh} />}
+      {tab === 'materials' && <Materials />}
+      {tab === 'enchant' && <Enchant refresh={refresh} bp={bp} />}
     </div>
   );
 }
 
-function CraftTab({ refresh }: { refresh: () => void }) {
+// ─── Craft ─────────────────────────────────────────────────
+
+function Craft({ refresh }: { refresh: () => void }) {
   const queue = engine.crafting.getQueue();
   const blueprints = engine.crafting.getAvailableBlueprints();
   const materials = engine.crafting.getAllMaterials();
 
   return (
     <div>
-      {/* Queue */}
       {queue.length > 0 && (
-        <div className="mb-3">
-          <div className="text-[10px] font-mono text-white/40 mb-1">Queue ({queue.length}/3):</div>
+        <div className="mb-4">
+          <div className="h-section text-left mb-2" style={{ fontSize: 11 }}>Forge Queue · {queue.length}/3</div>
           {queue.map((job) => {
             const progress = engine.crafting.getCraftProgress(job.id);
             return (
-              <div key={job.id} className="p-2 rounded bg-black/20 border border-white/5 mb-1 flex items-center gap-2">
+              <div key={job.id} className="panel p-3 mb-1.5 flex items-center gap-3" style={{ background: 'rgba(0,0,0,0.3)' }}>
                 <div className="flex-1">
-                  <div className="text-[9px] font-mono text-white/60">{job.blueprintId}</div>
-                  <div className="h-1 bg-black/30 rounded-full overflow-hidden mt-1">
-                    <div
-                      className="h-full rounded-full transition-all"
-                      style={{ width: `${progress * 100}%`, backgroundColor: '#50C878' }}
-                    />
+                  <div className="font-display text-[11px] tracking-[0.06em]" style={{ color: '#fff7df' }}>{job.blueprintId}</div>
+                  <div className="meter mt-1.5" style={{ height: 4 }}>
+                    <div className="meter-fill jade" style={{ width: `${progress * 100}%` }} />
                   </div>
                 </div>
                 <button
-                  className="text-[9px] font-mono px-1.5 py-0.5 rounded cursor-pointer"
-                  style={{ backgroundColor: 'rgba(255,255,255,0.05)', color: 'rgba(255,255,255,0.3)' }}
+                  className="btn"
+                  style={{ padding: '4px 10px', fontSize: 9 }}
                   onClick={() => { engine.cancelCraft(job.id); refresh(); }}
                 >
                   ✕
@@ -82,42 +91,44 @@ function CraftTab({ refresh }: { refresh: () => void }) {
         </div>
       )}
 
-      {/* Blueprints */}
-      <div className="text-[10px] font-mono text-white/40 mb-1">Blueprints:</div>
-      <div className="flex flex-col gap-1.5 max-h-[350px] overflow-y-auto">
-        {blueprints.map((bp) => {
-          const canCraft = engine.crafting.canCraft(bp.id);
+      <div className="h-section text-left mb-2" style={{ fontSize: 11 }}>Available Blueprints</div>
+      <div className="flex flex-col gap-2 max-h-[480px] overflow-y-auto pr-1">
+        {blueprints.length === 0 && (
+          <p className="text-center py-8 italic" style={{ color: 'var(--ink-dim)' }}>
+            No blueprints unlocked. Defeat dungeon bosses to discover them.
+          </p>
+        )}
+        {blueprints.map((b) => {
+          const canCraft = engine.crafting.canCraft(b.id);
           return (
-            <div key={bp.id} className="p-2 rounded-lg border border-white/5 bg-white/[0.02]">
+            <div key={b.id} className="panel p-3" style={{ background: 'rgba(0,0,0,0.3)' }}>
               <div className="flex items-center justify-between mb-1">
-                <div className="text-xs font-mono font-bold text-white/80">{bp.name}</div>
+                <div className="font-display text-[12px] tracking-[0.06em]" style={{ color: '#fff7df' }}>{b.name}</div>
                 <button
-                  className="text-[10px] font-mono px-2 py-1 rounded"
-                  style={{
-                    backgroundColor: canCraft ? `${COLOR}20` : 'rgba(255,255,255,0.05)',
-                    color: canCraft ? COLOR : 'rgba(255,255,255,0.2)',
-                    border: canCraft ? `1px solid ${COLOR}30` : '1px solid transparent',
-                    cursor: canCraft ? 'pointer' : 'not-allowed',
-                  }}
-                  onClick={() => { if (canCraft) { engine.startCraft(bp.id); refresh(); } }}
+                  className="btn"
+                  style={{ padding: '5px 12px', fontSize: 10, borderColor: canCraft ? 'var(--vermillion)' : undefined, color: canCraft ? 'var(--vermillion-bright)' : undefined }}
+                  disabled={!canCraft}
+                  onClick={() => { engine.startCraft(b.id); refresh(); }}
                 >
-                  Craft
+                  Forge
                 </button>
               </div>
-              <div className="text-[10px] font-mono text-white/50">
-                Time: {Math.round(bp.craftTime / 1000)}s
-              </div>
-              <div className="flex flex-wrap gap-1 mt-1">
-                {Object.entries(bp.materials).map(([matId, needed]) => {
+              <div className="h-eyebrow mb-2">time · {Math.round(b.craftTime / 1000)}s</div>
+              <div className="flex flex-wrap gap-1">
+                {Object.entries(b.materials).map(([matId, needed]) => {
                   const have = materials[matId] ?? 0;
                   const ok = have >= needed;
                   return (
                     <span
                       key={matId}
-                      className="text-[9px] font-mono px-1 rounded"
-                      style={{ color: ok ? '#50C878' : '#E94560', backgroundColor: 'rgba(0,0,0,0.3)' }}
+                      className="font-mono text-[10px] px-1.5 py-0.5"
+                      style={{
+                        color: ok ? 'var(--jade-bright)' : 'var(--vermillion-bright)',
+                        background: 'rgba(0,0,0,0.4)',
+                        border: `1px solid ${ok ? 'var(--jade-deep)' : 'var(--vermillion)'}`,
+                      }}
                     >
-                      {matId}: {have}/{needed}
+                      {matId} {have}/{needed}
                     </span>
                   );
                 })}
@@ -125,93 +136,102 @@ function CraftTab({ refresh }: { refresh: () => void }) {
             </div>
           );
         })}
-        {blueprints.length === 0 && (
-          <div className="text-[9px] font-mono text-white/50 text-center py-4">No blueprints unlocked</div>
-        )}
       </div>
     </div>
   );
 }
 
-function MaterialsTab() {
+// ─── Materials ────────────────────────────────────────────
+
+function Materials() {
   const materials = engine.crafting.getAllMaterials();
   const entries = Object.entries(materials).filter(([, v]) => v > 0);
+  const find = (id: string) => MATERIAL_TEMPLATES.find((m) => m.id === id);
 
-  const findTemplate = (id: string) => MATERIAL_TEMPLATES.find((m) => m.id === id);
-
-  // Group by category
   const grouped: Record<string, [string, number][]> = {};
   for (const [id, count] of entries) {
-    const tmpl = findTemplate(id);
+    const tmpl = find(id);
     const cat = tmpl?.category ?? 'unknown';
     if (!grouped[cat]) grouped[cat] = [];
     grouped[cat].push([id, count]);
   }
 
+  if (entries.length === 0) {
+    return (
+      <p className="text-center py-12 italic" style={{ color: 'var(--ink-dim)' }}>
+        No materials gathered yet.
+      </p>
+    );
+  }
+
   return (
     <div>
       {Object.entries(grouped).map(([cat, items]) => (
-        <div key={cat} className="mb-3">
-          <div className="text-[9px] font-mono text-white/40 mb-1 capitalize">{cat}:</div>
-          <div className="flex flex-col gap-0.5">
+        <div key={cat} className="mb-4">
+          <div className="h-section text-left mb-2 capitalize" style={{ fontSize: 11 }}>{cat}</div>
+          <div className="flex flex-col gap-1">
             {items.map(([id, count]) => {
-              const tmpl = findTemplate(id);
+              const tmpl = find(id);
               return (
-                <div key={id} className="flex items-center justify-between px-2 py-1 rounded bg-black/20">
-                  <span className="text-[9px] font-mono text-white/60">
-                    {tmpl?.emoji ?? '?'} {tmpl?.name ?? id}
+                <div
+                  key={id}
+                  className="flex items-center justify-between px-3 py-2 font-mono text-[11px]"
+                  style={{ background: 'rgba(0,0,0,0.3)', border: '1px solid var(--rule)' }}
+                >
+                  <span style={{ color: 'var(--ink)' }}>
+                    <span className="mr-1">{tmpl?.emoji ?? '·'}</span>
+                    {tmpl?.name ?? id}
                   </span>
-                  <span className="text-[9px] font-mono text-white/70">{count}</span>
+                  <span style={{ color: 'var(--gold-bright)' }}>{count}</span>
                 </div>
               );
             })}
           </div>
         </div>
       ))}
-      {entries.length === 0 && (
-        <div className="text-[9px] font-mono text-white/50 text-center py-4">No materials collected</div>
-      )}
     </div>
   );
 }
 
-function EnchantTab({ refresh, bp }: { refresh: () => void; bp: number }) {
+// ─── Enchant ──────────────────────────────────────────────
+
+function Enchant({ refresh, bp }: { refresh: () => void; bp: number }) {
   const enchantments = engine.crafting.getAvailableEnchantments();
 
+  if (enchantments.length === 0) {
+    return (
+      <p className="text-center py-12 italic" style={{ color: 'var(--ink-dim)' }}>
+        No enchantments learned. Defeat foes in the Pagoda to learn from their relics.
+      </p>
+    );
+  }
+
   return (
-    <div>
-      <div className="flex flex-col gap-1.5 max-h-[400px] overflow-y-auto">
-        {enchantments.map((ench) => {
-          const canEnchant = engine.crafting.canEnchant(ench.id, bp);
-          return (
-            <div key={ench.id} className="p-2 rounded-lg border border-white/5 bg-white/[0.02]">
-              <div className="flex items-center justify-between mb-1">
-                <div>
-                  <div className="text-xs font-mono font-bold text-white/80">{ench.name}</div>
-                  <div className="text-[10px] font-mono text-white/50">Tier {ench.tier}</div>
-                </div>
-                <button
-                  className="text-[10px] font-mono px-2 py-1 rounded"
-                  style={{
-                    backgroundColor: canEnchant ? '#DC143C20' : 'rgba(255,255,255,0.05)',
-                    color: canEnchant ? '#DC143C' : 'rgba(255,255,255,0.2)',
-                    cursor: canEnchant ? 'pointer' : 'not-allowed',
-                  }}
-                  onClick={() => { if (canEnchant) { engine.crafting.enchant(ench.id); refresh(); } }}
-                >
-                  Enchant ({formatNumber(ench.bpCost)} BP)
-                </button>
+    <div className="flex flex-col gap-2 max-h-[520px] overflow-y-auto pr-1">
+      {enchantments.map((e) => {
+        const canEnchant = engine.crafting.canEnchant(e.id, bp);
+        return (
+          <div key={e.id} className="panel p-3" style={{ background: 'rgba(0,0,0,0.3)' }}>
+            <div className="flex items-center justify-between mb-1">
+              <div>
+                <div className="font-display text-[12px] tracking-[0.06em]" style={{ color: '#fff7df' }}>{e.name}</div>
+                <div className="h-eyebrow">tier {e.tier}</div>
               </div>
-              <div className="text-[10px] font-mono text-white/40">
-                Stats: {Object.entries(ench.stats).map(([k, v]) => `${k}: +${v}`).join(', ')}
-              </div>
+              <button
+                className="btn"
+                style={{ padding: '5px 12px', fontSize: 10, borderColor: canEnchant ? 'var(--vermillion)' : undefined, color: canEnchant ? 'var(--vermillion-bright)' : undefined }}
+                disabled={!canEnchant}
+                onClick={() => { engine.crafting.enchant(e.id); refresh(); }}
+              >
+                Enchant · {formatNumber(e.bpCost)} bp
+              </button>
             </div>
-          );
-        })}
-        {enchantments.length === 0 && (
-          <div className="text-[9px] font-mono text-white/50 text-center py-4">No enchantments available</div>
-        )}
-      </div>
+            <div className="font-mono text-[10px] mt-1" style={{ color: 'var(--jade-bright)' }}>
+              {Object.entries(e.stats).map(([k, v]) => `${k} +${v}`).join(' · ')}
+            </div>
+          </div>
+        );
+      })}
     </div>
   );
 }
