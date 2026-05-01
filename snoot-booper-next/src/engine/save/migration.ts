@@ -82,6 +82,7 @@ function migrateV2Chain(data: SaveDataV2): SaveDataV2 {
     r.spiritStones = r.spiritStones ?? 0;
     r.heavenlySeals = r.heavenlySeals ?? 0;
     r.sectReputation = r.sectReputation ?? 0;
+    r.destinyThreads = r.destinyThreads ?? 0;
     r.waifuTokens = r.waifuTokens ?? 0;
     data.economy = data.economy ?? {
       currencies: { ...r }, gooseShopPurchases: {}, conversionCooldowns: {},
@@ -118,6 +119,7 @@ export function migrateV2ToV3(raw: SaveDataV2): SaveDataV3 {
     spiritStones: res.spiritStones ?? 0,
     heavenlySeals: res.heavenlySeals ?? 0,
     sectReputation: res.sectReputation ?? 0,
+    destinyThreads: res.destinyThreads ?? 0,
     waifuTokens: res.waifuTokens ?? 0,
     gooseFeathers: res.gooseFeathers ?? 0,
   };
@@ -183,4 +185,3 @@ export function migrateV2ToV3(raw: SaveDataV2): SaveDataV3 {
   console.log(`[SaveMigration] Migrated v${data.version} → v3.0.0`);
   return save;
 }
-

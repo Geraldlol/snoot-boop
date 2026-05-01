@@ -10,6 +10,7 @@ import { MASTERS, MASTER_IDS } from '@/engine/data/masters';
 import { useGameStore } from '@/store/game-store';
 import { useUIStore } from '@/store/ui-store';
 import { engine } from '@/engine/engine';
+import { saveGameNow } from '@/hooks/useAutoSave';
 import type { MasterId } from '@/engine/types';
 
 import WorldCanvas from '../shell/WorldCanvas';
@@ -34,25 +35,29 @@ export default function MasterSelect() {
   const setScreen = useUIStore((s) => s.setScreen);
 
   useEffect(() => {
-    setIsTouchDevice(window.matchMedia('(hover: none)').matches);
+    const media = window.matchMedia('(hover: none)');
+    const updateTouchState = () => setIsTouchDevice(media.matches);
+    const touchTimer = window.setTimeout(updateTouchState, 0);
+
+    media.addEventListener('change', updateTouchState);
+    return () => {
+      window.clearTimeout(touchTimer);
+      media.removeEventListener('change', updateTouchState);
+    };
   }, []);
 
   const activeId = hoveredId ?? selectedForDetail;
   const hovered = activeId ? MASTERS[activeId] : null;
 
   useEffect(() => {
-    if (hovered) {
-      setDetailVisible(false);
-      const t = setTimeout(() => setDetailVisible(true), 30);
-      return () => clearTimeout(t);
-    } else {
-      setDetailVisible(false);
-    }
+    const t = window.setTimeout(() => setDetailVisible(Boolean(hovered)), hovered ? 30 : 0);
+    return () => window.clearTimeout(t);
   }, [hovered]);
 
   function commit(masterId: string) {
     engine.master.selectMaster(masterId as MasterId);
     useGameStore.setState({ selectedMaster: masterId as MasterId });
+    saveGameNow();
     setScreen('game');
   }
 

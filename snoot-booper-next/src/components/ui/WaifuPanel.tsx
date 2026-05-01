@@ -7,7 +7,7 @@
 
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useGameStore } from '@/store/game-store';
 import { engine } from '@/engine/engine';
 import { WAIFU_TEMPLATES } from '@/engine/data/waifus';
@@ -28,6 +28,13 @@ export default function WaifuPanel() {
   void _bp;
   const [, force] = useState(0);
   const refresh = () => force((n) => n + 1);
+
+  useEffect(() => {
+    const timer = window.setInterval(() => {
+      if (engine.waifu.isInActivity()) refresh();
+    }, 1000);
+    return () => window.clearInterval(timer);
+  }, []);
 
   const unlocked = engine.waifu.getUnlockedWaifus();
   const activityProgress = engine.waifu.getActivityProgress();
@@ -175,7 +182,7 @@ export default function WaifuPanel() {
                               )}
                             </div>
                             <div className="h-eyebrow mt-0.5">
-                              {Math.round(act.duration / 60000)} min · +{act.bondGain} bond
+                              {Math.max(1, Math.round(act.duration / 60))} min · +{act.bondGain} bond
                             </div>
                           </div>
                           <button

@@ -17,9 +17,9 @@ export default function Header() {
 
   return (
     <div className="hud-top sticky top-0 z-30 relative">
-      <div className="max-w-[1600px] mx-auto px-8 h-[84px] flex items-center gap-6">
+      <div className="max-w-[1600px] mx-auto px-8 h-[84px] flex items-center gap-4 overflow-hidden">
         {/* Sect crest + title */}
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-4 shrink-0">
           <div
             className="relative w-14 h-14 flex items-center justify-center"
             style={{
@@ -40,12 +40,12 @@ export default function Header() {
           </div>
           <div className="leading-tight">
             <div
-              className="font-display text-[22px] font-black gold-text"
+              className="font-display text-[22px] font-black gold-text leading-none whitespace-nowrap"
               style={{ letterSpacing: '0.20em' }}
             >
               SNOOT BOOPER
             </div>
-            <div className="h-eyebrow flex items-center gap-2">
+            <div className="h-eyebrow hidden sm:flex items-center gap-2 whitespace-nowrap">
               <span>Sect of the Sleeping Loaf</span>
               <span className="diamond" />
               <span>Chapter {ascensions + 1}</span>
@@ -53,9 +53,8 @@ export default function Header() {
           </div>
         </div>
 
-        <div className="flex-1" />
-
         {/* Resource chips */}
+        <div className="ml-auto flex min-w-0 items-center gap-4 overflow-x-auto overflow-y-hidden py-2">
         <ResourceChip
           glyph="鼻"
           label="Boop"
@@ -88,9 +87,10 @@ export default function Header() {
           glyph="譽"
           label="Honor"
           value={formatNumber(currencies.sectReputation)}
-          sub="sect rep"
+          sub={`${formatNumber(currencies.destinyThreads)} threads`}
           tone="#ffd6a3"
         />
+        </div>
       </div>
     </div>
   );

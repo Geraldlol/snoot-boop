@@ -6,7 +6,7 @@
  * cat-localized bubble inside the reskinned roster panel.
  */
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useCatStore } from '@/store/cat-store';
 
 const BARKS = ['nyo', 'mrrp', '*purr*', 'snoot!', 'hisss', 'beep?', 'mew', 'mraow', 'prrt', 'eep'];
@@ -21,19 +21,31 @@ interface Bark {
 export default function BarkToast() {
   const cats = useCatStore((s) => s.cats);
   const [barks, setBarks] = useState<Bark[]>([]);
+  const lastBarkAtRef = useRef(0);
 
   useEffect(() => {
     function onBoop(e: Event) {
-      const detail = (e as CustomEvent<{ isCrit?: boolean }>).detail ?? {};
+      const detail = (e as CustomEvent<{ isCrit?: boolean; combo?: number }>).detail ?? {};
       if (cats.length === 0) return;
+
+      const now = Date.now();
+      const isCrit = !!detail.isCrit;
+      const isComboMilestone = !!detail.combo && detail.combo >= 25 && detail.combo % 25 === 0;
+      if (!isCrit && !isComboMilestone) {
+        if (now - lastBarkAtRef.current < 2800 || Math.random() > 0.18) return;
+      } else if (now - lastBarkAtRef.current < 900) {
+        return;
+      }
+      lastBarkAtRef.current = now;
+
       const cat = cats[Math.floor(Math.random() * cats.length)];
       const line = BARKS[Math.floor(Math.random() * BARKS.length)];
       const id = Math.random().toString(36).slice(2, 8);
       const bark: Bark = {
         id,
         name: cat.name,
-        line: detail.isCrit ? line.toUpperCase() + '!' : line,
-        isCrit: !!detail.isCrit,
+        line: isCrit ? line.toUpperCase() + '!' : line,
+        isCrit,
       };
 
       // Also notify any listening cat row component to flash itself.
@@ -41,10 +53,10 @@ export default function BarkToast() {
         new CustomEvent('snoot:bark', { detail: { catInstanceId: cat.instanceId, line: bark.line, isCrit: bark.isCrit } })
       );
 
-      setBarks((b) => [...b.slice(-3), bark]);
+      setBarks((b) => [...b.slice(-1), bark]);
       setTimeout(() => {
         setBarks((b) => b.filter((p) => p.id !== id));
-      }, 1400);
+      }, 1200);
     }
     window.addEventListener('snoot:boop', onBoop);
     return () => window.removeEventListener('snoot:boop', onBoop);
@@ -61,7 +73,7 @@ export default function BarkToast() {
           style={{
             color: b.isCrit ? 'var(--crit)' : 'var(--ink)',
             borderColor: b.isCrit ? 'var(--gold-bright)' : 'var(--rule)',
-            animation: 'barkPop 1.4s ease-out forwards',
+            animation: 'barkPop 1.2s ease-out forwards',
             transform: 'translateY(-100%)',
           }}
         >

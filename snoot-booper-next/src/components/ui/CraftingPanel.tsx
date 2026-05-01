@@ -5,17 +5,29 @@
 
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useGameStore } from '@/store/game-store';
 import { engine } from '@/engine/engine';
 import { formatNumber } from '@/engine/big-number';
-import { MATERIAL_TEMPLATES } from '@/engine/systems/equipment/crafting-system';
+import { BLUEPRINTS, MATERIAL_TEMPLATES } from '@/engine/systems/equipment/crafting-system';
 
 export default function CraftingPanel() {
   const bp = useGameStore((s) => s.currencies.bp);
   const [tab, setTab] = useState<'craft' | 'materials' | 'enchant'>('craft');
   const [, force] = useState(0);
   const refresh = () => force((n) => n + 1);
+
+  useEffect(() => {
+    let queueWasActive = engine.crafting.getQueue().length > 0;
+    const id = window.setInterval(() => {
+      const queueActive = engine.crafting.getQueue().length > 0;
+      if (queueActive || queueWasActive) {
+        force((n) => n + 1);
+      }
+      queueWasActive = queueActive;
+    }, 250);
+    return () => window.clearInterval(id);
+  }, []);
 
   return (
     <div>
@@ -70,10 +82,11 @@ function Craft({ refresh }: { refresh: () => void }) {
           <div className="h-section text-left mb-2" style={{ fontSize: 11 }}>Forge Queue · {queue.length}/3</div>
           {queue.map((job) => {
             const progress = engine.crafting.getCraftProgress(job.id);
+            const blueprint = BLUEPRINTS.find((b) => b.id === job.blueprintId);
             return (
               <div key={job.id} className="panel p-3 mb-1.5 flex items-center gap-3" style={{ background: 'rgba(0,0,0,0.3)' }}>
                 <div className="flex-1">
-                  <div className="font-display text-[11px] tracking-[0.06em]" style={{ color: '#fff7df' }}>{job.blueprintId}</div>
+                  <div className="font-display text-[11px] tracking-[0.06em]" style={{ color: '#fff7df' }}>{blueprint?.name ?? job.blueprintId}</div>
                   <div className="meter mt-1.5" style={{ height: 4 }}>
                     <div className="meter-fill jade" style={{ width: `${progress * 100}%` }} />
                   </div>
@@ -197,6 +210,11 @@ function Materials() {
 
 function Enchant({ refresh, bp }: { refresh: () => void; bp: number }) {
   const enchantments = engine.crafting.getAvailableEnchantments();
+  const inventory = engine.equipment.getInventory();
+  const [selectedItemId, setSelectedItemId] = useState('');
+  const activeItemId = inventory.some((item) => item.id === selectedItemId) ? selectedItemId : inventory[0]?.id ?? '';
+  const selectedItem = inventory.find((item) => item.id === activeItemId) ?? null;
+  const findMaterial = (id: string) => MATERIAL_TEMPLATES.find((m) => m.id === id);
 
   if (enchantments.length === 0) {
     return (
@@ -208,8 +226,36 @@ function Enchant({ refresh, bp }: { refresh: () => void; bp: number }) {
 
   return (
     <div className="flex flex-col gap-2 max-h-[520px] overflow-y-auto pr-1">
+      {inventory.length === 0 ? (
+        <p className="text-center py-8 italic" style={{ color: 'var(--ink-dim)' }}>
+          No relics available for enchantment.
+        </p>
+      ) : (
+        <div className="panel p-3" style={{ background: 'rgba(0,0,0,0.3)' }}>
+          <div className="h-section text-left mb-2" style={{ fontSize: 11 }}>Target Relic</div>
+          <select
+            className="w-full px-3 py-2 font-mono text-[11px]"
+            value={activeItemId}
+            onChange={(event) => setSelectedItemId(event.target.value)}
+            style={{ background: 'rgba(0,0,0,0.45)', color: 'var(--ink)', border: '1px solid var(--rule)' }}
+          >
+            {inventory.map((item) => (
+              <option key={item.id} value={item.id}>
+                {item.name} · Lv {item.level} · {item.rarity}
+              </option>
+            ))}
+          </select>
+          {selectedItem && (
+            <div className="font-mono text-[10px] mt-2" style={{ color: 'var(--ink-mute)' }}>
+              {Object.entries({ ...selectedItem.stats, ...selectedItem.substats }).map(([k, v]) => `${k} ${v}`).join(' · ')}
+            </div>
+          )}
+        </div>
+      )}
+
       {enchantments.map((e) => {
-        const canEnchant = engine.crafting.canEnchant(e.id, bp);
+        const canEnchant = Boolean(selectedItem) && engine.crafting.canEnchant(e.id, bp);
+        const requirements = [[e.scrollRequired, 1] as const, ...Object.entries(e.materialsRequired)];
         return (
           <div key={e.id} className="panel p-3" style={{ background: 'rgba(0,0,0,0.3)' }}>
             <div className="flex items-center justify-between mb-1">
@@ -221,13 +267,33 @@ function Enchant({ refresh, bp }: { refresh: () => void; bp: number }) {
                 className="btn"
                 style={{ padding: '5px 12px', fontSize: 10, borderColor: canEnchant ? 'var(--vermillion)' : undefined, color: canEnchant ? 'var(--vermillion-bright)' : undefined }}
                 disabled={!canEnchant}
-                onClick={() => { engine.crafting.enchant(e.id); refresh(); }}
+                onClick={() => { if (activeItemId) engine.enchantEquipment(activeItemId, e.id); refresh(); }}
               >
-                Enchant · {formatNumber(e.bpCost)} bp
+                Apply · {formatNumber(e.bpCost)} bp
               </button>
             </div>
             <div className="font-mono text-[10px] mt-1" style={{ color: 'var(--jade-bright)' }}>
               {Object.entries(e.stats).map(([k, v]) => `${k} +${v}`).join(' · ')}
+            </div>
+            <div className="flex flex-wrap gap-1 mt-2">
+              {requirements.map(([matId, needed]) => {
+                const have = engine.crafting.getMaterialCount(matId);
+                const ok = have >= needed;
+                const material = findMaterial(matId);
+                return (
+                  <span
+                    key={matId}
+                    className="font-mono text-[10px] px-1.5 py-0.5"
+                    style={{
+                      color: ok ? 'var(--jade-bright)' : 'var(--vermillion-bright)',
+                      background: 'rgba(0,0,0,0.4)',
+                      border: `1px solid ${ok ? 'var(--jade-deep)' : 'var(--vermillion)'}`,
+                    }}
+                  >
+                    {material?.name ?? matId} {have}/{needed}
+                  </span>
+                );
+              })}
             </div>
           </div>
         );

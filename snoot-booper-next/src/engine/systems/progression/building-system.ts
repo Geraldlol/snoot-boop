@@ -45,14 +45,14 @@ export const BUILDINGS: Record<string, BuildingData> = {
     effect: (level) => ({ catCapacity: level * 10 }),
   },
   meditation_garden: {
-    id: 'meditation_garden', name: 'Meditation Garden', description: '+25% PP when idle >1 hour',
+    id: 'meditation_garden', name: 'Meditation Garden', description: '+25% PP generation per level',
     category: 'core', baseCost: 50000, costScale: 2.0, maxLevel: 10,
     effect: (level) => ({ idlePPBonus: 0.25 * level }),
   },
   training_dojo: {
-    id: 'training_dojo', name: 'Training Dojo', description: 'Cats gain XP over time',
+    id: 'training_dojo', name: 'Training Dojo', description: 'Cats gain training XP over time',
     category: 'core', baseCost: 100000, costScale: 2.0, maxLevel: 10,
-    effect: (level) => ({ catExpPerHour: 10 * level }),
+    effect: (level) => ({ catExpPerHour: 240 * level }),
   },
   treasury_vault: {
     id: 'treasury_vault', name: 'Treasury Vault', description: 'Passive BP generation',
@@ -65,19 +65,19 @@ export const BUILDINGS: Record<string, BuildingData> = {
     effect: (level) => ({ craftingSpeed: 1 + level * 0.1, recipeSlots: level }),
   },
   library: {
-    id: 'library', name: 'Library', description: 'Research speed and lore drops',
+    id: 'library', name: 'Library', description: '+10% event discovery and lore drops per level',
     category: 'production', baseCost: 500000, costScale: 2.0, maxLevel: 10,
-    effect: (level) => ({ researchSpeed: 1 + level * 0.15, loreDropBonus: 1 + level * 0.1 }),
+    effect: (level) => ({ eventDiscoveryBonus: 0.1 * level, loreDropBonus: 1 + level * 0.1 }),
   },
   spirit_mine: {
     id: 'spirit_mine', name: 'Spirit Mine', description: 'Generate spirit stones',
     category: 'production', baseCost: 750000, costScale: 2.0, maxLevel: 10,
-    effect: (level) => ({ spiritStonesPerHour: level * 5 }),
+    effect: (level) => ({ spiritStonesPerHour: level * 60 }),
   },
   waifu_quarters: {
-    id: 'waifu_quarters', name: 'Waifu Quarters', description: 'Waifus give daily gifts',
+    id: 'waifu_quarters', name: 'Waifu Quarters', description: '+8% companion bond gain per level',
     category: 'social', baseCost: 200000, costScale: 2.5, maxLevel: 10,
-    effect: (level) => ({ dailyGifts: level, bondGainBonus: 1 + level * 0.05 }),
+    effect: (level) => ({ bondGainBonus: 1 + level * 0.08 }),
   },
   hot_springs: {
     id: 'hot_springs', name: 'Hot Springs', description: 'Happiness regen + bond bonus',
@@ -95,17 +95,17 @@ export const BUILDINGS: Record<string, BuildingData> = {
     effect: (level) => ({ gooseSpawnBonus: 0.05 * level, gooseWarning: level >= 1 }),
   },
   observatory: {
-    id: 'observatory', name: 'Observatory', description: 'Event prediction + night bonus',
+    id: 'observatory', name: 'Observatory', description: '+15% event discovery per level, stronger at night',
     category: 'utility', baseCost: 1500000, costScale: 3.0, maxLevel: 5,
-    effect: (level) => ({ eventPrediction: level >= 1, nightBonus: 1 + level * 0.1 }),
+    effect: (level) => ({ eventDiscoveryBonus: 0.15 * level, nightBonus: 1 + level * 0.1 }),
   },
   hall_of_legends: {
-    id: 'hall_of_legends', name: 'Hall of Legends', description: 'Achievement display + visitor bonus',
+    id: 'hall_of_legends', name: 'Hall of Legends', description: '+10% BP from visitor offerings per level',
     category: 'special', baseCost: 3000000, costScale: 3.0, maxLevel: 5,
     effect: (level) => ({ achievementDisplay: level >= 1, visitorBonus: 1 + level * 0.1 }),
   },
   pagoda_entrance: {
-    id: 'pagoda_entrance', name: 'Pagoda Entrance', description: 'Dungeon prep time reduction',
+    id: 'pagoda_entrance', name: 'Pagoda Entrance', description: 'Dungeon cooldowns and relic storage',
     category: 'special', baseCost: 5000000, costScale: 3.0, maxLevel: 5,
     effect: (level) => ({ dungeonPrepReduction: 0.1 * level, relicStorage: level * 2 }),
   },

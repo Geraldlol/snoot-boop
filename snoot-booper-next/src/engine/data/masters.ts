@@ -13,7 +13,7 @@ export const MASTERS: Record<string, Master> = {
     description: 'Founder of the Celestial Snoot Sect. Balance in all things.',
     passive: {
       name: 'Tranquil Boop',
-      description: 'Boops during meditation generate +25% BP',
+      description: '+25% BP from all boops',
       effect: { bpMultiplier: 1.25, requiresMeditation: true },
     },
     sprite: 'masters/gerald.png',
@@ -31,9 +31,9 @@ export const MASTERS: Record<string, Master> = {
     role: 'War General',
     description: 'Former bandit king, reformed cat lover. BOOP HARDER!',
     passive: {
-      name: 'Thousand Boop Barrage',
-      description: '10 seconds of 5x boop speed (5 min cooldown)',
-      effect: { activeAbility: true, duration: 10000, cooldown: 300000, boopSpeedMultiplier: 5 },
+      name: 'Relentless Barrage',
+      description: '+15% BP and +50% auto-boop speed',
+      effect: { bpMultiplier: 1.15, boopSpeedMultiplier: 1.5 },
     },
     sprite: 'masters/rusty.png',
     color: '#DC143C',
@@ -127,7 +127,7 @@ export const MASTERS: Record<string, Master> = {
     description: 'Meditated for 1000 days. A cat sat on him the whole time.',
     passive: {
       name: 'Unshakeable Foundation',
-      description: 'Multiplier bonuses never decay or reset',
+      description: 'Cat happiness never decays',
       effect: { preventDecay: true },
     },
     sprite: 'masters/scott.png',

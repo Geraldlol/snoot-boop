@@ -50,7 +50,7 @@ export class BoopSystem {
     bp *= waifuBpMult;
 
     // Critical check
-    let critChance = this.stanceModifiers.critChance + modifiers.critChanceBonus;
+    const critChance = this.stanceModifiers.critChance + modifiers.critChanceBonus;
     const isCrit = Math.random() < critChance;
 
     if (isCrit) {

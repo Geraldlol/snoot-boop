@@ -59,50 +59,55 @@ export default function SnootAltar() {
     );
 
     setOrbFlash(true);
-    setTimeout(() => setOrbFlash(false), 280);
+    setTimeout(() => setOrbFlash(false), 170);
 
     if (isCrit) {
       setShake(true);
-      setTimeout(() => setShake(false), 280);
+      setTimeout(() => setShake(false), 180);
     }
 
     const rect = altarRef.current?.getBoundingClientRect();
     if (!rect) return;
 
-    const x = e.clientX - rect.left + (Math.random() * 40 - 20);
+    const x = e.clientX - rect.left + (Math.random() * 28 - 14);
     const y = e.clientY - rect.top - 10;
     const id = rand();
 
     // Floating pop
-    const text = `${isCrit ? '✦ ' : ''}+${formatNumber(burst)} BP${combo > 5 ? `  ×${combo}` : ''}`;
-    setToasts((t) => [...t, { id, x, y, text, crit: isCrit }]);
-    setTimeout(() => setToasts((t) => t.filter((p) => p.id !== id)), 1300);
+    const showCombo = combo >= 10 && (isCrit || combo % 5 === 0);
+    const text = `${isCrit ? '✦ ' : ''}+${formatNumber(burst)} BP${showCombo ? `  ×${combo}` : ''}`;
+    setToasts((t) => [...t.slice(-4), { id, x, y, text, crit: isCrit }]);
+    setTimeout(() => setToasts((t) => t.filter((p) => p.id !== id)), isCrit ? 1200 : 850);
 
-    // Ripple
-    const rid = rand();
-    setRipples((r) => [...r, { id: rid, crit: isCrit }]);
-    setTimeout(() => setRipples((r) => r.filter((p) => p.id !== rid)), 900);
+    // Ripples are reserved for crits and combo beats so rapid booping stays readable.
+    if (isCrit || combo % 5 === 0) {
+      const rid = rand();
+      setRipples((r) => [...r.slice(-2), { id: rid, crit: isCrit }]);
+      setTimeout(() => setRipples((r) => r.filter((p) => p.id !== rid)), isCrit ? 760 : 560);
+    }
 
-    // Sparks
-    const n = isCrit ? 22 : 10;
+    // Sparks are now reward punctuation, not every-click confetti.
+    const n = isCrit ? 14 : combo % 10 === 0 ? 4 : 0;
     const newSparks: Spark[] = [];
     for (let i = 0; i < n; i++) {
       const a = (Math.PI * 2 * i) / n + Math.random() * 0.4;
-      const v = (isCrit ? 90 : 50) + Math.random() * (isCrit ? 80 : 40);
+      const v = (isCrit ? 72 : 34) + Math.random() * (isCrit ? 58 : 24);
       newSparks.push({
         id: rand(),
         dx: Math.cos(a) * v,
-        dy: Math.sin(a) * v - (isCrit ? 30 : 10),
+        dy: Math.sin(a) * v - (isCrit ? 24 : 8),
         crit: isCrit,
-        ttlMs: isCrit ? 1000 : 700,
+        ttlMs: isCrit ? 780 : 460,
       });
     }
-    setSparks((s) => [...s, ...newSparks]);
-    const ttl = isCrit ? 1000 : 700;
-    setTimeout(() => {
-      const ids = new Set(newSparks.map((s) => s.id));
-      setSparks((s) => s.filter((p) => !ids.has(p.id)));
-    }, ttl);
+    if (newSparks.length > 0) {
+      setSparks((s) => [...s, ...newSparks].slice(-34));
+      const ttl = isCrit ? 780 : 460;
+      setTimeout(() => {
+        const ids = new Set(newSparks.map((s) => s.id));
+        setSparks((s) => s.filter((p) => !ids.has(p.id)));
+      }, ttl);
+    }
   }, []);
 
   const critChancePct = Math.min(

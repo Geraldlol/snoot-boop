@@ -11,6 +11,7 @@ export class AudioEngine {
   private sfxGain: GainNode | null = null;
   private musicGain: GainNode | null = null;
   private initialized = false;
+  private lastBoopAt = 0;
 
   /** Must be called from a user interaction (click) to satisfy browser autoplay policy */
   init(): boolean {
@@ -60,31 +61,35 @@ export class AudioEngine {
     return this.ctx;
   }
 
-  /** Boop sound: sine sweep 440->880Hz, 80ms */
+  /** Boop sound: soft downward tick, throttled so rapid booping does not ping-spam. */
   playBoop(): void {
     if (!this.ctx || !this.sfxGain) return;
+    const nowMs = Date.now();
+    if (nowMs - this.lastBoopAt < 90) return;
+    this.lastBoopAt = nowMs;
+
     const now = this.ctx.currentTime;
     const osc = this.ctx.createOscillator();
     const gain = this.ctx.createGain();
 
-    osc.type = 'sine';
-    osc.frequency.setValueAtTime(440, now);
-    osc.frequency.exponentialRampToValueAtTime(880, now + 0.08);
+    osc.type = 'triangle';
+    osc.frequency.setValueAtTime(210, now);
+    osc.frequency.exponentialRampToValueAtTime(145, now + 0.11);
 
-    gain.gain.setValueAtTime(0.3, now);
-    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.08);
+    gain.gain.setValueAtTime(0.12, now);
+    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.11);
 
     osc.connect(gain);
     gain.connect(this.sfxGain);
     osc.start(now);
-    osc.stop(now + 0.1);
+    osc.stop(now + 0.13);
   }
 
-  /** Critical boop: chord (440+660+880Hz), 200ms, with shimmer */
+  /** Critical boop: softer reward chord, reserved for actual crits. */
   playCritBoop(): void {
     if (!this.ctx || !this.sfxGain) return;
     const now = this.ctx.currentTime;
-    const freqs = [440, 660, 880];
+    const freqs = [392, 523, 659];
 
     for (const freq of freqs) {
       const osc = this.ctx.createOscillator();
@@ -92,15 +97,15 @@ export class AudioEngine {
 
       osc.type = 'sine';
       osc.frequency.setValueAtTime(freq, now);
-      osc.frequency.exponentialRampToValueAtTime(freq * 1.5, now + 0.2);
+      osc.frequency.exponentialRampToValueAtTime(freq * 1.18, now + 0.18);
 
-      gain.gain.setValueAtTime(0.2, now);
-      gain.gain.exponentialRampToValueAtTime(0.01, now + 0.2);
+      gain.gain.setValueAtTime(0.12, now);
+      gain.gain.exponentialRampToValueAtTime(0.01, now + 0.18);
 
       osc.connect(gain);
       gain.connect(this.sfxGain);
       osc.start(now);
-      osc.stop(now + 0.25);
+      osc.stop(now + 0.22);
     }
   }
 

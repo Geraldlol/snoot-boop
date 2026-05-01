@@ -1,5 +1,5 @@
 /**
- * EconomySystem - 9-Currency Management
+ * EconomySystem - Currency Management
  *
  * Pure TypeScript, zero React imports.
  */
@@ -27,8 +27,9 @@ const CURRENCY_DEFS: Record<CurrencyId, CurrencyDef> = {
   spiritStones: { id: 'spiritStones', name: 'Spirit Stones', icon: '💠', description: 'Dungeon equipment currency', hasCap: false, premium: false, displayPriority: 5 },
   heavenlySeals: { id: 'heavenlySeals', name: 'Heavenly Seals', icon: '🔮', description: 'Prestige currency', hasCap: false, premium: false, displayPriority: 6 },
   sectReputation: { id: 'sectReputation', name: 'Sect Reputation', icon: '🏆', description: 'Social achievements', hasCap: false, premium: false, displayPriority: 7 },
-  waifuTokens: { id: 'waifuTokens', name: 'Waifu Tokens', icon: '💕', description: 'Relationship bonds', hasCap: false, premium: false, displayPriority: 8 },
-  gooseFeathers: { id: 'gooseFeathers', name: 'Goose Feathers', icon: '🪶', description: 'Goose combat drops', hasCap: false, premium: false, displayPriority: 9 },
+  destinyThreads: { id: 'destinyThreads', name: 'Destiny Threads', icon: '🧵', description: 'Tournament fate currency', hasCap: false, premium: false, displayPriority: 8 },
+  waifuTokens: { id: 'waifuTokens', name: 'Waifu Tokens', icon: '💕', description: 'Relationship bonds', hasCap: false, premium: false, displayPriority: 9 },
+  gooseFeathers: { id: 'gooseFeathers', name: 'Goose Feathers', icon: '🪶', description: 'Goose combat drops', hasCap: false, premium: false, displayPriority: 10 },
 };
 
 // ─── Qi Cap by Realm ───────────────────────────────────────
@@ -85,7 +86,7 @@ export class EconomySystem {
   constructor() {
     this.currencies = {
       bp: 0, pp: 0, qi: 0, jadeCatnip: 0, spiritStones: 0,
-      heavenlySeals: 0, sectReputation: 0, waifuTokens: 0, gooseFeathers: 0,
+      heavenlySeals: 0, sectReputation: 0, destinyThreads: 0, waifuTokens: 0, gooseFeathers: 0,
     };
   }
 
@@ -289,7 +290,7 @@ export class EconomySystem {
     const seals = this.currencies.heavenlySeals;
     this.currencies = {
       bp: 0, pp: 0, qi: 0, jadeCatnip: 0, spiritStones: 0,
-      heavenlySeals: seals, sectReputation: 0, waifuTokens: 0, gooseFeathers: 0,
+      heavenlySeals: seals, sectReputation: 0, destinyThreads: 0, waifuTokens: 0, gooseFeathers: 0,
     };
     this.activeEffects = [];
     this.currentRealm = 'mortal';

@@ -253,10 +253,28 @@ export class CultivationSystem {
 
   // ── Passives ───────────────────────────────────────────
 
+  ensureCurrentRankPassivesUnlocked(): string[] {
+    const realm = CULTIVATION_REALMS[this.currentRealm];
+    const newPassives: string[] = [];
+
+    for (const passive of realm.passives) {
+      if (passive.rank > this.currentRank) continue;
+      const key = `${this.currentRealm}_${passive.rank}`;
+      if (this.passivesUnlocked.includes(key)) continue;
+      this.passivesUnlocked.push(key);
+      newPassives.push(passive.name);
+    }
+
+    return newPassives;
+  }
+
   getUnlockedPassives(): RealmPassive[] {
     const result: RealmPassive[] = [];
     for (const key of this.passivesUnlocked) {
-      const [realmId, rankStr] = key.split('_');
+      const splitAt = key.lastIndexOf('_');
+      if (splitAt <= 0) continue;
+      const realmId = key.slice(0, splitAt);
+      const rankStr = key.slice(splitAt + 1);
       const rank = parseInt(rankStr);
       const realm = CULTIVATION_REALMS[realmId as CultivationRealm];
       if (!realm) continue;

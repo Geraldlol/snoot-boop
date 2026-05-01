@@ -22,10 +22,11 @@ export default function PrestigePanel({ tabHint }: { tabHint?: Tab } = {}) {
   const prestige = engine.prestige;
   const showReinc = prestige.currentTier >= 7 || prestige.reincarnationCount > 0;
   const showTrans = prestige.reincarnationCount >= 5 || prestige.transcendenceCount > 0;
+  const previewReinc = tabHint === 'reincarnation' || tab === 'reincarnation';
 
   const tabs: { id: Tab; label: string; visible: boolean; color: string }[] = [
     { id: 'rebirth',       label: 'Rebirth',       visible: true,       color: 'var(--gold-bright)' },
-    { id: 'reincarnation', label: 'Reincarnation', visible: showReinc,  color: '#9370DB' },
+    { id: 'reincarnation', label: 'Reincarnation', visible: showReinc || previewReinc, color: '#9370DB' },
     { id: 'transcendence', label: 'Transcendence', visible: showTrans,  color: '#fff7df' },
   ];
 
@@ -62,7 +63,7 @@ export default function PrestigePanel({ tabHint }: { tabHint?: Tab } = {}) {
       </div>
 
       {tab === 'rebirth' && <Rebirth refresh={refresh} />}
-      {tab === 'reincarnation' && showReinc && <Reincarnation refresh={refresh} />}
+      {tab === 'reincarnation' && <Reincarnation refresh={refresh} locked={!showReinc} />}
       {tab === 'transcendence' && showTrans && <Transcendence refresh={refresh} />}
     </div>
   );
@@ -177,7 +178,7 @@ function Rebirth({ refresh }: { refresh: () => void }) {
 
 // ─── Reincarnation ─────────────────────────────────────────
 
-function Reincarnation({ refresh }: { refresh: () => void }) {
+function Reincarnation({ refresh, locked }: { refresh: () => void; locked?: boolean }) {
   const prestige = engine.prestige;
   const canRein = prestige.canReincarnate();
   const karmaPreview = prestige.calculateKarmaEarned();
@@ -191,6 +192,17 @@ function Reincarnation({ refresh }: { refresh: () => void }) {
 
   return (
     <div>
+      {locked && (
+        <div className="panel p-3 mb-4" style={{ background: 'rgba(147,112,219,0.10)', borderColor: '#9370DB66' }}>
+          <div className="font-display text-[12px] tracking-[0.08em] mb-1" style={{ color: '#C4A7E7' }}>
+            Reincarnation Path Locked
+          </div>
+          <p className="text-xs" style={{ color: 'var(--ink-mute)' }}>
+            Reach Rebirth Tier 7 to open the karma cycle. This tab stays visible here as a preview of the next long-term loop.
+          </p>
+        </div>
+      )}
+
       <div className="panel panel-ornate p-5 mb-4" style={{ borderColor: '#9370DB' }}>
         <div className="flex items-start gap-4 mb-3">
           <div

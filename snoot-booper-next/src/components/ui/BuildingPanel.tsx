@@ -27,7 +27,7 @@ export default function BuildingPanel() {
   const territory = engine.building.getCurrentTerritory();
   const usedSlots = engine.building.getUsedSlots();
   const totalSlots = engine.building.getAvailableSlots();
-  const catCap = engine.building.getTotalCatCapacity();
+  const catCap = engine.getCatCapacity();
   const buildings = engine.building.getAllBuildings().filter((b) => b.data.category === tab);
   const lockedTerritories = Object.values(TERRITORIES).filter(
     (t) => !engine.building.getUnlockedTerritories().includes(t.id)

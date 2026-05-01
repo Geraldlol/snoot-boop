@@ -24,7 +24,9 @@ const SYMBOL_EMOJI: Record<string, string> = {
 export default function CatinoPanel() {
   const bp = useGameStore((s) => s.currencies.bp);
   const [tab, setTab] = useState<'slots' | 'race' | 'wheel'>('slots');
+  const [, refreshPanel] = useState(0);
   const stats = engine.catino.stats;
+  const refresh = () => refreshPanel((n) => n + 1);
 
   return (
     <div>
@@ -58,9 +60,9 @@ export default function CatinoPanel() {
         })}
       </div>
 
-      {tab === 'slots' && <Slots bp={bp} />}
-      {tab === 'race' && <Race bp={bp} />}
-      {tab === 'wheel' && <Wheel bp={bp} />}
+      {tab === 'slots' && <Slots bp={bp} onChange={refresh} />}
+      {tab === 'race' && <Race bp={bp} onChange={refresh} />}
+      {tab === 'wheel' && <Wheel bp={bp} onChange={refresh} />}
 
       {/* Lifetime stats footer */}
       <div className="mt-4 pt-3 border-t" style={{ borderColor: 'var(--rule)' }}>
@@ -76,7 +78,7 @@ export default function CatinoPanel() {
 
 // ─── Slots ─────────────────────────────────────────────────
 
-function Slots({ bp }: { bp: number }) {
+function Slots({ bp, onChange }: { bp: number; onChange: () => void }) {
   const [bet, setBet] = useState(100);
   const [result, setResult] = useState<SlotResult | null>(null);
   const [spinning, setSpinning] = useState(false);
@@ -86,6 +88,7 @@ function Slots({ bp }: { bp: number }) {
   function spin() {
     const r = engine.playSlots(bet);
     if (r) {
+      onChange();
       setSpinning(true);
       setTimeout(() => {
         setResult(r);
@@ -158,7 +161,7 @@ function Slots({ bp }: { bp: number }) {
       <button
         className="btn btn-primary w-full mb-3"
         style={{ borderColor: 'var(--vermillion-bright)', background: 'linear-gradient(180deg, rgba(214,91,64,0.36), rgba(91,30,20,0.24))', color: 'var(--vermillion-bright)' }}
-        disabled={bp < bet || spinning}
+        disabled={bet <= 0 || bp < bet || spinning}
         onClick={spin}
       >
         SPIN · {formatNumber(bet)} bp
@@ -184,7 +187,7 @@ function Slots({ bp }: { bp: number }) {
 
 // ─── Goose Race ────────────────────────────────────────────
 
-function Race({ bp }: { bp: number }) {
+function Race({ bp, onChange }: { bp: number; onChange: () => void }) {
   const [bets, setBets] = useState<Record<string, number>>({});
   const [result, setResult] = useState<RaceResult | null>(null);
   const totalBet = Object.values(bets).reduce((s, v) => s + v, 0);
@@ -192,7 +195,10 @@ function Race({ bp }: { bp: number }) {
 
   function go() {
     const r = engine.startGooseRace(bets);
-    if (r) setResult(r);
+    if (r) {
+      setResult(r);
+      onChange();
+    }
   }
 
   return (
@@ -243,11 +249,12 @@ function Race({ bp }: { bp: number }) {
 
 // ─── Wheel ─────────────────────────────────────────────────
 
-function Wheel({ bp }: { bp: number }) {
+function Wheel({ bp, onChange }: { bp: number; onChange: () => void }) {
   const [result, setResult] = useState<WheelResult | null>(null);
   const [, force] = useState(0);
   const cost = 10000;
-  const canSpin = bp >= cost;
+  const freeSpins = engine.catino.getFreeWheelSpins();
+  const canSpin = freeSpins > 0 || bp >= cost;
   const activeEffects = engine.catino.getActiveEffectDescriptions();
 
   function go() {
@@ -255,6 +262,7 @@ function Wheel({ bp }: { bp: number }) {
     if (r) {
       setResult(r);
       force((n) => n + 1);
+      onChange();
     }
   }
 
@@ -277,7 +285,7 @@ function Wheel({ bp }: { bp: number }) {
         disabled={!canSpin}
         onClick={go}
       >
-        ⚡ Spin Wheel · {formatNumber(cost)} bp
+        {freeSpins > 0 ? `Spin Wheel - free (${freeSpins})` : `Spin Wheel - ${formatNumber(cost)} bp`}
       </button>
 
       {result && (

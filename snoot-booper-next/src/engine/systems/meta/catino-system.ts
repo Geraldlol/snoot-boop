@@ -100,6 +100,7 @@ interface CatinoSerializedData {
   totalWon: number;
   totalLost: number;
   activeEffects: ActiveEffect[];
+  freeWheelSpins?: number;
   stats: CatinoStats;
 }
 
@@ -238,6 +239,7 @@ export class CatinoSystem {
   totalWon: number;
   totalLost: number;
   activeEffects: ActiveEffect[];
+  freeWheelSpins: number;
   stats: CatinoStats;
 
   constructor() {
@@ -246,6 +248,7 @@ export class CatinoSystem {
     this.totalWon = 0;
     this.totalLost = 0;
     this.activeEffects = [];
+    this.freeWheelSpins = 0;
     this.stats = {
       slotsPlayed: 0,
       slotsWon: 0,
@@ -469,7 +472,33 @@ export class CatinoSystem {
     };
   }
 
-  update(deltaMs: number): void {
+  addFreeWheelSpin(count = 1): void {
+    this.freeWheelSpins += count;
+  }
+
+  consumeFreeWheelSpin(): boolean {
+    if (this.freeWheelSpins <= 0) return false;
+    this.freeWheelSpins--;
+    return true;
+  }
+
+  getFreeWheelSpins(): number {
+    return this.freeWheelSpins;
+  }
+
+  recordWheelPayout(amount: number): void {
+    if (amount <= 0) return;
+    this.totalWon += amount;
+    this.stats.totalWon += amount;
+  }
+
+  recordWheelLoss(amount: number): void {
+    if (amount <= 0) return;
+    this.totalLost += amount;
+    this.stats.totalLost += amount;
+  }
+
+  update(): void {
     const now = Date.now();
 
     // Remove expired effects
@@ -506,6 +535,7 @@ export class CatinoSystem {
       totalWon: this.totalWon,
       totalLost: this.totalLost,
       activeEffects: this.activeEffects.map((e) => ({ ...e })),
+      freeWheelSpins: this.freeWheelSpins,
       stats: { ...this.stats },
     };
   }
@@ -516,6 +546,7 @@ export class CatinoSystem {
     this.totalWon = data.totalWon ?? 0;
     this.totalLost = data.totalLost ?? 0;
     this.activeEffects = (data.activeEffects ?? []).map((e) => ({ ...e }));
+    this.freeWheelSpins = data.freeWheelSpins ?? 0;
     this.stats = data.stats ?? {
       slotsPlayed: 0,
       slotsWon: 0,

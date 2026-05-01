@@ -84,14 +84,19 @@ export default function GameApp() {
     }
 
     // Check AFK return
+    let afkTimeout: number | undefined;
     const afk = engine.calculateAFKReturn();
     if (afk && afk.timeAway > 0) {
-      setAfkResult(afk);
+      afkTimeout = window.setTimeout(() => setAfkResult(afk), 0);
     }
 
     // Start game loop
     gameLoop.start();
     useGameStore.setState({ initialized: true, sessionStartTime: Date.now(), lastTickTime: Date.now() });
+
+    return () => {
+      if (afkTimeout !== undefined) window.clearTimeout(afkTimeout);
+    };
   }, []);
 
   // Auto-save

@@ -143,7 +143,7 @@ export interface RunRecord {
   timestamp: number;
   floorsCleared: number;
   reason: string;
-  rewards: { bp: number; tokens: number; items: LootItem[] };
+  rewards: { bp: number; tokens: number; spiritStones: number; items: LootItem[] };
   duration: number;
 }
 
@@ -170,7 +170,7 @@ export interface PagodaRunState {
   player: PlayerState;
   enemy: ActiveEnemy | null;
   cooldowns: Record<string, number>;
-  rewards: { bp: number; tokens: number; items: LootItem[] };
+  rewards: { bp: number; tokens: number; spiritStones: number; items: LootItem[] };
   floorModifiers: FloorModifier[];
   startTime: number;
   usedOncePerRun: Set<string>;
@@ -198,12 +198,12 @@ export const PAGODA_ENEMIES: EnemyTemplate[] = [
 ];
 
 export const PAGODA_BOSSES: BossTemplate[] = [
-  { id: 'eternal_napper', name: 'The Eternal Napper', emoji: '\uD83D\uDE34', floor: 10, baseHp: 250, baseDamage: 25, baseDefense: 15, speed: 0.5, phases: 2, element: null, rewards: { bp: 500, tokens: 3 } },
-  { id: 'goose_emperor', name: 'Goose Emperor', emoji: '\uD83E\uDDA2', floor: 20, baseHp: 500, baseDamage: 40, baseDefense: 20, speed: 1.2, phases: 3, element: 'water', rewards: { bp: 1500, tokens: 6 } },
-  { id: 'nine_tailed_menace', name: 'Nine-Tailed Menace', emoji: '\uD83E\uDD8A', floor: 30, baseHp: 800, baseDamage: 55, baseDefense: 25, speed: 1.5, phases: 3, element: 'fire', rewards: { bp: 3000, tokens: 10 } },
-  { id: 'jade_guardian', name: 'Jade Guardian', emoji: '\uD83D\uDDFF', floor: 40, baseHp: 1200, baseDamage: 50, baseDefense: 45, speed: 0.7, phases: 2, element: 'nature', rewards: { bp: 5000, tokens: 15 } },
-  { id: 'void_sovereign', name: 'Void Sovereign', emoji: '\uD83D\uDD73\uFE0F', floor: 50, baseHp: 2000, baseDamage: 80, baseDefense: 40, speed: 1.0, phases: 4, element: 'void', rewards: { bp: 10000, tokens: 25 } },
-  { id: 'celestial_cat_god', name: 'Celestial Cat God', emoji: '\uD83D\uDC31\u200D\uD83D\uDC51', floor: 100, baseHp: 10000, baseDamage: 150, baseDefense: 80, speed: 2.0, phases: 5, element: 'light', rewards: { bp: 50000, tokens: 100 } },
+  { id: 'eternal_napper', name: 'The Eternal Napper', emoji: '\uD83D\uDE34', floor: 10, baseHp: 250, baseDamage: 25, baseDefense: 15, speed: 0.5, phases: 2, element: null, rewards: { bp: 2500, tokens: 5 } },
+  { id: 'goose_emperor', name: 'Goose Emperor', emoji: '\uD83E\uDDA2', floor: 20, baseHp: 500, baseDamage: 40, baseDefense: 20, speed: 1.2, phases: 3, element: 'water', rewards: { bp: 10000, tokens: 10 } },
+  { id: 'nine_tailed_menace', name: 'Nine-Tailed Menace', emoji: '\uD83E\uDD8A', floor: 30, baseHp: 800, baseDamage: 55, baseDefense: 25, speed: 1.5, phases: 3, element: 'fire', rewards: { bp: 25000, tokens: 18 } },
+  { id: 'jade_guardian', name: 'Jade Guardian', emoji: '\uD83D\uDDFF', floor: 40, baseHp: 1200, baseDamage: 50, baseDefense: 45, speed: 0.7, phases: 2, element: 'nature', rewards: { bp: 60000, tokens: 30 } },
+  { id: 'void_sovereign', name: 'Void Sovereign', emoji: '\uD83D\uDD73\uFE0F', floor: 50, baseHp: 2000, baseDamage: 80, baseDefense: 40, speed: 1.0, phases: 4, element: 'void', rewards: { bp: 150000, tokens: 50 } },
+  { id: 'celestial_cat_god', name: 'Celestial Cat God', emoji: '\uD83D\uDC31\u200D\uD83D\uDC51', floor: 100, baseHp: 10000, baseDamage: 150, baseDefense: 80, speed: 2.0, phases: 5, element: 'light', rewards: { bp: 1000000, tokens: 150 } },
 ];
 
 export const BOOP_COMMANDS: BoopCommand[] = [
@@ -347,10 +347,11 @@ export class PagodaSystem {
   player: PlayerState = this.emptyPlayer();
   enemy: ActiveEnemy | null = null;
   cooldowns: Record<string, number> = {};
-  rewards: { bp: number; tokens: number; items: LootItem[] } = { bp: 0, tokens: 0, items: [] };
+  rewards: { bp: number; tokens: number; spiritStones: number; items: LootItem[] } = { bp: 0, tokens: 0, spiritStones: 0, items: [] };
   floorModifiers: FloorModifier[] = [];
   startTime: number = 0;
   usedOncePerRun: Set<string> = new Set();
+  private commandDamageMultipliers: Record<string, number> = {};
 
   private emptyPlayer(): PlayerState {
     return {
@@ -361,12 +362,18 @@ export class PagodaSystem {
     };
   }
 
-  startRun(selectedCatStats: { hp: number; attack: number; defense: number }[]): { success: boolean; error?: string } {
+  startRun(selectedCatStats: { hp: number; attack: number; defense: number; crit?: number; critMult?: number }[]): { success: boolean; error?: string } {
     if (this.inRun) return { success: false, error: 'Already in a run' };
 
     const totalCatHp = selectedCatStats.reduce((s, c) => s + c.hp, 0);
     const totalCatAtk = selectedCatStats.reduce((s, c) => s + c.attack, 0);
     const totalCatDef = selectedCatStats.reduce((s, c) => s + c.defense, 0);
+    const averageCrit = selectedCatStats.length > 0
+      ? selectedCatStats.reduce((s, c) => s + (c.crit ?? 0.1), 0) / selectedCatStats.length
+      : 0.1;
+    const averageCritMult = selectedCatStats.length > 0
+      ? selectedCatStats.reduce((s, c) => s + (c.critMult ?? 2), 0) / selectedCatStats.length
+      : 2;
 
     const baseHp = 100 + totalCatHp + this.upgrades.maxHpBonus * UPGRADE_VALUES.maxHpBonus;
     const baseDmg = 10 + totalCatAtk + this.upgrades.damageBonus * UPGRADE_VALUES.damageBonus;
@@ -375,7 +382,8 @@ export class PagodaSystem {
     this.player = {
       hp: baseHp, maxHp: baseHp,
       damage: baseDmg, defense: baseDef,
-      crit: 0.1, critMult: 2.0,
+      crit: Math.min(0.75, Math.max(0, averageCrit)),
+      critMult: Math.min(4.5, Math.max(1.2, averageCritMult)),
       shieldCharges: this.upgrades.startingShields * UPGRADE_VALUES.startingShields,
       dodgeCharges: 0,
       buffs: [], debuffs: [],
@@ -386,7 +394,7 @@ export class PagodaSystem {
     this.combatState = 'idle';
     this.enemy = null;
     this.cooldowns = {};
-    this.rewards = { bp: 0, tokens: 0, items: [] };
+    this.rewards = { bp: 0, tokens: 0, spiritStones: 0, items: [] };
     this.floorModifiers = [];
     this.startTime = Date.now();
     this.usedOncePerRun = new Set();
@@ -517,6 +525,7 @@ export class PagodaSystem {
     // Check if enemy is dead
     if (this.enemy && this.enemy.hp <= 0) {
       const defeated = this.onEnemyDefeated();
+      Object.assign(playerResult, defeated);
       return { success: true, playerAction: playerResult, combatState: this.combatState, ...defeated };
     }
 
@@ -555,10 +564,11 @@ export class PagodaSystem {
           break;
         }
         const hits = eff.hitCount || 1;
+        const commandDamageMult = this.commandDamageMultipliers[cmd.id] ?? 1;
         let totalDealt = 0;
         const hitResults: number[] = [];
         for (let i = 0; i < hits; i++) {
-          const { dealt } = this.playerAttack(eff.multiplier || 1.0, eff.guaranteedCrit, eff.element || null);
+          const { dealt } = this.playerAttack((eff.multiplier || 1.0) * commandDamageMult, eff.guaranteedCrit, eff.element || null);
           totalDealt += dealt;
           hitResults.push(dealt);
         }
@@ -670,6 +680,10 @@ export class PagodaSystem {
     return this.dealDamageToEnemy(Math.floor(dmg), isCrit, element);
   }
 
+  setCommandDamageMultiplier(commandId: string, multiplier: number): void {
+    this.commandDamageMultipliers[commandId] = Math.max(0.1, multiplier);
+  }
+
   private dealDamageToEnemy(rawDamage: number, isCrit: boolean, element?: Element): { dealt: number; crit: boolean } {
     if (!this.enemy) return { dealt: 0, crit: isCrit };
 
@@ -726,7 +740,7 @@ export class PagodaSystem {
     this.enemy.debuffs = this.enemy.debuffs.filter(d => { d.turnsLeft--; return d.turnsLeft > 0; });
 
     // Calculate enemy damage
-    let enemyDmg = this.getBuffedStat(this.enemy.damage, 'damage', this.enemy.buffs, this.enemy.debuffs);
+    const enemyDmg = this.getBuffedStat(this.enemy.damage, 'damage', this.enemy.buffs, this.enemy.debuffs);
 
     // Dodge check
     if (this.player.dodgeCharges > 0) {
@@ -750,7 +764,7 @@ export class PagodaSystem {
 
     // Defense calculation
     const playerDef = this.getBuffedStat(this.player.defense, 'defense', this.player.buffs, this.player.debuffs);
-    let incoming = Math.max(1, enemyDmg - Math.floor(playerDef * 0.5));
+    const incoming = Math.max(1, enemyDmg - Math.floor(playerDef * 0.5));
 
     // Reflect
     const reflectBuff = this.player.buffs.find(b => b.stat === 'reflect');
@@ -777,12 +791,19 @@ export class PagodaSystem {
       if (bossTemplate) {
         this.rewards.bp += bossTemplate.rewards.bp;
         this.rewards.tokens += bossTemplate.rewards.tokens;
-        result.bossRewards = bossTemplate.rewards;
+        const spiritStones = Math.max(5, bossTemplate.floor);
+        this.rewards.spiritStones += spiritStones;
+        result.bossRewards = { ...bossTemplate.rewards, spiritStones };
       }
     } else {
-      const floorBp = this.currentFloor * 10;
+      const floorBp = this.getFloorBpReward(this.currentFloor);
+      const spiritStones = Math.floor(this.currentFloor / 3);
       this.rewards.bp += floorBp;
       result.bpEarned = floorBp;
+      if (spiritStones > 0) {
+        this.rewards.spiritStones += spiritStones;
+        result.spiritStonesEarned = spiritStones;
+      }
 
       // Token chance from regular enemies
       if (Math.random() < 0.1) {
@@ -815,6 +836,10 @@ export class PagodaSystem {
     this.enemy = null;
     this.combatState = 'victory';
     return result;
+  }
+
+  private getFloorBpReward(floor: number): number {
+    return Math.floor(20 * floor * (1 + floor / 20));
   }
 
   endRun(reason: string): RunRecord {
@@ -859,7 +884,7 @@ export class PagodaSystem {
     return Math.floor(UPGRADE_BASE_COSTS[type] * Math.pow(1.5, this.upgrades[type]));
   }
 
-  autoClear(targetFloor: number): { floorsCleared: number; rewards: { bp: number; tokens: number } } | { error: string } {
+  autoClear(targetFloor: number): { floorsCleared: number; rewards: { bp: number; tokens: number; spiritStones: number } } | { error: string } {
     if (this.inRun) return { error: 'Already in a run' };
     const maxAuto = Math.max(0, this.highestFloor - 1);
     const floor = Math.min(targetFloor, maxAuto);
@@ -867,19 +892,22 @@ export class PagodaSystem {
 
     let bp = 0;
     let tokens = 0;
+    let spiritStones = 0;
     for (let f = 1; f <= floor; f++) {
-      bp += Math.floor(f * 10 * 0.5); // 50% reward rate
+      bp += Math.floor(this.getFloorBpReward(f) * 0.5); // 50% reward rate
+      spiritStones += Math.floor(Math.floor(f / 3) * 0.5);
       if (f % 10 === 0) {
         const boss = PAGODA_BOSSES.find(b => b.floor === f);
         if (boss) {
           bp += Math.floor(boss.rewards.bp * 0.5);
           tokens += Math.floor(boss.rewards.tokens * 0.5);
+          spiritStones += Math.floor(Math.max(5, boss.floor) * 0.5);
         }
       }
     }
 
     this.tokens += tokens;
-    return { floorsCleared: floor, rewards: { bp, tokens } };
+    return { floorsCleared: floor, rewards: { bp, tokens, spiritStones } };
   }
 
   addFloorModifier(): void {
@@ -1006,7 +1034,14 @@ export class PagodaSystem {
       bossKills: data.stats?.bossKills ?? 0,
       highestDamage: data.stats?.highestDamage ?? 0,
     };
-    this.runHistory = data.runHistory ?? [];
+    this.runHistory = (data.runHistory ?? []).map((run) => ({
+      ...run,
+      rewards: {
+        ...run.rewards,
+        spiritStones: run.rewards.spiritStones ?? 0,
+        items: [...(run.rewards.items ?? [])],
+      },
+    }));
     this.unlockedSkills = data.unlockedSkills ?? [];
 
     if (data.run && typeof data.run === 'object') {
@@ -1017,7 +1052,13 @@ export class PagodaSystem {
       this.player = (run.player as PlayerState) ?? this.emptyPlayer();
       this.enemy = (run.enemy as ActiveEnemy | null) ?? null;
       this.cooldowns = (run.cooldowns as Record<string, number>) ?? {};
-      this.rewards = (run.rewards as { bp: number; tokens: number; items: LootItem[] }) ?? { bp: 0, tokens: 0, items: [] };
+      const rewards = run.rewards as Partial<{ bp: number; tokens: number; spiritStones: number; items: LootItem[] }> | undefined;
+      this.rewards = {
+        bp: rewards?.bp ?? 0,
+        tokens: rewards?.tokens ?? 0,
+        spiritStones: rewards?.spiritStones ?? 0,
+        items: rewards?.items ?? [],
+      };
       this.floorModifiers = (run.floorModifiers as FloorModifier[]) ?? [];
       this.startTime = (run.startTime as number) ?? Date.now();
       this.usedOncePerRun = new Set((run.usedOncePerRun as string[]) ?? []);
@@ -1028,7 +1069,7 @@ export class PagodaSystem {
       this.player = this.emptyPlayer();
       this.enemy = null;
       this.cooldowns = {};
-      this.rewards = { bp: 0, tokens: 0, items: [] };
+      this.rewards = { bp: 0, tokens: 0, spiritStones: 0, items: [] };
       this.floorModifiers = [];
       this.startTime = 0;
       this.usedOncePerRun = new Set();

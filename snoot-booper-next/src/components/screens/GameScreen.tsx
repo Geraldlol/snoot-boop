@@ -134,7 +134,8 @@ const SELF_STYLED: ReadonlyArray<PanelId> = [
 
 function PanelRouter({ id }: { id: PanelId }) {
   if (id === 'sanctuary') return <SnootAltar />;
-  if (id === 'reincarnation') return <PrestigePanel tabHint="reincarnation" />;
+  if (id === 'prestige') return <PrestigePanel key="prestige" />;
+  if (id === 'reincarnation') return <PrestigePanel key="reincarnation" tabHint="reincarnation" />;
 
   const Component = PANEL_COMPONENTS[id];
   if (!Component) {

@@ -5,7 +5,7 @@
 
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { useCatStore } from '@/store/cat-store';
 import { useGameStore } from '@/store/game-store';
 import { engine } from '@/engine/engine';
@@ -44,7 +44,9 @@ export default function CatPanel() {
 
   const selectedCat = selectedCatId ? cats.find((c) => c.instanceId === selectedCatId) : null;
   const cost = RECRUITMENT_COSTS[recruitRealm];
-  const canRecruit = bp >= cost;
+  const capacity = engine.getCatCapacity();
+  const hasCapacity = cats.length < capacity;
+  const canRecruit = bp >= cost && hasCapacity;
 
   return (
     <div>
@@ -56,7 +58,7 @@ export default function CatPanel() {
           </div>
           <div>
             <div className="h-section">Sanctuary Roster</div>
-            <div className="h-eyebrow">{cats.length} disciples cultivate within</div>
+            <div className="h-eyebrow">{cats.length} / {capacity} disciples cultivate within</div>
           </div>
         </div>
       </div>
@@ -90,7 +92,7 @@ export default function CatPanel() {
           onClick={() => engine.recruitCat(recruitRealm)}
           disabled={!canRecruit}
         >
-          Recruit · {formatNumber(cost)} bp
+          {hasCapacity ? `Recruit - ${formatNumber(cost)} bp` : `Sanctuary full - ${cats.length}/${capacity}`}
         </button>
       </div>
 

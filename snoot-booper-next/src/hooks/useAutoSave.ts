@@ -7,16 +7,14 @@
 import { useEffect, useRef } from 'react';
 import { SaveManager } from '@/engine/save';
 import { useGameStore } from '@/store/game-store';
-import { useCatStore } from '@/store/cat-store';
 import { useUIStore } from '@/store/ui-store';
 import { engine } from '@/engine/engine';
 import type { SaveDataV3 } from '@/engine/types';
 
 const saveManager = new SaveManager();
 
-function buildSaveData(): SaveDataV3 {
+export function buildSaveData(): SaveDataV3 {
   const game = useGameStore.getState();
-  const cats = useCatStore.getState();
   const engineData = engine.buildSaveData();
 
   return {
@@ -61,6 +59,10 @@ function buildSaveData(): SaveDataV3 {
   };
 }
 
+export function saveGameNow(): boolean {
+  return saveManager.save(buildSaveData());
+}
+
 export function useAutoSave() {
   const initialized = useGameStore((s) => s.initialized);
   const flashSave = useUIStore((s) => s.flashSaveIndicator);
@@ -69,17 +71,15 @@ export function useAutoSave() {
   useEffect(() => {
     if (!initialized) return;
 
-    managerRef.current.startAutoSave(() => {
-      const data = buildSaveData();
-      managerRef.current.save(data);
+    const manager = managerRef.current;
+
+    manager.startAutoSave(() => {
       flashSave();
-      return data;
+      return buildSaveData();
     });
 
     return () => {
-      managerRef.current.stopAutoSave();
+      manager.stopAutoSave();
     };
   }, [initialized, flashSave]);
-
-  return managerRef.current;
 }

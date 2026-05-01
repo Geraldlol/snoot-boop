@@ -36,6 +36,7 @@ export type CurrencyId =
   | 'spiritStones' // Dungeon reward
   | 'heavenlySeals'// Prestige tier 1
   | 'sectReputation'// Social
+  | 'destinyThreads'// Tournament/social reward
   | 'waifuTokens'  // Relationship
   | 'gooseFeathers';// Humor + real benefits
 
@@ -398,7 +399,11 @@ export interface GameModifiers {
   critChanceBonus: number;
   critMultiplier: number;
   catHappinessMultiplier: number;
+  happinessDecayReduction: number;
+  happinessGain: number;
+  catCapacity: number;
   eventDiscoveryBonus: number;
+  gooseSpawnBonus: number;
   rareCatBonus: number;
   boopSpeedMultiplier: number;
   preventDecay: boolean;

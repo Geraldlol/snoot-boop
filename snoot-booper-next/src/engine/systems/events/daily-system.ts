@@ -108,7 +108,9 @@ export class DailySystem {
       if (commission.completed) continue;
       if (commission.type !== type) continue;
 
-      commission.progress = Math.min(commission.target, commission.progress + amount);
+      commission.progress = commission.type === 'happiness'
+        ? Math.min(commission.target, Math.max(commission.progress, amount))
+        : Math.min(commission.target, commission.progress + amount);
       if (commission.progress >= commission.target) {
         commission.completed = true;
         this.totalCommissionsCompleted++;

@@ -460,7 +460,7 @@ export class CelestialTournamentSystem {
       if (!cat.alive) continue;
 
       const isCrit = Math.random() < cat.critChance;
-      let baseDmg = cat.attack * (isCrit ? cat.critDamage : 1.0);
+      const baseDmg = cat.attack * (isCrit ? cat.critDamage : 1.0);
       const damage = this.applyDefense(baseDmg, bs.opponentBuffedStats.defense);
 
       bs.opponentHp -= damage;

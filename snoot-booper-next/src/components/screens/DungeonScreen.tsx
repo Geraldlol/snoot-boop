@@ -73,13 +73,19 @@ function useForceUpdate() {
 export default function DungeonScreen() {
   const forceUpdate = useForceUpdate();
   const setScreen = useUIStore((s) => s.setScreen);
+  const openPanel = useUIStore((s) => s.openPanel);
 
   const pagoda = engine.pagoda;
   const inRun = pagoda.inRun;
   const combatState = pagoda.combatState;
 
   if (inRun && combatState === 'victory') {
-    return <VictoryView onContinue={() => { engine.advancePagodaFloor(); forceUpdate(); }} />;
+    return (
+      <VictoryView
+        onContinue={() => { engine.advancePagodaFloor(); forceUpdate(); }}
+        onReturn={() => { engine.retreatPagodaRun(); forceUpdate(); }}
+      />
+    );
   }
   if (inRun && (combatState === 'defeat' || combatState === 'fled')) {
     return <DefeatView onReturn={forceUpdate} />;
@@ -87,7 +93,7 @@ export default function DungeonScreen() {
   if (inRun) {
     return <CombatView forceUpdate={forceUpdate} />;
   }
-  return <LobbyView forceUpdate={forceUpdate} onBack={() => setScreen('game')} />;
+  return <LobbyView forceUpdate={forceUpdate} onBack={() => { openPanel('sanctuary'); setScreen('game'); }} />;
 }
 
 // ─── Lobby View ───────────────────────────────────────────
@@ -264,7 +270,7 @@ function RunHistoryRow({ run }: { run: RunRecord }) {
       <span className="font-display text-[12px] tracking-[0.06em]" style={{ color: '#fff7df' }}>Floor {run.floorsCleared}</span>
       <span className="font-display text-[10px] tracking-[0.16em] uppercase" style={{ color: reasonColor }}>{run.reason}</span>
       <span className="ml-auto" style={{ color: 'var(--ink-mute)' }}>
-        +{formatNumber(run.rewards.bp)} bp · +{run.rewards.tokens} tokens
+        +{formatNumber(run.rewards.bp)} bp · +{run.rewards.tokens} tokens · +{formatNumber(run.rewards.spiritStones ?? 0)} stones
       </span>
     </div>
   );
@@ -317,9 +323,10 @@ function CombatView({ forceUpdate }: { forceUpdate: () => void }) {
     if (pa?.enemyDefeated) {
       addLog({ text: `${pa.enemyName as string} defeated!`, color: 'var(--gold-bright)' });
       if (pa.bpEarned) addLog({ text: `+${formatNumber(pa.bpEarned as number)} BP`, color: 'var(--gold-bright)' });
+      if (pa.spiritStonesEarned) addLog({ text: `+${formatNumber(pa.spiritStonesEarned as number)} spirit stones`, color: '#9370DB' });
       if (pa.bossRewards) {
-        const br = pa.bossRewards as { bp: number; tokens: number };
-        addLog({ text: `BOSS LOOT · +${br.bp} BP · +${br.tokens} tokens`, color: '#FF69B4' });
+        const br = pa.bossRewards as { bp: number; tokens: number; spiritStones?: number };
+        addLog({ text: `BOSS LOOT · +${br.bp} BP · +${br.tokens} tokens · +${br.spiritStones ?? 0} stones`, color: '#FF69B4' });
       }
       if (pa.loot) {
         const item = pa.loot as LootItem;
@@ -536,7 +543,7 @@ function CommandButton({ cmd, onClick }: {
 
 // ─── Victory / Defeat Views ───────────────────────────────
 
-function VictoryView({ onContinue }: { onContinue: () => void }) {
+function VictoryView({ onContinue, onReturn }: { onContinue: () => void; onReturn: () => void }) {
   const pagoda = engine.pagoda;
   const lastItem = pagoda.rewards.items[pagoda.rewards.items.length - 1];
 
@@ -565,6 +572,10 @@ function VictoryView({ onContinue }: { onContinue: () => void }) {
           Floor {pagoda.currentFloor} cleared
         </p>
 
+        <div className="mb-3 font-mono text-[11px]" style={{ color: 'var(--gold-bright)' }}>
+          Banked · +{formatNumber(pagoda.rewards.bp)} BP · +{pagoda.rewards.tokens} tokens · +{formatNumber(pagoda.rewards.spiritStones)} stones
+        </div>
+
         {lastItem && (
           <div className="mb-5 font-mono text-[11px]">
             <span style={{ color: 'var(--ink-dim)' }}>latest loot · </span>
@@ -572,9 +583,14 @@ function VictoryView({ onContinue }: { onContinue: () => void }) {
           </div>
         )}
 
+        <div className="flex gap-3 justify-center">
+          <button className="btn" style={{ padding: '10px 18px' }} onClick={onReturn}>
+            Return with Loot
+          </button>
         <button className="btn ascend-btn ready" style={{ padding: '10px 24px' }} onClick={onContinue}>
           Next Floor →
         </button>
+        </div>
       </div>
     </div>
   );
@@ -615,6 +631,7 @@ function DefeatView({ onReturn }: { onReturn: () => void }) {
             <p>Floors Cleared · {lastRun.floorsCleared}</p>
             <p style={{ color: 'var(--gold-bright)' }}>+{formatNumber(lastRun.rewards.bp)} BP</p>
             <p style={{ color: 'var(--gold-bright)' }}>+{lastRun.rewards.tokens} tokens</p>
+            <p style={{ color: '#9370DB' }}>+{formatNumber(lastRun.rewards.spiritStones ?? 0)} spirit stones</p>
             {lastRun.rewards.items.length > 0 && (
               <p>{lastRun.rewards.items.length} items collected</p>
             )}

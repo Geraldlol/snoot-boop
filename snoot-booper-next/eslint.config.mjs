@@ -12,6 +12,9 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Imported design handoff and retired 3D prototype files are not active app source.
+    ".handoff/**",
+    "src/components/three/**",
   ]),
 ]);
 

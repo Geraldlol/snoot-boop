@@ -31,20 +31,14 @@ export class MasterSystem {
    * Some passives are conditional (e.g., Gerald's meditation bonus).
    */
   getPassiveEffects(context: { isMeditating?: boolean }): Partial<GameModifiers> {
+    void context;
     if (!this.selectedMaster) return {};
 
     const effects = { ...this.selectedMaster.passive.effect };
     const result: Partial<GameModifiers> = {};
 
-    // Gerald: only applies when meditating
-    if (this.selectedMaster.id === 'gerald') {
-      if (context.isMeditating) {
-        result.bpMultiplier = 1.25;
-      }
-      return result;
-    }
-
     // Map effect keys to GameModifiers
+    if (effects.bpMultiplier) result.bpMultiplier = effects.bpMultiplier as number;
     if (effects.afkMultiplier) result.afkMultiplier = effects.afkMultiplier as number;
     if (effects.critChanceBonus) result.critChanceBonus = effects.critChanceBonus as number;
     if (effects.catHappinessMultiplier) result.catHappinessMultiplier = effects.catHappinessMultiplier as number;

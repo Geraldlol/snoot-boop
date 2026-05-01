@@ -22,6 +22,7 @@ export class SnootAudio {
   private muted = false;
   private volume = 0.6;
   private unlocked = false;
+  private lastBoopAt = 0;
 
   unlock(): void {
     if (this.unlocked) return;
@@ -122,54 +123,57 @@ export class SnootAudio {
 
   playBoop(combo = 0): void {
     if (!this.unlocked) return;
-    const baseFreq = 320;
+    const nowMs = Date.now();
+    if (nowMs - this.lastBoopAt < 90) return;
+    this.lastBoopAt = nowMs;
+
+    const baseFreq = 190;
     // Pitch rises with combo (capped); subtle so it stays musical.
-    const c = Math.min(combo, 50);
-    const freq = baseFreq + c * 6;
+    const c = Math.min(combo, 30);
+    const freq = baseFreq + c * 2;
     this.tone({
       freq,
-      duration: 0.18,
-      type: 'sine',
-      peak: 0.32,
-      attack: 0.005,
-      release: 0.10,
-      sweepTo: freq * 0.7,
+      duration: 0.12,
+      type: 'triangle',
+      peak: 0.14,
+      attack: 0.003,
+      release: 0.08,
+      sweepTo: freq * 0.72,
     });
     // Add a soft body — gives it weight.
     this.tone({
-      freq: freq * 0.5,
-      duration: 0.14,
-      type: 'triangle',
-      peak: 0.18,
+      freq: freq * 0.48,
+      duration: 0.10,
+      type: 'sine',
+      peak: 0.08,
       attack: 0.005,
-      release: 0.08,
+      release: 0.07,
     });
   }
 
   playCrit(): void {
     if (!this.unlocked) return;
-    // Major triad chime: G5, B5, D6
+    // Reward chime: bright enough to read, softer than the old click ping.
     const now = this.ctx?.currentTime ?? 0;
-    [784, 988, 1175].forEach((f, i) => {
+    [523, 659, 784].forEach((f, i) => {
       setTimeout(() => {
         this.tone({
           freq: f,
-          duration: 0.45,
+          duration: 0.32,
           type: 'sine',
-          peak: 0.30,
+          peak: 0.18,
           attack: 0.01,
-          release: 0.30,
+          release: 0.22,
         });
       }, i * 35);
     });
-    // Bright top-end shimmer
     this.tone({
-      freq: 2400,
-      duration: 0.25,
+      freq: 1568,
+      duration: 0.18,
       type: 'sine',
-      peak: 0.10,
+      peak: 0.05,
       attack: 0.01,
-      release: 0.20,
+      release: 0.14,
     });
     void now;
   }

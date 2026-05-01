@@ -108,16 +108,21 @@ export class GooseSystem {
     let chance = this.spawnChance;
     // Chaos goose doubles spawn chance
     if (this.selectedAlly === 'chaos') chance *= 2;
+    if (modifiers.gooseSpawnBonus) chance *= (1 + modifiers.gooseSpawnBonus);
 
     if (Math.random() >= chance) return null;
 
     return this.spawnGoose();
   }
 
+  forceSpawnGoose(): ActiveGoose {
+    if (this.activeGoose) return this.activeGoose;
+    return this.spawnGoose();
+  }
+
   private spawnGoose(): ActiveGoose {
     const type = this.selectGooseType();
     const mood = type.baseMood ?? this.rollMood();
-    const moodData = GOOSE_MOODS[mood];
 
     this.activeGoose = {
       id: type.id ?? `normal_${Date.now()}`,
@@ -203,7 +208,7 @@ export class GooseSystem {
     if (isCrit) bpReward *= 3;
     if (this.selectedAlly === 'attack') bpReward *= 1.25;
 
-    let feathers = 1;
+    const feathers = 1;
     let goldenFeathers = 0;
     let jadeCatnip = 0;
 

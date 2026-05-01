@@ -75,6 +75,10 @@ export const MATERIAL_TEMPLATES: MaterialTemplate[] = [
   { id: 'primordial_matter',name: 'Primordial Matter',category: 'mythic', emoji: '🌌', description: 'From before creation.',        maxStack: 50 },
   { id: 'reality_shard',  name: 'Reality Shard',   category: 'mythic',    emoji: '💫', description: 'A piece of reality itself.',    maxStack: 50 },
   { id: 'cosmic_heart',   name: 'Cosmic Heart',    category: 'mythic',    emoji: '💜', description: 'Heart of a dying star.',        maxStack: 50 },
+  // Enchantment scrolls
+  { id: 'enchant_scroll_common',    name: 'Common Enchant Scroll',    category: 'rare',      emoji: '📜', description: 'A simple relic inscription.',   maxStack: 99 },
+  { id: 'enchant_scroll_rare',      name: 'Rare Enchant Scroll',      category: 'rare',      emoji: '📘', description: 'A focused relic inscription.',  maxStack: 99 },
+  { id: 'enchant_scroll_legendary', name: 'Legendary Enchant Scroll', category: 'legendary', emoji: '📕', description: 'A heavenly relic inscription.', maxStack: 50 },
 ];
 
 export const BLUEPRINTS: BlueprintData[] = [
@@ -317,6 +321,13 @@ export class CraftingSystem {
     return [...ENCHANTMENTS];
   }
 
+  getEnchantment(enchantId: string): EnchantmentData | null {
+    const enchant = ENCHANTMENTS.find(e => e.id === enchantId);
+    return enchant
+      ? { ...enchant, stats: { ...enchant.stats }, materialsRequired: { ...enchant.materialsRequired } }
+      : null;
+  }
+
   canEnchant(enchantId: string, currentBP: number): boolean {
     const enchant = ENCHANTMENTS.find(e => e.id === enchantId);
     if (!enchant) return false;
@@ -335,6 +346,10 @@ export class CraftingSystem {
   enchant(enchantId: string): { success: boolean; stats?: Record<string, number>; bpCost?: number } {
     const enchant = ENCHANTMENTS.find(e => e.id === enchantId);
     if (!enchant) return { success: false };
+    if (this.getMaterialCount(enchant.scrollRequired) < 1) return { success: false };
+    for (const [matId, count] of Object.entries(enchant.materialsRequired)) {
+      if (this.getMaterialCount(matId) < count) return { success: false };
+    }
 
     // Consume scroll + materials
     this.removeMaterial(enchant.scrollRequired, 1);

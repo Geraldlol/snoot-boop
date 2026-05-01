@@ -409,6 +409,16 @@ export class EquipmentSystem {
     return stoneId;
   }
 
+  applyEnchant(equipmentId: string, stats: Record<string, number>): boolean {
+    const item = this.inventory.find(e => e.id === equipmentId);
+    if (!item) return false;
+
+    for (const [stat, value] of Object.entries(stats)) {
+      item.substats[stat] = Math.round(((item.substats[stat] ?? 0) + value) * 100) / 100;
+    }
+    return true;
+  }
+
   // ── Salvage ──────────────────────────────────────────────
 
   salvage(equipmentId: string): { scrap: number; essence: number } | null {

@@ -33,12 +33,15 @@ export default function EquipmentPanel() {
   const cats = useCatStore((s) => s.cats);
   const [tab, setTab] = useState<'inventory' | 'equipped'>('inventory');
   const [slotFilter, setSlotFilter] = useState<EquipmentSlotId | 'all'>('all');
-  const [selectedCat, setSelectedCat] = useState<string>(cats[0]?.id ?? '');
+  const [selectedCat, setSelectedCat] = useState<string>(cats[0]?.instanceId ?? '');
   const [, forceUpdate] = useState(0);
   const refresh = () => forceUpdate((n) => n + 1);
 
   const inventory = engine.equipment.getInventory();
   const filtered = slotFilter === 'all' ? inventory : inventory.filter((i) => i.slot === slotFilter);
+  const selectedCatId = cats.some((cat) => cat.instanceId === selectedCat)
+    ? selectedCat
+    : cats[0]?.instanceId ?? '';
 
   return (
     <div>
@@ -78,6 +81,31 @@ export default function EquipmentPanel() {
 
       {tab === 'inventory' && (
         <>
+          {cats.length > 0 ? (
+            <div className="mb-3">
+              <div className="h-eyebrow mb-1.5">Adorn Disciple</div>
+              <select
+                value={selectedCatId}
+                onChange={(e) => setSelectedCat(e.target.value)}
+                className="w-full font-mono text-sm p-2"
+                style={{
+                  background: 'rgba(0,0,0,0.4)',
+                  border: '1px solid var(--rule)',
+                  color: 'var(--ink)',
+                  borderRadius: 1,
+                }}
+              >
+                {cats.map((c) => (
+                  <option key={c.instanceId} value={c.instanceId}>{c.name}</option>
+                ))}
+              </select>
+            </div>
+          ) : (
+            <div className="text-xs italic mb-3" style={{ color: 'var(--ink-dim)' }}>
+              Recruit a disciple before relics can be adorned.
+            </div>
+          )}
+
           {/* Slot filter */}
           <div className="flex gap-1 mb-3 flex-wrap">
             {SLOT_IDS.map((s) => {
@@ -107,7 +135,9 @@ export default function EquipmentPanel() {
                 No relics in this category.
               </div>
             ) : (
-              filtered.map((item) => <ItemRow key={item.id} item={item} refresh={refresh} />)
+              filtered.map((item) => (
+                <ItemRow key={item.id} item={item} catId={selectedCatId || null} refresh={refresh} />
+              ))
             )}
           </div>
         </>
@@ -125,7 +155,7 @@ export default function EquipmentPanel() {
               <div className="mb-4">
                 <div className="h-eyebrow mb-1.5">Disciple</div>
                 <select
-                  value={selectedCat}
+                  value={selectedCatId}
                   onChange={(e) => setSelectedCat(e.target.value)}
                   className="w-full font-mono text-sm p-2"
                   style={{
@@ -136,12 +166,12 @@ export default function EquipmentPanel() {
                   }}
                 >
                   {cats.map((c) => (
-                    <option key={c.instanceId} value={c.id}>{c.name}</option>
+                    <option key={c.instanceId} value={c.instanceId}>{c.name}</option>
                   ))}
                 </select>
               </div>
 
-              {selectedCat && <PaperDoll catId={selectedCat} refresh={refresh} />}
+              {selectedCatId && <PaperDoll catId={selectedCatId} refresh={refresh} />}
             </>
           )}
         </>
@@ -229,7 +259,7 @@ function PaperDoll({ catId, refresh }: { catId: string; refresh: () => void }) {
 
 // ─── Item row ───────────────────────────────────────────────
 
-function ItemRow({ item, refresh }: { item: EquipmentInstance; refresh: () => void }) {
+function ItemRow({ item, catId, refresh }: { item: EquipmentInstance; catId: string | null; refresh: () => void }) {
   const canLevel = engine.equipment.canLevelUp(item.id);
   const levelCost = engine.equipment.getLevelUpCost(item.id);
   const isEquipped = engine.equipment.isEquipped(item.id);
@@ -269,6 +299,20 @@ function ItemRow({ item, refresh }: { item: EquipmentInstance; refresh: () => vo
       </div>
 
       <div className="flex gap-1.5 flex-shrink-0">
+        {!isEquipped && (
+          <button
+            className="btn btn-primary"
+            style={{ padding: '5px 10px', fontSize: 9 }}
+            disabled={!catId}
+            onClick={() => {
+              if (!catId) return;
+              engine.equipItem(catId, item.id);
+              refresh();
+            }}
+          >
+            Adorn
+          </button>
+        )}
         {canLevel && !isEquipped && (
           <button
             className="btn"

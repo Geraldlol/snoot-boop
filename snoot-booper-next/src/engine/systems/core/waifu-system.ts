@@ -143,7 +143,7 @@ export class WaifuSystem {
       .map((a) => ({ ...a, preferred: a.preferredBy.includes(waifuId) }));
   }
 
-  startActivity(waifuId: string, activityId: string): { success: boolean; dialogue?: string } {
+  startActivity(waifuId: string, activityId: string, bondMultiplier = 1): { success: boolean; dialogue?: string } {
     if (this.currentActivity) return { success: false };
     const state = this.waifuStates[waifuId];
     if (!state) return { success: false };
@@ -153,7 +153,7 @@ export class WaifuSystem {
     if (state.bondLevel < activity.unlockBond) return { success: false };
 
     const preferred = activity.preferredBy.includes(waifuId);
-    const bondGain = activity.bondGain * (preferred ? ACTIVITY_PREFERENCE_BONUS : 1);
+    const bondGain = activity.bondGain * (preferred ? ACTIVITY_PREFERENCE_BONUS : 1) * Math.max(1, bondMultiplier);
 
     this.currentActivity = {
       waifuId,

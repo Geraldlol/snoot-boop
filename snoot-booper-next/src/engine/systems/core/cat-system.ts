@@ -23,8 +23,8 @@ export class CatSystem {
   // ── Recruitment ────────────────────────────────────────────
 
   /** Recruit a random cat. Optionally force a realm. Returns the new cat or null on failure. */
-  recruitCat(realm?: CatRealmId): Cat | null {
-    const targetRealm = realm ?? this.rollRealm();
+  recruitCat(realm?: CatRealmId, rareCatBonus = 1): Cat | null {
+    const targetRealm = realm ?? this.rollRealm(rareCatBonus);
     const templates = CAT_TEMPLATES.filter((t) => t.baseRealm === targetRealm && !t.unlockedBy);
     if (templates.length === 0) return null;
 
@@ -64,11 +64,19 @@ export class CatSystem {
 
   // ── Realm Rolling ──────────────────────────────────────────
 
-  private rollRealm(): CatRealmId {
-    const roll = Math.random();
+  private rollRealm(rareCatBonus = 1): CatRealmId {
+    const bonus = Math.max(1, rareCatBonus);
+    const weights = REALM_ORDER.map((realmId, index) => {
+      const base = CAT_REALMS[realmId].dropRate;
+      return index === 0 ? base : base * bonus;
+    });
+    const totalWeight = weights.reduce((sum, weight) => sum + weight, 0);
+    const roll = Math.random() * totalWeight;
+
     let cumulative = 0;
-    for (const realmId of REALM_ORDER) {
-      cumulative += CAT_REALMS[realmId].dropRate;
+    for (let i = 0; i < REALM_ORDER.length; i++) {
+      const realmId = REALM_ORDER[i];
+      cumulative += weights[i];
       if (roll <= cumulative) return realmId;
     }
     return 'kittenMortal';
@@ -291,9 +299,11 @@ export class CatSystem {
   updateHappiness(deltaSeconds: number, modifiers: Partial<GameModifiers>): void {
     const decayRate = 0.01; // 1% per minute base
     const decayPerSecond = decayRate / 60;
+    const decayReduction = Math.max(0, Math.min(1, modifiers.happinessDecayReduction ?? 0));
+    const gain = ((modifiers.happinessGain ?? 0) / 60) * deltaSeconds;
 
     for (const cat of this.ownedCats) {
-      let decay = decayPerSecond * deltaSeconds;
+      let decay = modifiers.preventDecay ? 0 : decayPerSecond * deltaSeconds;
 
       // Personality modifiers
       const personalityData = CAT_PERSONALITIES[cat.personality];
@@ -307,7 +317,9 @@ export class CatSystem {
         decay /= modifiers.catHappinessMultiplier;
       }
 
-      cat.happiness = Math.max(0, cat.happiness - decay);
+      decay *= (1 - decayReduction);
+
+      cat.happiness = Math.min(100, Math.max(0, cat.happiness - decay + gain));
     }
   }
 

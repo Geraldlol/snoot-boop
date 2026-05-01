@@ -212,8 +212,8 @@ export class NemesisSystem {
       .map(id => NEMESIS_ABILITIES[id])
       .filter((a): a is NemesisAbility => !!a);
 
-    let hp = baseHp * nemesis.hpMultiplier;
-    let damage = baseDmg * nemesis.damageMultiplier;
+    const hp = baseHp * nemesis.hpMultiplier;
+    const damage = baseDmg * nemesis.damageMultiplier;
     let defense = baseDef * (1 + nemesis.level * 0.1);
 
     // Apply armor ability to defense

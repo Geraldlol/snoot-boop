@@ -14,6 +14,7 @@ const CURRENCY_DISPLAY = [
   { id: 'qi' as const, icon: '\u2728', label: 'Qi', fullName: 'Qi Energy', color: '#00BFFF', primary: false },
   { id: 'jadeCatnip' as const, icon: '\uD83D\uDC8E', label: 'JC', fullName: 'Jade Catnip', color: '#7FFFD4', primary: false },
   { id: 'spiritStones' as const, icon: '\uD83D\uDCA0', label: 'SS', fullName: 'Spirit Stones', color: '#9370DB', primary: false },
+  { id: 'destinyThreads' as const, icon: '\uD83E\uDDF5', label: 'DT', fullName: 'Destiny Threads', color: '#D3B8FF', primary: false },
   { id: 'gooseFeathers' as const, icon: '\uD83E\uDEB6', label: 'GF', fullName: 'Goose Feathers', color: '#F5F5F5', primary: false },
 ];
 
