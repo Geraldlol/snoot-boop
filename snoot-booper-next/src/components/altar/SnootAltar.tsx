@@ -6,6 +6,7 @@ import { useCatStore } from '@/store/cat-store';
 import { engine } from '@/engine/engine';
 import { formatNumber } from '@/engine/big-number';
 import { starterArt } from '@/lib/art-assets';
+import SectPathPanel from './SectPathPanel';
 
 interface Toast {
   id: string;
@@ -153,25 +154,26 @@ export default function SnootAltar() {
 
         {/* Altar surface */}
         <div className="p-4 pt-3">
-          <div
-            ref={altarRef}
-            className="altar"
-            onClick={onBoop}
-            role="button"
-            aria-label="Boop the snoot"
-            tabIndex={0}
-            onKeyDown={(e) => {
-              if (e.key === ' ' || e.key === 'Enter') {
-                e.preventDefault();
-                const rect = altarRef.current?.getBoundingClientRect();
-                if (!rect) return;
-                onBoop({
-                  clientX: rect.left + rect.width / 2,
-                  clientY: rect.top + rect.height * 0.54,
-                } as ReactMouseEvent<HTMLDivElement>);
-              }
-            }}
-          >
+          <div className="relative">
+            <div
+              ref={altarRef}
+              className="altar"
+              onClick={onBoop}
+              role="button"
+              aria-label="Boop the snoot"
+              tabIndex={0}
+              onKeyDown={(e) => {
+                if (e.key === ' ' || e.key === 'Enter') {
+                  e.preventDefault();
+                  const rect = altarRef.current?.getBoundingClientRect();
+                  if (!rect) return;
+                  onBoop({
+                    clientX: rect.left + rect.width / 2,
+                    clientY: rect.top + rect.height * 0.54,
+                  } as ReactMouseEvent<HTMLDivElement>);
+                }
+              }}
+            >
             <div className="altar-runes-3" />
             <div className="altar-runes-2" />
             <div className="altar-runes" />
@@ -268,6 +270,8 @@ export default function SnootAltar() {
                 </div>
               </div>
             </div>
+          </div>
+          <SectPathPanel className="hidden lg:block absolute right-5 top-5 z-20 w-[280px]" />
           </div>
         </div>
       </div>

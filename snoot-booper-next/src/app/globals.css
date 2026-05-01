@@ -407,6 +407,64 @@ body {
 .meter-fill.crimson { background: linear-gradient(90deg, #5b1e14, var(--vermillion), var(--vermillion-bright)); box-shadow: 0 0 12px rgba(214,91,64,0.6); }
 .meter-fill.gold    { background: linear-gradient(90deg, var(--gold-deep), var(--gold), var(--gold-bright)); }
 
+/* ============ SECT PATH (desktop opening-loop guidance) ============ */
+.sect-path-panel {
+  position: absolute;
+  padding: 14px;
+  cursor: default;
+  background:
+    linear-gradient(180deg, rgba(18, 28, 39, 0.94), rgba(5, 9, 14, 0.94)),
+    radial-gradient(circle at 20% 0%, rgba(109,197,168,0.18), transparent 46%);
+  border-color: rgba(230,194,117,0.38);
+  box-shadow:
+    0 22px 42px -24px rgba(0,0,0,0.95),
+    0 0 28px rgba(109,197,168,0.10),
+    inset 0 1px 0 rgba(255,225,170,0.12);
+}
+.sect-path-focus {
+  padding: 12px;
+  background: linear-gradient(180deg, rgba(230,194,117,0.07), rgba(0,0,0,0.28));
+  border: 1px solid rgba(230,194,117,0.20);
+  box-shadow: inset 0 1px 0 rgba(255,225,170,0.08);
+}
+.sect-path-state {
+  flex-shrink: 0;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 10px;
+  color: var(--gold-bright);
+  padding: 3px 6px;
+  border: 1px solid rgba(230,194,117,0.22);
+  background: rgba(230,194,117,0.08);
+}
+.sect-path-state.done {
+  color: var(--jade-bright);
+  border-color: rgba(109,197,168,0.28);
+  background: rgba(109,197,168,0.10);
+}
+.sect-path-row {
+  display: grid;
+  grid-template-columns: 52px minmax(0, 1fr);
+  align-items: center;
+  gap: 8px;
+  min-height: 28px;
+  padding: 6px 8px;
+  font-family: var(--font-display, 'Cinzel', serif);
+  font-size: 11px;
+  color: var(--ink-mute);
+  background: rgba(0,0,0,0.24);
+  border: 1px solid rgba(230,194,117,0.10);
+}
+.sect-path-row.complete {
+  color: rgba(255,247,223,0.82);
+  border-color: rgba(109,197,168,0.22);
+  background: rgba(109,197,168,0.06);
+}
+.sect-path-mark {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 9px;
+  color: var(--jade-bright);
+}
+
 /* ============ ALTAR (the boop ritual scene) ============ */
 .altar {
   position: relative; height: 100%; min-height: 540px; overflow: hidden; border-radius: 2px;
