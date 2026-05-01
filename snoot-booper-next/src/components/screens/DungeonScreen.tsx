@@ -12,6 +12,7 @@ import { useState, useCallback, useRef, useEffect } from 'react';
 import { useUIStore } from '@/store/ui-store';
 import { engine } from '@/engine/engine';
 import { formatNumber } from '@/engine/big-number';
+import { starterArt } from '@/lib/art-assets';
 import type {
   BoopCommand,
   SkillCategory,
@@ -23,6 +24,7 @@ import type {
 
 import WorldCanvas from '../shell/WorldCanvas';
 import ParallaxMountains from '../shell/ParallaxMountains';
+import SceneBackdrop from '../shell/SceneBackdrop';
 
 // ─── Helpers ──────────────────────────────────────────────
 
@@ -105,6 +107,7 @@ function LobbyView({ forceUpdate, onBack }: { forceUpdate: () => void; onBack: (
 
   return (
     <div className="relative min-h-screen overflow-y-auto" style={{ background: 'var(--bg-0)' }}>
+      <SceneBackdrop src={starterArt.backgrounds.pagoda} tone="combat" />
       <WorldCanvas />
       <ParallaxMountains />
 
@@ -358,6 +361,7 @@ function CombatView({ forceUpdate }: { forceUpdate: () => void }) {
 
   return (
     <div className="relative min-h-screen flex flex-col overflow-hidden" style={{ background: 'var(--bg-0)' }}>
+      <SceneBackdrop src={starterArt.backgrounds.pagoda} tone="combat" />
       <WorldCanvas />
       <ParallaxMountains />
 
@@ -549,6 +553,7 @@ function VictoryView({ onContinue, onReturn }: { onContinue: () => void; onRetur
 
   return (
     <div className="relative min-h-screen flex items-center justify-center" style={{ background: 'var(--bg-0)' }}>
+      <SceneBackdrop src={starterArt.backgrounds.tournament} tone="tournament" />
       <WorldCanvas />
       <ParallaxMountains />
       <div className="panel panel-ornate panel-elite p-8 text-center max-w-md relative" style={{ zIndex: 5, borderColor: 'var(--gold-bright)' }}>
@@ -605,6 +610,7 @@ function DefeatView({ onReturn }: { onReturn: () => void }) {
 
   return (
     <div className="relative min-h-screen flex items-center justify-center" style={{ background: 'var(--bg-0)' }}>
+      <SceneBackdrop src={starterArt.backgrounds.pagoda} tone="combat" />
       <WorldCanvas />
       <ParallaxMountains />
       <div className="panel panel-ornate p-8 text-center max-w-md relative" style={{ zIndex: 5, borderColor: isFled ? 'var(--gold)' : 'var(--vermillion)' }}>

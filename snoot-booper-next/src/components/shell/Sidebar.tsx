@@ -1,9 +1,11 @@
 'use client';
 
+import Image from 'next/image';
 import { useUIStore, type PanelId } from '@/store/ui-store';
 import { useGameStore } from '@/store/game-store';
 import { useCatStore } from '@/store/cat-store';
 import { engine } from '@/engine/engine';
+import { starterArt } from '@/lib/art-assets';
 
 interface NavAction {
   type: 'panel' | 'screen';
@@ -12,8 +14,9 @@ interface NavAction {
 }
 
 interface NavItem {
-  id: string;          // unique key (matches PanelId or screen target)
-  glyph: string;       // single Chinese character
+  id: string;
+  glyph: string;
+  iconSrc: string;
   label: string;
   action: NavAction;
 }
@@ -27,42 +30,42 @@ const NAV: NavGroup[] = [
   {
     group: 'Sanctuary',
     items: [
-      { id: 'sanctuary', glyph: '鼻', label: 'Snoot Altar', action: { type: 'panel', panelId: 'sanctuary' } },
-      { id: 'cats',      glyph: '貓', label: 'Roster',      action: { type: 'panel', panelId: 'cats' } },
-      { id: 'waifus',    glyph: '情', label: 'Bond Hall',   action: { type: 'panel', panelId: 'waifus' } },
-      { id: 'equipment', glyph: '甲', label: 'Relics',      action: { type: 'panel', panelId: 'equipment' } },
-      { id: 'goose',     glyph: '鵝', label: 'Goose Watch', action: { type: 'panel', panelId: 'goose' } },
+      { id: 'sanctuary', glyph: 'SB', iconSrc: starterArt.icons.boopCoin, label: 'Snoot Altar', action: { type: 'panel', panelId: 'sanctuary' } },
+      { id: 'cats', glyph: 'CT', iconSrc: starterArt.icons.pawSpirit, label: 'Roster', action: { type: 'panel', panelId: 'cats' } },
+      { id: 'waifus', glyph: 'BD', iconSrc: starterArt.icons.moonTea, label: 'Bond Hall', action: { type: 'panel', panelId: 'waifus' } },
+      { id: 'equipment', glyph: 'RL', iconSrc: starterArt.icons.clawCharm, label: 'Relics', action: { type: 'panel', panelId: 'equipment' } },
+      { id: 'goose', glyph: 'GW', iconSrc: starterArt.icons.koiTreat, label: 'Goose Watch', action: { type: 'panel', panelId: 'goose' } },
     ],
   },
   {
     group: 'Progression',
     items: [
-      { id: 'upgrades',    glyph: '增', label: 'Upgrades',   action: { type: 'panel', panelId: 'upgrades' } },
-      { id: 'techniques',  glyph: '技', label: 'Techniques', action: { type: 'panel', panelId: 'techniques' } },
-      { id: 'cultivation', glyph: '境', label: 'Realms',     action: { type: 'panel', panelId: 'cultivation' } },
-      { id: 'buildings',   glyph: '殿', label: 'Sect Hall',  action: { type: 'panel', panelId: 'buildings' } },
-      { id: 'crafting',    glyph: '匠', label: 'Forge',      action: { type: 'panel', panelId: 'crafting' } },
-      { id: 'dungeon',     glyph: '穴', label: 'Dungeon',    action: { type: 'screen', screenId: 'dungeon' } },
-      { id: 'prestige',    glyph: '道', label: 'Dao Tree',   action: { type: 'panel', panelId: 'prestige' } },
+      { id: 'upgrades', glyph: 'UP', iconSrc: starterArt.icons.qiOrb, label: 'Upgrades', action: { type: 'panel', panelId: 'upgrades' } },
+      { id: 'techniques', glyph: 'TC', iconSrc: starterArt.icons.scroll, label: 'Techniques', action: { type: 'panel', panelId: 'techniques' } },
+      { id: 'cultivation', glyph: 'RM', iconSrc: starterArt.icons.lotusBadge, label: 'Realms', action: { type: 'panel', panelId: 'cultivation' } },
+      { id: 'buildings', glyph: 'SH', iconSrc: starterArt.icons.bell, label: 'Sect Hall', action: { type: 'panel', panelId: 'buildings' } },
+      { id: 'crafting', glyph: 'FG', iconSrc: starterArt.icons.incense, label: 'Forge', action: { type: 'panel', panelId: 'crafting' } },
+      { id: 'dungeon', glyph: 'DG', iconSrc: starterArt.icons.talisman, label: 'Dungeon', action: { type: 'screen', screenId: 'dungeon' } },
+      { id: 'prestige', glyph: 'DT', iconSrc: starterArt.icons.tournamentMedallion, label: 'Dao Tree', action: { type: 'panel', panelId: 'prestige' } },
     ],
   },
   {
     group: 'Sect',
     items: [
-      { id: 'achievements', glyph: '勳', label: 'Achievements', action: { type: 'panel', panelId: 'achievements' } },
-      { id: 'lore',         glyph: '經', label: 'Lore',         action: { type: 'panel', panelId: 'lore' } },
-      { id: 'daily',        glyph: '務', label: 'Daily',        action: { type: 'panel', panelId: 'daily' } },
-      { id: 'social',       glyph: '朋', label: 'Friends',      action: { type: 'panel', panelId: 'social' } },
-      { id: 'sectWar',      glyph: '戰', label: 'Sect War',     action: { type: 'panel', panelId: 'sectWar' } },
+      { id: 'achievements', glyph: 'AC', iconSrc: starterArt.icons.tournamentMedallion, label: 'Achievements', action: { type: 'panel', panelId: 'achievements' } },
+      { id: 'lore', glyph: 'LR', iconSrc: starterArt.icons.scroll, label: 'Lore', action: { type: 'panel', panelId: 'lore' } },
+      { id: 'daily', glyph: 'DY', iconSrc: starterArt.icons.moonTea, label: 'Daily', action: { type: 'panel', panelId: 'daily' } },
+      { id: 'social', glyph: 'FR', iconSrc: starterArt.icons.pawSpirit, label: 'Friends', action: { type: 'panel', panelId: 'social' } },
+      { id: 'sectWar', glyph: 'SW', iconSrc: starterArt.icons.talisman, label: 'Sect War', action: { type: 'panel', panelId: 'sectWar' } },
     ],
   },
   {
     group: 'Special',
     items: [
-      { id: 'catino',        glyph: '賭', label: 'Catino',        action: { type: 'panel', panelId: 'catino' } },
-      { id: 'tournament',    glyph: '盃', label: 'Tournament',    action: { type: 'panel', panelId: 'tournament' } },
-      { id: 'reincarnation', glyph: '輪', label: 'Reincarnation', action: { type: 'panel', panelId: 'reincarnation' } },
-      { id: 'settings',      glyph: '齒', label: 'Settings',      action: { type: 'panel', panelId: 'settings' } },
+      { id: 'catino', glyph: 'CN', iconSrc: starterArt.icons.boopCoin, label: 'Catino', action: { type: 'panel', panelId: 'catino' } },
+      { id: 'tournament', glyph: 'TR', iconSrc: starterArt.icons.tournamentMedallion, label: 'Tournament', action: { type: 'panel', panelId: 'tournament' } },
+      { id: 'reincarnation', glyph: 'RC', iconSrc: starterArt.icons.qiOrb, label: 'Reincarnation', action: { type: 'panel', panelId: 'reincarnation' } },
+      { id: 'settings', glyph: 'ST', iconSrc: starterArt.icons.bell, label: 'Settings', action: { type: 'panel', panelId: 'settings' } },
     ],
   },
 ];
@@ -74,7 +77,6 @@ export default function Sidebar() {
   const catCount = useCatStore((s) => s.cats.length);
   const activeGoose = useGameStore((s) => s.activeGoose);
 
-  // Lightweight badge derivation. No new engine calls — just safe reads.
   const canRebirth = engine.prestige.canRebirth?.() ?? false;
   const claimableAch = (() => {
     try {
@@ -96,7 +98,7 @@ export default function Sidebar() {
     sanctuary: null,
     cats: catCount > 0 ? { tone: 'jade', text: String(catCount) } : null,
     goose: activeGoose ? { text: '!' } : null,
-    prestige: canRebirth ? { tone: 'gold', text: '✦' } : null,
+    prestige: canRebirth ? { tone: 'gold', text: '*' } : null,
     achievements: claimableAch > 0 ? { tone: 'jade', text: String(claimableAch) } : null,
     daily: claimableDaily > 0 ? { tone: 'jade', text: String(claimableDaily) } : null,
   };
@@ -123,8 +125,18 @@ export default function Sidebar() {
                 onClick={() => activate(item)}
                 className={`nav-item ${active ? 'active' : ''}`}
                 aria-current={active ? 'page' : undefined}
+                aria-label={item.label}
               >
-                <span className="nav-glyph">{item.glyph}</span>
+                <span className="nav-glyph nav-glyph-art">
+                  <Image
+                    src={item.iconSrc}
+                    alt=""
+                    width={24}
+                    height={24}
+                    className="nav-icon-art"
+                  />
+                  <span className="sr-only">{item.glyph}</span>
+                </span>
                 <span>{item.label}</span>
                 {b && <span className={`nav-badge ${b.tone ?? ''}`}>{b.text}</span>}
               </button>

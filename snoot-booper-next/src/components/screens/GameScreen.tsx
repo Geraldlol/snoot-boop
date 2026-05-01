@@ -12,13 +12,16 @@
 
 'use client';
 
+import type { ComponentType, CSSProperties } from 'react';
 import { useUIStore, type PanelId } from '@/store/ui-store';
 import { useGameStore } from '@/store/game-store';
 import { MASTERS } from '@/engine/data/masters';
 import { useTimeVisuals } from '@/hooks/useTimeVisuals';
+import { panelBackdropById, starterArt } from '@/lib/art-assets';
 
 import WorldCanvas from '../shell/WorldCanvas';
 import ParallaxMountains from '../shell/ParallaxMountains';
+import SceneBackdrop from '../shell/SceneBackdrop';
 import Header from '../shell/Header';
 import Sidebar from '../shell/Sidebar';
 import SectTicker from '../shell/SectTicker';
@@ -55,7 +58,9 @@ import TournamentPanel from '../ui/TournamentPanel';
 import NotificationToast from '../ui/NotificationToast';
 import GooseOverlay from '../ui/GooseOverlay';
 
-const PANEL_COMPONENTS: Partial<Record<PanelId, React.ComponentType>> = {
+type ArtStyle = CSSProperties & { '--panel-art'?: string };
+
+const PANEL_COMPONENTS: Partial<Record<PanelId, ComponentType>> = {
   cats: CatPanel,
   waifus: WaifuPanel,
   upgrades: UpgradePanel,
@@ -87,10 +92,15 @@ export default function GameScreen() {
   if (!selectedMaster) return null;
   const master = MASTERS[selectedMaster];
   if (!master) return null;
+  const backdrop = panelBackdropById[activePanel] ?? starterArt.backgrounds.sanctuary;
+  const backdropTone = activePanel === 'tournament' || activePanel === 'sectWar' || activePanel === 'catino'
+    ? 'tournament'
+    : 'default';
 
   return (
     <div className="min-h-screen w-full">
       {/* Atmospheric backdrop */}
+      <SceneBackdrop src={backdrop} tone={backdropTone} />
       <WorldCanvas />
       <ParallaxMountains />
 
@@ -98,10 +108,10 @@ export default function GameScreen() {
       <Header />
 
       {/* Main content */}
-      <div className="max-w-[1600px] mx-auto px-8 pb-24 pt-6 relative" style={{ zIndex: 5 }}>
+      <div className="max-w-[1600px] mx-auto px-4 md:px-8 pb-24 pt-4 md:pt-6 relative" style={{ zIndex: 5 }}>
         <SectTicker />
 
-        <div className="flex gap-6 items-start">
+        <div className="flex flex-col lg:flex-row gap-4 lg:gap-6 items-stretch lg:items-start">
           <Sidebar />
 
           <div className="flex-1 min-w-0">
@@ -155,7 +165,10 @@ function PanelRouter({ id }: { id: PanelId }) {
     return <Component />;
   }
   return (
-    <div className="panel panel-ornate p-6 min-h-[480px]">
+    <div
+      className="panel panel-ornate art-panel p-6 min-h-[480px]"
+      style={{ '--panel-art': `url("${starterArt.ui.jadePanel}")` } as ArtStyle}
+    >
       <Component />
     </div>
   );

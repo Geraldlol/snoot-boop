@@ -5,6 +5,7 @@ import { useGameStore } from '@/store/game-store';
 import { useCatStore } from '@/store/cat-store';
 import { engine } from '@/engine/engine';
 import { formatNumber } from '@/engine/big-number';
+import { starterArt } from '@/lib/art-assets';
 
 interface Toast {
   id: string;
@@ -118,15 +119,22 @@ export default function SnootAltar() {
   return (
     <div className={`grid grid-cols-12 gap-6 ${shake ? 'shake' : ''}`}>
       <div
-        className="col-span-12 lg:col-span-12 panel panel-ornate panel-elite"
-        style={{ minHeight: 620 }}
+        className="col-span-12 lg:col-span-12 panel panel-ornate panel-elite art-panel"
+        style={{ minHeight: 620, '--panel-art': `url("${starterArt.ui.jadePanel}")` } as React.CSSProperties & { '--panel-art': string }}
       >
         {/* Header */}
         <div className="flex items-center justify-between p-4 pb-3 border-b" style={{ borderColor: 'var(--rule)' }}>
           <div className="flex items-center gap-3">
             <div
               className="glyph-badge"
-              style={{ color: 'var(--gold-bright)', width: 38, height: 38 }}
+              style={{
+                color: 'var(--gold-bright)',
+                width: 38,
+                height: 38,
+                backgroundImage: `radial-gradient(circle at 50% 35%, rgba(255,225,170,0.34), rgba(0,0,0,0.42)), url("${starterArt.icons.boopCoin}")`,
+                backgroundPosition: 'center',
+                backgroundSize: 'cover',
+              }}
             >
               <span style={{ fontSize: 16 }}>鼻</span>
             </div>
