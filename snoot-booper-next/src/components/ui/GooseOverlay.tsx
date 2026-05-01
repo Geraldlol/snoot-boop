@@ -38,7 +38,7 @@ export default function GooseOverlay() {
   }
 
   return (
-    <div className="fixed top-24 left-1/2 -translate-x-1/2 z-40 flex flex-col items-center gap-2 select-none">
+    <div className="fixed bottom-8 right-8 z-40 flex w-64 flex-col items-stretch gap-2 select-none">
       {/* Banner */}
       <div
         className="panel px-4 py-2 text-center"
@@ -55,7 +55,7 @@ export default function GooseOverlay() {
 
       {/* HP bar (multi-hp goose) */}
       {activeGoose.maxHp > 1 && (
-        <div className="w-56">
+        <div className="w-full">
           <div className="meter" style={{ height: 6 }}>
             <div className="meter-fill" style={{ width: `${hpPct}%`, background: `linear-gradient(90deg, ${mood.color}55, ${mood.color}, ${mood.color}cc)`, boxShadow: `0 0 12px ${mood.color}88` }} />
           </div>
@@ -63,7 +63,7 @@ export default function GooseOverlay() {
       )}
 
       {/* Timer */}
-      <div className="w-56">
+      <div className="w-full">
         <div className="meter" style={{ height: 4 }}>
           <div
             className="meter-fill"

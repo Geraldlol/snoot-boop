@@ -113,23 +113,23 @@ function LobbyView({ forceUpdate, onBack }: { forceUpdate: () => void; onBack: (
 
       {/* Sticky header */}
       <div className="hud-top sticky top-0 z-20 relative">
-        <div className="max-w-[1100px] mx-auto px-6 h-[68px] flex items-center gap-4">
+        <div className="max-w-[1100px] mx-auto px-4 sm:px-6 min-h-[68px] py-3 flex items-center gap-3 sm:gap-4">
           <button
-            className="btn"
+            className="btn shrink-0"
             style={{ padding: '6px 12px', fontSize: 10 }}
             onClick={onBack}
           >
             ← Sanctuary
           </button>
-          <div className="flex items-center gap-3 flex-1">
+          <div className="flex items-center gap-3 flex-1 min-w-0">
             <div className="glyph-badge" style={{ color: 'var(--gold-bright)', width: 38, height: 38 }}>
               <span style={{ fontSize: 16 }}>塔</span>
             </div>
-            <div>
-              <div className="font-display text-[18px] font-black tracking-[0.10em] gold-text">
+            <div className="min-w-0 leading-tight">
+              <div className="font-display text-[16px] sm:text-[18px] font-black tracking-[0.08em] sm:tracking-[0.10em] gold-text">
                 The Infinite Pagoda
               </div>
-              <div className="h-eyebrow">Each floor a tribulation, each victory a step toward heaven</div>
+              <div className="h-eyebrow leading-relaxed [overflow-wrap:anywhere]">Each floor a tribulation, each victory a step toward heaven</div>
             </div>
           </div>
           {pagoda.highestFloor > 0 && (
@@ -141,7 +141,7 @@ function LobbyView({ forceUpdate, onBack }: { forceUpdate: () => void; onBack: (
         </div>
       </div>
 
-      <div className="max-w-[1100px] mx-auto px-6 py-6 relative" style={{ zIndex: 5 }}>
+      <div className="max-w-[1100px] mx-auto px-4 sm:px-6 py-5 sm:py-6 relative" style={{ zIndex: 5 }}>
         {/* Stats */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-5">
           <PagodaStat label="Tokens"      value={pagoda.tokens}                  glyph="幣" />

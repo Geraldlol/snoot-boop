@@ -66,6 +66,7 @@ html, body {
   color: var(--ink);
   min-height: 100vh;
 }
+html { scroll-padding-top: 96px; }
 body {
   font-family: var(--font-body, 'Cormorant Garamond', 'Times New Roman', serif);
   -webkit-font-smoothing: antialiased;
